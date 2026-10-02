@@ -1,0 +1,75 @@
+---
+// The "notify me" popover a Booked calendar date opens. One instance per
+// page, position: fixed, shared by every calendar on that page; main.js
+// wires it to whichever .availability instances exist.
+---
+
+<div class="wl-popover" id="wlPopover" role="dialog" aria-label="Join the waitlist">
+  <button
+    type="button"
+    class="wl-popover-close"
+    id="wlPopoverClose"
+    aria-label="Close"
+  >
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    >
+      <path d="M6 6l12 12M18 6 6 18" />
+    </svg>
+  </button>
+  <span class="wl-popover-arrow" aria-hidden="true"></span>
+  <div class="wl-popover-eyebrow">Notify me</div>
+  <h4 id="wlPopoverDate">—</h4>
+  <div class="wl-popover-body">
+    <p class="wl-popover-copy">
+      This date is booked. Leave your email and we'll let you know if it opens up.
+    </p>
+    <form class="wl-form" id="wlPopoverForm">
+      <div class="field">
+        <label for="wlPopName">Name</label>
+        <div class="field-input">
+          <input type="text" id="wlPopName" placeholder="Your name" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="wlPopEmail">Email</label>
+        <div class="field-input">
+          <input type="email" id="wlPopEmail" required placeholder="you@email.com" />
+        </div>
+      </div>
+      <div class="wl-form-actions">
+        <button type="submit" class="button button-gradient button-small">
+          <span>Join the waitlist</span>
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="wl-popover-success" hidden>
+    <div class="wl-success">
+      <span class="wl-success-icon">
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m4 12 5 5L20 6" />
+        </svg>
+      </span>
+      <p>
+        You're on the list. We'll email <b id="wlPopoverEmailOut"></b> the moment this
+        date opens up.
+      </p>
+    </div>
+  </div>
+</div>

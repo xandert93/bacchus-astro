@@ -12,8 +12,9 @@ import SiteFooter from "../components/SiteFooter.astro";
 interface Props {
   title: string;
   showEnquireLink?: boolean;
+  menuBackgroundImage?: string;
 }
-const { title, showEnquireLink = false } = Astro.props;
+const { title, showEnquireLink = false, menuBackgroundImage } = Astro.props;
 ---
 
 <!doctype html>
@@ -33,7 +34,7 @@ const { title, showEnquireLink = false } = Astro.props;
   <body>
     <div class="grain"></div>
     <SiteHeader />
-    <MobileMenu />
+    <MobileMenu backgroundImage={menuBackgroundImage} />
 
     <slot />
 

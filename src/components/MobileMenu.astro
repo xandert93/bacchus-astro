@@ -1,12 +1,18 @@
 ---
 // The <=980px fullscreen drawer opened by the burger in SiteHeader.
 import SocialLinks from "./SocialLinks.astro";
+
+interface Props {
+  // The photo behind the drawer. Each page in the prototype picked its own.
+  backgroundImage?: string;
+}
+const { backgroundImage = "/images/shared/ballroom-night.webp" } = Astro.props;
 ---
 
 <div class="menu" id="mobmenu">
   <div
     class="menu-bg"
-    style="background-image: url('/images/shared/ballroom-night.webp')"
+    style={`background-image: url('${backgroundImage}')`}
   ></div>
   {/* The SCROLL happens here, not on .menu. .menu-bg has to sit in a box
        that never scrolls and never changes its containing block; see the
