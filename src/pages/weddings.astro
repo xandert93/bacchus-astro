@@ -1,0 +1,1101 @@
+---
+// /weddings. Shared chrome comes from BaseLayout; the enquiry wizard,
+// lightbox and waitlist popover are shared components. The Venue Diary
+// (#availability) and its quick-pick modal are weddings-only, so they stay
+// inline here.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import EnquirySection from "../components/EnquirySection.astro";
+import Lightbox from "../components/Lightbox.astro";
+import WaitlistPopover from "../components/WaitlistPopover.astro";
+---
+
+<BaseLayout
+  title="Weddings — Bacchus, Mdina"
+  menuBackgroundImage="/images/weddings/cake-chandelier.webp"
+>
+  <section class="hero hero-sm">
+    <div class="hero-media">
+      <img
+        src="/images/weddings/toast.webp"
+        alt="A bride and groom clinking champagne glasses"
+      />
+    </div>
+    <div class="hero-scrim"></div>
+    <div class="particles" id="particles"></div>
+    <div class="hero-content">
+      <div class="wrap">
+        <div class="crumb fade-up" style="transition-delay: 0.1s">
+          <a href="/">Home</a>
+          <svg width="7" height="10" viewBox="0 0 7 10" fill="none">
+            <path
+              d="M1 1l5 4-5 4"
+              stroke="currentColor"
+              stroke-width="1.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>Weddings</span>
+        </div>
+        <h1 class="fade-up" style="transition-delay: 0.2s">
+          Married in the<br /><em>Prince De Redin</em> Hall
+        </h1>
+        <p class="sub fade-up" style="transition-delay: 0.32s">
+          From large-scale celebrations to intimate ceremonies, Bacchus hosts weddings
+          across the Secret Garden, the Prince De Redin Hall and the Terrace — part of
+          the same 17th-century estate as the restaurant, held exclusively for one
+          wedding a day.
+        </p>
+        <div class="hero-ctas fade-up" style="transition-delay: 0.44s">
+          <a href="#availability" class="button button-gradient button-shimmer"
+            ><span>Find Your Date</span>
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+              <path
+                d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </a>
+          <a
+            href="/docs/bacchus-wedding-catalogue.pdf"
+            target="_blank"
+            rel="noopener"
+            class="button button-ghost"
+            ><span>View the catalogue</span></a
+          >
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding">
+    <div class="wrap split">
+      <div>
+        <div class="eyebrow" data-reveal>Three spaces, one wedding a day</div>
+        <h2 data-reveal style="--d: 80ms">
+          The Secret Garden,<br />and the <em>Prince De Redin</em> Hall
+        </h2>
+        <p
+          class="lead"
+          data-reveal
+          style="--d: 160ms; margin-top: 22px; max-width: 52ch"
+        >
+          Bacchus is never shared on your day.
+        </p>
+        <p
+          class="lead"
+          data-reveal
+          style="--d: 180ms; margin-top: 12px; max-width: 52ch"
+        >
+          The Prince De Redin Hall seats the wedding breakfast, the Terrace holds the
+          bar and late dancing, and the Secret Garden — home to Roman and Arab
+          architectural remains dating back to the 1st century — is kept for the
+          ceremony, drinks and photographs in between.
+        </p>
+        <ul class="check" data-reveal style="--d: 240ms">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M3 8.5 6.5 12 13 4"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              /></svg
+            >Private hire of the Hall, Terrace and Secret Garden — one wedding a day,
+            always
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M3 8.5 6.5 12 13 4"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              /></svg
+            >Set or bespoke menus, tasted in advance with your dedicated Events Manager
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M3 8.5 6.5 12 13 4"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              /></svg
+            >In-house wine list, sourced from Maltese producers
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M3 8.5 6.5 12 13 4"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              /></svg
+            >Indoor ceremony option if the Mdina weather turns
+          </li>
+        </ul>
+        <div data-reveal style="--d: 320ms; margin-top: 32px">
+          <a href="#packages" class="link-underline"
+            >See the package categories <span class="arrow">↓</span></a
+          >
+        </div>
+      </div>
+      <div class="ph-wrap" data-reveal="img">
+        <img
+          src="/images/shared/secret-garden-night.webp"
+          alt="The Secret Garden at Bacchus, candlelit tables strung with fairy lights at night"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding on-dark" id="packages">
+    <div class="wrap">
+      <header class="section-head">
+        <div class="eyebrow" data-reveal>Building your package</div>
+        <h2 data-reveal style="--d: 80ms">
+          Three dining experiences, <em>one bar built on top</em>
+        </h2>
+        <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px">
+          Every couple picks one way to dine, then chooses a bar to run alongside it.
+          Full menus, pricing and deposit terms are in the printed catalogue.
+        </p>
+      </header>
+
+      <div class="package-step">
+        <div class="eyebrow" data-reveal style="--d: 60ms">
+          Choose your dining experience
+        </div>
+        <p class="package-step-note" data-reveal style="--d: 100ms">
+          Reception, Banquet or High Tea — each a complete celebration in its own right,
+          considered from beginning to end.
+        </p>
+      </div>
+
+      <ul class="package-dining-card-list">
+        <li class="package-dining-card-item">
+          {/* No inline --d here (or on Banquet/High Tea below): the
+               triptych's reveal stagger lives in styles.css behind the
+               980px query, so it can switch off at narrower widths where
+               the cards reveal one at a time as they scroll in. An inline
+               custom property would apply at every width — CLAUDE.md
+               bug #10. */}
+          <article class="package-dining-card" data-reveal>
+            <a
+              href="/weddings/packages/reception"
+              class="package-card-hit"
+              aria-label="View Reception menu"
+            ></a>
+            <div class="package-dining-card-figure">
+              <img
+                src="/images/weddings/reception-daisy-salmon-lobster-blinis.webp"
+                alt="A salmon and lobster blini canapé from the Reception menu"
+                loading="lazy"
+              />
+              <span class="package-dining-card-numeral" aria-hidden="true">I</span>
+            </div>
+            <div class="package-dining-card-body">
+              <h4>Reception</h4>
+              <p>
+                A relaxed standing reception — cold and hot canapés, a flying buffet,
+                desserts and the wedding cake.
+              </p>
+              <div class="package-dining-card-tiers">
+                <span class="package-dining-card-tiers-label">Tiers</span>
+                <ol>
+                  <li>Daisy</li>
+                  <li>Lavender</li>
+                  <li>Rose</li>
+                </ol>
+              </div>
+              <span class="button button-gradient package-card-link" aria-hidden="true"
+                ><span>View menu</span>
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                  <path
+                    d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </div>
+          </article>
+        </li>
+        <li class="package-dining-card-item">
+          <span class="package-dining-card-or" aria-hidden="true"><span>or</span></span>
+          <article class="package-dining-card" data-reveal>
+            <a
+              href="/weddings/packages/banquet"
+              class="package-card-hit"
+              aria-label="View Banquet menu"
+            ></a>
+            <div class="package-dining-card-figure">
+              <img
+                src="/images/weddings/banquet.jpg"
+                alt="The seated wedding banquet, table set for the breakfast"
+                loading="lazy"
+              />
+              <span class="package-dining-card-numeral" aria-hidden="true">II</span>
+            </div>
+            <div class="package-dining-card-body">
+              <h4>Banquet</h4>
+              <p>
+                The seated wedding breakfast — starter, intermediate and main course,
+                tasted before the day.
+              </p>
+              <div class="package-dining-card-tiers">
+                <span class="package-dining-card-tiers-label">Tiers</span>
+                <ol>
+                  <li>Orchid</li>
+                  <li>Dahlia</li>
+                  <li>Sunflower</li>
+                </ol>
+              </div>
+              <span class="button button-gradient package-card-link" aria-hidden="true"
+                ><span>View menu</span>
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                  <path
+                    d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </div>
+          </article>
+        </li>
+        <li class="package-dining-card-item">
+          <span class="package-dining-card-or" aria-hidden="true"><span>or</span></span>
+          <article class="package-dining-card" data-reveal>
+            <a
+              href="/weddings/packages/high-tea"
+              class="package-card-hit"
+              aria-label="View High Tea menu"
+            ></a>
+            <div class="package-dining-card-figure">
+              <img
+                src="/images/weddings/high-tea.jpg"
+                alt="The High Tea spread, laid out for guests"
+                loading="lazy"
+              />
+              <span class="package-dining-card-numeral" aria-hidden="true">III</span>
+            </div>
+            <div class="package-dining-card-body">
+              <h4>High Tea</h4>
+              <p>
+                An afternoon alternative to the formal banquet — dainty sandwiches, hot
+                savouries and sweets.
+              </p>
+              <div class="package-dining-card-tiers">
+                <span class="package-dining-card-tiers-label">Tiers</span>
+                <ol>
+                  <li>Jasmine</li>
+                  <li>Hibiscus</li>
+                  <li>Tulip</li>
+                </ol>
+              </div>
+              <span class="button button-gradient package-card-link" aria-hidden="true"
+                ><span>View menu</span>
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                  <path
+                    d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </div>
+          </article>
+        </li>
+      </ul>
+
+      <div class="package-join" aria-hidden="true">
+        <span class="package-join-line"></span>
+        <span class="package-join-plus">+</span>
+        <span class="package-join-line"></span>
+      </div>
+
+      <div class="package-step">
+        <div class="eyebrow" data-reveal style="--d: 60ms">Then add your bar</div>
+        <p class="package-step-note" data-reveal style="--d: 100ms">
+          To complement your dining experience of choice.
+        </p>
+      </div>
+
+      <article class="package-beverage-card" data-reveal style="--d: 80ms">
+        <a
+          href="/weddings/packages/beverage"
+          class="package-card-hit"
+          aria-label="View Beverage menu"
+        ></a>
+        <div class="package-beverage-card-figure">
+          <img
+            src="/images/shared/champagne.webp"
+            alt="Champagne poured for a wedding toast"
+            loading="lazy"
+          />
+        </div>
+        <div class="package-beverage-card-body">
+          <div class="eyebrow package-beverage-card-eyebrow">Your bar, your way</div>
+          <h4>Beverage</h4>
+          <p>
+            Local or foreign wine by the bottle, a full open bar for the night, or a
+            themed bar built around the two of you.
+          </p>
+          <span class="button button-gradient package-card-link" aria-hidden="true"
+            ><span>View menu</span>
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+              <path
+                d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-padding-small gallery" id="weddingsGalleryPreview">
+    <div class="wrap">
+      <div class="head-row">
+        <div>
+          <div class="eyebrow" data-reveal>From real weddings</div>
+          <h2 data-reveal style="--d: 80ms">A few frames from <em>the day</em></h2>
+          <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px">
+            The Hall dressed for dinner, the Terrace at dusk, the Secret Garden for vows
+            — real weddings, not staged shots.
+          </p>
+        </div>
+        <a
+          href="/gallery?filter=weddings"
+          class="button button-dark"
+          data-reveal
+          style="--d: 120ms"
+          ><span>View Gallery</span>
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+            <path
+              d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            /></svg
+        ></a>
+      </div>
+      <div class="gallery-grid gallery-grid-four-col" id="ggrid">
+        <div
+          class="gallery-item"
+          data-title="Cake Detail"
+          data-tag="Weddings"
+          data-reveal="img"
+        >
+          <img src="/images/weddings/cake-detail.webp" alt="Detail of a wedding cake" />
+          <span class="gallery-tag">Weddings</span>
+        </div>
+        <div
+          class="gallery-item"
+          data-title="Oysters, On Ice"
+          data-tag="Weddings"
+          data-reveal="img"
+          style="--d: 80ms"
+        >
+          <img
+            src="/images/weddings/oysters.webp"
+            alt="A tray of oysters served to guests"
+          />
+          <span class="gallery-tag">Weddings</span>
+        </div>
+        <div
+          class="gallery-item"
+          data-title="A Guest, In the Garden"
+          data-tag="Weddings"
+          data-reveal="img"
+          style="--d: 160ms"
+        >
+          <img
+            src="/images/weddings/guest-portrait.webp"
+            alt="A guest portrait at a wedding"
+          />
+          <span class="gallery-tag">Weddings</span>
+        </div>
+        <div
+          class="gallery-item"
+          data-title="The Banquet Room"
+          data-tag="Weddings"
+          data-reveal="img"
+          style="--d: 240ms"
+        >
+          <img
+            src="/images/shared/hall-chandeliers-banquet.webp"
+            alt="The banquet room dressed for a wedding"
+          />
+          <span class="gallery-tag">Weddings</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Lightbox />
+
+  <section class="section-padding on-dark">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow" data-reveal>How it comes together</div>
+        <h2 data-reveal style="--d: 80ms">From enquiry to <em>the aisle</em></h2>
+      </div>
+      <div class="process-steps">
+        <div class="process-step" data-reveal style="--d: 0ms">
+          <h4>Enquire</h4>
+          <p>
+            Send your date and guest count — we'll come back with availability within
+            two working days.
+          </p>
+        </div>
+        <div class="process-step" data-reveal style="--d: 100ms">
+          <h4>Viewing &amp; tasting</h4>
+          <p>
+            Walk the Hall, Terrace and Secret Garden, and taste the set menu options
+            with our team.
+          </p>
+        </div>
+        <div class="process-step" data-reveal style="--d: 200ms">
+          <h4>Confirm your date</h4>
+          <p>
+            A 30% non-refundable deposit secures the venue exclusively for your day.
+          </p>
+        </div>
+        <div class="process-step" data-reveal style="--d: 300ms">
+          <h4>The big day</h4>
+          <p>
+            The remaining balance is due 14 days before — then it's just you, your
+            guests, and 360 years of stone.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding-small">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow" data-reveal>Good to know</div>
+        <h2 data-reveal style="--d: 80ms">Wedding <em>FAQ</em></h2>
+        <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px">
+          A few of the questions couples ask most before they enquire — if yours isn't
+          here, just ask when you get in touch.
+        </p>
+      </div>
+      <div class="faq" data-reveal style="--d: 220ms">
+        <div class="faq-item">
+          <button class="faq-q">
+            Is Bacchus exclusively ours for the day?<svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
+              <path
+                d="M8 2v12M2 8h12"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <div class="faq-a">
+            <p>
+              Yes — we host one wedding a day. The Prince De Redin Hall, Terrace and
+              Secret Garden are yours from arrival to last dance.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            How do we secure our date?<svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
+              <path
+                d="M8 2v12M2 8h12"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <div class="faq-a">
+            <p>
+              A 30% deposit is non-refundable and confirms your booking. The remaining
+              70% is due 14 days before the event.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            What happens if it rains?<svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
+              <path
+                d="M8 2v12M2 8h12"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <div class="faq-a">
+            <p>
+              The Prince De Redin Hall gives us a covered indoor option for the ceremony
+              and reception, so a wet forecast never puts the day at risk.
+            </p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            How many guests can Bacchus hold?<svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+            >
+              <path
+                d="M8 2v12M2 8h12"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <div class="faq-a">
+            <p>
+              Capacity depends on layout and season — the figures on this prototype are
+              placeholders, which we'll confirm with Bacchus before we go into
+              production.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding quote testimonials" id="testimonials">
+    <img class="bgimg" src="/images/weddings/cake-chandelier.webp" alt="" />
+    <div class="particles" id="particles2"></div>
+    <div class="wrap">
+      <div class="eyebrow" data-reveal>From our guestbook</div>
+      <div class="stars" id="tStars" data-reveal style="--d: 60ms">
+        <svg
+          class="star"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"
+          />
+        </svg>
+        <svg
+          class="star"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"
+          />
+        </svg>
+        <svg
+          class="star"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"
+          />
+        </svg>
+        <svg
+          class="star"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"
+          />
+        </svg>
+        <svg
+          class="star"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"
+          />
+        </svg>
+      </div>
+      <div class="testimonial-quote-box" id="tQuoteBox">
+        <blockquote
+          class="testimonial-quote"
+          id="tQuote"
+          data-reveal
+          style="--d: 120ms"
+        ></blockquote>
+        <div
+          class="who testimonial-meta"
+          id="tMeta"
+          data-reveal
+          style="--d: 200ms"
+        ></div>
+      </div>
+      <div
+        class="testimonial-cards"
+        id="tCards"
+        role="tablist"
+        aria-label="Choose a testimonial"
+        data-reveal
+        style="--d: 240ms"
+      ></div>
+      <div class="testimonial-controls" data-reveal style="--d: 300ms">
+        <button
+          type="button"
+          class="testimonial-arrow"
+          id="tPrev"
+          aria-label="Previous testimonial"
+        >
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+            <path
+              d="M15 6H1M6 1 1 6l5 5"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <div class="testimonial-dots" id="tDots" aria-hidden="true"></div>
+        <button
+          type="button"
+          class="testimonial-arrow t-arrow-next"
+          id="tNext"
+          aria-label="Next testimonial"
+        >
+          <svg
+            class="testimonial-ring"
+            width="48"
+            height="48"
+            viewBox="0 0 48 48"
+            aria-hidden="true"
+          >
+            <circle class="testimonial-ring-track" cx="24" cy="24" r="23" />
+            <circle
+              class="testimonial-ring-fill"
+              id="tRingFill"
+              cx="24"
+              cy="24"
+              r="23"
+            />
+          </svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+            <path
+              d="M1 6h14M10 1l5 5-5 5"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-padding" id="availability">
+    <div class="wrap">
+      <div class="split">
+        <div class="availability-intro">
+          <div class="eyebrow" data-reveal>The Venue Diary</div>
+          <h2 data-reveal style="--d: 80ms">Begin with <em>the day</em></h2>
+          <p class="lead" data-reveal style="--d: 160ms; max-width: 46ch">
+            Bacchus hosts one wedding a day. Pick a date — it carries straight into your
+            enquiry.
+          </p>
+          <div
+            class="availability-picked"
+            id="availSelection"
+            data-reveal
+            style="--d: 220ms"
+          >
+            <div class="availability-picked-info">
+              <span class="availability-picked-label">Your selection</span>
+              <b class="availability-picked-date">No date selected</b>
+              <span class="availability-picked-status"></span>
+            </div>
+            <div class="availability-select-note">
+              The Prince De Redin Hall, Terrace and Secret Garden are reserved together
+              for your day. Your date stays unconfirmed until we reply.
+            </div>
+          </div>
+        </div>
+        <div data-reveal style="--d: 340ms">
+          <div class="availability diary" id="avail">
+            <div class="availability-head">
+              <button
+                type="button"
+                class="availability-prev"
+                aria-label="Previous month"
+              >
+                <svg width="12" height="9" viewBox="0 0 14 10" fill="none">
+                  <path
+                    d="M13 5H2m3.5-3.5L2 5l3.5 3.5"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <div class="availability-title">
+                <div class="availability-month">Month</div>
+                <div class="availability-sub">One celebration each day</div>
+              </div>
+              <button type="button" class="availability-next" aria-label="Next month">
+                <svg width="12" height="9" viewBox="0 0 14 10" fill="none">
+                  <path
+                    d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div class="availability-day-of-week">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span
+              ><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+            <div class="availability-grid"></div>
+            <div class="availability-legend">
+              <span class="availability-legend-open"><i></i>Available</span>
+              <span class="availability-legend-interest"
+                ><i></i>Enquiries Received</span
+              >
+              <span class="availability-legend-taken"><i></i>Booked</span>
+            </div>
+            {/* Without this, a Booked date being clickable at all is invisible —
+                 cursor:pointer/a hover ring are easy to miss, and there's nothing to
+                 notice on a touch device until you happen to tap one. Shown
+                 unconditionally (not just on touch) since a mouse user hovering a
+                 date without knowing anything happens is the same discoverability
+                 gap, just solved by a different affordance. Icon travels with its
+                 own text as one toggled group (display:contents — see styles.css),
+                 not one shared icon for both, so a touch visitor never sees a
+                 mouse-pointer glyph next to "Tap it...". */}
+            <div class="availability-note">
+              <span class="wl-hint-hover">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M4 4l7.07 16.97 2.51-7.39 7.39-2.51L4 4Z"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M13.5 13.5 19 19"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <span
+                  >Date unavailable? Click it to join the waitlist — we'll email you
+                  if it opens up.</span
+                >
+              </span>
+              <span class="wl-hint-touch">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.3" />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="6"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    opacity="0.6"
+                  />
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="9.5"
+                    stroke="currentColor"
+                    stroke-width="1.1"
+                    opacity="0.35"
+                  />
+                </svg>
+                <span
+                  >Date unavailable? Tap it to join the waitlist — we'll email you if
+                  it opens up.</span
+                >
+              </span>
+            </div>
+            <div class="availability-foot">
+              <span class="availability-foot-label">
+                <span class="availability-foot-label-date">No date selected</span>
+                <span class="availability-picked-status"></span>
+              </span>
+              <button
+                type="button"
+                class="button button-gradient button-small"
+                id="goToFormBtn"
+              >
+                <span>Enquire now</span>
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                  <path
+                    d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
+            <p class="availability-foot-note">
+              The Prince De Redin Hall, Terrace and Secret Garden are reserved together
+              for your day. Your date stays unconfirmed until we reply.
+            </p>
+            <div class="availability-note">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 9v4m0 4h.01M10.3 3.9 2.5 17.5A1.5 1.5 0 0 0 3.8 20h16.4a1.5 1.5 0 0 0 1.3-2.5L13.7 3.9a1.5 1.5 0 0 0-2.6 0Z"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span
+                >Illustrative only — the dates shown are placeholder data. We'll connect
+                this to real availability with Bacchus before we go live. Weddings need
+                at least 3 months' notice.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Quick-pick modal for the enquiry form's "Pick a date" — a second instance
+       of the same calendar widget above, kept in sync via the shared `selected`
+       state in main.js (see the avail widget module). Lets the form's date
+       field be filled without leaving the form to scroll up to #availability. */}
+  <div class="availability-modal" id="availModal">
+    <div class="availability-modal-backdrop" data-avail-modal-close></div>
+    <div class="availability-modal-panel">
+      <button
+        type="button"
+        class="availability-modal-close"
+        data-avail-modal-close
+        aria-label="Close"
+      >
+        <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+          <path
+            d="M2 2l14 14M16 2 2 16"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <div
+        class="availability diary"
+        id="availModalGrid"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Choose your wedding date"
+      >
+        <div class="availability-head">
+          <button type="button" class="availability-prev" aria-label="Previous month">
+            <svg width="12" height="9" viewBox="0 0 14 10" fill="none">
+              <path
+                d="M13 5H2m3.5-3.5L2 5l3.5 3.5"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <div class="availability-title">
+            <div class="availability-month">Month</div>
+            <div class="availability-sub">One celebration each day</div>
+          </div>
+          <button type="button" class="availability-next" aria-label="Next month">
+            <svg width="12" height="9" viewBox="0 0 14 10" fill="none">
+              <path
+                d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="availability-day-of-week">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span
+          ><span>Fri</span><span>Sat</span><span>Sun</span>
+        </div>
+        <div class="availability-grid"></div>
+        <div class="availability-legend">
+          <span class="availability-legend-open"><i></i>Available</span>
+          <span class="availability-legend-interest"><i></i>Enquiries Received</span>
+          <span class="availability-legend-taken"><i></i>Booked</span>
+        </div>
+        {/* Same hint as the showcase calendar above (see its own comment) — the
+             modal is the same widget, so a Booked date needs the same
+             discoverability affordance here too. */}
+        <div class="availability-note">
+          <span class="wl-hint-hover">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M4 4l7.07 16.97 2.51-7.39 7.39-2.51L4 4Z"
+                stroke="currentColor"
+                stroke-width="1.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M13.5 13.5 19 19"
+                stroke="currentColor"
+                stroke-width="1.3"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span
+              >Date unavailable? Click it to join the waitlist — we'll email you if it
+              opens up.</span
+            >
+          </span>
+          <span class="wl-hint-touch">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.3" />
+              <circle
+                cx="12"
+                cy="12"
+                r="6"
+                stroke="currentColor"
+                stroke-width="1.3"
+                opacity="0.6"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                r="9.5"
+                stroke="currentColor"
+                stroke-width="1.1"
+                opacity="0.35"
+              />
+            </svg>
+            <span
+              >Date unavailable? Tap it to join the waitlist — we'll email you if it
+              opens up.</span
+            >
+          </span>
+        </div>
+        <div class="availability-foot">
+          <span class="availability-foot-label">
+            <span class="availability-foot-label-date">No date selected</span>
+            <span class="availability-picked-status"></span>
+          </span>
+          <button
+            type="button"
+            class="button button-gradient button-small availability-modal-done"
+            id="availModalDone"
+            disabled
+          >
+            <span>Use this date</span>
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+              <path
+                d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+        <p class="availability-foot-note">
+          The Prince De Redin Hall, Terrace and Secret Garden are reserved together for
+          your day. Your date stays unconfirmed until we reply.
+        </p>
+        <div class="availability-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M12 9v4m0 4h.01M10.3 3.9 2.5 17.5A1.5 1.5 0 0 0 3.8 20h16.4a1.5 1.5 0 0 0 1.3-2.5L13.7 3.9a1.5 1.5 0 0 0-2.6 0Z"
+              stroke="currentColor"
+              stroke-width="1.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span
+            >Illustrative only — the dates shown are placeholder data. We'll connect
+            this to real availability with Bacchus before we go live.</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <WaitlistPopover />
+
+  <EnquirySection
+    eventType="Wedding"
+    datePicker="modal"
+    railPhoto={{
+      src: "/images/shared/hall-chandeliers-banquet.webp",
+      alt: "The Prince De Redin Hall, dressed for a wedding breakfast with chandeliers overhead",
+      caption: "The Prince De Redin Hall, dressed for a wedding breakfast.",
+    }}
+  >
+    <Fragment slot="heading">Tell us about your <em>wedding</em></Fragment>
+    <Fragment slot="lead">
+      Four short steps. We come back with dates, pricing and a proposal shaped to
+      your day — before we ever get on the phone.
+    </Fragment>
+  </EnquirySection>
+</BaseLayout>
