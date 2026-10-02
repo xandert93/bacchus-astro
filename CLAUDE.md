@@ -1,0 +1,76 @@
+# Bacchus — Astro build
+
+Production rebuild of the Bacchus site (restaurant + events venue, Mdina,
+Malta). The vanilla HTML prototype lives next door in `../bacchus-prototype`
+and stays the source of truth for **design decisions, content facts and the
+known-bugs list** — read its `CLAUDE.md` before changing anything visual. Don't
+duplicate that file's content here; this file only covers what is specific to
+the Astro project.
+
+The prototype is frozen as of 2026-10-02 except for pitch-critical fixes, so
+changes are not made in two places.
+
+## The user is learning Astro
+
+Never used Astro before this project; wants to learn it as we go. When an Astro
+concept appears for the first time, explain briefly what it is, why Astro does
+it that way, and what it gains this site compared with the prototype. Once per
+concept, not every time. Full note in the prototype's `CLAUDE.md` under "How
+this user likes to work".
+
+## Migration plan
+
+**Phase 1 — faithful port (in progress).** Same markup, same CSS, same JS,
+content hardcoded. Goal is a site that looks and behaves identically, with the
+repetition removed into components. No redesigns, no Sanity, no image
+pipeline yet; one new thing at a time.
+
+- Done: `index.astro` (homepage).
+- Next: `weddings`, `corporate`, `celebrations`, `gallery`, then the four
+  package pages (at `/weddings/packages/<leaf>`, the agreed URL scheme).
+
+**Phase 2** — `astro:assets` for images (resizing + `srcset`). **Phase 3** —
+Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
+— Vercel deploy, forms, payments.
+
+## Current structure
+
+- `src/layouts/BaseLayout.astro` — `<head>`, grain, nav, drawer, Visit
+  section, footer, the script. Props: `title`, `showEnquireLink`. Has a
+  named slot `after-footer` for page overlays (the waitlist popover).
+- `src/components/` — `SiteHeader`, `MobileMenu`, `SocialLinks`,
+  `VisitSection`, `SiteFooter`.
+- `src/styles/global.css` — the prototype's `styles.css`, copied verbatim,
+  imported once by the layout. Splitting it into component-scoped styles is
+  a later job.
+- `src/scripts/main.js` — the prototype's `main.js`, copied verbatim and
+  bundled as a module. Checked before the move: no undeclared globals, so
+  module strict mode doesn't break it.
+- `public/images/` — copied from the prototype minus `originals/`. Served
+  as-is from `/images/...`. Moves to `src/assets/` in phase 2.
+
+## Conventions
+
+- Comments in markup use `{/* */}`, not `<!-- -->` — JSX-style comments are
+  stripped at build, HTML comments ship to every visitor.
+- Links use extensionless routes (`/weddings`), not `weddings.html`. Pages not
+  yet ported 404 in dev — expected.
+- The prototype's footer "Sandboxes" link was dropped deliberately: the
+  sandboxes are pitch material and do not belong on the production site.
+- The wizard and waitlist popover are still inline in `index.astro`. They
+  repeat on five pages, but become components only once a second page is
+  ported — what varies between pages (default event type, copy) is only
+  visible with two side by side.
+
+## Development
+
+Start the dev server in background mode: `astro dev --background` (manage with
+`astro dev stop`, `astro dev status`, `astro dev logs`). The user runs
+`npm run dev` themselves. Build with `npm run build`.
+
+Docs: https://docs.astro.build — this project is on Astro 7.x. Consult before
+related work:
+[routing](https://docs.astro.build/en/guides/routing/),
+[components](https://docs.astro.build/en/basics/astro-components/),
+[styling](https://docs.astro.build/en/guides/styling/),
+[content collections](https://docs.astro.build/en/guides/content-collections/).

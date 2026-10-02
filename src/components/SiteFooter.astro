@@ -1,0 +1,50 @@
+---
+import SocialLinks from "./SocialLinks.astro";
+
+interface Props {
+  // Only pages with their own #enquire section link to it from the footer.
+  // In the prototype this was done by hand-editing each page's footer, which
+  // is how weddings.html ended up without the link despite having the section.
+  showEnquireLink?: boolean;
+}
+const { showEnquireLink = false } = Astro.props;
+
+// Rendered at build time, so the year is baked into the HTML rather than
+// filled in by main.js after load (main.js still sets #yr; harmless).
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top footer-top-two-col">
+      <div class="footer-brand">
+        <div class="footer-brand-mark">
+          <img src="/images/shared/bacchus-logo.png" alt="Bacchus mark" />
+          <span class="footer-brand-text">
+            <span class="footer-brand-name">Bacchus</span>
+            <span class="footer-brand-sub">Mdina · Est. 1660</span>
+          </span>
+        </div>
+        <p style="max-width: 34ch; font-size: 14px">
+          Two vaulted chambers inside the walls of the Silent City, serving Mdina
+          since 1660.
+        </p>
+        <SocialLinks />
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="/weddings">Weddings</a></li>
+          <li><a href="/corporate">Corporate</a></li>
+          <li><a href="/celebrations">Celebrations</a></li>
+          <li><a href="/gallery">Gallery</a></li>
+          {showEnquireLink && <li><a href="#enquire">Enquire</a></li>}
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© <span id="yr">{year}</span> Bacchus · Mdina, Malta</div>
+      <div>Prototype by xandert.93. All rights reserved.</div>
+    </div>
+  </div>
+</footer>

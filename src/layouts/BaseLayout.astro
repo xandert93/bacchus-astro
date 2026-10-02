@@ -1,0 +1,54 @@
+---
+// The shell every page sits inside: <head>, the grain overlay, the nav, the
+// mobile drawer, the shared "Visit Bacchus" section, the footer and the site
+// script. A page supplies its title and its own content; everything else
+// comes from here.
+import "../styles/global.css";
+import SiteHeader from "../components/SiteHeader.astro";
+import MobileMenu from "../components/MobileMenu.astro";
+import VisitSection from "../components/VisitSection.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+interface Props {
+  title: string;
+  showEnquireLink?: boolean;
+}
+const { title, showEnquireLink = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="icon" type="image/png" href="/images/shared/bacchus-logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Newsreader:ital,opsz,wght@0,6..72,350;0,6..72,400;0,6..72,500;1,6..72,350;1,6..72,400&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="grain"></div>
+    <SiteHeader />
+    <MobileMenu />
+
+    <slot />
+
+    <VisitSection />
+    <SiteFooter showEnquireLink={showEnquireLink} />
+
+    {/* Page-level overlays that sat after the footer in the prototype (e.g.
+        the waitlist popover). Kept in the same DOM position on purpose. */}
+    <slot name="after-footer" />
+
+    <script>
+      // Astro bundles this: main.js is pulled in, minified, and served as a
+      // module. Modules are deferred, which matches the prototype's
+      // <script> at the foot of <body> - the DOM is parsed before it runs.
+      import "../scripts/main.js";
+    </script>
+  </body>
+</html>
