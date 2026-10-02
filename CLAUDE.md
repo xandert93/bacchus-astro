@@ -12,10 +12,12 @@ changes are not made in two places.
 
 ## The user is learning Astro
 
-Never used Astro before this project; wants to learn it as we go. When an Astro
-concept appears for the first time, explain briefly what it is, why Astro does
-it that way, and what it gains this site compared with the prototype. Once per
-concept, not every time. Full note in the prototype's `CLAUDE.md` under "How
+Never used Astro before this project; wants to learn it as we go. Knows React
+(props, components), Next.js (layouts, file-based routing) and some Vue
+(slots), so map Astro concepts onto those and spend the words on where Astro
+differs. When an Astro concept appears for the first time, explain briefly
+what it is, why Astro does it that way, and what it gains this site compared
+with the prototype. Once per concept, not every time. Full note in the prototype's `CLAUDE.md` under "How
 this user likes to work".
 
 ## Migration plan
@@ -25,8 +27,8 @@ content hardcoded. Goal is a site that looks and behaves identically, with the
 repetition removed into components. No redesigns, no Sanity, no image
 pipeline yet; one new thing at a time.
 
-- Done: `index.astro` (homepage).
-- Next: `weddings`, `corporate`, `celebrations`, `gallery`, then the four
+- Done: `index.astro` (homepage), `weddings.astro`.
+- Next: `corporate`, `celebrations`, `gallery`, then the four
   package pages (at `/weddings/packages/<leaf>`, the agreed URL scheme).
 
 **Phase 2** — `astro:assets` for images (resizing + `srcset`). **Phase 3** —
@@ -36,10 +38,18 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 ## Current structure
 
 - `src/layouts/BaseLayout.astro` — `<head>`, grain, nav, drawer, Visit
-  section, footer, the script. Props: `title`, `showEnquireLink`. Has a
-  named slot `after-footer` for page overlays (the waitlist popover).
-- `src/components/` — `SiteHeader`, `MobileMenu`, `SocialLinks`,
-  `VisitSection`, `SiteFooter`.
+  section, footer, the script. Props: `title`, `showEnquireLink`,
+  `menuBackgroundImage`. Has a named slot `after-footer` for page overlays.
+- `src/components/` — chrome (`SiteHeader`, `MobileMenu`, `SocialLinks`,
+  `VisitSection`, `SiteFooter`) and shared sections (`EnquirySection`,
+  `WaitlistPopover`, `Lightbox`).
+- `EnquirySection` props: `eventType` (sets the selected chip AND the
+  initial visibility of every field main.js toggles per type, so there is no
+  post-load flash), `datePicker` (`inline` compact calendar, or `modal` for
+  weddings, which has the full diary on the page), `eyebrow`, `railPhoto`;
+  named slots `heading` and `lead`.
+- `src/data/enquiry.ts` — event types and chip notes. `CHIP_NOTES` is
+  duplicated in `main.js` until that file is split; change both.
 - `src/styles/global.css` — the prototype's `styles.css`, copied verbatim,
   imported once by the layout. Splitting it into component-scoped styles is
   a later job.
@@ -57,10 +67,14 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   yet ported 404 in dev — expected.
 - The prototype's footer "Sandboxes" link was dropped deliberately: the
   sandboxes are pitch material and do not belong on the production site.
-- The wizard and waitlist popover are still inline in `index.astro`. They
-  repeat on five pages, but become components only once a second page is
-  ported — what varies between pages (default event type, copy) is only
-  visible with two side by side.
+- Extract a component when the second copy is ported, not before — what
+  varies between pages is only visible with two side by side. (The enquiry
+  wizard was extracted this way, after diffing all five prototype copies.)
+- The new nav reaches every ported page, including ones that had the old
+  flat nav in the prototype. The mobile drawer still needs its first review
+  (open item in the prototype's `CLAUDE.md`).
+- Commits: Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`,
+  `docs:`). **No Claude co-author or attribution lines**, ever.
 
 ## Development
 
