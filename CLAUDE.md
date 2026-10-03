@@ -73,8 +73,12 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 - The new nav reaches every ported page, including ones that had the old
   flat nav in the prototype. The mobile drawer still needs its first review
   (open item in the prototype's `CLAUDE.md`).
-- Commits: Conventional Commits (`feat:`, `fix:`, `refactor:`, `chore:`,
-  `docs:`). **No Claude co-author or attribution lines**, ever.
+- Commits: Conventional Commits, **always with a scope**:
+  `type(scope): description` — e.g. `feat(weddings): port weddings page`,
+  `fix(nav): ...`, `chore(repo): ...`. Lower-case imperative description, no
+  trailing full stop. Scope is the area touched (a page, a component, `nav`,
+  `enquiry`, `tooling`, `repo`). **No Claude co-author or attribution lines**,
+  ever.
 
 ## Development
 
