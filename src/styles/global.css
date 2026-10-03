@@ -988,10 +988,20 @@ body.menu-open .nav::after {
   color: rgba(var(--limestone-rgb), 0.82);
   transition: color 0.35s;
 }
+/* The link's horizontal padding lives in two custom properties, and the
+   underline below reads the same two. Before 2026-10-04 they were separate
+   literals set by separate rules, and they drifted: the compact band set the
+   underline's left to 10px while the split trigger's own (0,2,2) padding rule
+   kept the text at 16px, so between 980px and 1180px the Restaurant/Events
+   underline started 6px before the first letter. Variants now change the
+   VARIABLE only, never padding or left/right directly, so the two cannot
+   disagree again however many variants or bands get added. */
 .nav-links > li > a {
+  --nav-link-padding-start: 16px;
+  --nav-link-padding-end: 16px;
   position: relative;
   display: block;
-  padding: 10px 16px;
+  padding: 10px var(--nav-link-padding-end) 10px var(--nav-link-padding-start);
 }
 /* right is 16px PLUS the trailing letter-space, not a flat 16px. CSS applies
    letter-spacing after every character including the last, so this element's
@@ -1000,12 +1010,12 @@ body.menu-open .nav::after {
    letter. Reported 2026-10-02 as the bar "extending a bit too far" past the
    last letter. left needs no equivalent, since nothing is added before the
    first character. Any future change to .nav-links' letter-spacing has to
-   come with the three calc() values below and in the compact band. */
+   come with the one calc() below. */
 .nav-links > li > a::after {
   content: "";
   position: absolute;
-  left: 16px;
-  right: calc(16px + 0.16em);
+  left: var(--nav-link-padding-start);
+  right: calc(var(--nav-link-padding-end) + 0.16em);
   bottom: 4px;
   height: 1px;
   background: var(--gold);
@@ -1027,22 +1037,9 @@ body.menu-open .nav::after {
 .nav-links > li.nav-dd-split > a {
   /* The split trigger is a label plus a separate chevron <button>, so the
      pair has to read as ONE target — hence 6px here instead of the 16px
-     above, closing the gap to the chevron's own 2px padding-left.
-     Full shorthand, not a lone padding-right: Chrome does not strike through
-     a shorthand when only one of its longhands is beaten, so an override
-     written as a longhand leaves "padding: 10px 16px" above rendering
-     un-struck and reading exactly as though it had won. */
-  padding: 10px 6px 10px 16px;
-}
-.nav-links > li.nav-dd-split > a::after {
-  /* Follows the padding above, or the underline would end 10px past the
-     label's last letter. The 0.16em is the trailing letter-space — CSS adds
-     letter-spacing after the final character too, so the inline box ends
-     1.84px beyond the last glyph and an underline inset to the padding edge
-     runs to the box rather than to the letter.
-     (0,2,2) against the base ::after's (0,1,2), so it wins on class count
-     rather than on source order (bug #14). */
-  right: calc(6px + 0.16em);
+     above, closing the gap to the chevron's own 2px padding-left. Only the
+     end variable changes; the start, and the underline, follow on their own. */
+  --nav-link-padding-end: 6px;
 }
 /* Shared with .nav-dd-v2-row:hover .nav-dd-v2-label (Events 2's row
    headings) — same single-source-of-truth reasoning as the resting-state
@@ -9917,8 +9914,8 @@ form.wl-form {
      horizontal padding, which is still comfortably above their 11.5px
      type. */
   .nav-links > li > a {
-    padding-left: 10px;
-    padding-right: 10px;
+    --nav-link-padding-start: 10px;
+    --nav-link-padding-end: 10px;
   }
   /* -18px. The links' own padding already separates them; the gap was
      additional breathing room, not structure. */
@@ -9930,20 +9927,11 @@ form.wl-form {
   .nav-dd-split-chevron-button {
     padding-right: 8px;
   }
-  /* The underline-reveal is inset to match .nav-links > li > a's own
-     padding, so it has to follow it down or it would end 6px inside the
-     label's last character. (0,2,2) to beat the base ::after rule's
-     (0,1,2) — bug #14, the same reason .nav-dd-split needs its own
-     longer selector. */
-  .nav-links > li > a::after {
-    left: 10px;
-    right: calc(10px + 0.16em);
-  }
+  /* The underline follows these automatically (see the custom properties
+     on .nav-links > li > a). Same (0,2,2) as the base split rule, so this
+     wins on source order — it sits ~9,000 lines later inside the band. */
   .nav-links > li.nav-dd-split > a {
-    padding-right: 4px;
-  }
-  .nav-links > li.nav-dd-split > a::after {
-    right: calc(4px + 0.16em);
+    --nav-link-padding-end: 4px;
   }
   /* -20px and -8px. */
   .nav .wrap {
