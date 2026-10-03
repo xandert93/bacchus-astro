@@ -1,0 +1,53 @@
+---
+// Four-photo strip linking through to the filtered full gallery. Tiles open
+// the page's <Lightbox /> (main.js), so a page using this needs one.
+import ArrowIcon from "./ArrowIcon.astro";
+
+interface Props {
+  // Kept from the prototype because global.css targets these ids
+  // (#weddingsGalleryPreview etc.) for the mobile head-row layout.
+  id: string;
+  eyebrow: string;
+  lead: string;
+  // Matches the ?filter= value gallery.astro reads, and the tile tag text.
+  category: "weddings" | "corporate" | "celebrations";
+  photos: { src: string; alt: string; title: string }[];
+}
+const { id, eyebrow, lead, category, photos } = Astro.props;
+const tag = category[0].toUpperCase() + category.slice(1);
+---
+
+<section class="section-padding-small gallery" id={id}>
+  <div class="wrap">
+    <div class="head-row">
+      <div>
+        <div class="eyebrow" data-reveal>{eyebrow}</div>
+        <h2 data-reveal style="--d: 80ms"><slot /></h2>
+        <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px">{lead}</p>
+      </div>
+      <a
+        href={`/gallery?filter=${category}`}
+        class="button button-dark"
+        data-reveal
+        style="--d: 120ms"
+        ><span>View Gallery</span><ArrowIcon /></a
+      >
+    </div>
+    <div class="gallery-grid gallery-grid-four-col" id="ggrid">
+      {
+        photos.map((photo, i) => (
+          <div
+            class="gallery-item"
+            data-title={photo.title}
+            data-tag={tag}
+            data-reveal="img"
+            style={i > 0 ? `--d: ${i * 80}ms` : undefined}
+          >
+            <img src={photo.src} alt={photo.alt} />
+            <span class="gallery-tag">{tag}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,56 @@
+---
+// The short hero at the top of every subpage: crumb → h1 → one paragraph →
+// optional CTAs, on the 24px rhythm described in the prototype's CLAUDE.md
+// ("Hero structure"). The homepage's portcullis hero is a different
+// component and stays in index.astro.
+//
+// Slots: default = the h1's content (rich text, so <em> works), "sub" = the
+// paragraph, "ctas" = the buttons. CTAs are optional — gallery has none —
+// and the wrapper only renders when the page actually passes some, via
+// Astro.slots.has().
+interface Props {
+  image: { src: string; alt: string };
+  // The last crumb, i.e. this page's own name.
+  crumb: string;
+}
+const { image, crumb } = Astro.props;
+const hasCtas = Astro.slots.has("ctas");
+---
+
+<section class="hero hero-sm">
+  <div class="hero-media">
+    <img src={image.src} alt={image.alt} />
+  </div>
+  <div class="hero-scrim"></div>
+  <div class="particles" id="particles"></div>
+  <div class="hero-content">
+    <div class="wrap">
+      <div class="crumb fade-up" style="transition-delay: 0.1s">
+        <a href="/">Home</a>
+        <svg width="7" height="10" viewBox="0 0 7 10" fill="none">
+          <path
+            d="M1 1l5 4-5 4"
+            stroke="currentColor"
+            stroke-width="1.3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span>{crumb}</span>
+      </div>
+      <h1 class="fade-up" style="transition-delay: 0.2s">
+        <slot />
+      </h1>
+      <p class="sub fade-up" style="transition-delay: 0.32s">
+        <slot name="sub" />
+      </p>
+      {
+        hasCtas && (
+          <div class="hero-ctas fade-up" style="transition-delay: 0.44s">
+            <slot name="ctas" />
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,49 @@
+---
+// "Good to know" accordion. Questions come in as data; main.js wires the
+// open/close (.faq-q / .faq-a). Default slot = heading, optional "lead"
+// slot = the paragraph under it.
+interface Props {
+  items: { question: string; answer: string }[];
+}
+const { items } = Astro.props;
+const hasLead = Astro.slots.has("lead");
+---
+
+<section class="section-padding-small">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" data-reveal>Good to know</div>
+      <h2 data-reveal style="--d: 80ms"><slot /></h2>
+      {
+        hasLead && (
+          <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px">
+            <slot name="lead" />
+          </p>
+        )
+      }
+    </div>
+    {/* The list's reveal waits for the lead paragraph when there is one. */}
+    <div class="faq" data-reveal style={`--d: ${hasLead ? 220 : 120}ms`}>
+      {
+        items.map((item) => (
+          <div class="faq-item">
+            <button class="faq-q">
+              {item.question}
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M8 2v12M2 8h12"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+            <div class="faq-a">
+              <p>{item.answer}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

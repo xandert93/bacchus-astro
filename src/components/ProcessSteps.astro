@@ -1,0 +1,27 @@
+---
+// "How it comes together" — four numbered steps on a dark band. The
+// heading comes in through the default slot so it can carry an <em>.
+interface Props {
+  steps: { title: string; body: string }[];
+}
+const { steps } = Astro.props;
+---
+
+<section class="section-padding on-dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" data-reveal>How it comes together</div>
+      <h2 data-reveal style="--d: 80ms"><slot /></h2>
+    </div>
+    <div class="process-steps">
+      {
+        steps.map((step, i) => (
+          <div class="process-step" data-reveal style={`--d: ${i * 100}ms`}>
+            <h4>{step.title}</h4>
+            <p>{step.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
