@@ -3792,10 +3792,10 @@ h2 em {
   gap: 22px;
   margin-top: 34px;
 }
-/* Matches .lightbox-prev/.lightbox-next (gallery lightbox) — the site's one other
-   "arrow button on a dark background" pattern — rather than a one-off
-   treatment: frosted dark chip at rest, gold-2 icon, solid ink + brighter
-   gold on hover, no border, no hover scale. */
+/* Resting state matches .lightbox-prev/.lightbox-next (gallery lightbox) — the
+   site's one other "arrow button on a dark background" pattern: frosted dark
+   chip, gold-2 icon, no border. The hover/press state below goes further than
+   the lightbox's; see the note there. */
 .testimonial-arrow {
   position: relative;
   width: 48px;
@@ -3811,10 +3811,53 @@ h2 em {
   transition: all 0.3s var(--ease);
   flex: none;
 }
+/* Hover/press state, strengthened 2026-10-04. The original (0.65 alpha ink to
+   solid ink, gold-2 to gold) was nearly invisible over the dark photo behind
+   this section, and on touch there was no state at all — bug #19's missing
+   (hover: none) fallback, on a control that never navigates away, so a tap
+   gave no sign it had registered. Now: a 1px gold ring, the icon nudging in
+   its own direction (the same 4px "proceed" motion as .button's arrows), and
+   on touch a press scale for the tactile part. The ring is an inset
+   box-shadow so it takes no layout and sits inside the next button's SVG
+   timer ring rather than colliding with it.
+   Diverges from .lightbox-prev/.lightbox-next, which this used to match
+   exactly: those carry a translateY(-50%) positioning transform, so a press
+   scale there needs its own treatment — left for when the lightbox is next
+   touched rather than bolted on here. */
+.testimonial-arrow > svg:last-child {
+  transition: transform 0.35s var(--ease);
+}
 @media (hover: hover) {
   .testimonial-arrow:hover {
     background: var(--ink);
     color: var(--gold);
+    box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.7);
+  }
+  .testimonial-arrow:not(.t-arrow-next):hover > svg:last-child {
+    transform: translateX(-4px);
+  }
+  .testimonial-arrow.t-arrow-next:hover > svg:last-child {
+    transform: translateX(4px);
+  }
+}
+@media (hover: none) {
+  .testimonial-arrow:active {
+    background: var(--ink);
+    color: var(--gold);
+    box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.7);
+    transform: scale(0.94);
+  }
+  .testimonial-arrow:not(.t-arrow-next):active > svg:last-child {
+    transform: translateX(-4px);
+  }
+  .testimonial-arrow.t-arrow-next:active > svg:last-child {
+    transform: translateX(4px);
+  }
+  /* Same gap on the picker cards below: tappable, never navigate, and
+     had a hover state only. Mirrors their hover exactly. */
+  .testimonial-card:active {
+    border-color: rgba(var(--gold-rgb), 0.5);
+    background: rgba(var(--gold-rgb), 0.06);
   }
 }
 .testimonial-dots {
