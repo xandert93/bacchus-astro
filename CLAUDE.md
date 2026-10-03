@@ -27,8 +27,8 @@ content hardcoded. Goal is a site that looks and behaves identically, with the
 repetition removed into components. No redesigns, no Sanity, no image
 pipeline yet; one new thing at a time.
 
-- Done: `index.astro` (homepage), `weddings.astro`.
-- Next: `corporate`, `celebrations`, `gallery`, then the four
+- Done: `index.astro` (homepage), `weddings.astro`, `corporate.astro`.
+- Next: `celebrations`, `gallery`, then the four
   package pages (at `/weddings/packages/<leaf>`, the agreed URL scheme).
 
 **Phase 2** — `astro:assets` for images (resizing + `srcset`). **Phase 3** —
@@ -41,8 +41,12 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   section, footer, the script. Props: `title`, `showEnquireLink`,
   `menuBackgroundImage`. Has a named slot `after-footer` for page overlays.
 - `src/components/` — chrome (`SiteHeader`, `MobileMenu`, `SocialLinks`,
-  `VisitSection`, `SiteFooter`) and shared sections (`EnquirySection`,
-  `WaitlistPopover`, `Lightbox`).
+  `VisitSection`, `SiteFooter`), shared sections (`PageHero`,
+  `EnquirySection`, `FaqSection`, `ProcessSteps`, `GalleryPreview`,
+  `Testimonials`, `WaitlistPopover`, `Lightbox`) and small parts
+  (`CheckList`, `ArrowIcon`). Repeating content (FAQ entries, process
+  steps, gallery photos, checklist items) is passed as arrays and rendered
+  with `map()` — the shape Sanity data will arrive in later.
 - `EnquirySection` props: `eventType` (sets the selected chip AND the
   initial visibility of every field main.js toggles per type, so there is no
   post-load flash), `datePicker` (`inline` compact calendar, or `modal` for
@@ -79,6 +83,22 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   trailing full stop. Scope is the area touched (a page, a component, `nav`,
   `enquiry`, `tooling`, `repo`). **No Claude co-author or attribution lines**,
   ever.
+
+## Checks and tests
+
+- `npm run check` — `astro check`: TypeScript across `.astro` and `.ts`
+  files, including component props. Must stay at 0 errors.
+- `npm run test:e2e` — Playwright, against a production build served by
+  `astro preview` on port 4322 (never the dev server). Two projects:
+  `desktop` runs everything; `mobile` (Pixel 7) runs only tests tagged
+  `@mobile`. Specs live in `tests/e2e/`.
+- When fixing a bug, add a test that fails without the fix — and confirm it
+  does fail against the old code, as was done for the nav underline.
+  Prototype bugs worth encoding as tests when their area is touched are in
+  the prototype's "Known bugs fixed" list.
+- Vitest is planned for pure logic (availability status, date maths, quote
+  templating) once that logic is split out of `main.js`; nothing to unit
+  test yet.
 
 ## Development
 
