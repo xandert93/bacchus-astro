@@ -63,6 +63,8 @@
 //
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import PageHero from "../../../components/PageHero.astro"
+import EnquirySection from "../../../components/EnquirySection.astro"
+import WaitlistPopover from "../../../components/WaitlistPopover.astro"
 import ArrowIcon from "../../../components/ArrowIcon.astro"
 // After BaseLayout, so these load after global.css (see package-page.css).
 import "../../../styles/package-page.css"
@@ -72,7 +74,6 @@ import "../../../styles/package-beverage.css"
 <BaseLayout
   title="Our Beverage Menus — Bacchus"
   menuBackgroundImage="/images/weddings/cake-chandelier.webp"
-  showVisitSection={false}
 >
   <PageHero crumb="Beverage Menus" parent={{ href: "/weddings", label: "Weddings" }}>
     Our Beverage <em>Menus</em>
@@ -84,7 +85,7 @@ import "../../../styles/package-beverage.css"
       Four categories, each explored in full below.
     </Fragment>
     <Fragment slot="ctas">
-      <a href="/weddings#enquire" class="button button-gradient button-shimmer">
+      <a href="#enquire" class="button button-gradient button-shimmer">
         <span>Book a tasting</span>
         <ArrowIcon />
       </a>
@@ -873,6 +874,25 @@ import "../../../styles/package-beverage.css"
       </div>
     </div>
   </section>
+
+  <EnquirySection
+    eventType="Wedding"
+    railPhoto={{
+      src: "/images/shared/champagne.webp",
+      alt: "A guest raising a glass of sparkling wine at a dressed table",
+      caption: "A glass raised at a dressed table.",
+    }}
+  >
+    <Fragment slot="heading">
+      Tell us about your <em>wedding</em>
+    </Fragment>
+    <Fragment slot="lead">
+      Four short steps. We come back with dates, pricing and a proposal shaped to your day
+      — before we ever get on the phone.
+    </Fragment>
+  </EnquirySection>
+
+  <WaitlistPopover slot="after-footer" />
 
   <script>
     import "../../../scripts/package-tiers.js"

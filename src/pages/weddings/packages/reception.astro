@@ -100,6 +100,8 @@
 // its siblings do.
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import PageHero from "../../../components/PageHero.astro"
+import EnquirySection from "../../../components/EnquirySection.astro"
+import WaitlistPopover from "../../../components/WaitlistPopover.astro"
 import ArrowIcon from "../../../components/ArrowIcon.astro"
 import Lightbox from "../../../components/Lightbox.astro"
 // After BaseLayout, so it loads after global.css, as the inline block did.
@@ -109,7 +111,6 @@ import "../../../styles/reception-package.css"
 <BaseLayout
   title="Our Reception Menus — Package (concept) — Bacchus"
   menuBackgroundImage="/images/weddings/cake-chandelier.webp"
-  showVisitSection={false}
 >
   <PageHero
     crumb="Reception Menus"
@@ -128,7 +129,7 @@ import "../../../styles/reception-package.css"
       Three considered tiers, each explored in full below — plus Stations to add on top.
     </Fragment>
     <Fragment slot="ctas">
-      <a href="/weddings#enquire" class="button button-gradient button-shimmer">
+      <a href="#enquire" class="button button-gradient button-shimmer">
         <span>Book a tasting</span>
         <ArrowIcon />
       </a>
@@ -5020,6 +5021,25 @@ import "../../../styles/reception-package.css"
   </section>
 
   <Lightbox />
+
+  <EnquirySection
+    eventType="Wedding"
+    railPhoto={{
+      src: "/images/shared/canapes-service.jpg",
+      alt: "Canapés being served to guests",
+      caption: "Canapés passed by hand at a reception.",
+    }}
+  >
+    <Fragment slot="heading">
+      Tell us about your <em>wedding</em>
+    </Fragment>
+    <Fragment slot="lead">
+      Four short steps. We come back with dates, pricing and a proposal shaped to your day
+      — before we ever get on the phone.
+    </Fragment>
+  </EnquirySection>
+
+  <WaitlistPopover slot="after-footer" />
 
   <script>
     import "../../../scripts/reception-package.js"
