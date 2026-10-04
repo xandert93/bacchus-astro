@@ -1691,11 +1691,18 @@
       { threshold: 0.4 },
     );
     tObs.observe(section);
-    nextBtn.addEventListener("mouseenter", function () {
+    // Mouse only. On touch, browsers fire a compatibility mouseenter after
+    // a tap but no mouseleave until the visitor taps somewhere else, so
+    // tapping the next arrow used to pause autoplay — the ring visibly
+    // stopped — until the next tap elsewhere. pointerType filters that out;
+    // a tap has no hover to pause for.
+    nextBtn.addEventListener("pointerenter", function (e) {
+      if (e.pointerType !== "mouse") return;
       tHovering = true;
       tSync();
     });
-    nextBtn.addEventListener("mouseleave", function () {
+    nextBtn.addEventListener("pointerleave", function (e) {
+      if (e.pointerType !== "mouse") return;
       tHovering = false;
       tSync();
     });

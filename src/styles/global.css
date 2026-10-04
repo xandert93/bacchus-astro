@@ -3818,30 +3818,20 @@ h2 em {
    original state (0.65 alpha ink to solid ink, gold-2 to gold) barely moved
    over the dark photo behind this section, and on touch there was no state
    at all — bug #19's missing (hover: none) fallback, on a control that never
-   navigates away. The next arrow's timer ring inverts with it — a gold
-   progress stroke on a gold chip would vanish — so its stroke goes ink. */
+   navigates away. The next arrow's timer ring is deliberately left gold
+   (tried inverting it to ink; it read worse). While hovered, its progress
+   stroke sits on the gold fill and is hard to see — which is also when
+   autoplay is paused, so nothing is lost. */
 @media (hover: hover) {
   .testimonial-arrow:hover {
     background-color: var(--gold);
     color: var(--ink);
-  }
-  .testimonial-arrow:hover .testimonial-ring-fill {
-    stroke: var(--ink);
-  }
-  .testimonial-arrow:hover .testimonial-ring-track {
-    stroke: rgba(var(--ink-rgb), 0.25);
   }
 }
 @media (hover: none) {
   .testimonial-arrow:active {
     background-color: var(--gold);
     color: var(--ink);
-  }
-  .testimonial-arrow:active .testimonial-ring-fill {
-    stroke: var(--ink);
-  }
-  .testimonial-arrow:active .testimonial-ring-track {
-    stroke: rgba(var(--ink-rgb), 0.25);
   }
   /* Same gap on the picker cards below: tappable, never navigate, and
      had a hover state only. Mirrors their hover exactly. */
@@ -3949,7 +3939,6 @@ h2 em {
 .testimonial-ring-fill {
   fill: none;
   stroke-width: 1.5;
-  transition: stroke 0.3s var(--ease);
 }
 .testimonial-ring-track {
   stroke: rgba(var(--limestone-rgb), 0.28);
