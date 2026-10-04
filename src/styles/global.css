@@ -9875,38 +9875,12 @@ form.wl-form {
 .button.nav-cta-enquire-button {
   --bg: transparent;
   --fg: var(--gold-2);
+  --bd: rgba(var(--gold-rgb), 0.55);
   --bg-h: var(--gold);
   --fg-h: var(--ink);
-  /* The 1px flat border is replaced by a 2px --gold-gradient ring drawn on
-     ::before (2026-10-04), so the outline carries the same sweep as Book a
-     table's fill beside it. */
-  border: 0;
-}
-/* Why a masked pseudo-element and not the padding-box/border-box background
-   trick .package-dining-card uses: that trick hides the gradient everywhere
-   but the ring by painting an OPAQUE fill over the middle, and this button
-   is transparent over a nav that is itself transparent at the top of the
-   page. Here the gradient fills the pseudo-element, and the mask cuts the
-   middle out instead: two mask layers, one clipped to the content box (the
-   inside of the 2px padding) and one covering the whole box, composited with
-   `exclude` so only the 2px ring between them stays visible. Follows
-   border-radius via inherit. ::before is free on this button (only the
-   hero's .button-shimmer uses it); ::after stays the shared hover sheen.
-   z-index 1 keeps it under the label and icon (z-index 2). */
-.button.nav-cta-enquire-button::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  padding: 2px;
-  border-radius: inherit;
-  background: var(--gold-gradient);
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  z-index: 1;
+  /* 2px, up from .button's 1px (2026-10-04), so the outline carries
+     visual mass closer to Book a table's solid fill beside it. */
+  border-width: 2px;
 }
 /* The envelope is a LABEL, not a "proceed" chevron, so it must not
    inherit .button:hover svg's 4px forward nudge — that motion only
