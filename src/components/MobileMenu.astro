@@ -1,12 +1,12 @@
 ---
 // The <=980px fullscreen drawer opened by the burger in SiteHeader.
-import SocialLinks from "./SocialLinks.astro";
+import SocialLinks from "./SocialLinks.astro"
 
 interface Props {
   // The photo behind the drawer. Each page in the prototype picked its own.
-  backgroundImage?: string;
+  backgroundImage?: string
 }
-const { backgroundImage = "/images/shared/ballroom-night.webp" } = Astro.props;
+const { backgroundImage = "/images/shared/ballroom-night.webp" } = Astro.props
 ---
 
 <div class="menu" id="mobmenu">

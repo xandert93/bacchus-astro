@@ -1,17 +1,17 @@
 ---
-import SocialLinks from "./SocialLinks.astro";
+import SocialLinks from "./SocialLinks.astro"
 
 interface Props {
   // Adds an "Enquire" row scrolling to the page's own #enquire section.
   // Only the homepage had it in the prototype, though four other pages have
   // the section too; kept as-is for now (open question, not a port decision).
-  showEnquireLink?: boolean;
+  showEnquireLink?: boolean
 }
-const { showEnquireLink = false } = Astro.props;
+const { showEnquireLink = false } = Astro.props
 
 // Rendered at build time, so the year is baked into the HTML rather than
 // filled in by main.js after load (main.js still sets #yr; harmless).
-const year = new Date().getFullYear();
+const year = new Date().getFullYear()
 ---
 
 <footer>

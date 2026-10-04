@@ -3,10 +3,10 @@
 // open/close (.faq-q / .faq-a). Default slot = heading, optional "lead"
 // slot = the paragraph under it.
 interface Props {
-  items: { question: string; answer: string }[];
+  items: { question: string; answer: string }[]
 }
-const { items } = Astro.props;
-const hasLead = Astro.slots.has("lead");
+const { items } = Astro.props
+const hasLead = Astro.slots.has("lead")
 ---
 
 <section class="section-padding-small">

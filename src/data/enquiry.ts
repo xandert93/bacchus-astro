@@ -4,8 +4,8 @@
 // the note when a visitor changes chip. Both must stay in step until main.js
 // is split up and can import this file instead.
 
-export const EVENT_TYPES = ["Wedding", "Corporate", "Celebration", "Other"] as const;
-export type EventType = (typeof EVENT_TYPES)[number];
+export const EVENT_TYPES = ["Wedding", "Corporate", "Celebration", "Other"] as const
+export type EventType = (typeof EVENT_TYPES)[number]
 
 export const CHIP_NOTES: Record<EventType, string> = {
   Wedding:
@@ -16,4 +16,4 @@ export const CHIP_NOTES: Record<EventType, string> = {
     "Two weeks' notice gives us time to make sure your celebration feels just right on the day.",
   Other:
     "Whatever you have in mind, we'd love to hear about it and follow up with you directly.",
-};
+}

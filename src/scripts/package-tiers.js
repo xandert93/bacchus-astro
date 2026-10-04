@@ -6,7 +6,7 @@
 // script uses window.BacchusTabs, which main.js defines. Both are ES modules
 // importing the same file, so the bundler evaluates main.js once and in
 // dependency order — no reliance on which <script> tag happens to come first.
-import "./main.js";
+import "./main.js"
 
 // Page-specific tier controller. Drives every way of changing tier —
 // the tab bar, the tier cards, the sticky switcher and touch swipe —
@@ -16,14 +16,14 @@ import "./main.js";
 // helper still supplies the sliding pill and aria bookkeeping; the
 // carousel below is this page's own. Guarded the same way every other
 // page-specific script here is (bug #4 — no-ops if .tab-bar is absent).
-(function () {
-  var tabs = [].slice.call(document.querySelectorAll(".tab-bar button"));
-  if (!tabs.length) return;
-  var tierCards = [].slice.call(document.querySelectorAll(".package-tier-card"));
-  var stickySwitch = document.getElementById("packageStickySwitch");
+;(function () {
+  var tabs = [].slice.call(document.querySelectorAll(".tab-bar button"))
+  if (!tabs.length) return
+  var tierCards = [].slice.call(document.querySelectorAll(".package-tier-card"))
+  var stickySwitch = document.getElementById("packageStickySwitch")
   var stickyBtns = stickySwitch
     ? [].slice.call(stickySwitch.querySelectorAll(".package-sticky-switch-btn"))
-    : [];
+    : []
   // Wires up the sticky switcher's own sliding pill via the shared
   // implementation in main.js (window.BacchusTabs.initTabGroup) —
   // same mechanism the real tab bar uses, not a second hand-rolled
@@ -35,7 +35,7 @@ import "./main.js";
   var stickyGroup =
     stickySwitch && window.BacchusTabs
       ? window.BacchusTabs.initTabGroup(stickySwitch, {})
-      : null;
+      : null
 
   // Keeps the card grid's selected state (checkmark, gold border,
   // which single card shows on mobile) matched to the active tier.
@@ -44,10 +44,10 @@ import "./main.js";
   // is one path that decides the active tier, and this reflects it.
   function syncTierCards(tierKey) {
     tierCards.forEach(function (card) {
-      var isActive = card.dataset.tierCard === tierKey;
-      card.classList.toggle("active", isActive);
-      card.setAttribute("aria-pressed", isActive ? "true" : "false");
-    });
+      var isActive = card.dataset.tierCard === tierKey
+      card.classList.toggle("active", isActive)
+      card.setAttribute("aria-pressed", isActive ? "true" : "false")
+    })
   }
 
   // Same idea as syncTierCards, for the sticky switcher's own active
@@ -58,11 +58,11 @@ import "./main.js";
   // selectTab rather than btn.click() also keeps it clear of this
   // group's own click listener, so it can't loop back into itself.
   function syncStickySwitch(tierKey) {
-    if (!stickyGroup) return;
+    if (!stickyGroup) return
     var btn = stickyBtns.filter(function (b) {
-      return b.dataset.tierSwitch === tierKey;
-    })[0];
-    if (btn) stickyGroup.selectTab(btn);
+      return b.dataset.tierSwitch === tierKey
+    })[0]
+    if (btn) stickyGroup.selectTab(btn)
   }
 
   // ================= Tier carousel =================
@@ -84,43 +84,43 @@ import "./main.js";
   // axis lock added — see the drag section below. This package has
   // exactly three tiers, so none of this generalises to N slides.
 
-  var view = document.getElementById("packageTierView");
-  var track = document.getElementById("packageTierTrack");
-  if (!view || !track) return;
+  var view = document.getElementById("packageTierView")
+  var track = document.getElementById("packageTierTrack")
+  if (!view || !track) return
 
   // Read from the tab bar's own data-tab values rather than hardcoded per
   // page, which is what lets one script serve every package page.
   var TIERS = tabs.map(function (b) {
-    return b.dataset.tab;
-  });
+    return b.dataset.tab
+  })
   // How long after the last scroll event the gesture counts as
   // finished. There is no scrollend event to rely on across the
   // browsers this has to work in, so settling is debounced instead.
-  var SCROLL_SETTLE_MS = 140;
+  var SCROLL_SETTLE_MS = 140
 
-  var index = 0;
+  var index = 0
 
   function panelFor(tierKey) {
-    return document.querySelector('.tab-panel[data-panel="' + tierKey + '"]');
+    return document.querySelector('.tab-panel[data-panel="' + tierKey + '"]')
   }
   function tabFor(tierKey) {
     return tabs.filter(function (b) {
-      return b.dataset.tab === tierKey;
-    })[0];
+      return b.dataset.tab === tierKey
+    })[0]
   }
   // Distance from one slide's left edge to the next: the window's own
   // width plus the real gap between slides, measured rather than
   // hardcoded — same approach as the homepage carousel.
   function slideStep() {
-    return view.clientWidth + parseFloat(getComputedStyle(track).gap || 0);
+    return view.clientWidth + parseFloat(getComputedStyle(track).gap || 0)
   }
   // Which tier the window is parked on (or nearest to, mid-scroll).
   // Rounding is what makes a half-finished swipe resolve to whichever
   // tier it is closest to.
   function indexFromScroll() {
-    var step = slideStep();
-    if (!step) return index;
-    return Math.max(0, Math.min(TIERS.length - 1, Math.round(view.scrollLeft / step)));
+    var step = slideStep()
+    if (!step) return index
+    return Math.max(0, Math.min(TIERS.length - 1, Math.round(view.scrollLeft / step)))
   }
 
   // ---- Per-item reveal ----
@@ -139,35 +139,35 @@ import "./main.js";
   var itemObserver = new IntersectionObserver(
     function (entries) {
       entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-revealed");
-        itemObserver.unobserve(entry.target);
-      });
+        if (!entry.isIntersecting) return
+        entry.target.classList.add("is-revealed")
+        itemObserver.unobserve(entry.target)
+      })
     },
     { threshold: 0.18, rootMargin: "0px 0px -8% 0px" },
-  );
-  [].slice.call(document.querySelectorAll(".package-reveal")).forEach(function (el) {
-    itemObserver.observe(el);
-  });
+  )
+  ;[].slice.call(document.querySelectorAll(".package-reveal")).forEach(function (el) {
+    itemObserver.observe(el)
+  })
 
   function revealItems(root, instant) {
-    if (!root) return;
-    [].slice.call(root.querySelectorAll(".package-reveal")).forEach(function (el) {
-      if (instant) el.classList.add("package-reveal-instant");
-      el.classList.add("is-revealed");
-      itemObserver.unobserve(el);
-    });
+    if (!root) return
+    ;[].slice.call(root.querySelectorAll(".package-reveal")).forEach(function (el) {
+      if (instant) el.classList.add("package-reveal-instant")
+      el.classList.add("is-revealed")
+      itemObserver.unobserve(el)
+    })
   }
   // Runs once, when a touch drag first starts: every tier's items land
   // in final position immediately, so whatever slides into view is
   // already fully formed. All three at once costs one repaint rather
   // than one per tier, mid-swipe. Clicks never trigger it, so the tab
   // bar keeps its staggered reveal.
-  var itemsAllRevealed = false;
+  var itemsAllRevealed = false
   function revealEverythingInstantly() {
-    if (itemsAllRevealed) return;
-    itemsAllRevealed = true;
-    revealItems(track, true);
+    if (itemsAllRevealed) return
+    itemsAllRevealed = true
+    revealItems(track, true)
   }
 
   // ---- The two motions ----
@@ -178,19 +178,19 @@ import "./main.js";
   // browser is already scrolling, and scrollLeft is what this reads
   // the result back from.
   function positionWindow() {
-    view.scrollLeft = index * slideStep();
+    view.scrollLeft = index * slideStep()
   }
   // Remove, reflow, re-add restarts the animation even if it has
   // already run, so returning to an already-seen tier replays the
   // fade — re-adding an animation class without a reflow in between
   // is a silent no-op (same shape as CLAUDE.md bug #7).
   function playContentFade() {
-    var panel = panelFor(TIERS[index]);
-    var content = panel && panel.querySelector(".package-tier-content");
-    if (!content) return;
-    content.classList.remove("package-tier-fade-in");
-    void content.offsetWidth;
-    content.classList.add("package-tier-fade-in");
+    var panel = panelFor(TIERS[index])
+    var content = panel && panel.querySelector(".package-tier-content")
+    if (!content) return
+    content.classList.remove("package-tier-fade-in")
+    void content.offsetWidth
+    content.classList.add("package-tier-fade-in")
   }
   // Keeps .package-tier-view's height matched to only the active
   // panel (see that class's own CSS comment for why this is needed at
@@ -203,20 +203,20 @@ import "./main.js";
   // expandViewForScroll() owns the height instead — without it the
   // observer below would re-collapse the window mid-swipe and
   // re-clip the incoming tier.
-  var heightLocked = false;
-  var heightSettleTimer = null;
+  var heightLocked = false
+  var heightSettleTimer = null
   function syncViewHeight(animate) {
-    var panel = panelFor(TIERS[index]);
-    if (!panel) return;
-    var h = panel.scrollHeight;
+    var panel = panelFor(TIERS[index])
+    if (!panel) return
+    var h = panel.scrollHeight
     if (animate) {
-      view.style.height = h + "px";
-      return;
+      view.style.height = h + "px"
+      return
     }
-    view.style.transition = "none";
-    view.style.height = h + "px";
-    void view.offsetHeight;
-    view.style.transition = "";
+    view.style.transition = "none"
+    view.style.height = h + "px"
+    void view.offsetHeight
+    view.style.transition = ""
   }
   // ---- Height while the window is scrolling ----
   // A swipe shows two panels at once while the window is sized to
@@ -230,30 +230,30 @@ import "./main.js";
   // scrolling was adopted to avoid.
   function tallestPanelHeight() {
     return TIERS.reduce(function (tallest, tierKey) {
-      var panel = panelFor(tierKey);
-      return panel ? Math.max(tallest, panel.scrollHeight) : tallest;
-    }, 0);
+      var panel = panelFor(tierKey)
+      return panel ? Math.max(tallest, panel.scrollHeight) : tallest
+    }, 0)
   }
   function expandViewForScroll() {
-    clearTimeout(heightSettleTimer);
-    heightLocked = true;
-    var h = tallestPanelHeight();
-    if (!h) return;
-    view.style.transition = "none";
-    view.style.height = h + "px";
-    void view.offsetHeight;
-    view.style.transition = "";
+    clearTimeout(heightSettleTimer)
+    heightLocked = true
+    var h = tallestPanelHeight()
+    if (!h) return
+    view.style.transition = "none"
+    view.style.height = h + "px"
+    void view.offsetHeight
+    view.style.transition = ""
   }
   // Re-armed on every scroll event, so it fires only once the window
   // has stopped — including when a half-swipe snaps back to the tier
   // it started from, which changes no tier and would otherwise leave
   // the window expanded indefinitely.
   function settleViewHeightAfterScroll() {
-    clearTimeout(heightSettleTimer);
+    clearTimeout(heightSettleTimer)
     heightSettleTimer = setTimeout(function () {
-      heightLocked = false;
-      syncViewHeight(true);
-    }, SCROLL_SETTLE_MS);
+      heightLocked = false
+      syncViewHeight(true)
+    }, SCROLL_SETTLE_MS)
   }
   // The explicit height was only ever measured on init, tier change
   // and window resize. Any other reason a panel's height changes went
@@ -264,13 +264,13 @@ import "./main.js";
   // the whole class of causes. Guarded per CLAUDE.md bug #4.
   if (window.ResizeObserver) {
     var panelHeightObserver = new ResizeObserver(function () {
-      if (heightLocked) return;
-      syncViewHeight(false);
-    });
+      if (heightLocked) return
+      syncViewHeight(false)
+    })
     TIERS.forEach(function (tierKey) {
-      var panel = panelFor(tierKey);
-      if (panel) panelHeightObserver.observe(panel);
-    });
+      var panel = panelFor(tierKey)
+      if (panel) panelHeightObserver.observe(panel)
+    })
   }
 
   // ---- Committing a tier change ----
@@ -282,15 +282,15 @@ import "./main.js";
     ? window.BacchusTabs.initTabGroup(tabs[0].closest(".tab-bar"), {
         panelSelector: ".tab-panel",
       })
-    : null;
+    : null
 
   // Everything that isn't the track itself: the tab bar's pill and
   // aria state, the tier cards, the sticky switcher.
   function applyTierState(tierKey) {
-    var btn = tabFor(tierKey);
-    if (btn && tabGroup) tabGroup.selectTab(btn);
-    syncTierCards(tierKey);
-    syncStickySwitch(tierKey);
+    var btn = tabFor(tierKey)
+    if (btn && tabGroup) tabGroup.selectTab(btn)
+    syncTierCards(tierKey)
+    syncStickySwitch(tierKey)
   }
   // The single path every tier change goes through, whichever control
   // triggered it.
@@ -301,20 +301,20 @@ import "./main.js";
   // scrollLeft from inside a scroll handler is how a scroll-driven
   // carousel fights its own momentum.
   function goToIndex(newIndex, viaScroll) {
-    newIndex = Math.max(0, Math.min(TIERS.length - 1, newIndex));
-    var changed = newIndex !== index;
-    index = newIndex;
-    if (!viaScroll) positionWindow();
-    if (!changed) return;
-    var tierKey = TIERS[index];
-    history.replaceState(null, "", "#" + tierKey);
-    applyTierState(tierKey);
+    newIndex = Math.max(0, Math.min(TIERS.length - 1, newIndex))
+    var changed = newIndex !== index
+    index = newIndex
+    if (!viaScroll) positionWindow()
+    if (!changed) return
+    var tierKey = TIERS[index]
+    history.replaceState(null, "", "#" + tierKey)
+    applyTierState(tierKey)
     // A swipe's height is owned by expandViewForScroll() /
     // settleViewHeightAfterScroll() instead; animating it here too
     // would put per-frame layout back under a live scroll.
-    if (!viaScroll) syncViewHeight(true);
-    revealItems(panelFor(tierKey), viaScroll);
-    if (!viaScroll) playContentFade();
+    if (!viaScroll) syncViewHeight(true)
+    revealItems(panelFor(tierKey), viaScroll)
+    if (!viaScroll) playContentFade()
   }
 
   // ---- Click triggers ----
@@ -324,13 +324,13 @@ import "./main.js";
   function bindTierClicks(elements, tierKeyName) {
     elements.forEach(function (el) {
       el.addEventListener("click", function () {
-        goToIndex(TIERS.indexOf(el.dataset[tierKeyName]));
-      });
-    });
+        goToIndex(TIERS.indexOf(el.dataset[tierKeyName]))
+      })
+    })
   }
-  bindTierClicks(tabs, "tab");
-  bindTierClicks(tierCards, "tierCard");
-  bindTierClicks(stickyBtns, "tierSwitch");
+  bindTierClicks(tabs, "tab")
+  bindTierClicks(tierCards, "tierCard")
+  bindTierClicks(stickyBtns, "tierSwitch")
 
   // ---- Swipe ----
   // There is no swipe code any more, and that is the point. The
@@ -346,8 +346,8 @@ import "./main.js";
   // to straight back out of sight — which looks exactly like "the
   // items are missing". If a transform ever reappears on this
   // element, suspect that first.
-  var scrollFrame = null;
-  var scrollingClassTimer = null;
+  var scrollFrame = null
+  var scrollingClassTimer = null
 
   // Suppresses the two effects that otherwise recompute against the
   // moving content every frame (see body.package-tier-dragging in the
@@ -355,17 +355,17 @@ import "./main.js";
   // the scroll settles — no event reliably reports "a scroll has
   // finished" across the browsers this has to support.
   function setScrollingState() {
-    clearTimeout(scrollingClassTimer);
-    document.body.classList.add("package-tier-dragging");
+    clearTimeout(scrollingClassTimer)
+    document.body.classList.add("package-tier-dragging")
     scrollingClassTimer = setTimeout(function () {
-      document.body.classList.remove("package-tier-dragging");
-    }, SCROLL_SETTLE_MS + 60);
+      document.body.classList.remove("package-tier-dragging")
+    }, SCROLL_SETTLE_MS + 60)
   }
 
   function readScrollPosition() {
-    scrollFrame = null;
-    var i = indexFromScroll();
-    if (i !== index) goToIndex(i, true);
+    scrollFrame = null
+    var i = indexFromScroll()
+    if (i !== index) goToIndex(i, true)
   }
   // Whether the window sits exactly on the active tier rather than
   // between two. This is what separates a real swipe from the scroll
@@ -377,59 +377,59 @@ import "./main.js";
   // was mine" flag, because such a flag leaks whenever the write
   // doesn't actually move anything.
   function isParkedOnActiveTier() {
-    var step = slideStep();
-    return !step || Math.abs(view.scrollLeft - index * step) < 1;
+    var step = slideStep()
+    return !step || Math.abs(view.scrollLeft - index * step) < 1
   }
   view.addEventListener(
     "scroll",
     function () {
       if (!isParkedOnActiveTier()) {
-        setScrollingState();
-        if (!heightLocked) expandViewForScroll();
+        setScrollingState()
+        if (!heightLocked) expandViewForScroll()
       }
       // Armed unconditionally and re-armed each event, so heightLocked
       // always has something coming to release it.
-      settleViewHeightAfterScroll();
+      settleViewHeightAfterScroll()
       // At most one position read per rendered frame.
-      if (scrollFrame === null) scrollFrame = requestAnimationFrame(readScrollPosition);
+      if (scrollFrame === null) scrollFrame = requestAnimationFrame(readScrollPosition)
     },
     { passive: true },
-  );
+  )
   // Re-parks the window: slideStep() is read live, so an offset that
   // pointed at a tier before a resize or rotation would otherwise
   // point between two afterwards. The re-arm matters because
   // heightLocked stays true through the settle window and
   // expandViewForScroll() clears the pending settle.
   window.addEventListener("resize", function () {
-    positionWindow();
+    positionWindow()
     if (!heightLocked) {
-      syncViewHeight(false);
-      return;
+      syncViewHeight(false)
+      return
     }
-    expandViewForScroll();
-    settleViewHeightAfterScroll();
-  });
+    expandViewForScroll()
+    settleViewHeightAfterScroll()
+  })
 
   // ---- Initial state ----
   // Land on the #hash tier if it names a real one, otherwise whichever
   // tab the markup already marks active. No transition on first paint:
   // easing in from off-screen on load would read as an unwanted
   // animation. The content fade still plays, as it always did.
-  var hashTier = location.hash.replace("#", "");
-  var landedOnHash = TIERS.indexOf(hashTier) >= 0;
-  var startTier = landedOnHash ? hashTier : null;
+  var hashTier = location.hash.replace("#", "")
+  var landedOnHash = TIERS.indexOf(hashTier) >= 0
+  var startTier = landedOnHash ? hashTier : null
   if (!startTier) {
-    var activeTab = document.querySelector(".tab-bar button.active");
-    startTier = activeTab ? activeTab.dataset.tab : TIERS[0];
+    var activeTab = document.querySelector(".tab-bar button.active")
+    startTier = activeTab ? activeTab.dataset.tab : TIERS[0]
   }
-  index = Math.max(0, TIERS.indexOf(startTier));
-  positionWindow();
-  applyTierState(TIERS[index]);
-  syncViewHeight(false);
-  playContentFade();
+  index = Math.max(0, TIERS.indexOf(startTier))
+  positionWindow()
+  applyTierState(TIERS[index])
+  syncViewHeight(false)
+  playContentFade()
   // A hash landing straight on a tier is "already looking at it", so
   // its items skip the scroll-stagger; a plain load keeps it.
-  if (landedOnHash) revealItems(panelFor(TIERS[index]), false);
+  if (landedOnHash) revealItems(panelFor(TIERS[index]), false)
 
   // Shows the sticky switcher once its trigger point has scrolled out
   // of view above AND hides it again once the NEXT section's own
@@ -472,40 +472,40 @@ import "./main.js";
   // it still hides the instant the eyebrow first comes into view,
   // not only once fully scrolled past it).
   if (stickySwitch) {
-    var tabBarEl = document.querySelector(".package-tabs-tabbar");
-    var cardsEl = document.querySelector(".package-tier-cards");
-    var nextEyebrowEl = document.getElementById("closerLookEyebrow");
-    var desktopMQ = window.matchMedia("(min-width: 841px)");
+    var tabBarEl = document.querySelector(".package-tabs-tabbar")
+    var cardsEl = document.querySelector(".package-tier-cards")
+    var nextEyebrowEl = document.getElementById("closerLookEyebrow")
+    var desktopMQ = window.matchMedia("(min-width: 841px)")
     var pastTabBar = false,
       pastCards = false,
-      pastBottom = false;
+      pastBottom = false
     function updateStickyVisibility() {
-      var pastTrigger = desktopMQ.matches ? pastCards : pastTabBar;
-      var visible = pastTrigger && !pastBottom;
-      stickySwitch.classList.toggle("is-visible", visible);
-      stickySwitch.setAttribute("aria-hidden", visible ? "false" : "true");
+      var pastTrigger = desktopMQ.matches ? pastCards : pastTabBar
+      var visible = pastTrigger && !pastBottom
+      stickySwitch.classList.toggle("is-visible", visible)
+      stickySwitch.setAttribute("aria-hidden", visible ? "false" : "true")
     }
     if (tabBarEl) {
       new IntersectionObserver(function (entries) {
-        var entry = entries[0];
-        pastTabBar = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-        updateStickyVisibility();
-      }).observe(tabBarEl);
+        var entry = entries[0]
+        pastTabBar = !entry.isIntersecting && entry.boundingClientRect.top < 0
+        updateStickyVisibility()
+      }).observe(tabBarEl)
     }
     if (cardsEl) {
       new IntersectionObserver(function (entries) {
-        var entry = entries[0];
-        pastCards = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-        updateStickyVisibility();
-      }).observe(cardsEl);
+        var entry = entries[0]
+        pastCards = !entry.isIntersecting && entry.boundingClientRect.top < 0
+        updateStickyVisibility()
+      }).observe(cardsEl)
     }
     if (nextEyebrowEl) {
       new IntersectionObserver(function (entries) {
-        var entry = entries[0];
-        pastBottom = entry.isIntersecting || entry.boundingClientRect.top < 0;
-        updateStickyVisibility();
-      }).observe(nextEyebrowEl);
+        var entry = entries[0]
+        pastBottom = entry.isIntersecting || entry.boundingClientRect.top < 0
+        updateStickyVisibility()
+      }).observe(nextEyebrowEl)
     }
-    window.addEventListener("resize", updateStickyVisibility);
+    window.addEventListener("resize", updateStickyVisibility)
   }
-})();
+})()

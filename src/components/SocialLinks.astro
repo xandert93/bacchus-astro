@@ -2,9 +2,9 @@
 // Facebook + Instagram. Used in the mobile drawer and the footer, which
 // differ only by an extra class on the wrapper - hence the `class` prop.
 interface Props {
-  class?: string;
+  class?: string
 }
-const { class: extraClass } = Astro.props;
+const { class: extraClass } = Astro.props
 ---
 
 <div class:list={["social-links", extraClass]}>
