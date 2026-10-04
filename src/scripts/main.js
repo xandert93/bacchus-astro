@@ -388,6 +388,8 @@
           var href = a.getAttribute("href");
           if (href && href !== "#" && pageKey(href) === curPage) {
             a.classList.add("active");
+            // The dot is visual only; this is what tells a screen reader.
+            a.setAttribute("aria-current", "page");
             ddHasActive = true;
           }
         });

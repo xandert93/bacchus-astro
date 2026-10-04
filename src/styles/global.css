@@ -9397,12 +9397,39 @@ form.wl-form {
     color: var(--gold-2);
   }
 }
-/* Current page: the same treatment, held. Not gated behind (hover: hover) -
-   this is a persistent state, not feedback, and a touch visitor needs to see
-   where they are as much as anyone. */
+/* Current page. Not gated behind (hover: hover) - this is a persistent
+   state, not feedback, and a touch visitor needs to see where they are as
+   much as anyone.
+   Until 2026-10-04 this was the hover treatment exactly, held — wash,
+   border, label and icon — so on returning to a panel the current page's
+   row read as a hover that never cleared. Now it keeps the gold border,
+   brightened label and gold icon but NOT the limestone wash, which is left
+   to mean "pointer is here", and adds a gold dot after the label as its own
+   "you are here" mark.
+   background is set explicitly, not just omitted: the light card's
+   .nav-dd-item.active gold wash (0,2,0) would otherwise show through. That
+   makes this (0,3,0) rule beat the (0,3,0) hover wash above on source
+   order, so hovering the current row gets its own (0,4,0) rule below. */
 .nav-dd-panel-card-dark .nav-dd-item.active {
-  background: rgba(var(--limestone-rgb), 0.07);
+  background: transparent;
   border-left-color: var(--gold);
+}
+@media (hover: hover) {
+  .nav-dd-panel-card-dark .nav-dd-item.active:hover {
+    background: rgba(var(--limestone-rgb), 0.07);
+  }
+}
+/* A flex item in the label's baseline-aligned row (see the .nav-dd-label
+   override further down), so it centres itself rather than sitting on the
+   baseline, which an empty box would otherwise do. */
+.nav-dd-panel-card-dark .nav-dd-item.active .nav-dd-label::after {
+  content: "";
+  flex: none;
+  align-self: center;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
 }
 .nav-dd-panel-card-dark .nav-dd-item.active .nav-dd-label {
   color: var(--limestone-2);
