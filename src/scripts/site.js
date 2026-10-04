@@ -3,6 +3,7 @@
 // ambient particles, and the scroll reveals for [data-reveal].
 
 import { reduce } from "./lib/motion.js"
+import "./lib/safe-reveal.js"
 
 requestAnimationFrame(function () {
   document.body.classList.add("loaded")
