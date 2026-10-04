@@ -1,0 +1,741 @@
+---
+// The High Tea package page - the third of the three meal formats, an
+// afternoon alternative to the formal banquet (the catalogue's own framing).
+// Three tiers (Jasmine, Hibiscus, Tulip), built to the same pattern as
+// reception-package.html: same tier switcher, same sticky switcher, same
+// .package-menu-* markup, same shared chrome. Linked from the High Tea card
+// in weddings.html's packages section.
+//
+// Per-person prices (35/45/55 euro) come from the client's own shared quote,
+// not from the catalogue - the catalogue's menu pages carry no prices at all.
+// Unlike Banquet, there is no conflicting second source for these, so they
+// are shown. Treat them as one data point rather than a fixed rate card: the
+// client has said pricing is generated internally and varies by season.
+//
+// NO (V) MARKERS ANYWHERE ON THIS PAGE, deliberately, and this is surfaced to
+// the reader rather than left silent: the catalogue marks vegetarian items
+// throughout Reception and Banquet but not once across Jasmine, Hibiscus or
+// Tulip. A .package-menu-note-warning callout under the tier cards says so
+// and says why we haven't inferred markers from dish names - getting that
+// wrong mislabels a dish to a guest with a dietary requirement, which is a
+// worse failure than an absent marker. The allergen callout at the foot of
+// the page therefore also has its "(V) vegetarian." legend line removed,
+// since there are no badges for it to explain. Restore both the legend line
+// and the badges together, once Bacchus confirms which items qualify.
+//
+// Content is taken from docs/bacchus-wedding-catalogue.pdf, read from the
+// rendered pages rather than from extracted text. An automated text pull of
+// this PDF silently drops every accented character and, in places, whole
+// words - "Goat's Cheese" vanished from one Orchid line, "Gavi Di Gavi" from
+// a wine name. Do not rebuild these lists from a text extraction.
+//
+// Capitalisation and spelling follow reception-package.html's existing
+// house-style normalisation rather than the catalogue's own inconsistencies,
+// which is the convention that page already set. Corrections applied, listed
+// here so the client can confirm or reverse them: "SANWHICHES" to
+// "Sandwiches", "SAVORIES" to "Savouries", "Caramelized" to "Caramelised",
+// "Pine Not Roll" to "Pine Nut Roll", "Macaroons" to "Macarons" (the
+// catalogue's own Stations page says "Macaron Tower"), and sentence-cased
+// dish words raised to title case.
+//
+// This page carries NO signature-dish photo tiles, unlike
+// reception-package.html. That component captions each tile with a specific
+// dish name, and no per-dish photography exists for this package - a stand-in
+// under a real dish name would be a false claim rather than a placeholder.
+// Imagery is deliberately BLACKED OUT rather than filled with stand-in
+// photography, on request: the hero is a flat black .hero-media with a
+// labelled chip over it, and each tier leads with three
+// .package-dish-placeholder tiles - black, dashed oxblood border, the dish's
+// initials and a "photo to follow" line. None of them can be opened; there is
+// nothing to enlarge, so the page has no lightbox. A stand-in photo reads as
+// a finished choice in a walkthrough, whereas an empty black frame reads as
+// "still to come", which is the honest signal while the client sources
+// images. The carousel further down is the exception and does use real
+// generic Bacchus photography, labelled as such in its own lead.
+//
+// To swap real imagery in: put an <img> back inside .hero-media (see
+// reception-package.html) and drop .package-hero-placeholder; replace each
+// .package-dish-placeholder with .gallery-item/.gallery-tag markup and copy
+// the page-scoped lightbox controller back from reception-package.html.
+//
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageHero from "../../../components/PageHero.astro";
+import ArrowIcon from "../../../components/ArrowIcon.astro";
+// After BaseLayout, so these load after global.css (see package-page.css).
+import "../../../styles/package-page.css";
+import "../../../styles/package-dish-placeholders.css";
+---
+
+<BaseLayout
+  title="Our High Tea Menus — Bacchus"
+  menuBackgroundImage="/images/weddings/cake-chandelier.webp"
+  showVisitSection={false}
+>
+  <PageHero crumb="High Tea Menus" parent={{ href: "/weddings", label: "Weddings" }}>
+    Our High Tea <em>Menus</em>
+    <Fragment slot="sub">
+      Dainty sandwiches, hot savouries and a table of sweets — an afternoon alternative to
+      the formal banquet.
+    </Fragment>
+    <Fragment slot="sub-secondary">
+      Three considered tiers, each explored in full below.
+    </Fragment>
+    <Fragment slot="ctas">
+      <a href="/weddings#enquire" class="button button-gradient button-shimmer">
+        <span>Book a tasting</span>
+        <ArrowIcon />
+      </a>
+      <a
+        href="/docs/bacchus-wedding-catalogue.pdf"
+        target="_blank"
+        rel="noopener"
+        class="button button-ghost"
+      >
+        <span>View the catalogue</span>
+      </a>
+    </Fragment>
+  </PageHero>
+
+  <section class="section-padding on-dark on-dark-gold-wash">
+    <div class="wrap">
+      <div class="eyebrow" data-reveal>
+        From the catalogue
+      </div>
+      <div class="package-tabs-grid">
+        <h2 class="package-tabs-heading" data-reveal style="--d: 80ms">
+          Compare the three <em>tiers</em>
+        </h2>
+        <div
+          class="tab-bar package-tabs-tabbar"
+          role="tablist"
+          data-reveal
+          style="--d: 160ms"
+        >
+          <span class="pill" id="pill"></span>
+          <button class="active" data-tab="jasmine" role="tab" aria-selected="true">
+            Jasmine
+          </button>
+          <button data-tab="hibiscus" role="tab" aria-selected="false">
+            Hibiscus
+          </button>
+          <button data-tab="tulip" role="tab" aria-selected="false">
+            Tulip
+          </button>
+        </div>
+        <div class="package-tabs-lead" data-reveal style="--d: 220ms">
+          <p class="lead">
+            Jasmine, Hibiscus and Tulip are three readings of the same afternoon table,
+            each more generous than the last.
+          </p>
+          <p class="lead">
+            Switch between them below — every item is taken straight from the printed
+            catalogue.
+          </p>
+        </div>
+      </div>
+
+      <div class="package-tier-cards" data-reveal style="--d: 280ms">
+        <button
+          type="button"
+          class="package-tier-card active"
+          data-tier-card="jasmine"
+          aria-pressed="true"
+        >
+          <span class="package-tier-card-check" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path
+                d="M4 9.5l3 3 7-7.5"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span class="package-tier-card-eyebrow">High Tea</span>
+          <b class="package-tier-card-name">Jasmine</b>
+          <span class="package-tier-card-price">
+            €35<span class="package-tier-card-unit">per person</span>
+          </span>
+          <span class="package-tier-card-desc">
+            The lightest of the three — five dainty sandwiches, two hot savouries, scones
+            and a short table of sweets.
+          </span>
+        </button>
+        <button
+          type="button"
+          class="package-tier-card"
+          data-tier-card="hibiscus"
+          aria-pressed="false"
+        >
+          <span class="package-tier-card-check" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path
+                d="M4 9.5l3 3 7-7.5"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span class="package-tier-card-eyebrow">High Tea</span>
+          <b class="package-tier-card-name">Hibiscus</b>
+          <span class="package-tier-card-price">
+            €45<span class="package-tier-card-unit">per person</span>
+          </span>
+          <span class="package-tier-card-desc">
+            Two more sandwiches, three hot savouries, home-made rolls and a fuller sweet
+            table.
+          </span>
+        </button>
+        <button
+          type="button"
+          class="package-tier-card"
+          data-tier-card="tulip"
+          aria-pressed="false"
+        >
+          <span class="package-tier-card-check" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path
+                d="M4 9.5l3 3 7-7.5"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span class="package-tier-card-eyebrow">High Tea</span>
+          <b class="package-tier-card-name">Tulip</b>
+          <span class="package-tier-card-price">
+            €55<span class="package-tier-card-unit">per person</span>
+          </span>
+          <span class="package-tier-card-desc">
+            The full table — seven savouries including quiches and open pies, three rolls,
+            and every sweet on the list.
+          </span>
+        </button>
+      </div>
+
+      <div class="package-menu-note package-menu-note-warning" data-reveal>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
+          <path d="M12 9v4m0 4h.01" />
+        </svg>
+        <div class="package-menu-note-text">
+          <p>
+            <b>Vegetarian marking is missing from the High Tea menus.</b>
+          </p>
+          <p>
+            The printed catalogue marks vegetarian items (V) throughout the Reception and
+            Banquet menus, but not once across Jasmine, Hibiscus or Tulip. We have
+            reproduced it as received rather than inferring markers from dish names, which
+            would risk mislabelling a dish to a guest with a dietary requirement.
+          </p>
+          <p>
+            Bacchus caters for vegetarian, vegan and gluten-free requirements — please
+            raise them with the team, and we will add the markers here once confirmed.
+          </p>
+        </div>
+      </div>
+
+      {/* Removed on request (2026-09-19) — redundant with the card grid
+           above, which already shows the selected tier's name + eyebrow +
+           checkmark. Commented out rather than deleted in case it's
+           wanted back (e.g. as an anchor once a visitor has scrolled
+           further down past the cards into the dish list, out of view
+           of the checkmark) — see the reasoning discussion around this
+           point. Note as of the 2026-09-22 swipe-carousel rework below,
+           the script no longer has any #packageTierName-aware code at
+           all (the old setTierName()/tierNameEl crossfade was removed
+           along with the fade-based tier switch it supported) — so
+           re-enabling this block would need new wiring, not just
+           uncommenting it.
+      <div class="package-now-viewing">Now viewing</div>
+      <div class="capacity">
+        Reception · <span id="packageTierName" class="package-tier-name">Daisy</span>
+      </div>
+      */}
+      {/* No data-reveal here (was: data-reveal style="--d: 300ms") — the
+           sitewide scroll-reveal observer (main.js, threshold: 0.18) needs
+           18% of a data-reveal target's OWN height visible before firing.
+           .panels wraps a whole tier's full content (3 dish photos + up
+           to 6 ingredient-list groups), so its height varies a lot by
+           tier and by viewport (much taller once .package-menu-groups
+           collapses to 1 column on mobile) — 18% of that was a large,
+           inconsistent scroll distance before anything appeared, reading
+           as "content stays hidden too long". The heading/tab-bar/lead
+           directly above already carry their own compact, well-behaved
+           reveals that cue "this section is arriving"; .panels itself
+           doesn't need a second scroll-gated fade on top of that. Same
+           reasoning CLAUDE.md already documents for why the dish tiles
+           skip data-reveal entirely (display:none tab-panels never fire
+           the observer) — this component just doesn't suit the generic
+           reveal mechanism. */}
+      <div class="package-tier-view" id="packageTierView">
+        <div class="panels" id="packageTierTrack">
+          <div class="tab-panel full active" data-panel="jasmine">
+            <div class="package-tier-content">
+              <h4 class="package-dishes-label">Signature dishes</h4>
+              <div class="package-dishes-grid">
+                <figure class="package-dish package-reveal" style="--package-d: 0ms">
+                  <div class="package-dish-placeholder" aria-hidden="true">
+                    <span class="package-dish-placeholder-initials">CS</span>
+                    <span class="package-dish-placeholder-note">Photo to follow</span>
+                  </div>
+                  <figcaption class="package-dish-name">Cured Salmon Sandwich</figcaption>
+                </figure>
+                <figure class="package-dish package-reveal" style="--package-d: 40ms">
+                  <div class="package-dish-placeholder" aria-hidden="true">
+                    <span class="package-dish-placeholder-initials">SC</span>
+                    <span class="package-dish-placeholder-note">Photo to follow</span>
+                  </div>
+                  <figcaption class="package-dish-name">
+                    Strawberry & Foamed Cream Scones
+                  </figcaption>
+                </figure>
+                <figure class="package-dish package-reveal" style="--package-d: 80ms">
+                  <div class="package-dish-placeholder" aria-hidden="true">
+                    <span class="package-dish-placeholder-initials">AC</span>
+                    <span class="package-dish-placeholder-note">Photo to follow</span>
+                  </div>
+                  <figcaption class="package-dish-name">Almond Cake</figcaption>
+                </figure>
+              </div>
+              <div class="package-menu-groups">
+                <div class="package-menu-group package-reveal" style="--package-d: 0ms">
+                  <h4>Dainty Sandwiches</h4>
+                  <ul>
+                    <li>Serrano Ham, Aged Smoked Cheese, Tomato Relish</li>
+                    <li>Roasted Cajun Chicken, Crispy Pancetta, Guacamole Roll</li>
+                    <li>Cured Salmon, Dill Yoghurt, Sliced Cucumber, Salmon Roe</li>
+                    <li>Roast Beef Brisket, Horseradish Cream, Truffle</li>
+                    <li>Grilled Aubergine, Hummus Spread, Fig Salsa Roll</li>
+                  </ul>
+                </div>
+                <div class="package-menu-group package-reveal" style="--package-d: 40ms">
+                  <h4>Hot Savouries</h4>
+                  <ul>
+                    <li>Feta &amp; Spinach Puffs</li>
+                    <li>Beef Trellis</li>
+                  </ul>
+                </div>
+                <div class="package-menu-group package-reveal" style="--package-d: 80ms">
+                  <h4>Hot Sweets</h4>
+                  <ul>
+                    <li>Strawberry &amp; Foamed Cream Scones</li>
+                    <li>Banana Bread, Walnut Cremieux &amp; Dehydrated Banana</li>
+                  </ul>
+                </div>
+                <div class="package-menu-group package-reveal" style="--package-d: 120ms">
+                  <h4>Heavenly Sweets</h4>
+                  <ul>
+                    <li>Cherry &amp; Coconut Lamingtons</li>
+                    <li>Assorted Macarons</li>
+                    <li>Coffee, Chocolate &amp; Walnut Cake</li>
+                    <li>Hazelnut &amp; Sheep Ricotta Cannolo</li>
+                    <li>Almond Cake</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel full" data-panel="hibiscus">
+            <div class="package-tier-content">
+              <h4 class="package-dishes-label">Signature dishes</h4>
+              <div class="package-dishes-grid">
+                <figure class="package-dish package-reveal" style="--package-d: 0ms">
+                  <div class="package-dish-placeholder" aria-hidden="true">
+                    <span class="package-dish-placeholder-initials">GM</span>
+                    <span class="package-dish-placeholder-note">Photo to follow</span>
+                  </div>
+                  <figcaption class="package-dish-name">
+                    Grouper Mousse Sandwich
+                  </figcaption>
+                </figure>
+                <figure class="package-dish package-reveal" style="--package-d: 40ms">
+                  <div class="package-dish-placeholder" aria-hidden="true">
+                    <span class="package-dish-placeholder-initials">PQ</span>
+                    <span class="package-dish-placeholder-note">Photo to follow</span>
+                  </div>
+                  <figcaption class="package-dish-name">Porcini Quiche</figcaption>
+                </figure>
+                <figure class="package-dish package-reveal" style="--package-d: 80ms">
+                  <div class="package-dish-placeholder" aria-hidden="true">
+                    <span class="package-dish-placeholder-initials">DL</span>
+                    <span class="package-dish-placeholder-note">Photo to follow</span>
+                  </div>
+                  <figcaption class="package-dish-name">
+                    Date & Ginger Tea Loaf
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="package-menu-groups">
+                <div class="package-menu-group package-reveal" style="--package-d: 0ms">
+                  <h4>Dainty Sandwiches</h4>
+                  <ul>
+                    <li>Serrano Ham, Aged Smoked Cheese, Tomato Relish</li>
+                    <li>Roasted Cajun Chicken, Crispy Pancetta, Guacamole Roll</li>
+                    <li>Cured Salmon, Dill Yoghurt, Sliced Cucumber, Salmon Roe</li>
+                    <li>Roast Beef Brisket, Horseradish Cream, Truffle</li>
+                    <li>Grilled Aubergine, Hummus Spread, Fig Salsa Roll</li>
+                    <li>Brie, Fruit Compote, Crispy Onions</li>
+                    <li>Grouper Mousse, Tartare Cream, Fried Leeks</li>
+                  </ul>
+                </div>
+                <div class="package-menu-group package-reveal" style="--package-d: 40ms">
+                  <h4>Hot Savouries</h4>
+                  <ul>
+                    <li>Pancetta &amp; Caramelised Onion Quiche</li>
+                    <li>Asparagus &amp; Porcini Quiche</li>
+                    <li>Pecorino &amp; Guanciale Muffins</li>
+                  </ul>
+                </div>
+                <div class="package-menu-group package-reveal" style="--package-d: 80ms">
+                  <h4>Homemade Rolls</h4>
+                  <ul>
+                    <li>Lamb, Mint &amp; Feta Rolls</li>
+                    <li>Traditional Pigs in Blankets</li>
+                  </ul>
+                </div>
+                <div class="package-menu-group package-reveal" style="--package-d: 120ms">
+                  <h4>Hot Sweets</h4>
+                  <ul>
+                    <li>Strawberry &amp; Foamed Cream Scones</li>
+                    <li>Banana Bread, Walnut Cremieux &amp; Dehydrated Banana</li>
+                  </ul>
+                </div>
+                <div class="package-menu-group package-reveal" style="--package-d: 160ms">
+                  <h4>Heavenly Sweets</h4>
+                  <ul>
+                    <li>Cherry &amp; Coconut Lamingtons</li>
+                    <li>Assorted Macarons</li>
+                    <li>Carrot &amp; Tahini Muffins</li>
+                    <li>Date &amp; Ginger Tea Loaf</li>
+                    <li>Coffee, Chocolate &amp; Walnut Cake</li>
+                    <li>Hazelnut &amp; Sheep Ricotta Cannolo</li>
+                    <li>Almond Cake</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel full" data-panel="tulip">
+            <div class="package-tier-content">
+              <h4 class="package-dishes-label">Signature dishes</h4>
+              <div class="package-dishes-grid">
+                <figure class="package-dish package-reveal" style="--package-d: 0ms">
+                  <div class="package-dish-placeholder" aria-hidden="true">
+                    <span class="package-dish-placeholder-initials">LR</span>
+                    <span class="package-dish-placeholder-note">Photo to follow</span>
+                  </div>
+                  <figcaption class="package-dish-name">
+                    Lamb, Mint & Feta Rolls
+                  </figcaption>
+                </figure>
+                <figure class="package-dish package-reveal" style="--package-d: 40ms">
+                  <div class="package-dish-placeholder" aria-hidden="true">
+                    <span class="package-dish-placeholder-initials">ZC</span>
+                    <span class="package-dish-placeholder-note">Photo to follow</span>
+                  </div>
+                  <figcaption class="package-dish-name">
+                    Zucchini & Chevre Open Pie
+                  </figcaption>
+                </figure>
+                <figure class="package-dish package-reveal" style="--package-d: 80ms">
+                  <div class="package-dish-placeholder" aria-hidden="true">
+                    <span class="package-dish-placeholder-initials">RC</span>
+                    <span class="package-dish-placeholder-note">Photo to follow</span>
+                  </div>
+                  <figcaption class="package-dish-name">Ricotta Cannolo</figcaption>
+                </figure>
+              </div>
+              <div class="package-menu-groups">
+                <div class="package-menu-group package-reveal" style="--package-d: 0ms">
+                  <h4>Dainty Sandwiches</h4>
+                  <ul>
+                    <li>Serrano Ham, Aged Smoked Cheese, Tomato Relish</li>
+                    <li>Roasted Cajun Chicken, Crispy Pancetta, Guacamole Roll</li>
+                    <li>Cured Salmon, Dill Yoghurt, Sliced Cucumber, Salmon Roe</li>
+                    <li>Roast Beef Brisket, Horseradish Cream, Truffle</li>
+                    <li>Grilled Aubergine, Hummus Spread, Fig Salsa Roll</li>
+                    <li>Brie, Fruit Compote, Crispy Onions</li>
+                    <li>Grouper Mousse, Tartare Cream, Fried Leeks</li>
+                  </ul>
+                </div>
+                <div class="package-menu-group package-reveal" style="--package-d: 40ms">
+                  <h4>Hot Savouries</h4>
+                  <ul>
+                    <li>Pancetta &amp; Caramelised Onion Quiche</li>
+                    <li>Asparagus &amp; Porcini Quiche</li>
+                    <li>Pecorino &amp; Guanciale Muffins</li>
+                    <li>Feta &amp; Spinach Puffs</li>
+                    <li>Bell Pepper &amp; Dill Quiche</li>
+                    <li>Butternut Squash Pie</li>
+                    <li>Zucchini &amp; Chevre Open Pie</li>
+                  </ul>
+                </div>
+                <div class="package-menu-group package-reveal" style="--package-d: 80ms">
+                  <h4>Homemade Rolls</h4>
+                  <ul>
+                    <li>Lamb, Mint &amp; Feta Rolls</li>
+                    <li>Chicken Curry, Capsicum &amp; Pine Nut Roll</li>
+                    <li>Traditional Pigs in Blankets</li>
+                  </ul>
+                </div>
+                <div class="package-menu-group package-reveal" style="--package-d: 120ms">
+                  <h4>Hot Sweets</h4>
+                  <ul>
+                    <li>Strawberry &amp; Foamed Cream Scones</li>
+                    <li>Banana Bread, Walnut Cremieux &amp; Dehydrated Banana</li>
+                  </ul>
+                </div>
+                <div class="package-menu-group package-reveal" style="--package-d: 160ms">
+                  <h4>Heavenly Sweets</h4>
+                  <ul>
+                    <li>Cherry &amp; Coconut Lamingtons</li>
+                    <li>Assorted Macarons</li>
+                    <li>Carrot &amp; Tahini Muffins</li>
+                    <li>Date &amp; Ginger Tea Loaf</li>
+                    <li>Coffee, Chocolate &amp; Walnut Cake</li>
+                    <li>Hazelnut &amp; Sheep Ricotta Cannolo</li>
+                    <li>Almond Cake</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Sits OUTSIDE .package-tier-view/.panels deliberately. It used to
+           be the last block inside each of the three .package-tier-content
+           blocks — byte-identical in all three — which meant it replayed
+           the whole tier-switch motion every time: the click path animates
+           .package-tier-content wholesale (packageTierFadeIn), and the
+           swipe path slid it across with its panel. A descendant can't opt
+           out of an ancestor's opacity/transform animation, so the only
+           real fix was to lift it out of the animated container. Doing
+           that also collapses the three identical copies into one.
+
+           data-reveal (not .package-reveal) so it still fades in once when
+           scrolled to, matching .package-stations-note directly below it —
+           the tier switcher's own JS never touches [data-reveal] elements,
+           which is exactly why it stays put now on every switch. */}
+      <div class="package-menu-note" data-reveal>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v5m0-8h.01" />
+        </svg>
+        <div class="package-menu-note-text">
+          <p>
+            Menu items may contain or come into contact with allergens — please discuss
+            requirements with the Bacchus sales team.
+          </p>
+          <p>
+            BCL is certified Halal by The World Islamic Call Society (Malta Branch). Full
+            terms are in the printed catalogue.
+          </p>
+        </div>
+      </div>
+      <div class="package-stations-note" data-reveal style="--d: 60ms">
+        <p>
+          Comparing formats? Also see our
+          <a href="/weddings/packages/reception" class="link-underline-inline">
+            Reception
+          </a>{" "}
+          and
+          <a href="/weddings/packages/banquet" class="link-underline-inline">
+            Banquet
+          </a>{" "}
+          menus.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div
+    class="package-sticky-switch"
+    id="packageStickySwitch"
+    role="tablist"
+    aria-label="Switch tier"
+    aria-hidden="true"
+  >
+    <span class="pill"></span>
+    <button
+      type="button"
+      class="package-sticky-switch-btn active"
+      data-tier-switch="jasmine"
+      role="tab"
+      aria-selected="true"
+      aria-label="Switch to Jasmine, €35 per person"
+    >
+      <span class="package-sticky-switch-name">Jasmine</span>
+      <span class="package-sticky-switch-price">€35</span>
+    </button>
+    <button
+      type="button"
+      class="package-sticky-switch-btn"
+      data-tier-switch="hibiscus"
+      role="tab"
+      aria-selected="false"
+      aria-label="Switch to Hibiscus, €45 per person"
+    >
+      <span class="package-sticky-switch-name">Hibiscus</span>
+      <span class="package-sticky-switch-price">€45</span>
+    </button>
+    <button
+      type="button"
+      class="package-sticky-switch-btn"
+      data-tier-switch="tulip"
+      role="tab"
+      aria-selected="false"
+      aria-label="Switch to Tulip, €55 per person"
+    >
+      <span class="package-sticky-switch-name">Tulip</span>
+      <span class="package-sticky-switch-price">€55</span>
+    </button>
+  </div>
+
+  <section class="section-padding">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow" id="closerLookEyebrow" data-reveal>
+          From the High Tea
+        </div>
+        <h2 data-reveal style="--d: 80ms">
+          A closer look, in <em>five</em> frames
+        </h2>
+        <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px">
+          Drag, swipe or use the arrows. Generic Bacchus photography for now — easily
+          swapped for shots of the High Tea itself once available.
+        </p>
+      </div>
+    </div>
+    <div class="wrap carousel-section">
+      <div class="carousel-view" id="carView">
+        <div class="carousel-track" id="carTrack">
+          <figure class="slide">
+            <div class="ph">
+              <img
+                src="/images/shared/canapes-service.jpg"
+                alt="A waiter serving canapés at a wedding reception"
+                decoding="async"
+              />
+            </div>
+            <figcaption class="carousel-caption">
+              <b>Canapés, Passed</b>
+              <i>1</i>
+            </figcaption>
+          </figure>
+          <figure class="slide">
+            <div class="ph">
+              <img
+                src="/images/shared/terrace-celebration-reception.webp"
+                alt="Guests mingling at a Bacchus wedding reception on the Terrace"
+                decoding="async"
+              />
+            </div>
+            <figcaption class="carousel-caption">
+              <b>Guests, On the Terrace</b>
+              <i>2</i>
+            </figcaption>
+          </figure>
+          <figure class="slide">
+            <div class="ph">
+              <img
+                src="/images/shared/champagne.webp"
+                alt="A guest raising a glass of sparkling wine at a dressed table"
+                decoding="async"
+              />
+            </div>
+            <figcaption class="carousel-caption">
+              <b>A Toast, On Arrival</b>
+              <i>3</i>
+            </figcaption>
+          </figure>
+          <figure class="slide">
+            <div class="ph">
+              <img
+                src="/images/shared/terrace-marquee-tables.webp"
+                alt="Tables dressed under a marquee on the Terrace"
+                decoding="async"
+              />
+            </div>
+            <figcaption class="carousel-caption">
+              <b>The Terrace, Dressed</b>
+              <i>4</i>
+            </figcaption>
+          </figure>
+          <figure class="slide">
+            <div class="ph">
+              <img
+                src="/images/shared/secret-garden-night.webp"
+                alt="A long candlelit table in the Secret Garden at night"
+                decoding="async"
+              />
+            </div>
+            <figcaption class="carousel-caption">
+              <b>The Secret Garden, By Night</b>
+              <i>5</i>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-button" id="prev" aria-label="Previous">
+          <svg width="16" height="12" viewBox="0 0 14 10" fill="none">
+            <path
+              d="M13 5H2m3.5-3.5L2 5l3.5 3.5"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <button class="carousel-button" id="next" aria-label="Next">
+          <svg width="16" height="12" viewBox="0 0 14 10" fill="none">
+            <path
+              d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <div class="carousel-progress-bar">
+          <i id="carBar"></i>
+        </div>
+        <div class="carousel-count">
+          <span id="carNow">1</span> / <span id="carTotal">5</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import "../../../scripts/package-tiers.js";
+  </script>
+</BaseLayout>

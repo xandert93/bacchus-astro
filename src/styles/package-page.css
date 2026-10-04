@@ -1,0 +1,1101 @@
+/* Shared by the package pages (banquet, high tea, beverage): the tier
+   switcher, tier cards, sticky switcher, menu groups and the photo
+   carousel. Was an identical <style> block copied into each prototype
+   page; imported once per page now, after global.css so it wins ties on
+   source order exactly as the inline block did.
+
+   reception-package has its own, much larger copy (stations included)
+   which has drifted from this one — merging the two is a separate job. */
+.package-now-viewing {
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+/* styles.css only styles .capacity as ".tab-panel .capacity" — this
+   one now sits outside .panels/.tab-panel entirely (a single shared
+   element, not one per tier), so it needs its own copy of that same
+   styling rather than inheriting it. */
+.capacity {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 9px;
+  /* Was 20px — bumped to match the gap the removed price/blurb block
+     used to leave before "Signature dishes" (that block's own
+     margin-bottom), now that .capacity is the last thing before it. */
+  margin-bottom: clamp(28px, 4vw, 40px);
+  color: var(--gold-2);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+/* Only the tier name itself fades on switch — "Now viewing" and
+   "Banquet · " are static chrome that never change and sit outside
+   .panels entirely (a single element, not one per tab-panel), so
+   there's nothing there for a class/display toggle to even animate.
+   The name is a single persistent <span> whose text content is
+   swapped by JS with a fixed setTimeout crossfade (CLAUDE.md bug #7 —
+   swapping text and toggling a class in the same tick can get
+   coalesced into one paint with no frame to animate from), not tied
+   to which .tab-panel is active. */
+.package-tier-name {
+  display: inline-block;
+  transition:
+    opacity 0.3s var(--ease),
+    transform 0.35s var(--ease);
+}
+.package-tier-name.package-tier-name-out {
+  opacity: 0;
+  transform: translateY(4px);
+}
+/* The vertical fade a CLICK-triggered tier switch plays (tab bar,
+   tier card, sticky switcher). A touch swipe has its own motion —
+   the track's horizontal slide, see .package-tier-view/.panels below
+   — and deliberately never replays this; goToIndex() in the script
+   picks one or the other per trigger.
+
+   Note the fade is an `animation` layered on top of a
+   visible-by-default base state, NOT a class that content has to
+   carry in order to be seen. That distinction is load-bearing here:
+   every tier is permanently in the DOM side by side for the track,
+   so a tier that has only ever been swiped to (never clicked) never
+   receives this class at all. Gating visibility on it left such a
+   tier rendering completely empty. */
+.package-tier-content {
+  opacity: 1;
+  transform: none;
+}
+@keyframes packageTierFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.package-tier-content.package-tier-fade-in {
+  animation: packageTierFadeIn 0.55s var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .package-tier-content.package-tier-fade-in {
+    animation: none;
+  }
+}
+
+/* Puts the tier switcher on the same line as the section heading
+   (not the eyebrow, which stays its own full-width line above) —
+   .tab-bar's own look/behavior (sliding pill, mobile equal-width fix)
+   is untouched, this only changes where it sits. A grid rather than a
+   flex row so the wrapped mobile order can put the tab-bar AFTER the
+   intro paragraph rather than between the heading and it — flex-wrap
+   can only reorder within its own container, it can't leapfrog a
+   sibling element the way a named grid area can. */
+.package-tabs-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "heading tabbar" "lead lead";
+  align-items: end;
+  column-gap: clamp(16px, 3vw, 32px);
+  row-gap: 22px;
+  /* Was clamp(44px, 6vw, 72px) — sized for when .package-menu-pdf-note
+     (removed, see CLAUDE.md) sat in this gap and ate into it via its
+     own -6px top margin. With nothing left to break the gap up, the
+     old value read as too much empty space before "Now viewing" —
+     brought down to match the clamp(32px, 4.5vw, 48px) rhythm already
+     used elsewhere on this page (e.g. .package-menu-groups below). */
+  margin-bottom: clamp(32px, 4.5vw, 48px);
+}
+.package-tabs-heading {
+  grid-area: heading;
+  margin: 0;
+}
+/* .tab-bar's sitewide margin-bottom (styles.css) exists for its usual
+   context — stacked directly above .panels, needing a gap before the
+   panel content starts. Sitting inline next to the heading here
+   instead, that inherited margin just adds dead space inside this
+   grid cell and throws off vertical alignment against the heading —
+   zero it out in this context specifically. */
+/* Equal-width tabs. flex:1 (the pattern .tab-bar already uses
+   sitewide at mobile widths, bug #13) doesn't actually guarantee
+   equal widths here: flex:1 expands to flex-basis:0, and a button
+   can never shrink below its own text's min-content width (white-
+   space:nowrap) — "Lavender" is longer than "Daisy"/"Rose", so it
+   hits that floor first and ends up wider than the other two instead
+   of all three matching. An explicit fixed width sidesteps the flex
+   algorithm entirely — sized to comfortably fit "Lavender", the
+   longest label, at this font-size/letter-spacing/padding. */
+.package-tabs-tabbar {
+  grid-area: tabbar;
+  display: flex;
+  margin-bottom: 0;
+  border-radius: var(--radius-pill);
+}
+.package-tabs-tabbar button {
+  width: 120px;
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  text-align: center;
+}
+/* The sliding active-tab highlight (.pill, main.js-driven) has a
+   sharp 2px radius sitewide — mismatched now that the bar and
+   buttons are fully rounded. The gradient background it now carries
+   (was a flat var(--gold) fill) lives in the sitewide .tab-bar .pill
+   rule in styles.css, not here — applies to every .tab-bar on
+   request, this page's own tab bar included, so nothing extra is
+   needed for it here beyond the radius override. */
+.package-tabs-tabbar .pill {
+  border-radius: var(--radius-pill);
+}
+.package-tabs-lead {
+  grid-area: lead;
+  max-width: 760px;
+  margin: 0;
+}
+.package-tabs-lead p {
+  margin: 0;
+}
+.package-tabs-lead p + p {
+  margin-top: 12px;
+}
+@media (max-width: 840px) {
+  .package-tabs-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: "heading" "lead" "tabbar";
+  }
+  /* Once wrapped, switch to the same full-width/flex:1 pattern the
+     sitewide mobile tab-bar already uses (bug #13) instead of the
+     fixed 120px buttons — those are sized for sitting compactly next
+     to the heading and would otherwise leave the wrapped row's edges
+     empty rather than the buttons collectively filling it. */
+  .package-tabs-tabbar {
+    width: 100%;
+  }
+  .package-tabs-tabbar button {
+    width: auto;
+    flex: 1;
+  }
+}
+
+/* Card view of the same three tiers, sitting alongside the tab bar
+   above — a second selector for the same state, not a replacement
+   (kept deliberately, on request, even though the tab bar alone
+   could drive this). Clicking a card clicks the matching tab button
+   under the hood (see script below), so panel switching, the hash
+   sync and the pill slide all fire exactly as they would from the
+   tab bar itself — no separate/duplicated switching logic here, this
+   is purely presentational plus a proxy click. <b>/<span> rather than
+   <h3>/<p> inside the <button> — button only allows phrasing content,
+   same reason the wizard's .option-card buttons use <b>/<span> (see
+   celebrations.html etc.) rather than headings. */
+.package-tier-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 2vw, 22px);
+  /* Matches .package-tabs-grid's own margin-bottom above the cards, so the
+     gap above and beneath the card grid reads as even. */
+  margin-bottom: clamp(32px, 4.5vw, 48px);
+}
+.package-tier-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  padding: clamp(22px, 2.4vw, 28px) clamp(20px, 2vw, 24px);
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(var(--limestone-rgb), 0.14);
+  background:
+    linear-gradient(
+      160deg,
+      rgba(var(--limestone-rgb), 0.08),
+      rgba(var(--limestone-rgb), 0.015) 60%
+    ),
+    rgba(var(--ink-rgb), 0.3);
+  cursor: pointer;
+  transition:
+    border-color 0.4s var(--ease),
+    transform 0.4s var(--ease);
+}
+@media (hover: hover) {
+  .package-tier-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(var(--gold-rgb), 0.32);
+  }
+}
+@media (hover: none) {
+  .package-tier-card:active {
+    transform: translateY(-2px);
+  }
+}
+.package-tier-card.active {
+  border-color: rgba(var(--gold-rgb), 0.55);
+}
+/* A circular selection indicator — hollow ring on every card (reads as
+   "this is a selectable option" even before anything's picked), fills
+   solid gold with the check going from transparent to ink so it shows
+   up against the fill, once .active — a radio-button-style fill
+   rather than a plain icon fading in. */
+.package-tier-card-check {
+  position: absolute;
+  top: clamp(22px, 2.4vw, 28px);
+  right: clamp(20px, 2vw, 24px);
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2.5px solid rgba(var(--limestone-rgb), 0.3);
+  background: transparent;
+  color: transparent;
+  transition:
+    background 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    color 0.3s var(--ease);
+}
+.package-tier-card-check svg {
+  width: 14px;
+  height: 14px;
+}
+.package-tier-card.active .package-tier-card-check {
+  border-color: var(--gold-2);
+  background: var(--gold-2);
+  color: var(--ink);
+}
+.package-tier-card-eyebrow {
+  display: block;
+  font-family: "Inter", sans-serif;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.package-tier-card-name {
+  display: block;
+  font-family: "Fraunces", serif;
+  font-weight: 400;
+  font-size: clamp(22px, 2.4vw, 27px);
+  color: var(--limestone-2);
+  margin-bottom: 10px;
+}
+.package-tier-card-price {
+  display: block;
+  font-family: "Fraunces", serif;
+  font-size: clamp(28px, 3.2vw, 34px);
+  color: var(--limestone-2);
+  margin-bottom: 14px;
+}
+.package-tier-card-unit {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  color: var(--muted);
+  margin-left: 4px;
+}
+.package-tier-card-desc {
+  display: block;
+  font-family: "Newsreader", Georgia, serif;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+/* Showing all three full cards stacked on mobile pushes the actual
+   menu content (dishes, ingredient lists) a long way down the page
+   before a visitor reaches it — the tab bar above already lets them
+   switch tiers without scrolling past anything. So on mobile only the
+   selected card renders; the tab bar and cards stay in sync either
+   way (see script), so switching tiers via the tab bar swaps which
+   single card is shown here too. */
+@media (max-width: 840px) {
+  .package-tier-cards {
+    grid-template-columns: 1fr;
+  }
+  .package-tier-card:not(.active) {
+    display: none;
+  }
+  /* The only card left visible here is always the selected one, so a
+     selection indicator has nothing left to distinguish — there's no
+     unselected sibling beside it to compare against. */
+  .package-tier-card-check {
+    display: none;
+  }
+}
+
+/* Condensed tier switcher, hidden until its trigger point scrolls out
+   of view above (see the script below), so a visitor deep in the menu
+   content — 31 line items on Daisy alone, all single-column below
+   620px — can switch tiers without scrolling back up. The trigger
+   differs by breakpoint: mobile shows just the tab bar + one
+   collapsed card, so appears once that's scrolled past; desktop/
+   tablet also shows all three full .package-tier-cards, which already
+   let you switch tiers, so there it waits until the cards themselves
+   have scrolled past too. Desktop/tablet: sticks under the fixed
+   site nav, which has room to spare. Mobile flips to the bottom
+   instead: stacking under the
+   already-74px-fixed .nav would burn ~130px of a small viewport, and
+   the bottom sits in the thumb zone anyway. Fill/blur match the
+   nav's own scrolled-state treatment (see the comment on
+   .package-sticky-switch's background below); the gold border and pill
+   shape are the one piece still borrowed from
+   sandboxes/secure-booking.html's .secure-booking-float-help.
+   Every button here is a pure proxy —
+   clicking it just clicks the matching real .package-tabs-tabbar button
+   (see script), and its own active state is synced from there too
+   (syncStickySwitch, same call sites as syncTierCards) — same "one
+   path decides the tier" principle .package-tier-card already follows.
+   Deliberately NOT given the sitewide .tab-bar class: main.js's tab
+   controller queries ".tab-bar button" and #pill as page-wide
+   singletons (exactly one pill, exactly one active button cleared/set
+   across ALL .tab-bar instances found) — a second .tab-bar here would
+   fight the real one over both. */
+.package-sticky-switch {
+  position: fixed;
+  z-index: 700;
+  display: flex;
+  gap: 2px;
+  padding: 6px;
+  border: 1px solid rgba(var(--gold-rgb), 0.4);
+  border-radius: var(--radius-pill);
+  /* Same recipe as .nav.stuck::after (styles.css) — the "scrolled
+     nav" frosted-dark treatment — rather than the plainer
+     rgba(--ink-rgb)/blur(8px) this started with (borrowed from
+     secure-booking.html's unrelated floating-help pill). Ties this
+     visually to the nav it sits directly under on desktop instead of
+     reading as a one-off floating badge; applied here at the base
+     level so mobile's bottom position picks up the same look too. */
+  background: rgba(var(--muted-ink-rgb), 0.86);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 12px 40px -12px rgba(var(--ink-rgb), 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.35s var(--ease),
+    transform 0.35s var(--ease);
+}
+.package-sticky-switch.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.package-sticky-switch-btn {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  cursor: pointer;
+  color: rgba(var(--limestone-rgb), 0.75);
+  transition: color 0.3s var(--ease);
+}
+/* No background here any more — the sliding .pill below (same
+   mechanism as the real tab bar's, via window.BacchusTabs.initTabGroup
+   in main.js) supplies the gold now, exactly like .tab-bar
+   button.active does. This used to set its own background directly
+   (first --gold-2, then --gold once that mismatch was caught), which
+   is also why the slide animation was missing — a plain class-based
+   background swap has nothing to animate between positions. */
+.package-sticky-switch-btn.active {
+  color: var(--ink);
+}
+/* Same computed contrast fix as the sitewide .tab-bar button rule
+   (styles.css) — rgba(--limestone-rgb, 0.75) resting vs full
+   --limestone-2 hover/tap computes to ~1.9:1, a real visible
+   brightening (plain --limestone -> --limestone-2 measured at only
+   ~1.1:1, imperceptible — see that rule's comment for the numbers). */
+@media (hover: hover) {
+  .package-sticky-switch-btn:not(.active):hover {
+    color: var(--limestone-2);
+  }
+}
+/* Same-page action button (switches tier, doesn't navigate away) —
+   needs its own gated tap feedback per CLAUDE.md bug #19, or an
+   unguarded :hover would read as stuck-active on touch after a tap. */
+@media (hover: none) {
+  .package-sticky-switch-btn:not(.active):active {
+    color: var(--limestone-2);
+  }
+}
+/* The sliding highlight itself — same recipe as .tab-bar .pill
+   (styles.css), just re-declared here since this button group is
+   deliberately NOT given the .tab-bar class (see the container's own
+   comment above). top/bottom 6px matches this container's own 6px
+   padding, so the pill fills exactly the same inner height the
+   buttons themselves sit in. window.BacchusTabs.initTabGroup (see
+   script below) finds this by its .pill class and drives its
+   width/transform — nothing here sets those directly. */
+.package-sticky-switch .pill {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 0;
+  width: 0;
+  /* Matches the sitewide .tab-bar .pill's two-tone gold gradient
+     (styles.css, shared via --gold-gradient with .button-gradient) —
+     this was still the old flat --gold fill from before that gradient
+     was adopted, so the compact sticky switcher's active pill looked
+     duller than the full tier switcher's above it. */
+  background: var(--gold-gradient);
+  border-radius: var(--radius-pill);
+  transition:
+    transform 0.55s var(--ease),
+    width 0.55s var(--ease);
+  z-index: 0;
+}
+.package-sticky-switch-name {
+  font-family: "Inter", sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.package-sticky-switch-price {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0.75;
+}
+@media (min-width: 841px) {
+  .package-sticky-switch {
+    top: calc(var(--nav-h) + 16px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  .package-sticky-switch.is-visible {
+    transform: translateX(-50%) translateY(0);
+  }
+  /* Explicit fixed width rather than flex's own content-based
+     sizing (which would otherwise leave "Lavender €57" visibly
+     wider than "Daisy €53"/"Rose €64") — same fix, same reason, as
+     .package-tabs-tabbar button's own 120px width above (bug #13: flex
+     alone doesn't guarantee equal widths once labels differ in
+     length). Sized to comfortably fit the longest pairing
+     ("Lavender €57") at this font-size/letter-spacing/padding, with
+     some headroom. */
+  .package-sticky-switch-btn {
+    width: 160px;
+    justify-content: center;
+    padding: 10px 18px;
+  }
+}
+/* Matches this file's own tier-mobile cutover (840px, above) rather
+   than a sitewide breakpoint — this component only ever appears
+   alongside the tier switcher it condenses, so it should flip in step
+   with that, not with an unrelated global one. */
+@media (max-width: 840px) {
+  .package-sticky-switch {
+    left: 16px;
+    right: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    transform: translateY(14px);
+  }
+  .package-sticky-switch.is-visible {
+    transform: translateY(0);
+  }
+  /* flex:1 (not a fixed width, unlike the desktop block above) is
+     safe here specifically because each button stacks name/price on
+     two lines instead of one — checked against the narrowest
+     realistic target (375px, iPhone SE): container insets/padding/
+     gaps leave ~109px per button, "LAVENDER" alone (the longest
+     single line in play, ~70px at this size/tracking) fits well
+     inside that with room to spare, so none of the three ever hits
+     its own min-content floor before reaching an equal 1/3 share
+     (bug #13's actual failure mode). Same reasoning already covers
+     .package-tabs-tabbar button's own flex:1 fallback below 840px. */
+  .package-sticky-switch-btn {
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 10px 8px;
+  }
+}
+
+/* Per-item scroll-stagger reveal for the menu groups —
+   own class/property (.package-reveal / --package-d), deliberately NOT the
+   sitewide [data-reveal] attribute + --d property. Two reasons:
+   1) [data-reveal]'s shared observer (main.js, threshold: 0.18) is
+   tuned for elements roughly this size, so reusing it here is fine
+   size-wise — but --d is also the property .gallery-item img's
+   hover-zoom transition-delay reads sitewide; a second unrelated user
+   of the same property name risks exactly the leak already fixed on
+   reception-package.html's dish tiles. 2) A visitor switching tiers (tab click) needs
+   every item in the newly active panel to appear immediately — not
+   wait for a scroll that isn't happening — so this is force-applied
+   by the page's own tab-switch JS below (revealItems(), called from
+   goToIndex()), which plain [data-reveal] elements have no hook
+   for. */
+.package-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.8s var(--ease);
+  transition-delay: var(--package-d, 0ms);
+}
+.package-reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+/* Lands an item in final position with no stagger and no motion —
+   the touch-swipe path only (revealEverythingInstantly() in the
+   script). The staggered version above is right for a scroll or a
+   tab click, but on a swipe it meant a tier arriving for the first
+   time slid in half-empty and then lifted ~9 items into place while
+   the track was still moving. Higher specificity (0,2,0) than
+   .package-reveal's own transition rule (0,1,0), so it wins outright
+   rather than by source order (CLAUDE.md bug #2/#14). */
+.package-reveal.package-reveal-instant {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .package-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+.package-menu-group h4 {
+  font-family: "Inter", sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  /* Gold gradient text, same recipe as packages-section.html's
+     .package-dining-card-numeral/-tiers-label — replaces the flat
+     --gold-2. */
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* .tab-panel ul (styles.css) sets margin-top: 26px — right for the
+   homepage's tab panels, where the list follows a paragraph of body
+   copy, but much too loose under these 11.5px eyebrow-style group
+   headings. It also silently beat the h4's own margin-bottom: 4px
+   directly above: adjacent siblings' margins collapse to the LARGER
+   of the two, so that 4px has never had any visible effect here and
+   the real gap has always been 26px. Zeroed so the 4px governs (each
+   li's own 14px top padding does the rest).
+
+   Equal specificity to .tab-panel ul — both (0,1,1) — and this block
+   comes after styles.css in the <head>, so it wins on source order.
+
+   The three other list fixes this page carried while they were being
+   worked out — the row's 2px gap, the copy's optical nudge and the
+   hyphen bullet's pinned top — have all moved into .tab-panel
+   ul/li/li::before in styles.css itself (2026-09-23), since the
+   homepage's tab panels had every one of them too. Nothing
+   list-related is overridden here any more beyond the margin above;
+   read those three rules there, not here. */
+.package-menu-group ul {
+  margin-top: 0;
+}
+/* Gold dividers, this page only — the homepage's tab panels keep the
+   flat limestone rule. Same component, but the density is nothing
+   alike: four items there against roughly forty here across six
+   groups, and gold is an accent on this site (eyebrows, buttons, the
+   hyphen bullet itself). At forty rows, a full-strength gold rule
+   would compete with the bullet on every line and read as a cage
+   rather than as richness.
+
+   So the gold blooms in the middle of the row and falls back to the
+   sitewide limestone at both ends, rather than leading at full
+   strength and fading out (tried first, and it made the flush right
+   edge read as unfinished against the indented left one). Landing on
+   limestone rather than transparent at the ends is what keeps this a
+   full-width rule with gold in it, instead of a gold rule that stops
+   short — the divider still spans the row, the gold just doesn't
+   carry the whole distance. Symmetric, so it reads the same however
+   wide the column gets across the three breakpoints.
+
+   Overriding only --tab-panel-divider (styles.css) — the
+   background-size/position/origin plumbing and the
+   li:first-child suppression all keep working untouched. (0,1,2)
+   beats .tab-panel li's (0,1,1), so it isn't resting on source
+   order. Alphas are the dial here if it wants to be louder or
+   quieter. */
+.package-menu-group ul li {
+  --tab-panel-divider: linear-gradient(
+    90deg,
+    rgba(var(--limestone-rgb), 0.12),
+    rgba(var(--gold-rgb), 0.55) 50%,
+    rgba(var(--limestone-rgb), 0.12)
+  );
+}
+/* Vegetarian marker inside the ingredient lists above — a circled "V"
+   badge rather than a literal "(V)". Both the ring and the letter's
+   gradient are built on --green-on-dark (styles.css), not the
+   sitewide --green, which reads near-invisible against this section's
+   --ink background (see that token's own comment for the measured
+   contrast).
+
+   inline-flex over a fixed square box (not padding + border-radius)
+   so the circle stays a true circle regardless of the letter's own
+   advance width, and Inter rather than the lists' Newsreader — this
+   is UI chrome, not body copy, matching the 3-font system's roles in
+   CLAUDE.md. The -1px margin-block-start is the same optical nudge as
+   bug #8: a box that's centred by its metrics still sits visibly low
+   against serif text on either side of it.
+
+   Deliberately not a fixed px font-size: the badge scales with
+   whatever text it sits in, so the same span works in the 13px
+   ingredient lists and the 12.5px legend below without a second rule.
+
+   Horizontal spacing is deliberately NOT set here — it differs
+   between the lists and the legend, so it lives in its own scoped
+   rule below. */
+.package-veg-marker {
+  /* One definition feeding both the ring and the letter, so the two
+     can never drift apart — the same reason --gold-gradient is a
+     single token rather than a recipe copied per component
+     (styles.css :root). Declared on the element, so ::before
+     inherits it. */
+  --package-veg-gradient: linear-gradient(
+    135deg,
+    #6fd9a0,
+    #45b57c 55%,
+    var(--green-on-dark)
+  );
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* 1.6em of this element's OWN 0.72em font-size, i.e. ~1.15x the
+     surrounding text — a circle that clears the cap height without
+     outgrowing the line. Both numbers move together; changing only
+     font-size changes the circle's diameter too. */
+  width: 1.6em;
+  height: 1.6em;
+  margin-block-start: -1px;
+  border-radius: 50%;
+  font-family: "Inter", sans-serif;
+  font-size: 0.72em;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  vertical-align: middle;
+  /* Gradient letter, same background-clip recipe as
+     .package-menu-group h4 above. The gradient's DARK end is
+     --green-on-dark itself and it brightens from there — deliberately
+     that direction, not the other: the flat token already measures
+     only ~4.4:1 against this section's --ink, so a gradient running
+     darker than it would drop small text further below WCAG's 4.5:1,
+     while running lighter leaves the worst point exactly where it is
+     today and lifts the rest to ~6.8:1. The ring stays flat
+     --green-on-dark so it reads as the same mark as the letter's
+     darkest stop rather than a separate accent.
+
+     background-clip: text fills only the glyph, so the circle's
+     interior stays empty — the gradient never paints the disc. */
+  background: var(--package-veg-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* The ring, carrying the same gradient at the same 135deg so it and
+   the letter read as one mark lit from one direction.
+
+   It has to be a pseudo-element rather than a border on the span
+   itself: the span's own `background` is already spoken for by the
+   letter's background-clip: text, and one element can't clip its
+   background to the glyphs and to a border ring at once.
+
+   This project's existing gradient-border recipe (the padding-box
+   flat fill + border-box gradient pair on .package-dining-card, see
+   styles.css) is deliberately NOT reused here. That one works by
+   painting an OPAQUE colour over the inside of the ring, and its own
+   comment flags that the fill has to stay fully opaque — fine for a
+   card that only ever sits on --ink-2, but this badge appears on two
+   different backgrounds: the plain --ink section and the
+   bronze-tinted legend callout below. An opaque disc would be a
+   shade off inside the callout. Masking the middle out instead
+   leaves it genuinely transparent, so the badge is background-
+   agnostic.
+
+   The radial-gradient mask is a single layer, not a two-layer XOR
+   composite: everything inside (radius - 1.5px) is masked away and
+   everything from there out is kept, which is the ring. 1.5px here
+   is what the removed border-width used to be. */
+.package-veg-marker::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--package-veg-gradient);
+  -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 1.5px), #000 0);
+  mask: radial-gradient(farthest-side, #0000 calc(100% - 1.5px), #000 0);
+}
+/* The <li> markup puts a word space before the badge (~3.6px at this
+   font-size), which read as too tight against the ingredient name —
+   this doubles it. (See .package-veg-marker-keep-with-word below for
+   why that space is a literal &nbsp; — it's the same width either
+   way, so this margin is unaffected.) Scoped to the lists on purpose:
+   in the legend callout below, the badge is the first thing in its
+   paragraph, and a left margin there would indent that line a few px
+   out of line with the two paragraphs under it (the callout gets its
+   own spacing rule instead — see below).
+
+   -3px rather than the base rule's -1px: the ingredient lines are
+   14.5px Newsreader and the badge needs the deeper nudge to sit
+   level against them. Bug #8/#23 again — the badge is a box centred
+   by its own metrics, the copy beside it is serif text riding high
+   inside its line box, and nothing but eye-tuning closes that. The
+   callout's 12.5px copy doesn't need it, so this stays scoped rather
+   than moving into the base rule. */
+.package-menu-group li .package-veg-marker {
+  margin-inline-start: 4px;
+  margin-block-start: -3px;
+}
+/* Stops the badge wrapping onto a line of its own and sitting there
+   marooned with no text beside it, which it did on any ingredient
+   name that happened to fill the column ("...Slow-Cooked Tomato,
+   Basil" + a lone V on line two).
+
+   A non-breaking space before the badge was tried first and does NOT
+   fix this, despite being the textbook answer: the badge is an
+   inline-flex box, i.e. an ATOMIC inline, and browsers allow a line
+   break either side of one regardless of what glue precedes it.
+   UAX #14 arguably says otherwise (LB12's "no break after glue" is a
+   lower-numbered, higher-priority rule than LB20's "break either side
+   of a contingent break"), but the observed behaviour is what counts
+   and it broke anyway. Worth knowing before reaching for &nbsp;
+   against an inline-block/inline-flex again.
+
+   What does work is removing the break opportunity outright, so the
+   wrapper holds the last word and the badge together and wraps as one
+   unit. It has to be real markup — white-space can't be applied to
+   "the last word" from CSS alone — so every list item carries one,
+   added mechanically rather than by hand. The &nbsp; inside is kept
+   as belt and braces; nowrap already covers it. */
+.package-veg-marker-keep-with-word {
+  white-space: nowrap;
+}
+/* The legend's badge is followed directly by the word "vegetarian",
+   with only a plain word space between them — too tight against a
+   ring that already carries its own visual weight. Spacing goes on
+   the trailing side here, the opposite side from the lists above,
+   because the badge leads its paragraph rather than trailing an
+   ingredient name. */
+.package-menu-note .package-veg-marker {
+  margin-inline-end: 4px;
+}
+/* Same callout-card recipe as secure-booking.html's warning boxes
+   (border + tinted background + leading icon, both matched to one
+   accent color), swapped from oxblood (that page's "illustrative/
+   placeholder data" warning color) to bronze/gold — this note is real,
+   confirmed catalogue copy, not a placeholder, so it reads as
+   informational rather than cautionary.
+
+   Lives outside .package-tier-view/.panels (2026-09-23), the same
+   placement and for a second reason the same as .package-stations-note
+   further down: one copy regardless of the active tier, and — the
+   reason it moved — no replay of the tier-switch motion. It was
+   previously duplicated inside all three .package-tier-content blocks,
+   so it animated on every switch along with content that genuinely had
+   changed, when the disclaimer itself never does. */
+.package-menu-note {
+  margin-top: clamp(36px, 5vw, 56px);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: clamp(12px, 2vw, 16px) clamp(16px, 2.5vw, 20px);
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(var(--bronze-rgb), 0.35);
+  background: rgba(var(--bronze-rgb), 0.12);
+  max-width: 64ch;
+}
+.package-menu-note svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--gold-2);
+}
+.package-menu-note-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.package-menu-note-text p {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* The swipe carousel's window and track. All three tiers sit side by
+   side in one flex track (.panels) inside this overflow:hidden
+   window, and a completed touch drag eases the track to the matching
+   slot — a port of this site's own homepage carousel
+   (.carousel-view/.carousel-track, styles.css + main.js), including
+   its release threshold and its gap between slides. A CLICK is a
+   different trigger and deliberately doesn't use this slide: it cuts
+   the track across instantly and plays the .package-tier-content
+   fade above instead. goToIndex() in the script decides which.
+
+   NATIVE SCROLL-SNAP, as of 2026-10-01 — ported from
+   reception-package.html, which carries the full reasoning. The short
+   version: this was a hand-rolled pointer drag, and that could never
+   work on touch, because preventDefault() on a POINTERMOVE does not
+   stop scrolling (nothing in pointer events can — only touch-action,
+   or preventDefault on a raw touchmove). With touch-action: pan-y the
+   compositor was free to scroll the page vertically the instant a
+   swipe had any vertical component, while the JS axis lock
+   independently decided the same gesture was horizontal and began
+   translating the track. Two owners, two threads, neither able to
+   cancel the other — the swipe stutter. touch-action is read when the
+   gesture STARTS, so JS could never win that race.
+
+   Handing both axes to the browser removes the race instead of
+   refereeing it, and nothing here runs per frame any more.
+
+   overflow-y: hidden is explicit and load-bearing: per spec, once one
+   axis is not `visible` the other's `visible` computes to `auto`, so
+   leaving it off would give this fixed-height window its own vertical
+   scrollbar and bury the lower half of every tier inside it. */
+.package-tier-view {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  /* Height is set explicitly by script/syncViewHeight() below, synced
+     to only the ACTIVE panel — without this, .panels being a flex row
+     holding all three tiers side by side (so the swipe carousel has
+     something to slide between) means the row's own height is the
+     TALLEST of the three, full stop, regardless of which one is
+     showing. Daisy/Rose (fewer total menu items than Lavender) were
+     left with a block of dead space below their own content, most
+     visible at the 1-column mobile breakpoint where item-count
+     differences between tiers translate directly into large height
+     differences (a 3-column grid absorbs the same differences far
+     more evenly). Animated so a tier switch's height change reads as
+     part of the same motion as the content fade / swipe snap, not a
+     separate jump. */
+  transition: height 0.5s var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .package-tier-view {
+    transition: none;
+  }
+}
+/* Cross-links to the other two mutually-exclusive formats
+   (Reception/High Tea), placed after the tier content. Previously a
+   copy-pasted "Explore the Stations add-on" link left over from
+   generating this page off reception-package.html's pattern —
+   Stations is Reception-only (see CLAUDE.md), so that link was wrong
+   here. Sits outside .package-tier-view/.panels so it renders once
+   regardless of which tier is active, not duplicated per tab-panel. */
+.package-stations-note {
+  margin-top: clamp(40px, 5vw, 64px);
+  padding-top: clamp(28px, 4vw, 40px);
+  border-top: 1px solid rgba(var(--limestone-rgb), 0.12);
+  text-align: center;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+/* No explicit width: .panels is a block-level flex container, so
+   width:auto already resolves to the window's width, and
+   flex-basis:100% + flex-shrink:0 per child is enough on its own to
+   push all three tiers out edge to edge, clipped by the window's
+   overflow:hidden — the same shape as the homepage's
+   .carousel-track/.slide pairing, with a percentage basis instead of
+   a px one. Sizing the track at 300% with 33.3334% children also
+   works, but then `gap` has to be subtracted back out of every
+   child; this way it just works. */
+/* 2026-10-01 — tier content is VISIBLE BY DEFAULT. Full reasoning
+   lives on reception-package.html's own copy of these rules; the short
+   version is that both of the things hiding this content could fail
+   and leave it permanently invisible on phones and tablets:
+   .package-reveal waited on an IntersectionObserver that could lose an
+   element outright, and every menu item is also a `.tab-panel li`,
+   which styles.css starts at opacity: 0 behind a `liIn` animation
+   written for the homepage's four-item lists — here it lands on 100+
+   items across three always-rendered panels, all animating at once,
+   which is what made this section's entrance stutter.
+
+   No entrance animation is worth content that can go missing, so both
+   are switched off here. Specificity, not source order, does the work:
+   (0,2,0) over .package-reveal's (0,1,0), (0,2,1) over .tab-panel li's
+   (0,1,1) — CLAUDE.md bug #14. The JS that adds .is-revealed is left
+   alone; it is simply a no-op now.
+
+   NOTE: this page still has the hand-rolled pointer-drag swipe that
+   reception-package.html replaced with native scroll-snap. That is a
+   separate outstanding fix — see reception's .package-tier-view. */
+.panels .package-reveal,
+.panels .tab-panel li {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+.package-tier-view::-webkit-scrollbar {
+  display: none;
+}
+/* No transition: transform and no will-change any more — both belonged
+   to the hand-rolled drag, and the browser's own scroller needs
+   neither. Dropping will-change also stops permanently promoting a
+   layer spanning every tier panel side by side, which at the
+   1-column mobile breakpoint is several thousand pixels tall and
+   several viewports wide, for no benefit once nothing animates it. */
+.panels {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(20px, 4vw, 48px);
+}
+/* Overrides main.js's shared .tab-panel display:none / .active
+   display:grid + panelIn entrance animation (styles.css): the track
+   needs every tier actually laid out to have something to slide
+   between, and the entrance fade doesn't apply to this component.
+   main.js's own tab-bar handling still runs as normal — this page
+   simply no longer reads .tab-panel.active for visibility, only for
+   which slide the track should sit on.
+
+   `.panels .tab-panel.full` (three classes, and all three tiers
+   carry `.full`) rather than !important: it exceeds
+   `.tab-panel.active`'s specificity outright, so it wins without
+   depending on source order (CLAUDE.md bug #14). */
+.panels .tab-panel.full {
+  display: block;
+  animation: none;
+  flex: 0 0 100%;
+  min-width: 0;
+  /* Each tier is its own snap position. */
+  scroll-snap-align: start;
+}
+/* Held on <body> for as long as the tier window is scrolling, plus a
+   moment past it (see setScrollingState() in the script). Kept its
+   original name through the move to native scrolling: it is still the
+   same swipe, and renaming it would churn these rules and the script
+   for nothing. Both rules switch off an effect
+   that's cheap when the page is still and expensive when a
+   full-width section is moving underneath it every frame:
+
+   .grain is a fixed viewport-sized noise overlay at
+   mix-blend-mode: overlay, so the compositor must re-blend it
+   against its backdrop whenever that backdrop changes — during a
+   drag, every frame, for the whole viewport. At 0.05 opacity its
+   brief absence mid-swipe isn't perceptible.
+
+   .package-sticky-switch is a fixed panel with
+   backdrop-filter: blur(14px), and by design it's only on screen
+   once you're deep enough in the tier content to be swiping. A
+   backdrop blur re-samples and re-blurs the moving content behind
+   it every frame. It keeps its fill and border, just not the blur.
+
+   Page-scoped on purpose: nothing else on the site drags a section
+   this large beneath either effect. */
+body.package-tier-dragging .grain {
+  display: none;
+}
+/* is-scrolling too (main.js sets it for any page scroll) — a fixed
+   backdrop-blurred panel re-blurs moving content every frame on a
+   vertical scroll for the same reason it did on a swipe. */
+body.package-tier-dragging .package-sticky-switch,
+body.is-scrolling .package-sticky-switch {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+/* --- Placeholder imagery -------------------------------------------
+   Neither the hero nor the dish tiles on this page have real
+   photography yet. Both are deliberately blacked out rather than
+   filled with a stand-in shot: a stand-in reads as a finished choice
+   when the page is walked through, whereas an empty black frame reads
+   as "still to come", which is the honest signal while the client is
+   sourcing images. Both carry a visible label saying so, so nobody has
+   to infer it from the colour alone.
+
+   Replacing them: the hero wants an <img> back inside .hero-media (see
+   reception-package.html), and the dish tiles want
+   .gallery-item/.gallery-tag markup plus the page-scoped lightbox
+   controller, both copied from reception-package.html. */
+.package-hero-placeholder {
+  background: #000;
+}
+/* A plain line of small type in the bottom-right of the black frame,
+   not a pill. The pill version carried a background, border and
+   padding, which made it wide enough to collide with the hero's CTA
+   buttons at tablet and laptop widths — .hero-content only reserves
+   clamp(46px, 7vh, 76px) of space below those buttons, and at 1440x900
+   that resolves to ~63px against a pill occupying ~32-56px from the
+   bottom. Seven pixels of clearance, and none at all once the pill
+   wrapped to two lines. Plain type is short enough to sit inside that
+   gutter at every width.
+
+   Spans the hero edge-to-edge and right-aligns, rather than being
+   pinned by a `right` offset. A full-width block can't overflow its
+   container, so there's no shrink-to-fit cap left to get wrong (the
+   bug the pill had on phones), and it wraps on its own if it ever
+   needs to. The max-width/margin/padding trio is copied from .wrap so
+   the text lands exactly on the hero copy's own right edge instead of
+   floating at an unrelated offset — that's what "adequate offset"
+   means here, the same gutter everything else on the page uses.
+
+   Sits above .hero-scrim (z-index 2) but below .hero-content (3), so
+   the scrim can't dim it and it can't overlap the h1. */
+.package-hero-placeholder-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(12px, 1.8vw, 20px);
+  z-index: 2;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 44px);
+  font-family: "Inter", sans-serif;
+  font-size: clamp(8.5px, 1.05vw, 10.5px);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-align: right;
+  text-transform: uppercase;
+  color: rgba(var(--oxblood-on-dark-rgb), 0.92);
+}
+
+/* Warning variant of .package-menu-note, for facts that are NOT
+   confirmed catalogue copy — the base note is bronze/gold precisely
+   because it carries real, confirmed text (see its own comment), so an
+   unconfirmed or contested one needs to read differently rather than
+   sit in the same colour. Oxblood is the sitewide "illustrative /
+   unconfirmed" warning colour (.secure-booking-warning-box), via the
+   --oxblood-on-dark token since this section is on --ink. */
+.package-menu-note-warning {
+  /* .package-menu-note sets a margin-TOP only, because in its original
+     position it was the last thing in a tier panel with nothing after
+     it to push away. This variant sits mid-section, between the tier
+     cards and the tier content, so it needs a margin on both sides —
+     without one it butted straight up against the "Signature dishes"
+     heading below it. Same clamp as .package-tier-cards' own
+     margin-bottom directly above, so the callout sits on the section's
+     existing rhythm rather than introducing a third gap size; the top
+     margin collapses against that one rather than adding to it. */
+  margin-block: clamp(32px, 4.5vw, 48px);
+  border-color: rgba(var(--oxblood-on-dark-rgb), 0.45);
+  background: rgba(var(--oxblood-on-dark-rgb), 0.11);
+}
+.package-menu-note-warning svg {
+  color: var(--oxblood-on-dark);
+}
+.package-menu-note-warning .package-menu-note-text p {
+  color: rgba(var(--limestone-rgb), 0.78);
+}
+.package-menu-note-warning .package-menu-note-text b {
+  color: var(--oxblood-on-dark);
+  font-weight: 600;
+}
