@@ -1,0 +1,46 @@
+---
+// Four icon cards on a dark band: "What we cater for" (corporate),
+// "Occasions we host" (celebrations). Default slot = heading.
+interface Props {
+  eyebrow: string;
+  cards: {
+    title: string;
+    body: string;
+    // One or more SVG path "d" strings, drawn in a 24x24 box.
+    iconPaths: string[];
+  }[];
+}
+const { eyebrow, cards } = Astro.props;
+---
+
+<section class="section-padding on-dark">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" data-reveal>
+        {eyebrow}
+      </div>
+      <h2 data-reveal style="--d: 80ms">
+        <slot />
+      </h2>
+    </div>
+    <div class="package-grid">
+      {cards.map((card, i) => (
+        <div class="package-card" data-reveal style={`--d: ${i * 100}ms`}>
+          <svg class="card-icon" viewBox="0 0 24 24" fill="none">
+            {card.iconPaths.map((d) => (
+              <path
+                d={d}
+                stroke="currentColor"
+                stroke-width="1.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            ))}
+          </svg>
+          <h4>{card.title}</h4>
+          <p>{card.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

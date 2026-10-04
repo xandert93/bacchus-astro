@@ -4,6 +4,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHero from "../components/PageHero.astro";
 import ArrowIcon from "../components/ArrowIcon.astro";
 import CheckList from "../components/CheckList.astro";
+import OccasionCards from "../components/OccasionCards.astro";
 import GalleryPreview from "../components/GalleryPreview.astro";
 import Lightbox from "../components/Lightbox.astro";
 import ProcessSteps from "../components/ProcessSteps.astro";
@@ -75,79 +76,33 @@ import WaitlistPopover from "../components/WaitlistPopover.astro";
     </div>
   </section>
 
-  <section class="section-padding on-dark">
-    <div class="wrap">
-      <div class="section-head">
-        <div class="eyebrow" data-reveal>
-          What we cater for
-        </div>
-        <h2 data-reveal style="--d: 80ms">
-          Every kind of working <em>gathering</em>
-        </h2>
-      </div>
-      <div class="package-grid">
-        <div class="package-card" data-reveal style="--d: 0ms">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M4 21V9l8-6 8 6v12M9 21v-6h6v6"
-              stroke="currentColor"
-              stroke-width="1.3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          <h4>Lunches &amp; dinners</h4>
-          <p>Working lunches through to a full seated evening for the whole team.</p>
-        </div>
-        <div class="package-card" data-reveal style="--d: 100ms">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M4 21h16M6 21V8a2 2 0 0 1 2-2h5l5 5v10"
-              stroke="currentColor"
-              stroke-width="1.3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-          <h4>High teas</h4>
-          <p>A lighter, daytime format for smaller meetings or client visits.</p>
-        </div>
-        <div class="package-card" data-reveal style="--d: 200ms">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M4 5h16M4 12h16M4 19h10"
-              stroke="currentColor"
-              stroke-width="1.3"
-              stroke-linecap="round"
-            />
-          </svg>
-          <h4>Presentations &amp; meetings</h4>
-          <p>AV and theatre-style seating for launches, briefings and board sessions.</p>
-        </div>
-        <div class="package-card" data-reveal style="--d: 300ms">
-          <svg class="card-icon" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M8 3h8l-1 9a3 3 0 0 1-6 0z"
-              stroke="currentColor"
-              stroke-width="1.3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M12 15v6M9 21h6"
-              stroke="currentColor"
-              stroke-width="1.3"
-              stroke-linecap="round"
-            />
-          </svg>
-          <h4>Staff parties &amp; galas</h4>
-          <p>
-            Year-end and milestone celebrations, with a private bar through the night.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <OccasionCards
+    eyebrow="What we cater for"
+    cards={[
+      {
+        title: "Lunches & dinners",
+        body: "Working lunches through to a full seated evening for the whole team.",
+        iconPaths: ["M4 21V9l8-6 8 6v12M9 21v-6h6v6"],
+      },
+      {
+        title: "High teas",
+        body: "A lighter, daytime format for smaller meetings or client visits.",
+        iconPaths: ["M4 21h16M6 21V8a2 2 0 0 1 2-2h5l5 5v10"],
+      },
+      {
+        title: "Presentations & meetings",
+        body: "AV and theatre-style seating for launches, briefings and board sessions.",
+        iconPaths: ["M4 5h16M4 12h16M4 19h10"],
+      },
+      {
+        title: "Staff parties & galas",
+        body: "Year-end and milestone celebrations, with a private bar through the night.",
+        iconPaths: ["M8 3h8l-1 9a3 3 0 0 1-6 0z", "M12 15v6M9 21h6"],
+      },
+    ]}
+  >
+    Every kind of working <em>gathering</em>
+  </OccasionCards>
 
   <GalleryPreview
     id="corpGalleryPreview"
