@@ -3,26 +3,26 @@
 // mobile drawer, the shared "Visit Bacchus" section, the footer and the site
 // script. A page supplies its title and its own content; everything else
 // comes from here.
-import "../styles/global.css";
-import SiteHeader from "../components/SiteHeader.astro";
-import MobileMenu from "../components/MobileMenu.astro";
-import VisitSection from "../components/VisitSection.astro";
-import SiteFooter from "../components/SiteFooter.astro";
+import "../styles/global.css"
+import SiteHeader from "../components/SiteHeader.astro"
+import MobileMenu from "../components/MobileMenu.astro"
+import VisitSection from "../components/VisitSection.astro"
+import SiteFooter from "../components/SiteFooter.astro"
 
 interface Props {
-  title: string;
-  showEnquireLink?: boolean;
-  menuBackgroundImage?: string;
+  title: string
+  showEnquireLink?: boolean
+  menuBackgroundImage?: string
   // The shared "Visit Bacchus" band above the footer. Off on the package
   // pages, which never had it in the prototype.
-  showVisitSection?: boolean;
+  showVisitSection?: boolean
 }
 const {
   title,
   showEnquireLink = false,
   menuBackgroundImage,
   showVisitSection = true,
-} = Astro.props;
+} = Astro.props
 ---
 
 <!doctype html>
@@ -57,7 +57,7 @@ const {
       // Astro bundles this: main.js is pulled in, minified, and served as a
       // module. Modules are deferred, which matches the prototype's
       // <script> at the foot of <body> - the DOM is parsed before it runs.
-      import "../scripts/main.js";
+      import "../scripts/main.js"
     </script>
   </body>
 </html>

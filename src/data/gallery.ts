@@ -7,26 +7,26 @@ export const GALLERY_FILTERS = [
   { id: "corporate", label: "Corporate" },
   { id: "celebrations", label: "Celebrations" },
   { id: "venue", label: "Venue & Dining" },
-] as const;
+] as const
 
-export type GalleryCategory = Exclude<(typeof GALLERY_FILTERS)[number]["id"], "all">;
+export type GalleryCategory = Exclude<(typeof GALLERY_FILTERS)[number]["id"], "all">
 
 export interface GalleryPhoto {
-  src: string;
-  alt: string;
+  src: string
+  alt: string
   // Lightbox caption title.
-  title: string;
-  category: GalleryCategory;
+  title: string
+  category: GalleryCategory
   // Lightbox caption tag (data-tag).
-  tag: string;
+  tag: string
   // Hover badge text, when it differs from the tag ("Kitchen" vs "From the
   // kitchen", which is too long for the badge).
-  badge?: string;
+  badge?: string
   // Takes two grid columns on wide screens.
-  wide?: boolean;
+  wide?: boolean
   // Reveal stagger, in ms. Carried over exactly from the prototype, where
   // it restarts at each category run rather than following one formula.
-  revealDelay: number;
+  revealDelay: number
 }
 
 export const GALLERY_PHOTOS: GalleryPhoto[] = [
@@ -219,4 +219,4 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     badge: "Kitchen",
     revealDelay: 240,
   },
-];
+]

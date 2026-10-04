@@ -8,24 +8,24 @@
 // event type. The prototype hardcoded the Wedding state on every page and
 // let main.js correct it after load, so non-wedding pages flashed the wrong
 // state first.
-import { CHIP_NOTES, EVENT_TYPES, type EventType } from "../data/enquiry";
+import { CHIP_NOTES, EVENT_TYPES, type EventType } from "../data/enquiry"
 
 interface Props {
-  eventType: EventType;
+  eventType: EventType
   // "inline": the compact calendar sits in the form (most pages).
   // "modal": a summary row + "Pick a date" button opening the page's own
   // quick-pick modal (weddings, which already shows the full diary above).
-  datePicker?: "inline" | "modal";
-  eyebrow?: string;
-  railPhoto: { src: string; alt: string; caption: string };
+  datePicker?: "inline" | "modal"
+  eyebrow?: string
+  railPhoto: { src: string; alt: string; caption: string }
 }
 const {
   eventType,
   datePicker = "inline",
   eyebrow = "Start planning",
   railPhoto,
-} = Astro.props;
-const isWedding = eventType === "Wedding";
+} = Astro.props
+const isWedding = eventType === "Wedding"
 ---
 
 <section class="section-padding enquire" id="enquire">

@@ -2,15 +2,15 @@
 // Four icon cards on a dark band: "What we cater for" (corporate),
 // "Occasions we host" (celebrations). Default slot = heading.
 interface Props {
-  eyebrow: string;
+  eyebrow: string
   cards: {
-    title: string;
-    body: string;
+    title: string
+    body: string
     // One or more SVG path "d" strings, drawn in a 24x24 box.
-    iconPaths: string[];
-  }[];
+    iconPaths: string[]
+  }[]
 }
-const { eyebrow, cards } = Astro.props;
+const { eyebrow, cards } = Astro.props
 ---
 
 <section class="section-padding on-dark">
