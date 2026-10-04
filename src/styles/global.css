@@ -2410,6 +2410,31 @@ body.menu-open .menu-social {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  /* Entrance "settle" (2026-10-04): the photo arrives slightly enlarged and
+     eases back to its resting size as the hero copy animates in, so the
+     image is part of the entrance rather than sitting static under it.
+     On the WRAPPER, not the <img>: the img already carries the endless
+     Ken Burns drift below and, on the homepage, a scroll parallax — a
+     transform here composes with both instead of replacing either.
+     Transform only, no opacity: the hero photo is usually the page's
+     Largest Contentful Paint, which is timed from when it first becomes
+     visible, so fading it in would make every page measure slower. Scale
+     costs nothing there. On the homepage it runs behind the portcullis
+     bars, finishing as the last bar clears. */
+  animation: hero-settle 1.8s var(--ease) both;
+}
+@keyframes hero-settle {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-media {
+    animation: none;
+  }
 }
 .hero-media img {
   width: 100%;
