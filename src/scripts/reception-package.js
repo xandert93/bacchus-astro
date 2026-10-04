@@ -2448,6 +2448,7 @@ import "./main.js"
     var token = ++showToken
     function reveal() {
       if (token !== showToken) return
+      lbImg.classList.remove("lightbox-fade")
       applyImage()
       lb.classList.add("show")
       document.body.style.overflow = "hidden"
@@ -2475,12 +2476,23 @@ import "./main.js"
       show()
       return
     }
+    // The 180ms fade-out usually gives the new photo time to decode, but
+    // nothing guarantees it (a slow phone, a photo not yet cached), and if
+    // it hasn't, the outgoing photo shows through the fade-in. Gate the
+    // fade-in on decode(), as show() already does for a fresh open; the
+    // token also stops an older navigate fading in over a newer one.
+    var token = ++showToken
     lbImg.classList.add("lightbox-fade")
     setTimeout(function () {
       applyImage()
-      setTimeout(function () {
-        lbImg.classList.remove("lightbox-fade")
-      }, 20)
+      function fadeIn() {
+        if (token !== showToken) return
+        setTimeout(function () {
+          lbImg.classList.remove("lightbox-fade")
+        }, 20)
+      }
+      if (lbImg.decode) lbImg.decode().then(fadeIn, fadeIn)
+      else fadeIn()
     }, LB_FADE_MS)
   }
   function closeLb() {
