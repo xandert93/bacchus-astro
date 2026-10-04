@@ -1211,6 +1211,8 @@ import "./main.js"
 
     // Everything the stage shows for one station, in one place, so
     // the crossfade can defer exactly this and nothing else.
+    var stageFadeToken = 0
+
     function fillStage(sel) {
       stage.img.src = sel.src
       stage.img.alt = sel.alt
@@ -1260,15 +1262,26 @@ import "./main.js"
       if (fade && !reduceMotion.matches) {
         clearTimeout(stageFadeTimer)
         stageFade(true)
+        var fadeToken = ++stageFadeToken
         stageFadeTimer = setTimeout(function () {
           fillStage(byId(state.selected))
-          // A second, short timeout rather than a nested
-          // requestAnimationFrame — the browser can coalesce rAFs
-          // into one paint, leaving no in-between frame for the
-          // fade back in to animate across (CLAUDE.md bug #7).
-          stageFadeTimer = setTimeout(function () {
-            stageFade(false)
-          }, 30)
+          // Fade back in only once the new photo can be painted — the
+          // same stale-bitmap problem as the lightboxes: until decode
+          // finishes, the browser keeps drawing the previous station's
+          // photo, and it would show through the fade-in. The token
+          // drops a slow decode that a newer selection has overtaken.
+          function fadeIn() {
+            if (fadeToken !== stageFadeToken) return
+            // A second, short timeout rather than a nested
+            // requestAnimationFrame — the browser can coalesce rAFs
+            // into one paint, leaving no in-between frame for the
+            // fade back in to animate across (CLAUDE.md bug #7).
+            stageFadeTimer = setTimeout(function () {
+              stageFade(false)
+            }, 30)
+          }
+          if (stage.img.decode) stage.img.decode().then(fadeIn, fadeIn)
+          else fadeIn()
         }, STAGE_FADE_MS)
       } else {
         fillStage(sel)
