@@ -44,13 +44,11 @@ const hasCtas = Astro.slots.has("ctas");
       <p class="sub fade-up" style="transition-delay: 0.32s">
         <slot name="sub" />
       </p>
-      {
-        hasCtas && (
-          <div class="hero-ctas fade-up" style="transition-delay: 0.44s">
-            <slot name="ctas" />
-          </div>
-        )
-      }
+      {hasCtas && (
+        <div class="hero-ctas fade-up" style="transition-delay: 0.44s">
+          <slot name="ctas" />
+        </div>
+      )}
     </div>
   </div>
 </section>

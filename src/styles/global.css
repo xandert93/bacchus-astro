@@ -1899,8 +1899,7 @@ body.menu-open .nav::after {
   /* Tight on the left where the marker sits, rounded on the right. A fully
      rounded left edge would leave the 2px bar as a floating curved sliver
      rather than a straight rule against the row. */
-  border-radius: 3px calc(var(--radius-card) - 2px) calc(var(--radius-card) - 2px)
-    3px;
+  border-radius: 3px calc(var(--radius-card) - 2px) calc(var(--radius-card) - 2px) 3px;
   text-decoration: none;
   /* 0.18s, not the 0.4s this was ported with. 0.4s suits
      .package-stations-index-row, which is a vertical index read slowly; a nav

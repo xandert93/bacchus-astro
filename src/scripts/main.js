@@ -599,9 +599,11 @@
           var t = el.querySelector(".mobile-nav-group-trigger");
           if (t) rows.push(t);
           if (!el.classList.contains("is-open")) return;
-          [].slice.call(el.querySelectorAll(".mobile-nav-sub-link")).forEach(function (a) {
-            rows.push(a);
-          });
+          [].slice
+            .call(el.querySelectorAll(".mobile-nav-sub-link"))
+            .forEach(function (a) {
+              rows.push(a);
+            });
         });
       // Clear first: a row that was in the sequence last time and is not now
       // would otherwise keep a stale delay and arrive out of order.
@@ -1220,17 +1222,16 @@
         now.textContent =
           range.first === range.last
             ? String(range.first + 1)
-            // En dash, not a hyphen: this is a range, and it matches the
-            // site's typography elsewhere.
-            : range.first + 1 + "–" + (range.last + 1);
+            : // En dash, not a hyphen: this is a range, and it matches the
+              // site's typography elsewhere.
+              range.first + 1 + "–" + (range.last + 1);
       // Written from here rather than left hardcoded in the markup, so the
       // two halves of the counter can never disagree.
       if (total) total.textContent = String(slides.length);
       // Fills by the LAST slide on screen, so it reads full exactly when
       // the final slide is visible — which is also when the counter reads
       // "… / total".
-      if (bar)
-        bar.style.transform = "scaleX(" + (range.last + 1) / slides.length + ")";
+      if (bar) bar.style.transform = "scaleX(" + (range.last + 1) / slides.length + ")";
     }
     function go(i) {
       index = Math.max(0, Math.min(maxIndex(), i));
@@ -1744,7 +1745,9 @@
     }
 
     // Lovable-port markup (two swapped SVG icons), used by secure-booking.html
-    var sbCopyBtns = [].slice.call(document.querySelectorAll(".secure-booking-copy-button"));
+    var sbCopyBtns = [].slice.call(
+      document.querySelectorAll(".secure-booking-copy-button"),
+    );
     sbCopyBtns.forEach(function (btn) {
       var copyIcon = btn.querySelector(".secure-booking-copy-icon");
       var checkIcon = btn.querySelector(".secure-booking-check-icon");
@@ -2085,9 +2088,11 @@
   }
   function chosenSpaces() {
     if (!spacesWrap) return [];
-    return [].slice.call(spacesWrap.querySelectorAll(".option-card.is-selected")).map(function (o) {
-      return o.dataset.v;
-    });
+    return [].slice
+      .call(spacesWrap.querySelectorAll(".option-card.is-selected"))
+      .map(function (o) {
+        return o.dataset.v;
+      });
   }
 
   // ---------- Event style (Wedding only, single-select) ----------
@@ -2205,7 +2210,9 @@
     // the plain submit-validation path below (steps.length === 0).
     var steps = [].slice.call(form.querySelectorAll(".wizard-step"));
     var stepTabs = [].slice.call(form.querySelectorAll(".wizard-step-tab"));
-    var lineSegs = [].slice.call(form.querySelectorAll(".wizard-progress-line .wizard-progress-segment"));
+    var lineSegs = [].slice.call(
+      form.querySelectorAll(".wizard-progress-line .wizard-progress-segment"),
+    );
     var backBtn = form.querySelector(".wizard-back-link");
     var nextBtn = form.querySelector(".wizard-next-button");
     var submitBtn = form.querySelector(".wizard-submit-button");
@@ -3043,9 +3050,11 @@
           : { iso: iso, status: status, dd: dd, yy: yy, mm: mm };
       modalPending = next;
       if (modalInstance) {
-        modalInstance.el.querySelectorAll(".availability-cell.picked").forEach(function (c) {
-          c.classList.remove("picked");
-        });
+        modalInstance.el
+          .querySelectorAll(".availability-cell.picked")
+          .forEach(function (c) {
+            c.classList.remove("picked");
+          });
       }
       if (next && cellEl) cellEl.classList.add("picked");
       var footEl = availModal.querySelector(".availability-foot-label");

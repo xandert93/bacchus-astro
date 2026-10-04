@@ -26,24 +26,38 @@ const year = new Date().getFullYear();
           </span>
         </div>
         <p style="max-width: 34ch; font-size: 14px">
-          Two vaulted chambers inside the walls of the Silent City, serving Mdina
-          since 1660.
+          Two vaulted chambers inside the walls of the Silent City, serving Mdina since
+          1660.
         </p>
         <SocialLinks />
       </div>
       <div>
         <h5>Explore</h5>
         <ul>
-          <li><a href="/weddings">Weddings</a></li>
-          <li><a href="/corporate">Corporate</a></li>
-          <li><a href="/celebrations">Celebrations</a></li>
-          <li><a href="/gallery">Gallery</a></li>
-          {showEnquireLink && <li><a href="#enquire">Enquire</a></li>}
+          <li>
+            <a href="/weddings">Weddings</a>
+          </li>
+          <li>
+            <a href="/corporate">Corporate</a>
+          </li>
+          <li>
+            <a href="/celebrations">Celebrations</a>
+          </li>
+          <li>
+            <a href="/gallery">Gallery</a>
+          </li>
+          {showEnquireLink && (
+            <li>
+              <a href="#enquire">Enquire</a>
+            </li>
+          )}
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <div>© <span id="yr">{year}</span> Bacchus · Mdina, Malta</div>
+      <div>
+        © <span id="yr">{year}</span> Bacchus · Mdina, Malta
+      </div>
       <div>Prototype by xandert.93. All rights reserved.</div>
     </div>
   </div>

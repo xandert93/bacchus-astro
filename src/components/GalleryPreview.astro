@@ -21,33 +21,39 @@ const tag = category[0].toUpperCase() + category.slice(1);
   <div class="wrap">
     <div class="head-row">
       <div>
-        <div class="eyebrow" data-reveal>{eyebrow}</div>
-        <h2 data-reveal style="--d: 80ms"><slot /></h2>
-        <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px">{lead}</p>
+        <div class="eyebrow" data-reveal>
+          {eyebrow}
+        </div>
+        <h2 data-reveal style="--d: 80ms">
+          <slot />
+        </h2>
+        <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px">
+          {lead}
+        </p>
       </div>
       <a
         href={`/gallery?filter=${category}`}
         class="button button-dark"
         data-reveal
         style="--d: 120ms"
-        ><span>View Gallery</span><ArrowIcon /></a
       >
+        <span>View Gallery</span>
+        <ArrowIcon />
+      </a>
     </div>
     <div class="gallery-grid gallery-grid-four-col" id="ggrid">
-      {
-        photos.map((photo, i) => (
-          <div
-            class="gallery-item"
-            data-title={photo.title}
-            data-tag={tag}
-            data-reveal="img"
-            style={i > 0 ? `--d: ${i * 80}ms` : undefined}
-          >
-            <img src={photo.src} alt={photo.alt} />
-            <span class="gallery-tag">{tag}</span>
-          </div>
-        ))
-      }
+      {photos.map((photo, i) => (
+        <div
+          class="gallery-item"
+          data-title={photo.title}
+          data-tag={tag}
+          data-reveal="img"
+          style={i > 0 ? `--d: ${i * 80}ms` : undefined}
+        >
+          <img src={photo.src} alt={photo.alt} />
+          <span class="gallery-tag">{tag}</span>
+        </div>
+      ))}
     </div>
   </div>
 </section>
