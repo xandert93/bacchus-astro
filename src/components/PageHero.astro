@@ -1,32 +1,47 @@
 ---
-// The short hero at the top of every subpage: crumb → h1 → one paragraph →
+// The short hero at the top of every subpage: crumb → h1 → paragraph(s) →
 // optional CTAs, on the 24px rhythm described in the prototype's CLAUDE.md
 // ("Hero structure"). The homepage's portcullis hero is a different
 // component and stays in index.astro.
 //
 // Slots: default = the h1's content (rich text, so <em> works), "sub" = the
-// paragraph, "ctas" = the buttons. CTAs are optional — gallery has none —
-// and the wrapper only renders when the page actually passes some, via
-// Astro.slots.has().
+// paragraph, "sub-secondary" = an optional second paragraph (the package
+// pages), "ctas" = the buttons. Optional slots only render their wrapper
+// when the page actually passes something, via Astro.slots.has().
 interface Props {
-  image: { src: string; alt: string };
+  // Omit for the black "photography to follow" placeholder the package
+  // pages use while real imagery is sourced. Its styles live in
+  // package-page.css, so only pages importing that should omit it.
+  image?: { src: string; alt: string };
+  // The page one level up. Home for top-level pages, Weddings for packages.
+  parent?: { href: string; label: string };
   // The last crumb, i.e. this page's own name.
   crumb: string;
 }
-const { image, crumb } = Astro.props;
+const { image, parent = { href: "/", label: "Home" }, crumb } = Astro.props;
+const hasSecondarySub = Astro.slots.has("sub-secondary");
 const hasCtas = Astro.slots.has("ctas");
 ---
 
 <section class="hero hero-sm">
-  <div class="hero-media">
-    <img src={image.src} alt={image.alt} />
-  </div>
+  {image ? (
+    <div class="hero-media">
+      <img src={image.src} alt={image.alt} />
+    </div>
+  ) : (
+    <div class="hero-media package-hero-placeholder" />
+  )}
   <div class="hero-scrim"></div>
+  {!image && (
+    <span class="package-hero-placeholder-label">
+      Image placeholder — real photography to follow
+    </span>
+  )}
   <div class="particles" id="particles"></div>
   <div class="hero-content">
     <div class="wrap">
       <div class="crumb fade-up" style="transition-delay: 0.1s">
-        <a href="/">Home</a>
+        <a href={parent.href}>{parent.label}</a>
         <svg width="7" height="10" viewBox="0 0 7 10" fill="none">
           <path
             d="M1 1l5 4-5 4"
@@ -34,7 +49,7 @@ const hasCtas = Astro.slots.has("ctas");
             stroke-width="1.3"
             stroke-linecap="round"
             stroke-linejoin="round"
-          />
+          ></path>
         </svg>
         <span>{crumb}</span>
       </div>
@@ -44,6 +59,11 @@ const hasCtas = Astro.slots.has("ctas");
       <p class="sub fade-up" style="transition-delay: 0.32s">
         <slot name="sub" />
       </p>
+      {hasSecondarySub && (
+        <p class="sub fade-up" style="transition-delay: 0.38s">
+          <slot name="sub-secondary" />
+        </p>
+      )}
       {hasCtas && (
         <div class="hero-ctas fade-up" style="transition-delay: 0.44s">
           <slot name="ctas" />
