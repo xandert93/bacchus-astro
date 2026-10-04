@@ -13,8 +13,16 @@ interface Props {
   title: string;
   showEnquireLink?: boolean;
   menuBackgroundImage?: string;
+  // The shared "Visit Bacchus" band above the footer. Off on the package
+  // pages, which never had it in the prototype.
+  showVisitSection?: boolean;
 }
-const { title, showEnquireLink = false, menuBackgroundImage } = Astro.props;
+const {
+  title,
+  showEnquireLink = false,
+  menuBackgroundImage,
+  showVisitSection = true,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -38,7 +46,7 @@ const { title, showEnquireLink = false, menuBackgroundImage } = Astro.props;
 
     <slot />
 
-    <VisitSection />
+    {showVisitSection && <VisitSection />}
     <SiteFooter showEnquireLink={showEnquireLink} />
 
     {/* Page-level overlays that sat after the footer in the prototype (e.g.

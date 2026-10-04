@@ -1,0 +1,75 @@
+/* --- Beverage-specific -----------------------------------------------
+   Four categories, not three ranked tiers, so the card grid is a 2x2
+   rather than the siblings' 3-across row — four cards in one row would
+   squeeze each description into a column too narrow to read, and a
+   3+1 wrap reads as a mistake. */
+@media (min-width: 700px) {
+  .package-tier-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* Two columns, not the siblings' three: wine entries carry a tasting
+   note each, which needs a measure a third of the wrap can't give it. */
+@media (min-width: 981px) {
+  .package-menu-groups {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* Each category opens with the catalogue's own framing sentence — what
+   the package is based on, what every bar option includes, or the fact
+   that themed bars sit outside the open bar. Real copy, so it leads the
+   panel rather than being tucked into a footnote.
+
+   The margin-bottom is load-bearing: nothing below it supplies a top
+   margin (.package-menu-groups is a bare grid, and .package-menu-group
+   h4 sets margin-bottom only), so without this the intro sits directly
+   on the first group heading. Note .tab-panel p (styles.css) also
+   matches this element at a HIGHER specificity (0,1,1 vs 0,1,0) — it
+   only sets font-family today, so there's no conflict, but anything
+   added to it that touches margins would silently win over this rule. */
+.package-panel-intro {
+  max-width: 68ch;
+  margin-bottom: clamp(28px, 4vw, 40px);
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 15px;
+  color: var(--muted);
+}
+/* A wine is a name, a grape, a producer and a tasting note — four facts,
+   not one line of text, so each <li> stacks them instead of running them
+   together. The meta line is Inter (UI chrome, per the 3-font split in
+   CLAUDE.md) and the note stays Newsreader, since it's prose. */
+.package-wine-name,
+.package-wine-meta,
+.package-wine-note {
+  display: block;
+}
+.package-wine-name {
+  color: var(--limestone-2);
+}
+.package-wine-meta {
+  margin-top: 3px;
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+}
+.package-wine-note {
+  margin-top: 7px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+/* The catalogue prints each themed bar's "service of five ..." line as a
+   subhead above its list. Kept as the list's own first item so it sits
+   inside the same divided rhythm, but italic and unbulleted so it still
+   reads as framing rather than as a sixth spirit. */
+.package-group-subhead {
+  color: var(--muted);
+}
+/* (0,2,2) beats .tab-panel li::before's (0,1,2), so the bullet is
+   suppressed by specificity rather than by source order. */
+.package-menu-group ul li.package-group-subhead::before {
+  display: none;
+}
