@@ -1,0 +1,111 @@
+---
+// /gallery. Filtering is pure CSS (:has() keyed off which radio is
+// :checked — see global.css); main.js only keeps ?filter= in the URL in
+// step as the visitor clicks between categories.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHero from "../components/PageHero.astro";
+import Lightbox from "../components/Lightbox.astro";
+import EnquirySection from "../components/EnquirySection.astro";
+import WaitlistPopover from "../components/WaitlistPopover.astro";
+import { GALLERY_FILTERS, GALLERY_PHOTOS } from "../data/gallery";
+---
+
+<BaseLayout
+  title="Gallery — Bacchus, Mdina"
+  menuBackgroundImage="/images/shared/hall-chandeliers-banquet.webp"
+>
+  <PageHero
+    crumb="Gallery"
+    image={{
+      src: "/images/shared/hall-chandeliers-banquet.webp",
+      alt: "The banquet room dressed with chair sashes and long tables",
+    }}
+  >
+    Every photograph is <em>real</em> Bacchus
+    <Fragment slot="sub">
+      No stock photography, no renders — every frame here was taken at Bacchus, across the
+      restaurant and the estate's event spaces.
+    </Fragment>
+  </PageHero>
+
+  <section class="section-padding-small">
+    <div class="wrap">
+      {/* Radio + label, not buttons: the selected filter is real, native
+           single-select state that the CSS :has() filter can read, and
+           radios get arrow-key navigation for free. The input is visually
+           hidden; the label is the visible pill. */}
+      <div class="gallery-filter" id="gfilter" data-reveal>
+        {GALLERY_FILTERS.map((filter) => (
+          <>
+            <input
+              type="radio"
+              name="gfilter"
+              id={`gf-${filter.id}`}
+              class="gallery-filter-input"
+              checked={filter.id === "all"}
+            />
+            <label for={`gf-${filter.id}`} class="gallery-filter-label">
+              {filter.label}
+            </label>
+          </>
+        ))}
+      </div>
+
+      {/* is:inline tells Astro to leave this script EXACTLY here, as written:
+           not bundled, not turned into a deferred module, not moved. Every
+           other <script> on the site is processed, which makes it deferred —
+           and that is precisely wrong here (prototype bug #25). The mini
+           galleries link in with ?filter=weddings etc.; if the radio were set
+           any later than this point, the browser would already have painted
+           the whole unfiltered grid below and the visitor would see every
+           photo flash before it snapped to their category. Running here,
+           parser-blocking and before #ggrid exists, the CSS filter is right
+           at first paint. Keep it to this one job. */}
+      <script is:inline>
+        (function () {
+          var requested = new URLSearchParams(location.search).get("filter");
+          var radio = requested && document.getElementById("gf-" + requested);
+          if (radio) radio.checked = true;
+        })();
+      </script>
+      <div class="gallery-grid" id="ggrid">
+        {GALLERY_PHOTOS.map((photo, i) => (
+          <div
+            class:list={["gallery-item", { "gallery-item-span-two": photo.wide }]}
+            data-cat={photo.category}
+            data-title={photo.title}
+            data-tag={photo.tag}
+            data-reveal="img"
+            style={i === 0 ? undefined : `--d: ${photo.revealDelay}ms`}
+          >
+            {/* The first two load eagerly: they're in view on arrival. */}
+            <img src={photo.src} alt={photo.alt} loading={i < 2 ? undefined : "lazy"} />
+            <span class="gallery-tag">{photo.badge ?? photo.tag}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Lightbox />
+
+  <EnquirySection
+    eventType="Wedding"
+    eyebrow="Liked what you saw?"
+    railPhoto={{
+      src: "/images/shared/mdina-bastion-view.webp",
+      alt: "View over Mdina's bastion walls at dusk",
+      caption: "Mdina's bastion walls, just beyond the estate.",
+    }}
+  >
+    <Fragment slot="heading">
+      Let's plan your <em>own</em> evening
+    </Fragment>
+    <Fragment slot="lead">
+      Whichever room caught your eye, tell us the occasion and we'll come back with dates,
+      pricing and a proposal — before we ever get on the phone.
+    </Fragment>
+  </EnquirySection>
+
+  <WaitlistPopover slot="after-footer" />
+</BaseLayout>
