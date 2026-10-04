@@ -1,6 +1,6 @@
 ---
 // "From our guestbook" rotator. Empty shells here; the four testimonials
-// themselves live in main.js, which fills the quote, meta and picker cards.
+// themselves live in testimonials.js, which fills the quote, meta and picker cards.
 interface Props {
   // The darkened photo behind the section.
   backgroundImage: string
@@ -96,3 +96,7 @@ const { backgroundImage } = Astro.props
     </div>
   </div>
 </section>
+
+<script>
+  import "../scripts/testimonials.js"
+</script>

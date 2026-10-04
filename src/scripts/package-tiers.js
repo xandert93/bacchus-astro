@@ -2,11 +2,11 @@
 // an identical inline <script> on each prototype page, differing only in its
 // TIERS list, which is now read from the markup.
 //
-// Imported explicitly so main.js is guaranteed to have run first: this
-// script uses window.BacchusTabs, which main.js defines. Both are ES modules
-// importing the same file, so the bundler evaluates main.js once and in
-// dependency order — no reliance on which <script> tag happens to come first.
-import "./main.js"
+// Imports tabs.js so window.BacchusTabs exists before this runs: ES modules
+// evaluate their imports first, and a module imported by several scripts
+// on a page still runs once — no reliance on <script> order.
+import "./tabs.js"
+import "./photo-carousel.js"
 
 // Page-specific tier controller. Drives every way of changing tier —
 // the tab bar, the tier cards, the sticky switcher and touch swipe —

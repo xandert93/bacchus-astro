@@ -1,6 +1,8 @@
 ---
-// Full-screen photo viewer opened from any .gallery-item on the page.
-// Empty until main.js fills it from the clicked tile.
+// The site's one full-screen photo viewer. Empty until lightbox.js fills it
+// from the clicked photo — see that file for which elements open it and how
+// captions are built. The two detail paragraphs are only used by photos that
+// carry data-detail (reception's stations) and stay hidden otherwise.
 ---
 
 <div class="lightbox" id="lightbox">
@@ -42,6 +44,12 @@
     <figcaption>
       <b></b>
       <i></i>
+      <p class="lightbox-detail" hidden></p>
+      <p class="lightbox-detail lightbox-detail-items" hidden></p>
     </figcaption>
   </figure>
 </div>
+
+<script>
+  import "../scripts/lightbox.js"
+</script>

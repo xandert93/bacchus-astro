@@ -1,12 +1,12 @@
 ---
 // The four-step enquiry wizard (#enquire). Same component on every events
 // page; what differs per page comes in as props and slots. Behaviour lives
-// in main.js (.wizard-* classes) and is untouched.
+// in enquiry.js (.wizard-* classes).
 //
 // Initial visibility below (date picker, spaces/tone fields, guest hint,
-// chip note) is rendered to match what main.js sets on load for the chosen
+// chip note) is rendered to match what enquiry.js sets on load for the chosen
 // event type. The prototype hardcoded the Wedding state on every page and
-// let main.js correct it after load, so non-wedding pages flashed the wrong
+// let its script correct it after load, so non-wedding pages flashed the wrong
 // state first.
 import { CHIP_NOTES, EVENT_TYPES, type EventType } from "../data/enquiry"
 
@@ -812,3 +812,7 @@ const isWedding = eventType === "Wedding"
     </div>
   </div>
 </section>
+
+<script>
+  import "../scripts/enquiry.js"
+</script>

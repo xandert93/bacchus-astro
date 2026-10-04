@@ -10,7 +10,7 @@ interface Props {
 const { showEnquireLink = false } = Astro.props
 
 // Rendered at build time, so the year is baked into the HTML rather than
-// filled in by main.js after load (main.js still sets #yr; harmless).
+// filled in after load (site.js still sets #yr; harmless).
 const year = new Date().getFullYear()
 ---
 
