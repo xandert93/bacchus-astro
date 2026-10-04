@@ -60,6 +60,8 @@
 //
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import PageHero from "../../../components/PageHero.astro"
+import EnquirySection from "../../../components/EnquirySection.astro"
+import WaitlistPopover from "../../../components/WaitlistPopover.astro"
 import ArrowIcon from "../../../components/ArrowIcon.astro"
 // After BaseLayout, so these load after global.css (see package-page.css).
 import "../../../styles/package-page.css"
@@ -69,7 +71,6 @@ import "../../../styles/package-dish-placeholders.css"
 <BaseLayout
   title="Our High Tea Menus — Bacchus"
   menuBackgroundImage="/images/weddings/cake-chandelier.webp"
-  showVisitSection={false}
 >
   <PageHero crumb="High Tea Menus" parent={{ href: "/weddings", label: "Weddings" }}>
     Our High Tea <em>Menus</em>
@@ -81,7 +82,7 @@ import "../../../styles/package-dish-placeholders.css"
       Three considered tiers, each explored in full below.
     </Fragment>
     <Fragment slot="ctas">
-      <a href="/weddings#enquire" class="button button-gradient button-shimmer">
+      <a href="#enquire" class="button button-gradient button-shimmer">
         <span>Book a tasting</span>
         <ArrowIcon />
       </a>
@@ -734,6 +735,25 @@ import "../../../styles/package-dish-placeholders.css"
       </div>
     </div>
   </section>
+
+  <EnquirySection
+    eventType="Wedding"
+    railPhoto={{
+      src: "/images/celebrations/tea-pour.webp",
+      alt: "A guest pouring tea at an outdoor garden celebration",
+      caption: "Tea poured in the garden.",
+    }}
+  >
+    <Fragment slot="heading">
+      Tell us about your <em>wedding</em>
+    </Fragment>
+    <Fragment slot="lead">
+      Four short steps. We come back with dates, pricing and a proposal shaped to your day
+      — before we ever get on the phone.
+    </Fragment>
+  </EnquirySection>
+
+  <WaitlistPopover slot="after-footer" />
 
   <script>
     import "../../../scripts/package-tiers.js"
