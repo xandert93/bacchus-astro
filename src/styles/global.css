@@ -10245,3 +10245,33 @@ html.is-scroll-locked body {
 html.is-scroll-locked .nav {
   padding-right: var(--scrollbar-compensation, 0px);
 }
+
+/* ============================================================
+   SAFE REVEALS — driven by src/scripts/lib/safe-reveal.js
+   ============================================================
+   Only ever applied by that script, to elements still below the fold, so
+   content is visible by default (see the script's header for why).
+   Specificity is deliberate: html + class + :not() is (0,2,1), which beats
+   the package pages' old ".panels .package-reveal { opacity: 1 }" override
+   (0,2,0) that switched the previous, unsafe reveals off. */
+html .reveal-armed {
+  transition:
+    opacity 0.8s var(--ease),
+    transform 0.8s var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+html .reveal-armed:not(.reveal-in) {
+  opacity: 0;
+  transform: translateY(18px);
+}
+html .reveal-armed-horizontal:not(.reveal-in) {
+  transform: translateX(24px);
+}
+@media (prefers-reduced-motion: reduce) {
+  html .reveal-armed,
+  html .reveal-armed:not(.reveal-in) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
