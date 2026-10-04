@@ -9983,13 +9983,14 @@ form.wl-form {
     padding-left: 16px;
     padding-right: 16px;
   }
-  /* -22px. The primary's trailing arrow is decorative — the label
-     "Book a table" already says it proceeds. Enquire KEEPS its
-     envelope, because that icon is doing semantic work: "Enquire" is
-     the vaguer of the two labels and the glyph is what says what the
-     action is. Dropping the ornamental one and keeping the informative
-     one is the right order to give width back in. */
-  .nav-cta .button-gradient svg {
+  /* -44px. Both CTAs drop their icon together in this band, so the pair
+     always matches: either both carry one (above 1180px, and in the
+     mobile drawer) or neither does. Until 2026-10-04 only Book a table's
+     arrow went, on the argument that Enquire's envelope said more than
+     the arrow did — but a matched pair reads as one deliberate group,
+     and one icon on one pill read as an inconsistency. The labels carry
+     the meaning on their own. */
+  .nav-cta .button svg {
     display: none;
   }
 
