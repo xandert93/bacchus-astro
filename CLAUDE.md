@@ -33,8 +33,8 @@ content hardcoded. Goal is a site that looks and behaves identically, with the
 repetition removed into components. No redesigns, no Sanity, no image
 pipeline yet; one new thing at a time.
 
-- Done: `index.astro` (homepage), `weddings.astro`, `corporate.astro`, `celebrations.astro`.
-- Next: `gallery`, then the four
+- Done: `index.astro` (homepage), `weddings.astro`, `corporate.astro`, `celebrations.astro`, `gallery.astro`.
+- Next: the four
   package pages (at `/weddings/packages/<leaf>`, the agreed URL scheme).
 
 **Phase 2** — `astro:assets` for images (resizing + `srcset`). **Phase 3** —
