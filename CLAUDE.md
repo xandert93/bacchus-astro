@@ -17,7 +17,13 @@ Never used Astro before this project; wants to learn it as we go. Knows React
 (slots), so map Astro concepts onto those and spend the words on where Astro
 differs. When an Astro concept appears for the first time, explain briefly
 what it is, why Astro does it that way, and what it gains this site compared
-with the prototype. Once per concept, not every time. Full note in the prototype's `CLAUDE.md` under "How
+with the prototype. Once per concept, not every time.
+
+**Also new to Vitest and Playwright, and wants to do them hands-on (stated
+2026-10-04).** For the next several times a test is about to be written or
+run, don't just do it: walk the user through it step by step (what to type,
+where, what output to expect) so they can try it themselves and report
+back. Only take over once they say they're comfortable. Full note in the prototype's `CLAUDE.md` under "How
 this user likes to work".
 
 ## Migration plan
@@ -27,8 +33,8 @@ content hardcoded. Goal is a site that looks and behaves identically, with the
 repetition removed into components. No redesigns, no Sanity, no image
 pipeline yet; one new thing at a time.
 
-- Done: `index.astro` (homepage), `weddings.astro`, `corporate.astro`.
-- Next: `celebrations`, `gallery`, then the four
+- Done: `index.astro` (homepage), `weddings.astro`, `corporate.astro`, `celebrations.astro`.
+- Next: `gallery`, then the four
   package pages (at `/weddings/packages/<leaf>`, the agreed URL scheme).
 
 **Phase 2** — `astro:assets` for images (resizing + `srcset`). **Phase 3** —
@@ -43,7 +49,7 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 - `src/components/` — chrome (`SiteHeader`, `MobileMenu`, `SocialLinks`,
   `VisitSection`, `SiteFooter`), shared sections (`PageHero`,
   `EnquirySection`, `FaqSection`, `ProcessSteps`, `GalleryPreview`,
-  `Testimonials`, `WaitlistPopover`, `Lightbox`) and small parts
+  `Testimonials`, `OccasionCards`, `WaitlistPopover`, `Lightbox`) and small parts
   (`CheckList`, `ArrowIcon`). Repeating content (FAQ entries, process
   steps, gallery photos, checklist items) is passed as arrays and rendered
   with `map()` — the shape Sanity data will arrive in later.
@@ -85,6 +91,10 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   ever.
 
 ## Checks and tests
+
+- `npm run format` / `npm run format:check` — Prettier with
+  `prettier-plugin-astro`, `printWidth: 90`. Format-on-save is set in
+  `.vscode/settings.json`.
 
 - `npm run check` — `astro check`: TypeScript across `.astro` and `.ts`
   files, including component props. Must stay at 0 errors.
