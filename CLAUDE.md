@@ -90,6 +90,28 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   `enquiry`, `tooling`, `repo`). **No Claude co-author or attribution lines**,
   ever.
 
+## Git workflow
+
+Repo: `github.com/xandert93/bacchus-astro` (private), default branch `main`.
+
+- **Every feature or fix gets its own branch off `main`**, named
+  `type/short-description` using the same types as commits
+  (`feat/gallery-page`, `fix/testimonials-touch-autoplay`). One branch per
+  independent change, so each can be reviewed, merged or dropped alone.
+- Commit on the branch in `type(scope): description` form, as small logical
+  commits.
+- Before merging: `npm run check` at 0 errors, `npm run build` clean, and
+  `npm run test:e2e` green when the change touches anything tested.
+- Merge back with `git merge --no-ff <branch>` and git's default message
+  (`Merge branch '<branch>'`), so the history shows each change as one
+  group; then delete the branch. Merge commits are the one exception to the
+  `type(scope)` format.
+- `main` should always build and pass. Tiny docs-only edits to this file may
+  go straight to `main`.
+- **Claude does not push.** The user pushes `main` (and any branch they want
+  on GitHub). If a change ever wants review on GitHub first, push the branch
+  and open a pull request instead of merging locally.
+
 ## Checks and tests
 
 - `npm run format` / `npm run format:check` — Prettier with
