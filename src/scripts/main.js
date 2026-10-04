@@ -2723,10 +2723,29 @@
       lbCapI.textContent = it.dataset.tag || "";
       if (lbCount) lbCount.textContent = current + 1 + " / " + vis.length;
     }
+    // Opening holds the image invisible until the NEW photo is decoded.
+    // The lightbox reuses one <img>, and on a src change browsers keep
+    // painting the previous bitmap until the new one is ready to draw — so
+    // reopening on a different photo showed the last one for a frame or two
+    // as the overlay faded in. decode() resolves once the new image can be
+    // painted; the reveal then runs .lightbox img's own open transition.
+    // The token stops a slow decode from an earlier open revealing over a
+    // later one.
+    var lbOpenToken = 0;
     function show() {
+      var token = ++lbOpenToken;
+      // Clear any navigate() crossfade still mid-flight from before a
+      // close: its fade-in is cancelled by the token, so it can't clear it.
+      lbImg.classList.remove("lightbox-fade");
+      lbImg.classList.add("lightbox-loading");
       applyImage();
       lb.classList.add("show");
       document.body.style.overflow = "hidden";
+      function reveal() {
+        if (token === lbOpenToken) lbImg.classList.remove("lightbox-loading");
+      }
+      if (lbImg.decode) lbImg.decode().then(reveal, reveal);
+      else reveal();
     }
     // Crossfades to the next/prev image once already open — a fixed
     // setTimeout clock rather than requestAnimationFrame, same reasoning
@@ -2741,12 +2760,21 @@
         show();
         return;
       }
+      var token = ++lbOpenToken;
       lbImg.classList.add("lightbox-fade");
       setTimeout(function () {
         applyImage();
-        setTimeout(function () {
-          lbImg.classList.remove("lightbox-fade");
-        }, 20);
+        // Same reason as show(): fade back in only once the new photo can
+        // be painted, or the outgoing one shows through the fade-in. The
+        // 20ms floor keeps bug #7's frame boundary when decode is instant.
+        function fadeIn() {
+          if (token !== lbOpenToken) return;
+          setTimeout(function () {
+            lbImg.classList.remove("lightbox-fade");
+          }, 20);
+        }
+        if (lbImg.decode) lbImg.decode().then(fadeIn, fadeIn);
+        else fadeIn();
       }, LB_FADE_MS);
     }
     function closeLb() {
