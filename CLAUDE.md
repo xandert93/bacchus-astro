@@ -98,6 +98,12 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 - The new nav reaches every ported page, including ones that had the old
   flat nav in the prototype. The mobile drawer still needs its first review
   (open item in the prototype's `CLAUDE.md`).
+- **Swapping an existing `<img>`'s `src` must wait on `img.decode()` before
+  revealing it.** Browsers keep painting the previous bitmap until the new
+  one is decoded, so any reused image (lightbox, stations stage) flashes
+  the old photo otherwise. Found and fixed in three separate controllers
+  (2026-09-30 and 2026-10-04) because each had its own copy — one reason
+  the lightbox becomes a single component in the main.js split.
 - Commits: Conventional Commits, **always with a scope**:
   `type(scope): description` — e.g. `feat(weddings): port weddings page`,
   `fix(nav): ...`, `chore(repo): ...`. Lower-case imperative description, no
