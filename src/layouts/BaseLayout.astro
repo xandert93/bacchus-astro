@@ -54,10 +54,11 @@ const {
     <slot name="after-footer" />
 
     <script>
-      // Astro bundles this: main.js is pulled in, minified, and served as a
-      // module. Modules are deferred, which matches the prototype's
-      // <script> at the foot of <body> - the DOM is parsed before it runs.
-      import "../scripts/main.js"
+      // Sitewide behaviour only. Each component brings its own script
+      // (Testimonials, EnquirySection, Lightbox…), and Astro bundles a
+      // component's script once per page, only on pages that use it.
+      import "../scripts/site.js"
+      import "../scripts/site-nav.js"
     </script>
   </body>
 </html>

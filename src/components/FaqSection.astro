@@ -1,5 +1,5 @@
 ---
-// "Good to know" accordion. Questions come in as data; main.js wires the
+// "Good to know" accordion. Questions come in as data; faq.js wires the
 // open/close (.faq-q / .faq-a). Default slot = heading, optional "lead"
 // slot = the paragraph under it.
 interface Props {
@@ -47,3 +47,7 @@ const hasLead = Astro.slots.has("lead")
     </div>
   </div>
 </section>
+
+<script>
+  import "../scripts/faq.js"
+</script>

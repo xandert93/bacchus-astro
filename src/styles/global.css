@@ -10199,3 +10199,24 @@ body.menu-open .mobile-nav-cta-row {
   opacity: 1;
   transform: none;
 }
+
+/* ============================================================
+   SCROLL LOCK — driven by src/scripts/lib/scroll-lock.js
+   ============================================================
+   Any overlay that locks the page (drawer, lightbox, quick-pick modal)
+   adds .is-scroll-locked to <html> and sets --scrollbar-compensation to
+   the width of the scrollbar it is about to remove. Padding the page and
+   the fixed nav by exactly that much keeps everything where it was, so
+   nothing shifts sideways behind the overlay as it opens or closes. The
+   value is 0px wherever scrollbars don't take up space (phones, macOS
+   overlay scrollbars), so this does nothing there. */
+html.is-scroll-locked body {
+  overflow: hidden;
+  padding-right: var(--scrollbar-compensation, 0px);
+}
+/* The nav is position: fixed, so the body's padding doesn't reach it.
+   Padding (not `right`) so its background still spans the full width
+   while its centred contents stay put. */
+html.is-scroll-locked .nav {
+  padding-right: var(--scrollbar-compensation, 0px);
+}
