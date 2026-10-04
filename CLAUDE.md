@@ -28,7 +28,7 @@ this user likes to work".
 
 ## Migration plan
 
-**Phase 1 — faithful port (in progress).** Same markup, same CSS, same JS,
+**Phase 1 — faithful port (complete, 2026-10-04).** Same markup, same CSS, same JS,
 content hardcoded. Goal is a site that looks and behaves identically, with the
 repetition removed into components. No redesigns, no Sanity, no image
 pipeline yet; one new thing at a time.
@@ -37,7 +37,9 @@ pipeline yet; one new thing at a time.
   `gallery`, and the four packages at `/weddings/packages/{reception,banquet,
 high-tea,beverage}` (the agreed URL scheme). `menu.html` is deliberately not
   ported (parked restaurant content).
-- Next, to finish phase 1: split `main.js` into per-component scripts.
+- `main.js` split into per-component scripts (see Current structure).
+- Next: decide what sections the package pages carry (Visit, enquiry,
+  gallery) and in what order — open question with the user.
 - Phase-1 debt worth knowing: `reception-package.css` and `package-page.css`
   are two drifted copies of the same package styles; `reception-package.js`
   likewise contains its own copy of `package-tiers.js`'s tier controller.
@@ -60,7 +62,7 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   steps, gallery photos, checklist items) is passed as arrays and rendered
   with `map()` — the shape Sanity data will arrive in later.
 - `EnquirySection` props: `eventType` (sets the selected chip AND the
-  initial visibility of every field main.js toggles per type, so there is no
+  initial visibility of every field enquiry.js toggles per type, so there is no
   post-load flash), `datePicker` (`inline` compact calendar, or `modal` for
   weddings, which has the full diary on the page), `eyebrow`, `railPhoto`;
   named slots `heading` and `lead`.
@@ -68,19 +70,42 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   after `BaseLayout` (`package-page.css` + `package-dish-placeholders.css` /
   `package-beverage.css`, or `reception-package.css`) and their own script
   (`package-tiers.js` / `reception-package.js`). Those scripts
-  `import "./main.js"` themselves, so main.js has always run first
-  (`window.BacchusTabs`) regardless of `<script>` order. Small CSS files are
+  `import "./tabs.js"` themselves, so `window.BacchusTabs` exists before
+  they run regardless of `<script>` order. Small CSS files are
   inlined into the page by Astro (`build.inlineStylesheets: "auto"`), after
   the linked ones, so cascade order is preserved.
 - `src/data/gallery.ts` — the full gallery's photos and filters.
 - `src/data/enquiry.ts` — event types and chip notes. `CHIP_NOTES` is
-  duplicated in `main.js` until that file is split; change both.
+  still duplicated inside `enquiry.js`; change both until the script imports
+  it.
 - `src/styles/global.css` — the prototype's `styles.css`, copied verbatim,
   imported once by the layout. Splitting it into component-scoped styles is
   a later job.
-- `src/scripts/main.js` — the prototype's `main.js`, copied verbatim and
-  bundled as a module. Checked before the move: no undeclared globals, so
-  module strict mode doesn't break it.
+- `src/scripts/` — one module per feature, each loaded by the component or
+  page that needs it, so a page only ships the JS it uses. `BaseLayout` loads
+  `site.js` (loaded class, particles, `[data-reveal]`, safe reveals) and
+  `site-nav.js` (bar, drawer, dropdowns). Components: `testimonials.js`,
+  `enquiry.js` (imports `availability.js`), `faq.js`, `lightbox.js`. Pages:
+  `tabs.js` + `photo-carousel.js` + `home.js` (homepage), `availability.js` +
+  `weddings.js`, `gallery-filter.js`, `package-tiers.js` /
+  `reception-package.js`. Shared helpers in `src/scripts/lib/`:
+  `motion.js` (reduced motion), `scroll-lock.js`, `safe-reveal.js`,
+  `availability-hooks.js` (the two calls enquiry needs from the calendar).
+- **Scroll lock:** every overlay calls `lockScroll(owner)` /
+  `unlockScroll(owner)` — never sets `body.style.overflow` itself. The lock
+  pads the page and the fixed nav by the scrollbar width so nothing shifts
+  on desktop. A new fixed-position element that must not shift needs the
+  same `html.is-scroll-locked` padding rule.
+- **One lightbox:** `Lightbox.astro` + `lightbox.js` serve every photo on the
+  site. Group photos with `data-lb-group`; `#ggrid .gallery-item`s group
+  automatically and follow the gallery filter.
+- **Entrance animations on content that must not go missing** use
+  `data-reveal-safe` (one block) or `data-reveal-group` (children stagger in
+  from the right) — see `lib/safe-reveal.js`. Visible by default; only armed
+  below the fold, never in an inactive tier.
+- Hero photos settle in (`.hero-media` scale 1.08 → 1), transform-only so
+  Largest Contentful Paint isn't delayed.
+- `/weddings/packages` redirects to `/weddings#packages` (`astro.config.mjs`).
 - `public/images/` — copied from the prototype minus `originals/`. Served
   as-is from `/images/...`. Moves to `src/assets/` in phase 2.
 
