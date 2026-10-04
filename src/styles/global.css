@@ -7955,6 +7955,13 @@ form.wl-form {
   opacity: 1;
   transform: none;
 }
+/* Held back while a freshly opened photo decodes — see show() in main.js.
+   (0,3,1), out-specifying .lightbox.show img above; keeps the closed-state
+   values so removing it plays the normal open transition. */
+.lightbox.show img.lightbox-loading {
+  opacity: 0;
+  transform: scale(0.97);
+}
 /* Taken out of normal flow — otherwise .lightbox centers the whole figure
    (image + caption) as one block, and the caption's own height pushes the
    image itself above true vertical center. Absolute + top:100% keeps it
