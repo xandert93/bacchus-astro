@@ -33,9 +33,15 @@ content hardcoded. Goal is a site that looks and behaves identically, with the
 repetition removed into components. No redesigns, no Sanity, no image
 pipeline yet; one new thing at a time.
 
-- Done: `index.astro` (homepage), `weddings.astro`, `corporate.astro`, `celebrations.astro`, `gallery.astro`.
-- Next: the four
-  package pages (at `/weddings/packages/<leaf>`, the agreed URL scheme).
+- Done: every page — `index`, `weddings`, `corporate`, `celebrations`,
+  `gallery`, and the four packages at `/weddings/packages/{reception,banquet,
+high-tea,beverage}` (the agreed URL scheme). `menu.html` is deliberately not
+  ported (parked restaurant content).
+- Next, to finish phase 1: split `main.js` into per-component scripts.
+- Phase-1 debt worth knowing: `reception-package.css` and `package-page.css`
+  are two drifted copies of the same package styles; `reception-package.js`
+  likewise contains its own copy of `package-tiers.js`'s tier controller.
+  Merge each pair deliberately, not as a side effect of other work.
 
 **Phase 2** — `astro:assets` for images (resizing + `srcset`). **Phase 3** —
 Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
@@ -58,6 +64,15 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   post-load flash), `datePicker` (`inline` compact calendar, or `modal` for
   weddings, which has the full diary on the page), `eyebrow`, `railPhoto`;
   named slots `heading` and `lead`.
+- Package pages (`src/pages/weddings/packages/`) import their own CSS
+  after `BaseLayout` (`package-page.css` + `package-dish-placeholders.css` /
+  `package-beverage.css`, or `reception-package.css`) and their own script
+  (`package-tiers.js` / `reception-package.js`). Those scripts
+  `import "./main.js"` themselves, so main.js has always run first
+  (`window.BacchusTabs`) regardless of `<script>` order. Small CSS files are
+  inlined into the page by Astro (`build.inlineStylesheets: "auto"`), after
+  the linked ones, so cascade order is preserved.
+- `src/data/gallery.ts` — the full gallery's photos and filters.
 - `src/data/enquiry.ts` — event types and chip notes. `CHIP_NOTES` is
   duplicated in `main.js` until that file is split; change both.
 - `src/styles/global.css` — the prototype's `styles.css`, copied verbatim,
