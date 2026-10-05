@@ -72,4 +72,22 @@ const tag = category[0].toUpperCase() + category.slice(1)
       grid-template-columns: repeat(4, 1fr);
     }
   }
+  .gallery .head-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: clamp(30px, 4vw, 48px);
+  }
+  /* Hidden on the three page-specific mini-galleries (.gallery — every photo
+     in that grid is already the one category the section heading names) —
+     gallery.html's own full grid doesn't use this wrapper class, so its
+     .gallery-tag stays visible there, where it's actually load-bearing (mixed
+     categories + a filter bar). The underlying data-tag/data-title
+     attributes are untouched either way — the lightbox reads those directly,
+     not this span's text. */
+  .gallery .gallery-tag {
+    display: none;
+  }
 </style>

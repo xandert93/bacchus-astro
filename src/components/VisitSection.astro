@@ -161,4 +161,27 @@ import Photo from "./Photo.astro"
     font-size: 12.5px;
     color: var(--muted);
   }
+  .visit .arch {
+    aspect-ratio: 4/5;
+  }
+  .visit-list > :global(*) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(var(--limestone-rgb), 0.14);
+    transition:
+      padding 0.4s var(--ease),
+      color 0.3s;
+  }
+  .visit-list > :global(*:last-child) {
+    border-bottom: none;
+  }
+  @media (max-width: 980.98px) {
+    .visit .arch {
+      order: -1;
+      max-width: 440px;
+    }
+  }
 </style>

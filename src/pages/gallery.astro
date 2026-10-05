@@ -253,4 +253,26 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "../data/gallery"
       grid-column: span 1;
     }
   }
+  /* Filtering itself, in place of the old JS click handler that toggled a
+     .hide class on non-matching .gallery-item elements: #gfilter and #ggrid
+     are plain siblings under one .wrap (same shape the mega-menu scrim
+     already relies on :has() for), so :has() on that shared ancestor, keyed
+     off which radio is :checked, can reach across to filter the grid with no
+     JS at all. #gf-all has no matching rule below — with nothing checked
+     matching, no .gallery-item ever gets hidden, which is exactly "show
+     everything." */
+  .wrap:has(#gf-weddings:checked)
+    :global(#ggrid)
+    :global(.gallery-item:not([data-cat="weddings"])),
+  .wrap:has(#gf-corporate:checked)
+    :global(#ggrid)
+    :global(.gallery-item:not([data-cat="corporate"])),
+  .wrap:has(#gf-celebrations:checked)
+    :global(#ggrid)
+    :global(.gallery-item:not([data-cat="celebrations"])),
+  .wrap:has(#gf-venue:checked)
+    :global(#ggrid)
+    :global(.gallery-item:not([data-cat="venue"])) {
+    display: none;
+  }
 </style>
