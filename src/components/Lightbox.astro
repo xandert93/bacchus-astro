@@ -305,4 +305,24 @@
       right: 12px;
     }
   }
+  /* Held back while a freshly opened photo decodes — see show() in main.js.
+     (0,3,1), out-specifying .lightbox.show img above; keeps the closed-state
+     values so removing it plays the normal open transition. */
+  .lightbox.show :global(img.lightbox-loading) {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  .lightbox-detail-items :global(.package-veg-marker) {
+    margin-inline-start: 1px;
+  }
+  /* Crossfade between images on navigate (prev/next/swipe) — .lightbox.show
+     img already forces opacity:1 for the initial open animation, so this
+     needs to explicitly out-specificity that (0,3,1 vs 0,2,1) rather than
+     just adding a same-weight class, or it'd silently lose that fight. Only
+     opacity is touched here since the initial-open transform pop isn't
+     needed again on navigate. */
+  .lightbox.show :global(img.lightbox-fade) {
+    opacity: 0;
+    transition: opacity 0.18s var(--ease);
+  }
 </style>

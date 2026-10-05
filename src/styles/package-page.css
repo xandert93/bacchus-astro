@@ -1,3 +1,5 @@
+@import "./tabs.css";
+
 /* Shared by all four package pages: the tier switcher, tier cards,
    sticky switcher, signature-dish tiles, menu groups and the photo
    carousel. Imported after global.css (so it wins ties on source order,
@@ -9,6 +11,16 @@
    prototype's banquet/high tea/beverage pages) and reception's (its
    original). Where they differed, reception's newer version won — see the
    git history for the comparison. */
+:root {
+  /* The column gutter shared by BOTH grids inside a package page's tier
+     panel — .package-menu-groups (the ingredient lists) and
+     .package-dishes-grid (the signature-dish tiles). They stack directly on
+     top of each other and are both repeat(3, 1fr), so they only read as one
+     column structure if their gaps match too; when they didn't, every column
+     after the first started somewhere different (CLAUDE.md bug #24). One
+     token rather than two equal literals, so they cannot drift apart again. */
+  --package-grid-column-gap: clamp(32px, 5.5vw, 72px);
+}
 .package-now-viewing {
   font-family: "Inter", sans-serif;
   font-size: 10px;
@@ -1100,62 +1112,6 @@ body.is-scrolling .package-sticky-switch {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
-/* --- Placeholder imagery -------------------------------------------
-   Neither the hero nor the dish tiles on this page have real
-   photography yet. Both are deliberately blacked out rather than
-   filled with a stand-in shot: a stand-in reads as a finished choice
-   when the page is walked through, whereas an empty black frame reads
-   as "still to come", which is the honest signal while the client is
-   sourcing images. Both carry a visible label saying so, so nobody has
-   to infer it from the colour alone.
-
-   Replacing them: the hero wants an <img> back inside .hero-media (see
-   reception-package.html), and the dish tiles want
-   .gallery-item/.gallery-tag markup plus the page-scoped lightbox
-   controller, both copied from reception-package.html. */
-.package-hero-placeholder {
-  background: #000;
-}
-/* A plain line of small type in the bottom-right of the black frame,
-   not a pill. The pill version carried a background, border and
-   padding, which made it wide enough to collide with the hero's CTA
-   buttons at tablet and laptop widths — .hero-content only reserves
-   clamp(46px, 7vh, 76px) of space below those buttons, and at 1440x900
-   that resolves to ~63px against a pill occupying ~32-56px from the
-   bottom. Seven pixels of clearance, and none at all once the pill
-   wrapped to two lines. Plain type is short enough to sit inside that
-   gutter at every width.
-
-   Spans the hero edge-to-edge and right-aligns, rather than being
-   pinned by a `right` offset. A full-width block can't overflow its
-   container, so there's no shrink-to-fit cap left to get wrong (the
-   bug the pill had on phones), and it wraps on its own if it ever
-   needs to. The max-width/margin/padding trio is copied from .wrap so
-   the text lands exactly on the hero copy's own right edge instead of
-   floating at an unrelated offset — that's what "adequate offset"
-   means here, the same gutter everything else on the page uses.
-
-   Sits above .hero-scrim (z-index 2) but below .hero-content (3), so
-   the scrim can't dim it and it can't overlap the h1. */
-.package-hero-placeholder-label {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: clamp(12px, 1.8vw, 20px);
-  z-index: 2;
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 0 clamp(20px, 5vw, 44px);
-  font-family: "Inter", sans-serif;
-  font-size: clamp(8.5px, 1.05vw, 10.5px);
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  line-height: 1.4;
-  text-align: right;
-  text-transform: uppercase;
-  color: rgba(var(--oxblood-on-dark-rgb), 0.92);
-}
-
 /* Warning variant of .package-menu-note, for facts that are NOT
    confirmed catalogue copy — the base note is bronze/gold precisely
    because it carries real, confirmed text (see its own comment), so an
@@ -1186,4 +1142,94 @@ body.is-scrolling .package-sticky-switch {
 .package-menu-note-warning .package-menu-note-text b {
   color: var(--oxblood-on-dark);
   font-weight: 600;
+}
+
+/* Opt-in modifier for a LONG dark section — two soft gold radials in
+   opposite corners, so a 1,500px+ block doesn't read identically at its
+   top and its bottom. Strictly an addition to .on-dark's ground: the
+   base colour still comes from there, this only layers the wash.
+
+   Deliberately NOT applied to .on-dark generally. Flat dark is the
+   site's default and should stay that way — .enquire (the one washed
+   light section) and .testimonials (the one photo-backed dark one) read
+   as special precisely because almost nothing else is treated. This is
+   for the handful of sections long enough to have an actual problem,
+   which today means the four package pages' tier/category switchers:
+   each is a single .on-dark section running 400-600 lines, the longest
+   flat dark blocks on the site, and each is the section the Reception
+   stations grid will eventually merge beneath.
+
+   Not a new device so much as the missing cell of one the site already
+   half-owns: .hero-scrim is an oxblood radial on a dark ground,
+   .enquire is a gold radial on a light one. The top-right radial's
+   geometry is .enquire's own, verbatim, so the two read as one
+   vocabulary.
+
+   THE OPACITIES ARE NOT .enquire's, AND THAT IS THE POINT — the same
+   number means something very different over near-black than over
+   near-white. .enquire at 0.10 over --paper (#fbf8f0) lands around
+   247, 241, 222: its largest move is blue, down ~7%, a tint you cannot
+   easily point at. This wash arrived from the design export at 0.13
+   over --ink (#171007), which takes 23, 16, 7 to roughly 48, 37, 14 —
+   a DOUBLING of every channel. Comparable raw deltas (~25 against ~18),
+   but doubling a near-black ground is a far larger perceptual step than
+   darkening a near-white one by 7%, and it showed: the 0.13 version got
+   noticed and described as a glow on first sight, which .enquire never
+   has in the whole life of the site. 0.06 lifts R from 23 to ~35 —
+   present, ambient, not a light source. The second corner keeps the
+   export's 2.6:1 ratio against the first.
+
+   So: match .enquire on geometry, never on opacity. If this is ever
+   used over a different ground, re-derive the number from the channel
+   shift rather than copying 0.06 across.
+
+   Doubled class (0,2,0) rather than relying on this rule sitting after
+   .on-dark in the file — .on-dark's `background` shorthand resets
+   background-image, so an equal-specificity longhand would be winning
+   on source order alone (CLAUDE.md bug #2). */
+.on-dark.on-dark-gold-wash {
+  background-image:
+    radial-gradient(120% 80% at 85% 0%, rgba(var(--gold-rgb), 0.06), transparent 60%),
+    radial-gradient(120% 80% at 0% 100%, rgba(var(--gold-rgb), 0.025), transparent 60%);
+}
+/* ---------- Package menu grids (Reception, Banquet, High Tea, Beverage) ----------
+   Lives here, not in each page's own \3c style> block, because all four package
+   pages use it and the whole point of --package-grid-column-gap is that there
+   is exactly one definition of it. Page-scoped rules in those files load after
+   this and still win on equal specificity, so a page can still override its own
+   column count (beverage-package.html does, for its two-column layout) without
+   touching the gap. */
+.package-menu-groups {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: clamp(30px, 4.5vw, 50px);
+  column-gap: var(--package-grid-column-gap);
+}
+.package-dishes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: clamp(10px, 2vw, 22px);
+  column-gap: var(--package-grid-column-gap);
+  margin-bottom: clamp(32px, 4.5vw, 48px);
+  /* .gallery-item:not(.is-revealed) img binds transition-delay to
+     var(--d, 0ms) for its reveal pop-in and, on reception-package.html, these
+     tiles are permanently matched by that selector (they sit in a display:none
+     tab-panel the scroll observer never sees). Pinned to 0 here so an
+     ancestor's stagger value can't leak into the hover-zoom's timing. */
+  --d: 0ms;
+}
+@media (max-width: 980.98px) {
+  .package-menu-groups {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 980.98px) {
+  .package-dishes-grid {
+    --package-grid-column-gap: clamp(10px, 2vw, 22px);
+  }
+}
+@media (max-width: 620.98px) {
+  .package-menu-groups {
+    grid-template-columns: 1fr;
+  }
 }

@@ -108,6 +108,37 @@ import Lightbox from "../../../components/Lightbox.astro"
 import "../../../styles/package-page.css"
 import "../../../styles/package-stations.css"
 import Photo from "../../../components/Photo.astro"
+import PhotoCarousel from "../../../components/PhotoCarousel.astro"
+import GalleryTile from "../../../components/GalleryTile.astro"
+
+// The "closer look" photo strip.
+const carouselSlides = [
+  {
+    src: "food-and-drink/canapes-service",
+    alt: "A waiter serving canapés at a wedding reception",
+    caption: "Canapés, Passed",
+  },
+  {
+    src: "venue/terrace-celebration-reception",
+    alt: "Guests mingling at a Bacchus wedding reception on the Terrace",
+    caption: "Reception, On the Terrace",
+  },
+  {
+    src: "food-and-drink/champagne",
+    alt: "A guest raising a glass of sparkling wine at a dressed table",
+    caption: "A Toast, On Arrival",
+  },
+  {
+    src: "venue/terrace-marquee-tables",
+    alt: "Tables dressed under a marquee on the Terrace",
+    caption: "The Terrace, Dressed",
+  },
+  {
+    src: "venue/secret-garden-night",
+    alt: "A long candlelit table in the Secret Garden at night",
+    caption: "The Secret Garden, By Night",
+  },
+]
 ---
 
 <BaseLayout
@@ -308,58 +339,52 @@ import Photo from "../../../components/Photo.astro"
               <h4 class="package-dishes-label">Signature dishes</h4>
               <div class="package-dishes-grid" data-reveal-group>
                 <figure class="package-dish">
-                  <div
-                    class="gallery-item"
+                  <GalleryTile
                     data-lb-group="daisy"
                     data-title="Smoked Salmon &amp; Lobster Blinis"
                     data-tag="Cold Canapé"
-                  >
-                    <Photo
-                      src="reception-menu/dishes/daisy-salmon-lobster-blinis"
-                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
-                      decoding="async"
-                      alt="Smoked Salmon &amp; Lobster Blinis, a cold canapé from the Daisy tier"
-                    />
-                    <span class="gallery-tag">Cold Canapé</span>
-                  </div>
+                    tag="Cold Canapé"
+                    photo={{
+                      src: "reception-menu/dishes/daisy-salmon-lobster-blinis",
+                      sizes: "(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw",
+                      decoding: "async",
+                      alt: "Smoked Salmon & Lobster Blinis, a cold canapé from the Daisy tier",
+                    }}
+                  />
                   <figcaption class="package-dish-name">
                     Smoked Salmon &amp; Lobster Blinis
                   </figcaption>
                 </figure>
                 <figure class="package-dish">
-                  <div
-                    class="gallery-item"
+                  <GalleryTile
                     data-lb-group="daisy"
                     data-title="Lamb Koftas &amp; Sumac Yogurt"
                     data-tag="Hot Canapé"
-                  >
-                    <Photo
-                      src="reception-menu/dishes/daisy-lamb-koftas"
-                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
-                      decoding="async"
-                      alt="Lamb Koftas &amp; Sumac Yogurt, a hot canapé from the Daisy tier"
-                    />
-                    <span class="gallery-tag">Hot Canapé</span>
-                  </div>
+                    tag="Hot Canapé"
+                    photo={{
+                      src: "reception-menu/dishes/daisy-lamb-koftas",
+                      sizes: "(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw",
+                      decoding: "async",
+                      alt: "Lamb Koftas & Sumac Yogurt, a hot canapé from the Daisy tier",
+                    }}
+                  />
                   <figcaption class="package-dish-name">
                     Lamb Koftas &amp; Sumac Yogurt
                   </figcaption>
                 </figure>
                 <figure class="package-dish">
-                  <div
-                    class="gallery-item"
+                  <GalleryTile
                     data-lb-group="daisy"
                     data-title="Cassatelle"
                     data-tag="Dessert"
-                  >
-                    <Photo
-                      src="reception-menu/dishes/daisy-cassatelle"
-                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
-                      decoding="async"
-                      alt="Cassatelle, a Maltese ricotta pastry from the Daisy tier's dessert selection"
-                    />
-                    <span class="gallery-tag">Dessert</span>
-                  </div>
+                    tag="Dessert"
+                    photo={{
+                      src: "reception-menu/dishes/daisy-cassatelle",
+                      sizes: "(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw",
+                      decoding: "async",
+                      alt: "Cassatelle, a Maltese ricotta pastry from the Daisy tier's dessert selection",
+                    }}
+                  />
                   <figcaption class="package-dish-name">Cassatelle</figcaption>
                 </figure>
               </div>
@@ -558,58 +583,52 @@ import Photo from "../../../components/Photo.astro"
               <h4 class="package-dishes-label">Signature dishes</h4>
               <div class="package-dishes-grid" data-reveal-group>
                 <figure class="package-dish">
-                  <div
-                    class="gallery-item"
+                  <GalleryTile
                     data-lb-group="lavender"
                     data-title="Potato Terrine, Fresh Octopus, Crispy Guanciale"
                     data-tag="Cold Canapé"
-                  >
-                    <Photo
-                      src="reception-menu/dishes/lavender-octopus-terrine"
-                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
-                      decoding="async"
-                      alt="Potato Terrine, Fresh Octopus, Crispy Guanciale, a cold canapé from the Lavender tier"
-                    />
-                    <span class="gallery-tag">Cold Canapé</span>
-                  </div>
+                    tag="Cold Canapé"
+                    photo={{
+                      src: "reception-menu/dishes/lavender-octopus-terrine",
+                      sizes: "(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw",
+                      decoding: "async",
+                      alt: "Potato Terrine, Fresh Octopus, Crispy Guanciale, a cold canapé from the Lavender tier",
+                    }}
+                  />
                   <figcaption class="package-dish-name">
                     Potato Terrine, Fresh Octopus, Crispy Guanciale
                   </figcaption>
                 </figure>
                 <figure class="package-dish">
-                  <div
-                    class="gallery-item"
+                  <GalleryTile
                     data-lb-group="lavender"
                     data-title="Prawn Tempura &amp; Dynamite Sauce"
                     data-tag="Hot Canapé"
-                  >
-                    <Photo
-                      src="reception-menu/dishes/lavender-prawn-tempura"
-                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
-                      decoding="async"
-                      alt="Prawn Tempura &amp; Dynamite Sauce, a hot canapé from the Lavender tier"
-                    />
-                    <span class="gallery-tag">Hot Canapé</span>
-                  </div>
+                    tag="Hot Canapé"
+                    photo={{
+                      src: "reception-menu/dishes/lavender-prawn-tempura",
+                      sizes: "(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw",
+                      decoding: "async",
+                      alt: "Prawn Tempura & Dynamite Sauce, a hot canapé from the Lavender tier",
+                    }}
+                  />
                   <figcaption class="package-dish-name">
                     Prawn Tempura &amp; Dynamite Sauce
                   </figcaption>
                 </figure>
                 <figure class="package-dish">
-                  <div
-                    class="gallery-item"
+                  <GalleryTile
                     data-lb-group="lavender"
                     data-title="Sea Salt &amp; Dark Chocolate Tart"
                     data-tag="Dessert"
-                  >
-                    <Photo
-                      src="reception-menu/dishes/lavender-chocolate-tart"
-                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
-                      decoding="async"
-                      alt="Sea Salt &amp; Dark Chocolate Tart, a dessert from the Lavender tier"
-                    />
-                    <span class="gallery-tag">Dessert</span>
-                  </div>
+                    tag="Dessert"
+                    photo={{
+                      src: "reception-menu/dishes/lavender-chocolate-tart",
+                      sizes: "(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw",
+                      decoding: "async",
+                      alt: "Sea Salt & Dark Chocolate Tart, a dessert from the Lavender tier",
+                    }}
+                  />
                   <figcaption class="package-dish-name">
                     Sea Salt &amp; Dark Chocolate Tart
                   </figcaption>
@@ -810,58 +829,52 @@ import Photo from "../../../components/Photo.astro"
               <h4 class="package-dishes-label">Signature dishes</h4>
               <div class="package-dishes-grid" data-reveal-group>
                 <figure class="package-dish">
-                  <div
-                    class="gallery-item"
+                  <GalleryTile
                     data-lb-group="rose"
                     data-title="Foie Gras &amp; Smoked Duck Croustade"
                     data-tag="Cold Canapé"
-                  >
-                    <Photo
-                      src="reception-menu/dishes/rose-foie-gras-croustade"
-                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
-                      decoding="async"
-                      alt="Foie Gras &amp; Smoked Duck Croustade, a cold canapé from the Rose tier"
-                    />
-                    <span class="gallery-tag">Cold Canapé</span>
-                  </div>
+                    tag="Cold Canapé"
+                    photo={{
+                      src: "reception-menu/dishes/rose-foie-gras-croustade",
+                      sizes: "(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw",
+                      decoding: "async",
+                      alt: "Foie Gras & Smoked Duck Croustade, a cold canapé from the Rose tier",
+                    }}
+                  />
                   <figcaption class="package-dish-name">
                     Foie Gras &amp; Smoked Duck Croustade
                   </figcaption>
                 </figure>
                 <figure class="package-dish">
-                  <div
-                    class="gallery-item"
+                  <GalleryTile
                     data-lb-group="rose"
                     data-title="Oyster &amp; Alsace Bacon"
                     data-tag="Hot Canapé"
-                  >
-                    <Photo
-                      src="reception-menu/dishes/rose-oyster-bacon"
-                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
-                      decoding="async"
-                      alt="Oyster &amp; Alsace Bacon, a hot canapé from the Rose tier"
-                    />
-                    <span class="gallery-tag">Hot Canapé</span>
-                  </div>
+                    tag="Hot Canapé"
+                    photo={{
+                      src: "reception-menu/dishes/rose-oyster-bacon",
+                      sizes: "(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw",
+                      decoding: "async",
+                      alt: "Oyster & Alsace Bacon, a hot canapé from the Rose tier",
+                    }}
+                  />
                   <figcaption class="package-dish-name">
                     Oyster &amp; Alsace Bacon
                   </figcaption>
                 </figure>
                 <figure class="package-dish">
-                  <div
-                    class="gallery-item"
+                  <GalleryTile
                     data-lb-group="rose"
                     data-title="Marinated Scallop &amp; Ikura Crostini"
                     data-tag="Cold Canapé"
-                  >
-                    <Photo
-                      src="reception-menu/dishes/rose-scallop-crostini"
-                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
-                      decoding="async"
-                      alt="Marinated Scallop &amp; Ikura Crostini, a cold canapé from the Rose tier"
-                    />
-                    <span class="gallery-tag">Cold Canapé</span>
-                  </div>
+                    tag="Cold Canapé"
+                    photo={{
+                      src: "reception-menu/dishes/rose-scallop-crostini",
+                      sizes: "(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw",
+                      decoding: "async",
+                      alt: "Marinated Scallop & Ikura Crostini, a cold canapé from the Rose tier",
+                    }}
+                  />
                   <figcaption class="package-dish-name">
                     Marinated Scallop &amp; Ikura Crostini
                   </figcaption>
@@ -1172,117 +1185,7 @@ import Photo from "../../../components/Photo.astro"
         </p>
       </div>
     </div>
-    <div class="wrap carousel-section">
-      <div class="carousel-view" id="carView">
-        <div class="carousel-track" id="carTrack" data-reveal-group>
-          <figure class="slide">
-            <div class="ph">
-              <Photo
-                src="food-and-drink/canapes-service"
-                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
-                maxWidth={960}
-                alt="A waiter serving canapés at a wedding reception"
-                decoding="async"
-              />
-            </div>
-            <figcaption class="carousel-caption">
-              <b>Canapés, Passed</b>
-              <i>1</i>
-            </figcaption>
-          </figure>
-          <figure class="slide">
-            <div class="ph">
-              <Photo
-                src="venue/terrace-celebration-reception"
-                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
-                maxWidth={960}
-                alt="Guests mingling at a Bacchus wedding reception on the Terrace"
-                decoding="async"
-              />
-            </div>
-            <figcaption class="carousel-caption">
-              <b>Reception, On the Terrace</b>
-              <i>2</i>
-            </figcaption>
-          </figure>
-          <figure class="slide">
-            <div class="ph">
-              <Photo
-                src="food-and-drink/champagne"
-                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
-                maxWidth={960}
-                alt="A guest raising a glass of sparkling wine at a dressed table"
-                decoding="async"
-              />
-            </div>
-            <figcaption class="carousel-caption">
-              <b>A Toast, On Arrival</b>
-              <i>3</i>
-            </figcaption>
-          </figure>
-          <figure class="slide">
-            <div class="ph">
-              <Photo
-                src="venue/terrace-marquee-tables"
-                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
-                maxWidth={960}
-                alt="Tables dressed under a marquee on the Terrace"
-                decoding="async"
-              />
-            </div>
-            <figcaption class="carousel-caption">
-              <b>The Terrace, Dressed</b>
-              <i>4</i>
-            </figcaption>
-          </figure>
-          <figure class="slide">
-            <div class="ph">
-              <Photo
-                src="venue/secret-garden-night"
-                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
-                maxWidth={960}
-                alt="A long candlelit table in the Secret Garden at night"
-                decoding="async"
-              />
-            </div>
-            <figcaption class="carousel-caption">
-              <b>The Secret Garden, By Night</b>
-              <i>5</i>
-            </figcaption>
-          </figure>
-        </div>
-      </div>
-      <div class="carousel-controls">
-        <button class="carousel-button" id="prev" aria-label="Previous">
-          <svg width="16" height="12" viewBox="0 0 14 10" fill="none">
-            <path
-              d="M13 5H2m3.5-3.5L2 5l3.5 3.5"
-              stroke="currentColor"
-              stroke-width="1.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </button>
-        <button class="carousel-button" id="next" aria-label="Next">
-          <svg width="16" height="12" viewBox="0 0 14 10" fill="none">
-            <path
-              d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
-              stroke="currentColor"
-              stroke-width="1.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </button>
-        <div class="carousel-progress-bar">
-          <i id="carBar"></i>
-        </div>
-        <div class="carousel-count">
-          <span id="carNow">1</span> / <span id="carTotal">5</span>
-        </div>
-      </div>
-    </div>
+    <PhotoCarousel slides={carouselSlides} />
   </section>
 
   <section

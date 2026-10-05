@@ -1,10 +1,9 @@
 // The testimonials carousel (#testimonials). Loaded by Testimonials.astro.
 
 import { reduce } from "./lib/motion.js"
+import { TESTIMONIALS } from "../data/testimonials"
 
 // ---------- Testimonials rotator ----------
-// Content lives here (not in the page) so the same markup on index.html/weddings.html
-// shares one source.
 ;(function () {
   var section = document.getElementById("testimonials")
   var quoteBox = document.getElementById("tQuoteBox")
@@ -34,46 +33,12 @@ import { reduce } from "./lib/motion.js"
   var T_RING_CIRC = 2 * Math.PI * 23
   ringFill.style.strokeDasharray = String(T_RING_CIRC)
 
-  // <em> markers below become real <em> elements (see tBuildQuoteNodes) —
-  // color/italic already come for free from the existing .quote blockquote em
-  // rule (color: gold-2) plus <em>'s default browser italic, which nothing
-  // in this stylesheet resets. Safe to author as inline markup here since
-  // this is our own hardcoded array, not remote/user content.
-  var items = [
-    {
-      quote:
-        "We would like to express our appreciation and thanks for the <em>impeccable service you offered us on our wedding day</em>.",
-      name: "Mandy & Gabriel Camenzuli",
-      category: "Wedding celebration",
-      location: "Malta",
-      date: "26 April 2014",
-      rating: 5,
-    },
-    {
-      quote:
-        "Thank you from the bottom of our hearts to all who shared our marriage in presence and thought! We had a <em>magical time and are still in a trance</em>!",
-      name: "Mel & James Zammit",
-      category: "Wedding celebration",
-      location: "Malta",
-      rating: 5,
-    },
-    {
-      quote:
-        "Had our wedding at Bacchus and I would definitely recommend it. <em>Food, venue and service were impeccable.</em> Thanks to Francois and his team our special day was extra special.",
-      name: "Marvin W",
-      category: "Wedding celebration",
-      location: "Malta",
-      rating: 5,
-    },
-    {
-      quote:
-        "Cannot thank them enough. An impeccable service from start to finish. They gave us a plenty of choice and helped us all way through. <em>The service on the day was impeccable and the food was sublime</em> with good portion sizes.",
-      name: "Daniela C",
-      category: "Wedding celebration",
-      location: "Malta",
-      rating: 5,
-    },
-  ]
+  // The testimonials themselves live in src/data/testimonials.ts, shared
+  // with Testimonials.astro (which renders the picker cards and dots).
+  // <em> markers become real <em> elements (see tBuildQuoteNodes) — the
+  // gold comes from Testimonials.astro's .quote blockquote em rule, the
+  // italic from <em>'s own default.
+  var items = TESTIMONIALS
 
   var tActive = 0,
     tFadeTimer = null,
@@ -83,26 +48,13 @@ import { reduce } from "./lib/motion.js"
   var T_FADE_MS = 220
   var T_CYCLE_MS = 8000
 
-  items.forEach(function (item, i) {
-    var card = document.createElement("button")
-    card.type = "button"
-    card.className = "testimonial-card"
-    card.setAttribute("role", "tab")
-    card.setAttribute("aria-label", "Read testimonial from " + item.name)
-    card.innerHTML =
-      '<span class="testimonial-card-name"></span><span class="testimonial-card-category"></span>'
-    card.querySelector(".testimonial-card-name").textContent = item.name
-    card.querySelector(".testimonial-card-category").textContent = item.category
+  // Cards and dots are rendered by Testimonials.astro, one per item, in order.
+  var cards = [].slice.call(cardsWrap.children)
+  cards.forEach(function (card, i) {
     card.addEventListener("click", function () {
       tShow(i)
     })
-    cardsWrap.appendChild(card)
-
-    var dot = document.createElement("span")
-    dot.className = "testimonial-dot"
-    dotsWrap.appendChild(dot)
   })
-  var cards = [].slice.call(cardsWrap.children)
   var dots = [].slice.call(dotsWrap.children)
 
   var T_MAX_LINES = 5

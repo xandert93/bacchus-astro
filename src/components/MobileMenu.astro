@@ -553,4 +553,165 @@ const background = await getImage({
     opacity: 1;
     transform: none;
   }
+  .nav-dd-chevron {
+    flex: none;
+    transition: transform 0.35s var(--ease);
+  }
+  /* ---------- Chevron rotation jitter, attempt 2 (2026-10-01) ----------
+     Attempt 1 fixed the glyph's geometry: the viewBox is "0 0 12 8"
+     (ratio 1.5) but the SVGs rendered at 11x7 and 16x11, so the path was
+     letterboxed by preserveAspectRatio AND the rotation centre landed on
+     half pixels — (5.5, 3.5) and (8, 5.5). Both are now exact 1:1 matches
+     centred on whole pixels (12x8 and 18x12). The vibration survived
+     that, so the centre was not the whole story.
+     What is left is rasterisation. A 180deg rotation on a path with a
+     1.4px stroke is re-rastered by the main thread on every frame unless
+     the element has its own compositing layer, and a thin stroke
+     antialiases differently at every intermediate angle — which reads as
+     the glyph shimmering rather than turning. Promoting it means the
+     browser rasterises the chevron ONCE and composites the rotation,
+     so the antialiasing is computed a single time.
+     will-change on a permanently-present element does cost a standing
+     layer (CLAUDE.md bug #27's caution), but that applies to elements
+     that are never seen; these are two small, visible, interactive
+     glyphs, so the trade is the right way round. transform-origin is
+     stated explicitly rather than left to its 50% 50% default, so it
+     cannot drift if the box size is ever changed again.
+     STILL UNCONFIRMED — if it persists, see the CLAUDE.md entry, which
+     records both attempts and the two remaining suspects. */
+  .nav-dd-chevron {
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-origin: 50% 50%;
+  }
+  /* ============================================================
+     (i) THE ENQUIRE BUTTON — .nav-cta-enquire-button
+     ============================================================
+     .button-ghost next to .button-gradient read as the disabled sibling
+     rather than the secondary action, and three things were doing that at
+     once: it was GREY where the other was gold, its border sat at 0.42
+     alpha so the outline barely existed, and it had no icon so it carried
+     noticeably less visual mass.
+
+     Hue was the main one. Two buttons in the same colour, one filled and
+     one outlined, read as a deliberate primary/secondary pair; a gold
+     pill beside a grey pill reads as "one action and one thing that isn't
+     available". So this keeps the outline — the hierarchy is still
+     correct, Book a table should lead — and moves it into the same family
+     by tinting the border and the label gold, then fills solid gold on
+     hover, which is a more confident resolution than .button-ghost's fade
+     to limestone.
+
+     .button-ghost is DROPPED from the element rather than overridden.
+     Overriding it would have meant silently redefining all five of its
+     custom properties, leaving a class on the markup that no longer
+     describes anything true about the button — and styles.css's own
+     comment reserves it for hero secondary CTAs. Written as
+     ".button.nav-cta-enquire-button" at (0,2,0) so it beats .button's own
+     (0,1,0) defaults outright rather than on source order (bug #2). */
+  .button.nav-cta-enquire-button {
+    --bg: transparent;
+    --fg: var(--gold-2);
+    --bd: rgba(var(--gold-rgb), 0.55);
+    --bg-h: var(--gold);
+    --fg-h: var(--ink);
+    /* 2px, up from .button's 1px (2026-10-04), so the outline carries
+       visual mass closer to Book a table's solid fill beside it. */
+    border-width: 2px;
+  }
+  /* The envelope is a LABEL, not a "proceed" chevron, so it must not
+     inherit .button:hover svg's 4px forward nudge — that motion only
+     reads correctly on a trailing arrow. Exactly the precedent
+     #availChangeBtn's calendar icon already set in styles.css, and the
+     reason the icon here is an envelope rather than a second copy of
+     Book a table's arrow: "Enquire" is the vaguer of the two labels, so
+     the icon is doing real work saying what the action is, instead of
+     repeating what its neighbour already says. */
+  .nav-cta-enquire-button :global(svg) {
+    transition: none;
+  }
+  @media (hover: hover) {
+    .button.nav-cta-enquire-button:hover :global(svg) {
+      transform: none;
+    }
+  }
+  @media (hover: none) {
+    .button.nav-cta-enquire-button:active :global(svg) {
+      transform: none;
+    }
+  }
+  :global(html.nav-no-anim) .menu :global(*) {
+    transition: none !important;
+    animation: none !important;
+  }
+  .menu .mobile-nav-link :global(span) {
+    color: var(--gold);
+    /* 0.38em, up from the original 0.32em across two passes: em tracks the
+       label, so each reduction shrank the numeral with it. These were already
+       at the small end, and below ~9px Inter numerals go thin on a dark ground,
+       so the ratio is raised to hold the RENDERED size at ~9.3px rather than to
+       keep the proportion. Deliberate trade: the numeral-to-label ratio is now
+       noticeably tighter than it was. If the label shrinks again this should
+       stop being an em and become a fixed px — it is UI chrome, not display
+       type, and at some point tracking the label is the wrong behaviour.
+       Mirrored on .mobile-nav-number in the whole-site nav section. */
+    font-size: 0.38em;
+    vertical-align: text-top;
+    letter-spacing: 0;
+    margin-right: 12px;
+    font-family: "Inter", sans-serif;
+  }
+  .mobile-nav-group.is-pinned-open .mobile-nav-group-trigger .nav-dd-chevron {
+    display: none;
+  }
+  /* Gated for the same reasons as .menu .mobile-nav-link above — see that
+     rule's note. These rows are the worse case of the two: every sub-link in
+     the Restaurant group currently points at "#", so on touch the latch had
+     nothing at all to clear it. */
+  :global(.menu-social) {
+    margin-top: 28px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s var(--ease) 0.45s;
+    position: relative;
+    z-index: 2;
+  }
+  :global(body.menu-open) :global(.menu-social) {
+    opacity: 1;
+    transform: none;
+  }
+  /* 18x12 — the drawer trigger chevron. The viewBox is "0 0 12 8" (ratio
+     1.5), so 16x11 letterboxed the path and put the rotation centre on a half
+     pixel, which made the glyph shimmer through its 180deg turn instead
+     of rotating cleanly. Keep any replacement size on a 3:2 ratio with
+     even numbers on both axes. */
+  .menu .mobile-nav-group-trigger .nav-dd-chevron {
+    flex: none;
+    width: 18px;
+    height: 12px;
+    margin-left: auto;
+    transition: transform 0.35s var(--ease);
+  }
+  .mobile-nav-group.is-open .mobile-nav-group-trigger .nav-dd-chevron {
+    transform: rotate(180deg);
+  }
+  /* .button is inline-flex and flex-shrink: 0, so it sizes to its label
+     unless told otherwise — width + max-width is what gives the two equal
+     widths. justify-content matters because the label and icon would otherwise
+     sit left inside a button that is now wider than its content. */
+  .mobile-nav-cta-row :global(.button) {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+    /* Scaled up from .button-small's own size, exactly as
+       .availability-foot .button already does at this same 300px width. That
+       rule's note applies verbatim here: the compact size made sense sitting
+       tight beside other chrome, but on a full-width stacked pill there is no
+       reason to keep it cramped — at 40px tall against 300px wide it reads as
+       a letterbox. Reads the same --button-* tokens .button itself does rather
+       than inventing a size, so the two stay in step. */
+    height: var(--button-height);
+    padding: 0 var(--button-padding-x);
+    font-size: var(--button-font-size);
+  }
 </style>

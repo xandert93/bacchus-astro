@@ -1,7 +1,11 @@
 ---
+import Particles from "./Particles.astro"
 import Photo from "./Photo.astro"
-// "From our guestbook" rotator. Empty shells here; the four testimonials
-// themselves live in testimonials.js, which fills the quote, meta and picker cards.
+import { TESTIMONIALS } from "../data/testimonials"
+// "From our guestbook" rotator. The picker cards and dots are rendered here
+// from src/data/testimonials.ts; testimonials.js fills the active quote and
+// its meta line (the quote is measured in the browser to cap it at five
+// lines) and runs the autoplay.
 interface Props {
   // The darkened photo behind the section — a key from src/lib/images.ts.
   backgroundImage: string
@@ -11,7 +15,7 @@ const { backgroundImage } = Astro.props
 
 <section class="section-padding quote testimonials" id="testimonials">
   <Photo class="bgimg" src={backgroundImage} alt="" sizes="100vw" loading="lazy" />
-  <div class="particles" id="particles2"></div>
+  <Particles id="particles2" />
   <div class="wrap">
     <div class="eyebrow" data-reveal>
       From our guestbook
@@ -49,7 +53,19 @@ const { backgroundImage } = Astro.props
       aria-label="Choose a testimonial"
       data-reveal
       style="--d: 240ms"
-    ></div>
+    >
+      {TESTIMONIALS.map((item) => (
+        <button
+          type="button"
+          class="testimonial-card"
+          role="tab"
+          aria-label={`Read testimonial from ${item.name}`}
+        >
+          <span class="testimonial-card-name">{item.name}</span>
+          <span class="testimonial-card-category">{item.category}</span>
+        </button>
+      ))}
+    </div>
     <div class="testimonial-controls" data-reveal style="--d: 300ms">
       <button
         type="button"
@@ -67,7 +83,11 @@ const { backgroundImage } = Astro.props
           />
         </svg>
       </button>
-      <div class="testimonial-dots" id="tDots" aria-hidden="true"></div>
+      <div class="testimonial-dots" id="tDots" aria-hidden="true">
+        {TESTIMONIALS.map(() => (
+          <span class="testimonial-dot" />
+        ))}
+      </div>
       <button
         type="button"
         class="testimonial-arrow t-arrow-next"
@@ -156,7 +176,7 @@ const { backgroundImage } = Astro.props
       opacity 0.35s var(--ease),
       transform 0.35s var(--ease);
   }
-  :global(#tStars.is-in-view) .star {
+  #tStars.is-in-view .star {
     opacity: 1;
     transform: scale(1);
   }
@@ -167,19 +187,19 @@ const { backgroundImage } = Astro.props
      an unconditional delay left its leaving transition never even starting in
      that window — it just sat unchanged, with nothing to visibly animate back
      from on re-entry. Leaving now happens uniformly with no delay instead. */
-  :global(#tStars.is-in-view) .star:nth-child(1) {
+  #tStars.is-in-view .star:nth-child(1) {
     transition-delay: 0ms;
   }
-  :global(#tStars.is-in-view) .star:nth-child(2) {
+  #tStars.is-in-view .star:nth-child(2) {
     transition-delay: 70ms;
   }
-  :global(#tStars.is-in-view) .star:nth-child(3) {
+  #tStars.is-in-view .star:nth-child(3) {
     transition-delay: 140ms;
   }
-  :global(#tStars.is-in-view) .star:nth-child(4) {
+  #tStars.is-in-view .star:nth-child(4) {
     transition-delay: 210ms;
   }
-  :global(#tStars.is-in-view) .star:nth-child(5) {
+  #tStars.is-in-view .star:nth-child(5) {
     transition-delay: 280ms;
   }
   .stars .star.is-empty {
@@ -303,5 +323,146 @@ const { backgroundImage } = Astro.props
   .testimonial-arrow svg:last-child {
     position: relative;
     z-index: 1;
+  }
+  .quote .wrap {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 940px;
+  }
+  .quote blockquote :global(em) {
+    color: var(--gold-2);
+  }
+  /* ---- Testimonials rotator (extends .quote) ---- */
+  .testimonials .eyebrow {
+    justify-content: center;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  /* .quote's own dark (--ink) background, not .on-dark — so the general
+     .on-dark .eyebrow::before fix doesn't reach this one; needs its own
+     explicit line color for the same currentColor reason. */
+  .testimonials .eyebrow::before {
+    background: var(--gold-2);
+  }
+  /* Two-line meta: the name is what actually matters ("who said this") and
+     gets its own prominent line; .testimonial-meta-sub inherits the .who wrapper's small
+     uppercase/muted treatment as-is (font-size/letter-spacing/text-transform/
+     color are all inheritable, so no separate rule is needed for it) rather
+     than putting name and category/location/date on equal visual footing in
+     one string that wraps wherever it runs out of room. */
+  :global(.testimonial-meta-name) {
+    display: block;
+    font-family: "Fraunces", serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--limestone-2);
+    margin-bottom: 6px;
+  }
+  /* The shared .eyebrow only has a line before the text (::before) — fine
+     left-aligned, but centering that as a block leaves the line unbalanced on
+     one side. Scoped to .testimonials only: a matching ::after mirrors
+     .eyebrow::before exactly, just growing from the right instead of the left,
+     so the centered line+text+line reads symmetrically. */
+  .testimonials .eyebrow::after {
+    content: "";
+    height: 1px;
+    width: 34px;
+    background: var(--gold-2);
+    opacity: 0.6;
+    flex: none;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.8s var(--ease) 0.1s;
+  }
+  .testimonials .eyebrow.is-revealed::after {
+    transform: scaleX(1);
+  }
+  :global(.testimonial-quote-mark) {
+    color: var(--gold-2);
+  }
+  /* Same gap on the picker cards below: tappable, never navigate, and
+       had a hover state only. Mirrors their hover exactly. */
+  @media (hover: none) {
+    .testimonial-card:active {
+      border-color: rgba(var(--gold-rgb), 0.5);
+      background: rgba(var(--gold-rgb), 0.06);
+    }
+  }
+  /* Hover (and press, on touch) inverts the chip: gold fill, ink icon. The
+     original state (0.65 alpha ink to solid ink, gold-2 to gold) barely moved
+     over the dark photo behind this section, and on touch there was no state
+     at all — bug #19's missing (hover: none) fallback, on a control that never
+     navigates away. The next arrow's timer ring is deliberately left gold
+     (tried inverting it to ink; it read worse). While hovered, its progress
+     stroke sits on the gold fill and is hard to see — which is also when
+     autoplay is paused, so nothing is lost. */
+  .testimonial-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    border: none;
+    padding: 0;
+    background: rgba(var(--limestone-rgb), 0.3);
+    transition:
+      width 0.35s var(--ease),
+      background 0.35s var(--ease);
+  }
+  .testimonial-dot.is-active {
+    width: 16px;
+    background: var(--gold);
+  }
+  .testimonial-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 16px;
+    /* Grid items default to min-width: auto, so a track can still be forced
+       wider than its 1fr share by its content's natural minimum size (a long
+       name) even with repeat(4, 1fr) — zeroing it here is what actually makes
+       the four columns equal width and lets .testimonial-card-name's ellipsis (rather
+       than the grid track) be what handles an overlong name. */
+    min-width: 0;
+    border: 1px solid rgba(var(--limestone-rgb), 0.18);
+    border-radius: 6px;
+    background: rgba(var(--limestone-rgb), 0.05);
+    cursor: pointer;
+    transition:
+      background 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+  @media (hover: hover) {
+    .testimonial-card:hover {
+      border-color: rgba(var(--gold-rgb), 0.5);
+      background: rgba(var(--gold-rgb), 0.06);
+    }
+  }
+  /* Hover sits between resting and .is-active (0.05 -> 0.06 -> 0.12) rather than
+     matching .is-active outright — keeping a lower intensity than the selected
+     state avoids the two being visually ambiguous with each other. */
+  .testimonial-card.is-active {
+    border-color: var(--gold);
+    background: rgba(var(--gold-rgb), 0.12);
+  }
+  .testimonial-card-name {
+    font-family: "Fraunces", serif;
+    font-size: 15px;
+    color: var(--limestone-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+  .testimonial-card-category {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 </style>

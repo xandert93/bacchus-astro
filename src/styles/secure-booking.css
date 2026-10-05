@@ -5,6 +5,15 @@
    It was always its own namespace (secure-booking-*), deliberately kept
    apart from the site's shared component classes. */
 
+:root {
+  /* Single source of truth for vertical rhythm between sections on
+     secure-booking.html. Each section contributes half of this as its own
+     top/bottom padding, so two adjacent sections combine to exactly this
+     value; single-sided gaps (e.g. above the FAQ) use the full value.
+     Change this one line to rescale every section gap on that page. */
+  --sb-gap: clamp(64px, 8vw, 128px);
+}
+
 /* ==========================================================================
    secure-booking.html — literal port of an external (Lovable) design.
    Deliberately its own namespace (`sb-*`), not reusing site-wide component

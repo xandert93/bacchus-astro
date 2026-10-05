@@ -62,3 +62,65 @@ const {
     </script>
   </body>
 </html>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* Dropped for the duration of any page scroll (see body.is-scrolling in
+     main.js for the full reasoning): mix-blend-mode below means the
+     compositor re-blends this against the whole viewport every frame the
+     page moves, AND cannot composite anything beneath it independently,
+     which is what made cheap opacity/transform reveals underneath it
+     stutter. At 0.05 opacity its absence while moving isn't perceptible —
+     the same judgement reception-package.html already made for its own
+     swipe. */
+  /* ...and for as long as the overlay is open, for the same reason plus a
+     worse one. The accordion animates grid-template-rows, which is a LAYOUT
+     property, so every frame of its 0.45s dirties layout and paint across the
+     whole viewport — directly beneath a blend layer at z-index 900, above both
+     the overlay (790) and the bar (800), whose render surface therefore has to
+     be rebuilt each of those frames.
+     The is-scrolling guard above cannot reach this case, on two counts:
+     markScrolling() is bound to WINDOW scroll and the overlay scrolls
+     .menu-scroll instead (a scroll event on an element does not bubble to
+     window), and body gets overflow: hidden while the overlay is open so there
+     is no page scroll to fire at all. So the most expensive surface on the site
+     was fully live across the one animation that dirties layout viewport-wide.
+     No visual cost: 0.05 opacity of overlay-blended noise over a near-black
+     overlay is not perceptible, which is the same judgement already made for
+     the scrolling case. */
+  :global(body.is-scrolling) .grain,
+  :global(body.menu-open) .grain {
+    display: none;
+  }
+  .grain {
+    position: fixed;
+    inset: -120px;
+    z-index: 900;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grainShift 7s steps(6) infinite;
+    mix-blend-mode: overlay;
+  }
+  @keyframes grainShift {
+    0% {
+      transform: translate(0, 0);
+    }
+    20% {
+      transform: translate(-14px, 8px);
+    }
+    40% {
+      transform: translate(10px, -12px);
+    }
+    60% {
+      transform: translate(-8px, -6px);
+    }
+    80% {
+      transform: translate(12px, 10px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+</style>

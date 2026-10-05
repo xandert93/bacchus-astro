@@ -1,4 +1,5 @@
 ---
+import AvailabilityCalendar from "./AvailabilityCalendar.astro"
 import Photo from "./Photo.astro"
 // The four-step enquiry wizard (#enquire). Same component on every events
 // page; what differs per page comes in as props and slots. Behaviour lives
@@ -218,150 +219,7 @@ const isWedding = eventType === "Wedding"
                   class:list={{ "is-revealed": isWedding }}
                   style={isWedding ? undefined : "display: none"}
                 >
-                  <div class="availability compact" id="availForm">
-                    <div class="availability-head">
-                      <button
-                        type="button"
-                        class="availability-prev"
-                        aria-label="Previous month"
-                      >
-                        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-                          <path
-                            d="M13 5H2m3.5-3.5L2 5l3.5 3.5"
-                            stroke="currentColor"
-                            stroke-width="1.4"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      </button>
-                      <div class="availability-title">
-                        <div class="availability-month" id="availMonth">
-                          Month
-                        </div>
-                        <div class="availability-sub">One celebration each day</div>
-                      </div>
-                      <button
-                        type="button"
-                        class="availability-next"
-                        aria-label="Next month"
-                      >
-                        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-                          <path
-                            d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
-                            stroke="currentColor"
-                            stroke-width="1.4"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                    <div class="availability-day-of-week">
-                      <span>Mon</span>
-                      <span>Tue</span>
-                      <span>Wed</span>
-                      <span>Thu</span>
-                      <span>Fri</span>
-                      <span>Sat</span>
-                      <span>Sun</span>
-                    </div>
-                    <div class="availability-grid" id="availGrid"></div>
-                    <div class="availability-legend">
-                      <span class="availability-legend-open">
-                        <i></i>Available
-                      </span>
-                      <span class="availability-legend-interest">
-                        <i></i>Enquiries Received
-                      </span>
-                      <span class="availability-legend-taken">
-                        <i></i>Booked
-                      </span>
-                    </div>
-                    {/* Without this, a Booked date being clickable at all is invisible —
-                           cursor:pointer/a hover ring are easy to miss, and there's nothing
-                           to notice on a touch device until you happen to tap one. Shown
-                           unconditionally (not just on touch) since a mouse user hovering a
-                           date without knowing anything happens is the same discoverability
-                           gap, just solved by a different affordance. Icon travels with its
-                           own text as one toggled group (display:contents — see
-                           styles.css), not one shared icon for both, so a touch visitor
-                           never sees a mouse-pointer glyph next to "Tap it...". Same hint as
-                           weddings.html's showcase calendar (see its own comment there). */}
-                    <div class="availability-note">
-                      <span class="wl-hint-hover">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                          <path
-                            d="M4 4l7.07 16.97 2.51-7.39 7.39-2.51L4 4Z"
-                            stroke="currentColor"
-                            stroke-width="1.3"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M13.5 13.5 19 19"
-                            stroke="currentColor"
-                            stroke-width="1.3"
-                            stroke-linecap="round"
-                          />
-                        </svg>
-                        <span>
-                          Date unavailable? Click it to join the waitlist — we'll email
-                          you if it opens up.
-                        </span>
-                      </span>
-                      <span class="wl-hint-touch">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                          <circle
-                            cx="12"
-                            cy="12"
-                            r="2.5"
-                            stroke="currentColor"
-                            stroke-width="1.3"
-                          />
-                          <circle
-                            cx="12"
-                            cy="12"
-                            r="6"
-                            stroke="currentColor"
-                            stroke-width="1.3"
-                            opacity="0.6"
-                          />
-                          <circle
-                            cx="12"
-                            cy="12"
-                            r="9.5"
-                            stroke="currentColor"
-                            stroke-width="1.1"
-                            opacity="0.35"
-                          />
-                        </svg>
-                        <span>
-                          Date unavailable? Tap it to join the waitlist — we'll email you
-                          if it opens up.
-                        </span>
-                      </span>
-                    </div>
-                    <div class="availability-foot-label" id="availPicked">
-                      <span class="availability-foot-label-date" id="apDate"></span>
-                      <span class="availability-picked-status" id="apStatus"></span>
-                    </div>
-                    <div class="availability-note">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                        <path
-                          d="M12 9v4m0 4h.01M10.3 3.9 2.5 17.5A1.5 1.5 0 0 0 3.8 20h16.4a1.5 1.5 0 0 0 1.3-2.5L13.7 3.9a1.5 1.5 0 0 0-2.6 0Z"
-                          stroke="currentColor"
-                          stroke-width="1.3"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                      <span>
-                        Illustrative only — the dates shown are placeholder data. We'll
-                        connect this to real availability with Bacchus before we go live.
-                      </span>
-                    </div>
-                  </div>
+                  <AvailabilityCalendar variant="compact" />
                 </div>
               ) : (
                 <div id="dateCalWrap" class="availability-form-row">
@@ -750,7 +608,7 @@ const isWedding = eventType === "Wedding"
         </form>
 
         {/* ---------- Sent ---------- */}
-        <div class="availability sent" id="sent" role="status">
+        <div class="enquiry-sent-panel" id="sent" role="status">
           <div class="seal">
             <svg
               width="30"
@@ -917,7 +775,7 @@ const isWedding = eventType === "Wedding"
   }
   /* The gold sweep-underline is part of the recessed-panel treatment being
      replaced above. */
-  :global(.field-input) .field-underline {
+  .field-input .field-underline {
     display: none;
   }
   /* Custom calendar icon (.field-date-icon in the markup), matching the
@@ -950,15 +808,15 @@ const isWedding = eventType === "Wedding"
     opacity: 0;
     transition: all 0.3s var(--ease);
   }
-  :global(.field.bad) .error {
+  .field.bad .error {
     margin-top: 8px;
     height: 18px;
     opacity: 1;
   }
-  :global(.field.bad) .field-underline {
+  .field.bad .field-underline {
     background: rgba(var(--oxblood-rgb), 0.4);
   }
-  :global(.field.bad) .field-underline::after {
+  .field.bad .field-underline::after {
     width: 100%;
     background: var(--oxblood);
   }
@@ -1025,8 +883,8 @@ const isWedding = eventType === "Wedding"
   /* Equal-width chips (event type + "how should we get back to you") for
        non-mobile only — content-hugging below 620px instead. */
   @media (min-width: 621px) {
-    :global(#chips) .chip,
-    :global(#prefer) .chip {
+    #chips .chip,
+    #prefer .chip {
       flex: 1 1 0;
       text-align: center;
     }
@@ -1266,12 +1124,6 @@ const isWedding = eventType === "Wedding"
       border-color: var(--ink);
     }
   }
-  .guest-count-row input {
-    font-family: "Fraunces", Georgia, serif;
-    font-size: 22px;
-    text-align: center;
-    -moz-appearance: textfield;
-  }
   .guest-count-row input::-webkit-outer-spin-button,
   .guest-count-row input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -1479,16 +1331,27 @@ const isWedding = eventType === "Wedding"
     animation: shake 0.4s;
   }
   /* ---------- Sent state ---------- */
-  .availability.sent {
+  /* The confirmation shown in place of the form once it's sent. It used to
+     borrow the calendar's card styling by carrying the .availability class
+     itself; it has its own copy of that card now (the white card below),
+     since the calendar's styles live in AvailabilityCalendar.astro. */
+  .enquiry-sent-panel {
+    background: #fff;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.1);
+    border-radius: var(--radius-card);
+    padding: clamp(22px, 4vw, 44px);
+    box-shadow: 0 40px 90px -60px rgba(var(--muted-ink-rgb), 0.4);
+  }
+  .enquiry-sent-panel {
     display: none;
     text-align: center;
     padding: clamp(30px, 5vw, 56px) clamp(18px, 3vw, 34px);
   }
-  .availability.sent.show {
+  .enquiry-sent-panel.show {
     display: block;
     animation: sentIn 0.7s var(--ease) both;
   }
-  .availability.sent .seal {
+  .enquiry-sent-panel .seal {
     width: 74px;
     height: 74px;
     margin: 0 auto 20px;
@@ -1499,12 +1362,12 @@ const isWedding = eventType === "Wedding"
     background: rgba(var(--gold-rgb), 0.14);
     box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.5);
   }
-  .availability.sent h3 {
+  .enquiry-sent-panel h3 {
     font-family: "Fraunces", Georgia, serif;
     font-weight: 400;
     font-size: clamp(26px, 3.2vw, 36px);
   }
-  .availability.sent > p {
+  .enquiry-sent-panel > p {
     font-family: "Newsreader", Georgia, serif;
     font-size: 16px;
     color: var(--muted-ink);
@@ -1542,16 +1405,6 @@ const isWedding = eventType === "Wedding"
      permanently into already-limited screen space. */
   .trust-sticky {
     display: none;
-  }
-  .availability.compact {
-    background: none;
-    border: none;
-    box-shadow: none;
-    /* Explicit 0 (not just "no override"), since without this it silently falls
-       back to plain .availability's own padding: clamp(22px,3vw,34px) on all four
-       sides — the wizard's own form card (see form{} above) already provides
-       its own padding, so this widget shouldn't add a second layer inside it. */
-    padding: 0;
   }
   /* weddings.html only: wizard step 1 has no grid of its own, just this
      picked-date summary + a button back to the real calendar — laid out as one
@@ -1597,6 +1450,538 @@ const isWedding = eventType === "Wedding"
     .chip {
       flex: 1 1 calc(50% - 5px);
       text-align: center;
+    }
+  }
+  .enquiry-sent-panel .seal :global(svg) {
+    animation: sealTick 0.7s 0.25s var(--ease) both;
+  }
+  .enquiry-sent-panel h3 :global(em) {
+    font-family: "Newsreader", Georgia, serif;
+    font-style: italic;
+    color: var(--bronze);
+  }
+  .availability-picked-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .availability-picked-status:not(:empty)::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+  .availability-foot-label-date {
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-ink);
+  }
+  .availability-foot-label.status-open .availability-picked-status {
+    color: var(--avail-green-fg);
+  }
+  .availability-foot-label.status-interest .availability-picked-status {
+    color: var(--avail-amber-fg);
+  }
+  /* Scoped to this specific instance of .availability-picked-status, not the shared class in
+       general (it's also reused by .availability-picked elsewhere, where no one's
+       asked for a smaller dot). */
+  @media (max-width: 480px) {
+    .availability-foot-label .availability-picked-status:not(:empty)::before {
+      width: 4px;
+      height: 4px;
+    }
+  }
+  @media (max-width: 480px) {
+    .availability-foot-label {
+      align-items: center;
+    }
+  }
+  .field input,
+  .field textarea {
+    font-family: "Newsreader", Georgia, serif;
+  }
+  @media (hover: hover) {
+    .wizard-back-link:hover :global(svg) {
+      transform: translateX(-4px);
+    }
+  }
+  .enquire .wrap {
+    position: relative;
+  }
+  /* Right column is a fixed 500px track (not 1fr) so it matches the form
+     card's own max-width exactly — matches the showcase calendar's own
+     .availability.diary width (styles.css) so every widget on the page shares one
+     sourced width. Left column (the rail) takes whatever's left. */
+  .enquire .grid {
+    display: grid;
+    align-items: start;
+    grid-template-columns: 1fr 500px;
+    gap: clamp(32px, 5vw, 72px);
+  }
+  /* Collapse point moved down from the site's usual 980px: with the right
+       column now a fixed 500px (not 1fr), the left column is what shrinks as
+       the viewport narrows, and stays reasonably readable all the way down
+       to ~920px — only below that does it get genuinely cramped. */
+  @media (max-width: 920.98px) {
+    .enquire .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  /* .grid's own gap used to apply exactly once, between the rail block and
+       the form — now that .enquiry-intro's children are direct grid items too, it
+       was landing between every one of them instead, stacking on top of
+       their own margins. Zeroed here and replaced with one explicit
+       margin-top on the form, so only the rail-to-form transition keeps
+       that spacing. */
+  @media (max-width: 920.98px) {
+    .enquire .grid {
+      gap: 0;
+    }
+  }
+  .enquiry-intro .lead {
+    margin-top: 20px;
+    max-width: 42ch;
+  }
+  .enquire .trust-rail > li {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 18px 2px;
+    border-bottom: 1px solid rgba(var(--muted-ink-rgb), 0.12);
+  }
+  .enquire .trust-rail > li:last-child {
+    border-bottom: none;
+  }
+  .enquire .trust-rail :global(b) {
+    display: block;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 400;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+  .enquire .rail-photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.4s var(--ease);
+  }
+  .enquire .rail-photo:hover :global(img) {
+    transform: scale(var(--image-hover-zoom-ambient));
+  }
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px 12px;
+    background: #fff;
+    border-radius: var(--radius-card);
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.09);
+    box-shadow: 0 46px 100px -64px rgba(var(--muted-ink-rgb), 0.55);
+    position: relative;
+    padding: clamp(22px, 4vw, 44px);
+    max-width: 500px;
+  }
+  /* Once the section collapses to one column, a max-width-capped card left
+       without this just sits flush-left in the now much wider column,
+       reading as off-center. Not needed above 920px — there the card still
+       shares its column with the rail, so it stays where the grid puts it. */
+  @media (max-width: 920.98px) {
+    .enquiry-form form {
+      margin-inline: auto;
+    }
+  }
+  /* Reverts to the original 480px at true mobile. */
+  @media (max-width: 620.98px) {
+    form {
+      max-width: 480px;
+    }
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    /* Half the row (minus half the 12px column gap) by default, so a pair of
+       adjacent .field elements without .full (currently just first + last
+       name) sit side by side — the only place this form actually needs two
+       columns. Everything else opts into a full-width row via .full below. */
+    flex: 1 1 calc(50% - 6px);
+    /* Flex items default to min-width:auto, refusing to shrink below their
+       content's intrinsic width — same reasoning as .split > * {min-width:0}
+       elsewhere, guards against a field ever overflowing its 50% share. */
+    min-width: 0;
+  }
+  .field.full {
+    flex: 1 1 100%;
+  }
+  .field label {
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    margin-bottom: 9px;
+  }
+  .field-input {
+    position: relative;
+  }
+  .field input,
+  .field :global(select),
+  .field textarea {
+    background: var(--paper);
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
+    border-radius: var(--radius-card);
+    padding: 14px 16px;
+    font-size: 15px;
+    outline: 0;
+    width: 100%;
+    transition:
+      border-color 0.3s var(--ease),
+      background-color 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+  /* Three deliberately escalating states: resting is plain; hover moves
+     background to the full --limestone-2 with a moderate gold border; focus
+     keeps that background but pushes the border to full gold and adds a
+     crisp inset ring (matches .option-card.is-selected's own selected-state ring), not a soft
+     outer glow. Hover listed before :focus-within so focus still wins if
+     both apply at once (hovering a field you're already in). */
+  .field-input:hover input,
+  .field-input:hover :global(select),
+  .field-input:hover textarea {
+    border-color: rgba(var(--gold-rgb), 0.5);
+    background: var(--limestone-2);
+  }
+  .field-input:focus-within input,
+  .field-input:focus-within :global(select),
+  .field-input:focus-within textarea {
+    border-color: rgba(var(--gold-rgb), 0.75);
+    background: var(--limestone-2);
+    box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.35);
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 82px;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: rgba(var(--muted-ink-rgb), 0.48);
+    opacity: 1;
+  }
+  /* Native <input type="date"> has no ::placeholder — its own empty "dd/mm/
+     yyyy" and its filled value share the same `color` property, so a
+     text-input-style placeholder/filled color split isn't possible with CSS
+     alone. .has-value (toggled in main.js) stands in for it. */
+  input[type="date"] {
+    color: rgba(var(--muted-ink-rgb), 0.48);
+  }
+  :global(input[type="date"].has-value) {
+    color: var(--ink);
+  }
+  /* Native <input type="date"> (non-Wedding event types, where the custom
+     availability calendar doesn't apply) — color-scheme:light stops the
+     picker popup rendering dark-mode chrome when the OS is in dark mode,
+     which is the main source of it looking out of place. */
+  #dateNative,
+  #backupDate {
+    color-scheme: light;
+    cursor: auto;
+    padding-right: 42px;
+  }
+  #dateNative::-webkit-calendar-picker-indicator,
+  #backupDate::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 0;
+    width: 42px;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+  /* Fades + lifts in when switching to Wedding from another event type
+     (opacity+lift, not clip-path — see CLAUDE.md's known-bugs list). .is-revealed is
+     added on a double-rAF in main.js's syncDateMode(), one real painted
+     frame after display switches from none, since toggling display and
+     opacity/transform in the same tick can get coalesced into a single
+     paint with no in-between frame to animate from. Switching away hides
+     instantly — only the reveal needed a transition. */
+  #dateCalWrap {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.4s var(--ease),
+      transform 0.4s var(--ease);
+  }
+  #dateCalWrap.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+  .field.bad {
+    animation: shake 0.4s;
+  }
+  .chip :global(svg) {
+    flex: none;
+    /* Optical nudge, not a box-model bug — flex's align-items:center matches
+       the SVG's geometric box to the text's line box, but the Font Awesome
+       glyphs' visible "ink" isn't centered within their own viewBox, reading
+       as sitting slightly below the text otherwise (see CLAUDE.md bug #8,
+       same class of fix). */
+    margin-top: -1.5px;
+  }
+  /* Event-type helper line under the chips: crossfades its copy per chip
+     (see main.js CHIP_NOTES). Fade only, same fixed-clock swap pattern as
+     .availability-picked.swapping — not a display toggle, so no reveal race. */
+  #chipNote {
+    transition: opacity 0.2s var(--ease);
+  }
+  #chipNote.swapping {
+    opacity: 0.35;
+  }
+  .wizard-step.active > :global(*) {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.28s var(--ease),
+      transform 0.32s var(--ease);
+  }
+  .wizard-step.leaving > :global(*) {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.18s var(--ease),
+      transform 0.18s var(--ease);
+  }
+  .wizard-step.entering > :global(*) {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: none;
+  }
+  .wizard-count .wizard-count-title :global(em) {
+    font-family: "Newsreader", Georgia, serif;
+    font-style: italic;
+    color: var(--bronze);
+  }
+  .wizard-back-hidden {
+    visibility: hidden;
+  }
+  /* Cancels .wizard-back-link:hover svg's inherited translateX(-4px) (this button
+       keeps the .wizard-back-link class for the JS that selects it) — that nudge was
+       built for a wide text+icon pill with room for the arrow to travel; the
+       circle-button pattern being reused here never animates its icon on
+       hover (see .availability-prev/.availability-next), so this stays consistent with it. */
+  @media (hover: hover) {
+    .wizard-back-circle:hover :global(svg) {
+      transform: none;
+    }
+  }
+  :global(.ok) {
+    display: none;
+    font-size: 13.5px;
+    color: var(--green);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.5s var(--ease);
+  }
+  :global(.ok.show) {
+    display: block;
+    opacity: 1;
+    transform: none;
+  }
+  .guest-count-row .field-input {
+    flex: 1;
+  }
+  .guest-count-hint :global(b) {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .option-card :global(b) {
+    display: block;
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 400;
+    font-size: 15.5px;
+  }
+  .option-card :global(span) {
+    display: block;
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 12.5px;
+    color: var(--muted-ink);
+    margin-top: 3px;
+  }
+  #msg {
+    font-size: 14px;
+    min-height: 122px;
+  }
+  .character-ring :global(svg) {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  .review-note :global(svg) {
+    flex: none;
+    color: var(--bronze);
+    margin-top: 2px;
+  }
+  :global(.review-group) {
+    border-bottom: 1px solid rgba(var(--muted-ink-rgb), 0.1);
+  }
+  :global(.review-group:last-child) {
+    border-bottom: 0;
+  }
+  :global(.review-head) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(var(--limestone-rgb), 0.42);
+  }
+  :global(.review-head) :global(h4) {
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+  }
+  .review-edit-button :global(svg) {
+    flex: none;
+  }
+  :global(.review-rows) {
+    padding: 0 16px;
+  }
+  :global(.review-row) {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 10px 16px;
+    padding: 9px 0;
+    border-bottom: 1px dotted rgba(var(--muted-ink-rgb), 0.16);
+  }
+  :global(.review-row:last-child) {
+    border-bottom: 0;
+  }
+  :global(.review-row) :global(dt) {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-ink);
+    padding-top: 2px;
+  }
+  :global(.review-row-full) {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  :global(.review-row-full) :global(dt) {
+    padding-top: 0;
+  }
+  :global(.review-row-full) :global(dd) {
+    white-space: pre-line;
+  }
+  :global(.review-row) :global(dd) {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  :global(.review-row) :global(dd.empty) {
+    color: rgba(var(--muted-ink-rgb), 0.42);
+    font-style: italic;
+  }
+  @media (max-width: 520px) {
+    :global(.review-row) {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+  .consent .box :global(svg) {
+    opacity: 0;
+    transform: scale(0.6);
+    transition: all 0.3s var(--ease);
+  }
+  .consent input:checked + .box :global(svg) {
+    opacity: 1;
+    transform: none;
+  }
+  .next-steps li {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 14px;
+    align-items: start;
+    opacity: 0;
+    animation: revealUp 0.5s var(--ease) both;
+  }
+  .next-steps li:nth-child(1) {
+    animation-delay: 0.3s;
+  }
+  .next-steps li:nth-child(2) {
+    animation-delay: 0.45s;
+  }
+  .next-steps li:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+  .next-steps :global(b) {
+    font-family: "Newsreader", Georgia, serif;
+    font-weight: 500;
+    font-size: 15.5px;
+  }
+  #availChangeBtn {
+    flex: none;
+  }
+  /* The calendar icon here is a label, not a "proceed" chevron, so it shouldn't
+     inherit .button:hover svg's forward-nudge translateX — that motion only reads
+     correctly on the trailing arrows it was designed for. */
+  #availChangeBtn :global(svg) {
+    transition: none;
+  }
+  @media (max-width: 980.98px) {
+    .enquire .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 620.98px) {
+    form {
+      padding: 22px;
+    }
+  }
+  /* Overrides the desktop 50% basis so email/phone stack too, matching the
+       old grid's single-column collapse at this breakpoint. */
+  @media (max-width: 620.98px) {
+    .field {
+      flex-basis: 100%;
+    }
+  }
+  /* The guest count's large centred numeral. Kept after the .field input
+     base rules, which it overrides at equal specificity. */
+  .guest-count-row input {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 22px;
+    text-align: center;
+    -moz-appearance: textfield;
+  }
+  @keyframes sentIn {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  @keyframes sealTick {
+    from {
+      opacity: 0;
+      transform: scale(0.5) rotate(-12deg);
+    }
+  }
+  @keyframes revealUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
     }
   }
 </style>
