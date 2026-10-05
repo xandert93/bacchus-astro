@@ -3,6 +3,12 @@
 // Banquet, so none is marked — inferring it from dish names risks
 // mislabelling food for a guest with a dietary requirement. No dish
 // photography yet: black "photo to follow" tiles.
+//
+// House-style corrections to the catalogue's own text, listed so the client
+// can confirm or reverse them: "SANWHICHES" to "Sandwiches", "SAVORIES" to
+// "Savouries", "Caramelized" to "Caramelised", "Pine Not Roll" to "Pine Nut
+// Roll", "Macaroons" to "Macarons", and sentence-cased dish words raised to
+// title case.
 import type { PackageTier } from "./types"
 
 export const HIGH_TEA_TIERS: PackageTier[] = [

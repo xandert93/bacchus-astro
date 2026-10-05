@@ -4,6 +4,12 @@
 // person. The page states the conflict under the tier cards; keep it there
 // until Bacchus confirms which governs. No dish photography yet: the
 // signature dishes render as black "photo to follow" tiles.
+//
+// House-style corrections to the catalogue's own text, listed so the client
+// can confirm or reverse them: "SANWHICHES" to "Sandwiches", "SAVORIES" to
+// "Savouries", "Caramelized" to "Caramelised", "Pine Not Roll" to "Pine Nut
+// Roll", "Macaroons" to "Macarons", and sentence-cased dish words raised to
+// title case.
 import type { PackageTier } from "./types"
 
 export const BANQUET_TIERS: PackageTier[] = [

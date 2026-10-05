@@ -4,6 +4,15 @@
 // why the page carries a warning note about them. Corkage is deliberately
 // not shown: the quote gives an amount without saying per bottle or per
 // person.
+//
+// House-style corrections to the catalogue's own text, listed so the client
+// can confirm or reverse them: "Rosmary" to "Rosemary", accents restored on
+// "Piña Colada", "Saint-Émilion", "Château", "Shiraz Rosé" and "Sancerre
+// Rosé", "characterized" to "characterised". Left exactly as printed, since
+// either could be deliberate: "Terre Antich" and "Henessey". Also as printed:
+// the Whiskey and Rum bars say "service of five" but list six each.
+// Deliberately omitted on request: the catalogue's "After Mass Reception",
+// which needs the client before it is published.
 import type { PackageTier } from "./types"
 
 export const BEVERAGE_TIERS: PackageTier[] = [

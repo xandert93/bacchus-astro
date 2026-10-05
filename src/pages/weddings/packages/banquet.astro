@@ -1,57 +1,17 @@
 ---
-// The Banquet package page - the seated-dinner alternative to
-// reception-package.html's standing reception and high-tea-package.html's
-// afternoon table. Three tiers (Orchid, Dahlia, Sunflower), six courses each,
-// built to the same pattern as reception-package.html: same tier switcher,
-// same sticky switcher, same .package-menu-* markup, same shared chrome.
-// Linked from the Banquet card in weddings.html's packages section.
+// /weddings/packages/banquet — the Banquet package: a six-course seated
+// dinner in three tiers. The content is src/data/packages/banquet.ts.
 //
-// PRICING IS SHOWN WITH AN ON-PAGE WARNING, not silently resolved. The tier
-// prices (65/85/95 euro per person) come from the quote Bacchus shared;
-// separate client correspondence (2026-09-17) says banqueting "begins at
-// around 135 euro per person" and needs a dedicated meeting. Those disagree
-// materially about the same product, and CLAUDE.md's standing instruction is
-// not to pick one. So the catalogue figures are displayed and a
-// .package-menu-note-warning callout sits directly under the tier cards
-// stating the conflict in the client's own terms. Do not delete that callout
-// while the conflict is open - it is the only thing on the page telling a
-// reader the number above it is contested.
+// PRICING IS SHOWN WITH A WARNING, not silently resolved: the client quote
+// gives €65/€85/€95, while client correspondence says banqueting starts
+// around €135 per person. The warning note under the tier cards states the
+// conflict. Do not remove it while the conflict is open — it is the only
+// thing telling a reader the numbers above it are contested.
 //
-// Content is taken from docs/bacchus-wedding-catalogue.pdf, read from the
-// rendered pages rather than from extracted text. An automated text pull of
-// this PDF silently drops every accented character and, in places, whole
-// words - "Goat's Cheese" vanished from one Orchid line, "Gavi Di Gavi" from
-// a wine name. Do not rebuild these lists from a text extraction.
-//
-// Capitalisation and spelling follow reception-package.html's existing
-// house-style normalisation rather than the catalogue's own inconsistencies,
-// which is the convention that page already set. Corrections applied, listed
-// here so the client can confirm or reverse them: "SANWHICHES" to
-// "Sandwiches", "SAVORIES" to "Savouries", "Caramelized" to "Caramelised",
-// "Pine Not Roll" to "Pine Nut Roll", "Macaroons" to "Macarons" (the
-// catalogue's own Stations page says "Macaron Tower"), and sentence-cased
-// dish words raised to title case.
-//
-// This page carries NO signature-dish photo tiles, unlike
-// reception-package.html. That component captions each tile with a specific
-// dish name, and no per-dish photography exists for this package - a stand-in
-// under a real dish name would be a false claim rather than a placeholder.
-// Imagery is deliberately BLACKED OUT rather than filled with stand-in
-// photography, on request: the hero is a flat black .hero-media with a
-// labelled chip over it, and each tier leads with three
-// .package-dish-placeholder tiles - black, dashed oxblood border, the dish's
-// initials and a "photo to follow" line. None of them can be opened; there is
-// nothing to enlarge, so the page has no lightbox. A stand-in photo reads as
-// a finished choice in a walkthrough, whereas an empty black frame reads as
-// "still to come", which is the honest signal while the client sources
-// images. The carousel further down is the exception and does use real
-// generic Bacchus photography, labelled as such in its own lead.
-//
-// To swap real imagery in: put an <img> back inside .hero-media (see
-// reception-package.html) and drop .package-hero-placeholder; replace each
-// .package-dish-placeholder with .gallery-item/.gallery-tag markup and copy
-// the page-scoped lightbox controller back from reception-package.html.
-//
+// No photography yet: the hero and the signature dishes are deliberately
+// black "photo to follow" frames rather than stand-in shots, which would
+// read as finished choices. Pass PageHero an image, and give the dishes
+// photos in the data file, once Bacchus supplies them.
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { BANQUET_TIERS } from "@data/packages/banquet"
 import PackageTierSection from "@components/packages/PackageTierSection.astro"
@@ -61,7 +21,7 @@ import EnquirySection from "@components/enquiry/EnquirySection.astro"
 import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
 import ArrowIcon from "@components/ui/ArrowIcon.astro"
 import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
-// After BaseLayout, so these load after global.css (see package-page.css).
+// After BaseLayout, so these load after global.css.
 import "@styles/package-page.css"
 import "@styles/package-dish-placeholders.css"
 

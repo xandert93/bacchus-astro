@@ -72,7 +72,7 @@ for (const route of pages) {
   const [x, y] = [await dump(a, route), await dump(b, route)]
   const diffs = []
   const n = Math.max(x.length, y.length)
-  for (let i = 0; i < n && diffs.length < 8; i++)
+  for (let i = 0; i < n && diffs.length < Number(process.env.MAX_DIFFS || 8); i++)
     if (x[i] !== y[i]) diffs.push(`  - ${x[i]}\n  + ${y[i]}`)
   total += diffs.length
   console.log(

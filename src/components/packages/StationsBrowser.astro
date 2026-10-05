@@ -1,0 +1,194 @@
+---
+// One way of browsing the sixteen stations. The page renders two and CSS
+// shows one per breakpoint (package-stations.css):
+//   • "stage"    — phones and tablets: category tabs filter the cards, and
+//                  one station at a time takes the stage
+//   • "carousel" — desktop: every card in one carousel, with the category
+//                  buttons scrolling to a category's first card
+// Both ship as plain card lists with their controls hidden; the stations
+// controller in reception-package.js builds the index, stage and
+// thumbnails from the cards and un-hides what each layout uses. So the
+// cards are the single source of content for both, and each list is its
+// own lightbox group.
+import { STATIONS, STATION_CATEGORIES } from "@data/packages/reception-stations"
+import StationCard from "./StationCard.astro"
+
+interface Props {
+  variant: "stage" | "carousel"
+}
+
+const { variant } = Astro.props
+const isStage = variant === "stage"
+const lightboxGroup = isStage ? "stations-hybrid-mobtab" : "stations-hybrid-desktop"
+const labelOf = (id: string) => STATION_CATEGORIES.find((c) => c.id === id)!.label
+
+const previousArrow = "M13 5H2m3.5-3.5L2 5l3.5 3.5"
+const nextArrow = "M1 5h11M8.5 1.5 12 5 8.5 8.5"
+---
+
+<div
+  class="package-stations-browser"
+  data-stations={variant}
+  data-reveal
+  style="--d: 240ms"
+>
+  {isStage ? (
+    <div
+      class="package-stations-category-tabs"
+      role="tablist"
+      aria-label="Station categories"
+      hidden
+    >
+      <span class="pill" aria-hidden="true" />
+      {STATION_CATEGORIES.map((category, i) => (
+        <button
+          type="button"
+          role="tab"
+          class="package-stations-category-tab"
+          id={`package-stations-category-tab-${category.id}-hybrid`}
+          data-group={category.id}
+          aria-controls="stations-panel-hybrid"
+          aria-selected={i === 0 ? "true" : "false"}
+          tabindex={i === 0 ? "0" : "-1"}
+          data-label-full={category.label}
+          aria-label={category.label}
+        >
+          {category.shortLabel}
+        </button>
+      ))}
+    </div>
+  ) : (
+    // A <nav>, not a tablist: these scroll the one carousel to a
+    // category's first card rather than filtering it, so there is no
+    // panel for them to control and no selected tab to announce.
+    <nav
+      class="package-stations-category-tabs"
+      aria-label="Jump to a station category"
+      hidden
+    >
+      {STATION_CATEGORIES.map((category, i) => (
+        <button
+          type="button"
+          class="package-stations-category-tab"
+          data-group={category.id}
+          aria-controls="package-stations-card-list-hybrid"
+          aria-current={i === 0 ? "true" : "false"}
+          data-label-full={category.label}
+          aria-label={category.label}
+        >
+          {category.shortLabel}
+        </button>
+      ))}
+    </nav>
+  )}
+
+  <div
+    class="package-stations-browser-body"
+    id={isStage ? "stations-panel-hybrid" : undefined}
+  >
+    <nav class="package-stations-index" aria-label="All reception stations" hidden></nav>
+    {isStage && (
+      <>
+        <article
+          class="package-stations-stage"
+          id="package-stations-stage-hybrid"
+          aria-label="Selected station"
+          hidden
+        />
+        <ul class="package-stations-thumbnails" role="list" hidden />
+      </>
+    )}
+
+    <div class="package-stations-carousel">
+      <ol
+        class="package-stations-card-list"
+        id={isStage ? undefined : "package-stations-card-list-hybrid"}
+        role="list"
+      >
+        {STATIONS.map((station) => (
+          <StationCard
+            station={station}
+            categoryLabel={labelOf(station.category)}
+            lightboxGroup={lightboxGroup}
+          />
+        ))}
+      </ol>
+      <div class="package-stations-carousel-nav" hidden>
+        {isStage && (
+          <p class="package-stations-carousel-counter" aria-hidden="true">
+            <span class="package-stations-carousel-counter-current" data-carousel-current>
+              01
+            </span>
+            <span class="package-stations-carousel-counter-total">
+              / <span data-carousel-total>04</span>
+            </span>
+          </p>
+        )}
+        <div class="package-stations-carousel-buttons">
+          <button
+            type="button"
+            class="package-stations-carousel-arrow"
+            data-carousel-prev
+            aria-label="Previous station"
+          >
+            <svg
+              width="16"
+              height="12"
+              viewBox="0 0 14 10"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d={previousArrow}
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="package-stations-carousel-arrow"
+            data-carousel-next
+            aria-label="Next station"
+          >
+            <svg
+              width="16"
+              height="12"
+              viewBox="0 0 14 10"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d={nextArrow}
+                stroke="currentColor"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
+        {!isStage && (
+          <>
+            <div class="package-stations-carousel-progress" aria-hidden="true">
+              <i data-carousel-progress />
+            </div>
+            <p class="package-stations-carousel-counter" aria-hidden="true">
+              <span
+                class="package-stations-carousel-counter-current"
+                data-carousel-current
+              >
+                01
+              </span>
+              <span class="package-stations-carousel-counter-total">
+                / <span data-carousel-total>{STATIONS.length}</span>
+              </span>
+            </p>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+</div>

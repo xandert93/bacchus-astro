@@ -1,66 +1,21 @@
 ---
-// The Beverage package page - the fourth and last of the wedding package
-// pages, and the only one that is NOT a meal format. Reception, Banquet and
-// High Tea are three mutually exclusive ways to feed a wedding; Beverage is
-// additive, chosen alongside whichever of those three a couple picks. The
-// page says that outright in its hero and lead, because the whole packages
-// section on weddings.html is built around that distinction.
+// /weddings/packages/beverage — the Beverage package, the one package that is
+// NOT a meal format: chosen alongside whichever of Reception, Banquet or High
+// Tea a couple picks, and its four categories combine freely. The content is
+// src/data/packages/beverage.ts.
 //
-// Structure differs from its three siblings for the same reason. It has FOUR
-// categories (Local Wine / Foreign Wine / Bar Options / Themed Bars), not
-// three ranked tiers, and they are not alternatives to each other - a wedding
-// can take a wine package AND an open bar AND a themed bar. So:
-// - the tier switcher is reused as-is, but the card grid is a 2x2 (four
-// cards across one row would squeeze each description below a readable
-// measure, and a 3+1 wrap reads as a mistake);
-// - there is NO .package-sticky-switch. That control sizes its buttons
-// flex:1 on mobile and was measured against three short tier names; four
-// categories, the longest being "Themed Bars", leave roughly 80px each
-// and would overflow (CLAUDE.md bug #13). The tab bar and the cards both
-// already switch categories, so nothing is lost, and the switcher JS
-// guards for its absence;
-// - .package-menu-groups drops to two columns, because each wine carries a
-// tasting note that a third of the wrap can't give a readable measure;
-// - wines render as name / grape + producer / tasting note rather than a
-// single line (.package-wine-*).
+// What differs from the other three pages, and why:
+// - four categories rather than three tiers, so the cards sit 2x2;
+// - no sticky tier switcher: it sizes its buttons to fit three short names
+//   on a phone, and four would overflow;
+// - two menu columns rather than three, since wines carry tasting notes;
+// - no signature-dish tiles — the wrong frame for a wine list.
 //
-// Pricing: the catalogue carries NO prices at all. The figures shown come
-// from the quote Bacchus shared - EUR 30 and 35 per person for the wine
-// packages, EUR 23 and 12 for the full and reduced open bars - and a
-// .package-menu-note-warning callout under the cards says so, plus notes that
-// Bacchus generates pricing internally and varies it by season. The corkage
-// figure from that quote is deliberately NOT published: the quote gives an
-// amount without saying whether it is per bottle or per person, and guessing
-// a unit on a chargeable fee is worse than omitting it. The callout says that
-// too.
-//
-// NO placeholder dish tiles on this page, unlike banquet-package.html and
-// high-tea-package.html. Those two carry three blacked-out
-// .package-dish-placeholder tiles per tier standing in for dish photography;
-// a drinks page has no equivalent - "signature dishes" is the wrong frame for
-// a wine list, and there is no per-item photography to stand in for. The hero
-// is blacked out the same way the siblings' are, and the carousel further
-// down uses real generic Bacchus photography, labelled as such in its lead.
-//
-// Content comes from the rendered catalogue pages, not from extracted text -
-// an automated text pull of that PDF silently drops accents and whole words
-// ("Gavi Di Gavi" vanished from one wine name, "Gordon's Gin" from the spirit
-// list). Do not rebuild these lists from a text extraction.
-//
-// House-style normalisations applied, same convention as the sibling pages,
-// listed so the client can confirm or reverse them: "Rosmary" to "Rosemary",
-// "Pina Colada" given its tilde, "Saint-Emilion" and
-// "Chateau" given their accents, "Shiraz Rose" and "Sancerre Rose" given
-// theirs, "characterized" to "characterised". Two catalogue oddities were
-// left exactly as printed rather than corrected, since both could be
-// deliberate: "Terre Antich" (probably Terre Antiche) and "Henessey"
-// (probably Hennessy). Also left as printed: the Whiskey and Rum bars are
-// captioned "service of five" but list six each, which reads naturally as
-// choosing five from six - worth confirming, not worth silently editing.
-//
-// Deliberately omitted on request: the catalogue's "After Mass Reception"
-// offering, which needs the client before it can be published.
-//
+// The catalogue prints no prices; the figures come from the client quote,
+// and the warning note under the cards says so. The quote's corkage figure is
+// deliberately NOT shown: it gives an amount without saying per bottle or per
+// person, and guessing the unit of a chargeable fee is worse than leaving it
+// out.
 import BaseLayout from "@layouts/BaseLayout.astro"
 import { BEVERAGE_TIERS } from "@data/packages/beverage"
 import PackageTierSection from "@components/packages/PackageTierSection.astro"
@@ -70,7 +25,7 @@ import EnquirySection from "@components/enquiry/EnquirySection.astro"
 import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
 import ArrowIcon from "@components/ui/ArrowIcon.astro"
 import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
-// After BaseLayout, so these load after global.css (see package-page.css).
+// After BaseLayout, so these load after global.css.
 import "@styles/package-page.css"
 import "@styles/package-beverage.css"
 
