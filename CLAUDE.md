@@ -45,22 +45,30 @@ high-tea,beverage}` (the agreed URL scheme). `menu.html` is deliberately not
   likewise contains its own copy of `package-tiers.js`'s tier controller.
   Merge each pair deliberately, not as a side effect of other work.
 
-**Phase 2** — `astro:assets` for images. **Started 2026-10-05 with the six
-hero photos** (`src/assets/images/heroes/`, rendered by `HeroImage.astro` as
-AVIF + WebP). Rules learned on the way:
+**Phase 2** — `astro:assets` for images. **Done for every photo,
+2026-10-05.** Everything lives in `src/assets/images/`, organised by SUBJECT
+(`venue/`, `weddings/`, `corporate/`, `celebrations/`, `food-and-drink/`,
+`reception-menu/{dishes,stations}/`, `brand/`), never by page or role.
+`public/` now holds only `favicon.png` and `docs/`.
 
-- **Always build from the untouched originals, never from `public/images/`.**
-  Those are already-compressed web copies, and resizing them compresses
-  twice (visibly softer; measured 40.7 vs 43.2 dB PSNR, at a larger file).
-  Originals live in the prototype's `images/originals/` — 25 JPEGs (renamed
-  from a misleading `.png` by the user on 2026-10-05). Images
-  without an original there need one requested from Bacchus.
-- AVIF first (much smaller at equal quality) with a WebP fallback, each at
-  its own quality — hence `getImage()` twice rather than `<Picture>`.
-- `sizes` must describe the real drawn width, including object-fit cover
-  and any scale animation, or browsers pick a file that's too small.
-- Every other image still comes from `public/images/`. Move them the same
-  way, galleries first.
+- **Use a key, never a path:** `src/lib/images.ts` looks photos up as
+  `"venue/ballroom-night"`; an unknown key fails the build. Render with
+  `<Photo src="key" alt sizes>` (any photo), `<HeroImage>` (page heroes),
+  `<NavPanelPhoto>` (dropdown panels, lazy via data-src), or `getImage()`
+  for CSS backgrounds (see `MobileMenu`).
+- **Always build from the untouched originals.** Resizing an already-
+  compressed web copy compresses twice (measured 40.7 vs 43.2 dB PSNR, at a
+  larger file). Originals come from the prototype's `images/originals/`
+  (25 JPEGs). Photos without one are listed in `WEB_COPY_ONLY` in
+  `images.ts` — served untouched at their own size, with only smaller
+  variants generated — and that list is the request list for Bacchus.
+  When an original arrives: replace the file, delete its entry.
+- AVIF first with a WebP fallback, each at its own quality (hence
+  `getImage()` twice rather than `<Picture>`).
+- `sizes` must describe the real drawn width — object-fit cover, scale
+  animations, grid columns — or browsers pick a file that's too small.
+- `<picture>` is `display: contents` sitewide, so it never affects layout;
+  any `> img` child selector needs a `> picture > img` twin.
 
 **Phase 3** —
 Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
@@ -127,9 +135,7 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 - Hero photos settle in (`.hero-media` scale 1.08 → 1), transform-only so
   Largest Contentful Paint isn't delayed.
 - `/weddings/packages` redirects to `/weddings#packages` (`astro.config.mjs`).
-- `public/images/` — copied from the prototype minus `originals/`. Served
-  as-is from `/images/...`, full size. Moving to `src/assets/` image by image
-  in phase 2 (heroes done).
+- `src/assets/images/` — every photo, by subject; see Phase 2 above.
 
 ## Conventions
 
