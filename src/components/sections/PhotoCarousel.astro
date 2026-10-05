@@ -4,7 +4,7 @@
 // the page's own; this is the strip and its controls. photo-carousel.js
 // drives it — dragging, the arrows, the progress bar and the "1–2 / 5"
 // counter — and finds it by the fixed ids below, so it's one per page.
-import Photo from "./Photo.astro"
+import Photo from "@components/ui/Photo.astro"
 
 interface Props {
   // src is a key from src/lib/images.ts.
@@ -69,7 +69,7 @@ const { slides } = Astro.props
 </div>
 
 <script>
-  import "../scripts/photo-carousel.js"
+  import "@scripts/photo-carousel.js"
 </script>
 
 <style>

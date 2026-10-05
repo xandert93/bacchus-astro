@@ -1,9 +1,9 @@
 ---
 // Four-photo strip linking through to the filtered full gallery. Tiles open
 // the page's <Lightbox /> (lightbox.js), so a page using this needs one.
-import ArrowIcon from "./ArrowIcon.astro"
-import GalleryTile from "./GalleryTile.astro"
-import "../styles/gallery-grid.css"
+import ArrowIcon from "@components/ui/ArrowIcon.astro"
+import GalleryTile from "@components/ui/GalleryTile.astro"
+import "@styles/gallery-grid.css"
 
 interface Props {
   // Kept from the prototype because global.css targets these ids

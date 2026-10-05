@@ -61,15 +61,15 @@
 // Deliberately omitted on request: the catalogue's "After Mass Reception"
 // offering, which needs the client before it can be published.
 //
-import BaseLayout from "../../../layouts/BaseLayout.astro"
-import PageHero from "../../../components/PageHero.astro"
-import EnquirySection from "../../../components/EnquirySection.astro"
-import WaitlistPopover from "../../../components/WaitlistPopover.astro"
-import ArrowIcon from "../../../components/ArrowIcon.astro"
-import PhotoCarousel from "../../../components/PhotoCarousel.astro"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import PageHero from "@components/sections/PageHero.astro"
+import EnquirySection from "@components/enquiry/EnquirySection.astro"
+import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
+import ArrowIcon from "@components/ui/ArrowIcon.astro"
+import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
 // After BaseLayout, so these load after global.css (see package-page.css).
-import "../../../styles/package-page.css"
-import "../../../styles/package-beverage.css"
+import "@styles/package-page.css"
+import "@styles/package-beverage.css"
 
 // The "closer look" photo strip.
 const carouselSlides = [
@@ -825,6 +825,6 @@ const carouselSlides = [
   <WaitlistPopover slot="after-footer" />
 
   <script>
-    import "../../../scripts/package-tiers.js"
+    import "@scripts/package-tiers.js"
   </script>
 </BaseLayout>

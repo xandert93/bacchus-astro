@@ -2,15 +2,15 @@
 // The homepage. Everything shared with other pages (nav, drawer, Visit
 // section, footer, script) comes from BaseLayout; this file holds only what
 // is unique to the homepage.
-import BaseLayout from "../layouts/BaseLayout.astro"
-import HeroFrame from "../components/HeroFrame.astro"
-import HeroImage from "../components/HeroImage.astro"
-import EnquirySection from "../components/EnquirySection.astro"
-import Testimonials from "../components/Testimonials.astro"
-import WaitlistPopover from "../components/WaitlistPopover.astro"
-import Photo from "../components/Photo.astro"
-import PhotoCarousel from "../components/PhotoCarousel.astro"
-import "../styles/tabs.css"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import HeroFrame from "@components/sections/HeroFrame.astro"
+import HeroImage from "@components/ui/HeroImage.astro"
+import EnquirySection from "@components/enquiry/EnquirySection.astro"
+import Testimonials from "@components/sections/Testimonials.astro"
+import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
+import Photo from "@components/ui/Photo.astro"
+import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
+import "@styles/tabs.css"
 
 // "Across the estate": the photo strip.
 const carouselSlides = [
@@ -477,8 +477,8 @@ const carouselSlides = [
   </EnquirySection>
   <WaitlistPopover slot="after-footer" />
   <script>
-    import "../scripts/tabs.js"
-    import "../scripts/home.js"
+    import "@scripts/tabs.js"
+    import "@scripts/home.js"
   </script>
 </BaseLayout>
 

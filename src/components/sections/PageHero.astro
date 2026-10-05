@@ -18,8 +18,8 @@ interface Props {
   // The last crumb, i.e. this page's own name.
   crumb: string
 }
-import HeroFrame from "./HeroFrame.astro"
-import HeroImage from "./HeroImage.astro"
+import HeroFrame from "@components/sections/HeroFrame.astro"
+import HeroImage from "@components/ui/HeroImage.astro"
 
 const { image, parent = { href: "/", label: "Home" }, crumb } = Astro.props
 const hasSecondarySub = Astro.slots.has("sub-secondary")

@@ -3,19 +3,19 @@
 // lightbox and waitlist popover are shared components. The Venue Diary
 // (#availability) and its quick-pick modal are weddings-only, so they stay
 // inline here.
-import BaseLayout from "../layouts/BaseLayout.astro"
-import AvailabilityCalendar from "../components/AvailabilityCalendar.astro"
-import EnquirySection from "../components/EnquirySection.astro"
-import ArrowIcon from "../components/ArrowIcon.astro"
-import CheckList from "../components/CheckList.astro"
-import FaqSection from "../components/FaqSection.astro"
-import GalleryPreview from "../components/GalleryPreview.astro"
-import Lightbox from "../components/Lightbox.astro"
-import PageHero from "../components/PageHero.astro"
-import ProcessSteps from "../components/ProcessSteps.astro"
-import Testimonials from "../components/Testimonials.astro"
-import WaitlistPopover from "../components/WaitlistPopover.astro"
-import Photo from "../components/Photo.astro"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import AvailabilityCalendar from "@components/enquiry/AvailabilityCalendar.astro"
+import EnquirySection from "@components/enquiry/EnquirySection.astro"
+import ArrowIcon from "@components/ui/ArrowIcon.astro"
+import CheckList from "@components/ui/CheckList.astro"
+import FaqSection from "@components/sections/FaqSection.astro"
+import GalleryPreview from "@components/sections/GalleryPreview.astro"
+import Lightbox from "@components/ui/Lightbox.astro"
+import PageHero from "@components/sections/PageHero.astro"
+import ProcessSteps from "@components/sections/ProcessSteps.astro"
+import Testimonials from "@components/sections/Testimonials.astro"
+import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
+import Photo from "@components/ui/Photo.astro"
 ---
 
 <BaseLayout
@@ -549,8 +549,8 @@ import Photo from "../components/Photo.astro"
     </Fragment>
   </EnquirySection>
   <script>
-    import "../scripts/availability.js"
-    import "../scripts/weddings.js"
+    import "@scripts/availability.js"
+    import "@scripts/weddings.js"
   </script>
 </BaseLayout>
 

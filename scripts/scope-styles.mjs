@@ -3,7 +3,7 @@
 //   node scripts/scope-styles.mjs <target> [--select <regex>] [--from <source>]
 //                                 [--keep] [--dry]
 //
-// <target> is a component name ("SiteHeader" -> src/components/SiteHeader.astro),
+// <target> is a component name ("SiteHeader" -> src/components/layout/SiteHeader.astro),
 // a path under src/ for a page ("pages/index"), or a stylesheet
 // ("styles/tabs.css").
 //
@@ -47,12 +47,20 @@ const selectIndex = args.indexOf("--select")
 const select = selectIndex > -1 ? new RegExp(args[selectIndex + 1]) : null
 const fromIndex = args.indexOf("--from")
 const SRC = "src"
+// A bare component name is looked up in any folder under src/components/.
+const findComponent = (n) => {
+  const hit = fs
+    .readdirSync(path.join(SRC, "components"), { recursive: true })
+    .find((f) => path.basename(String(f)) === `${n}.astro`)
+  if (!hit) throw new Error(`No component called ${n}`)
+  return path.join(SRC, "components", String(hit))
+}
 const fileFor = (n) =>
   n.endsWith(".css")
     ? path.join(SRC, n)
     : n.includes("/")
       ? path.join(SRC, `${n}.astro`)
-      : path.join(SRC, "components", `${n}.astro`)
+      : findComponent(n)
 const targetFile = fileFor(name)
 const sourceFile = fromIndex > -1 ? fileFor(args[fromIndex + 1]) : null
 const cssTarget = targetFile.endsWith(".css")

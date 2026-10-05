@@ -1,5 +1,5 @@
 ---
-import SocialLinks from "./SocialLinks.astro"
+import SocialLinks from "@components/ui/SocialLinks.astro"
 
 interface Props {
   // Adds an "Enquire" row scrolling to the page's own #enquire section.
@@ -12,7 +12,7 @@ const { showEnquireLink = false } = Astro.props
 // Rendered at build time, so the year is baked into the HTML rather than
 // filled in after load (site.js still sets #yr; harmless).
 const year = new Date().getFullYear()
-import Photo from "./Photo.astro"
+import Photo from "@components/ui/Photo.astro"
 ---
 
 <footer>

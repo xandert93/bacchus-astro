@@ -1,6 +1,6 @@
 ---
-import AvailabilityCalendar from "./AvailabilityCalendar.astro"
-import Photo from "./Photo.astro"
+import AvailabilityCalendar from "@components/enquiry/AvailabilityCalendar.astro"
+import Photo from "@components/ui/Photo.astro"
 // The four-step enquiry wizard (#enquire). Same component on every events
 // page; what differs per page comes in as props and slots. Behaviour lives
 // in enquiry.js (.wizard-* classes).
@@ -10,7 +10,7 @@ import Photo from "./Photo.astro"
 // event type. The prototype hardcoded the Wedding state on every page and
 // let its script correct it after load, so non-wedding pages flashed the wrong
 // state first.
-import { CHIP_NOTES, EVENT_TYPES, type EventType } from "../data/enquiry"
+import { CHIP_NOTES, EVENT_TYPES, type EventType } from "@data/enquiry"
 
 interface Props {
   eventType: EventType
@@ -680,7 +680,7 @@ const isWedding = eventType === "Wedding"
 </section>
 
 <script>
-  import "../scripts/enquiry.js"
+  import "@scripts/enquiry.js"
 </script>
 
 <style>

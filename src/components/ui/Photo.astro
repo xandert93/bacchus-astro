@@ -17,7 +17,7 @@
 // `maxWidth` caps the largest copy for photos that are only ever small.
 import { getImage } from "astro:assets"
 import type { HTMLAttributes } from "astro/types"
-import { image, isWebCopyOnly } from "../lib/images"
+import { image, isWebCopyOnly } from "@lib/images"
 
 type ImgAttributes = Omit<
   HTMLAttributes<"img">,

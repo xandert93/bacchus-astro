@@ -2,14 +2,14 @@
 // /gallery. Filtering is pure CSS (:has() keyed off which radio is
 // :checked — see global.css); gallery-filter.js keeps ?filter= in the URL in
 // step as the visitor clicks between categories.
-import BaseLayout from "../layouts/BaseLayout.astro"
-import PageHero from "../components/PageHero.astro"
-import GalleryTile from "../components/GalleryTile.astro"
-import "../styles/gallery-grid.css"
-import Lightbox from "../components/Lightbox.astro"
-import EnquirySection from "../components/EnquirySection.astro"
-import WaitlistPopover from "../components/WaitlistPopover.astro"
-import { GALLERY_FILTERS, GALLERY_PHOTOS } from "../data/gallery"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import PageHero from "@components/sections/PageHero.astro"
+import GalleryTile from "@components/ui/GalleryTile.astro"
+import "@styles/gallery-grid.css"
+import Lightbox from "@components/ui/Lightbox.astro"
+import EnquirySection from "@components/enquiry/EnquirySection.astro"
+import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
+import { GALLERY_FILTERS, GALLERY_PHOTOS } from "@data/gallery"
 ---
 
 <BaseLayout
@@ -118,7 +118,7 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "../data/gallery"
 
   <WaitlistPopover slot="after-footer" />
   <script>
-    import "../scripts/gallery-filter.js"
+    import "@scripts/gallery-filter.js"
   </script>
 </BaseLayout>
 

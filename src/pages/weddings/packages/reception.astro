@@ -98,18 +98,18 @@
 // marked .active, since this sits under the wedding journey), the standard
 // footer, and the footer's "🏖️ Sandboxes" link pointing at sandboxes/ like
 // its siblings do.
-import BaseLayout from "../../../layouts/BaseLayout.astro"
-import PageHero from "../../../components/PageHero.astro"
-import EnquirySection from "../../../components/EnquirySection.astro"
-import WaitlistPopover from "../../../components/WaitlistPopover.astro"
-import ArrowIcon from "../../../components/ArrowIcon.astro"
-import Lightbox from "../../../components/Lightbox.astro"
+import BaseLayout from "@layouts/BaseLayout.astro"
+import PageHero from "@components/sections/PageHero.astro"
+import EnquirySection from "@components/enquiry/EnquirySection.astro"
+import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
+import ArrowIcon from "@components/ui/ArrowIcon.astro"
+import Lightbox from "@components/ui/Lightbox.astro"
 // After BaseLayout, so it loads after global.css, as the inline block did.
-import "../../../styles/package-page.css"
-import "../../../styles/package-stations.css"
-import Photo from "../../../components/Photo.astro"
-import PhotoCarousel from "../../../components/PhotoCarousel.astro"
-import GalleryTile from "../../../components/GalleryTile.astro"
+import "@styles/package-page.css"
+import "@styles/package-stations.css"
+import Photo from "@components/ui/Photo.astro"
+import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
+import GalleryTile from "@components/ui/GalleryTile.astro"
 
 // The "closer look" photo strip.
 const carouselSlides = [
@@ -4966,6 +4966,6 @@ const carouselSlides = [
   <WaitlistPopover slot="after-footer" />
 
   <script>
-    import "../../../scripts/reception-package.js"
+    import "@scripts/reception-package.js"
   </script>
 </BaseLayout>

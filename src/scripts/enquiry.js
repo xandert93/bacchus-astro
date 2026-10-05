@@ -4,7 +4,7 @@
 import { reduce } from "./lib/motion.js"
 import { availabilityHooks } from "./lib/availability-hooks.js"
 import "./availability.js"
-import { CHIP_NOTES } from "../data/enquiry"
+import { CHIP_NOTES } from "@data/enquiry"
 
 // ---------- Enquiry form ----------
 // On pages with a calendar embedded in the "Preferred date" field (Weddings only —

@@ -10,7 +10,7 @@
 // without this component knowing about it.
 import type { HTMLAttributes } from "astro/types"
 import type { ComponentProps } from "astro/types"
-import Photo from "./Photo.astro"
+import Photo from "@components/ui/Photo.astro"
 
 interface Props extends HTMLAttributes<"div"> {
   photo: ComponentProps<typeof Photo>
