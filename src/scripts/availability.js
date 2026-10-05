@@ -445,7 +445,7 @@ import { lockScroll, unlockScroll } from "./lib/scroll-lock.js"
     }
 
     // Called once per .diary/.compact grid found below — a .taken cell only
-    // ever gets a real click listener from main.js when open/interest (see
+    // ever gets a real click listener from this file when open/interest (see
     // render() below), so a Booked cell's hover/click has to be caught via
     // delegation on the grid itself, which also survives the grid being
     // rebuilt wholesale on every prev/next (a listener on an individual

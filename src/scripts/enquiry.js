@@ -4,6 +4,7 @@
 import { reduce } from "./lib/motion.js"
 import { availabilityHooks } from "./lib/availability-hooks.js"
 import "./availability.js"
+import { CHIP_NOTES } from "../data/enquiry"
 
 // ---------- Enquiry form ----------
 // On pages with a calendar embedded in the "Preferred date" field (Weddings only —
@@ -190,20 +191,9 @@ if (dateNative) {
 // said the same notice-period thing further down the form for the same
 // three chips — kept in one place instead of two.
 var chipNote = document.getElementById("chipNote")
-// Kept close in length to each other on purpose (79-88 characters) — these
-// swap in place when switching chips, and very different lengths used to
-// wrap to different line counts at this form's width, causing real
-// cumulative layout shift every time someone tried a different chip.
-var CHIP_NOTES = {
-  Wedding:
-    "We host just one wedding a day, so your date is entirely yours — take a look below.",
-  Corporate:
-    "Two weeks' notice gives us time to prepare everything properly for your corporate event.",
-  Celebration:
-    "Two weeks' notice gives us time to make sure your celebration feels just right on the day.",
-  Other:
-    "Whatever you have in mind, we'd love to hear about it and follow up with you directly.",
-}
+// The notes themselves live in src/data/enquiry.ts, shared with
+// EnquirySection.astro, which renders the initial one on the server — one
+// list, so the server-rendered note and the swapped-in ones can't drift.
 var CHIP_NOTE_FADE_MS = 200
 function syncChipNote(isInitial) {
   if (!chipNote) return

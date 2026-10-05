@@ -1,6 +1,13 @@
-// Tier controller for the package pages (banquet, high tea, beverage) — was
-// an identical inline <script> on each prototype page, differing only in its
-// TIERS list, which is now read from the markup.
+// Tier controller for all four package pages — the tab bar, tier cards,
+// sticky switcher, native swipe, and the #hash that makes a tier linkable.
+// The tier list is read from the tab bar's markup, so the same file serves
+// Reception's three tiers, Banquet's, High Tea's and Beverage's four
+// categories.
+//
+// Was two copies until 2026-10-05: this one (from the prototype's banquet,
+// high tea and beverage pages) and Reception's original, which had since
+// lost its dead per-item reveal code and gained accurate comments for the
+// move to native scroll-snap. This is Reception's version, generalised.
 //
 // Imports tabs.js so window.BacchusTabs exists before this runs: ES modules
 // evaluate their imports first, and a module imported by several scripts
@@ -12,7 +19,7 @@ import "./photo-carousel.js"
 // the tab bar, the tier cards, the sticky switcher and touch swipe —
 // plus the #hash sync that makes a tier directly linkable without
 // needing a separate page for each (see the "package switcher vs.
-// separate pages" discussion in CLAUDE.md). main.js's shared tab
+// separate pages" discussion in CLAUDE.md). tabs.js's shared tab
 // helper still supplies the sliding pill and aria bookkeeping; the
 // carousel below is this page's own. Guarded the same way every other
 // page-specific script here is (bug #4 — no-ops if .tab-bar is absent).
@@ -25,7 +32,7 @@ import "./photo-carousel.js"
     ? [].slice.call(stickySwitch.querySelectorAll(".package-sticky-switch-btn"))
     : []
   // Wires up the sticky switcher's own sliding pill via the shared
-  // implementation in main.js (window.BacchusTabs.initTabGroup) —
+  // implementation in tabs.js (window.BacchusTabs.initTabGroup) —
   // same mechanism the real tab bar uses, not a second hand-rolled
   // copy of the slide math. No panelSelector: this group only needs
   // its own active state and pill, never panels of its own (the
@@ -52,7 +59,7 @@ import "./photo-carousel.js"
 
   // Same idea as syncTierCards, for the sticky switcher's own active
   // state and pill. Delegates to stickyGroup.selectTab (the shared
-  // main.js mechanism) rather than toggling .active by hand, so a
+  // tabs.js mechanism) rather than toggling .active by hand, so a
   // tier changed from anywhere else slides this pill exactly as a
   // direct click on it would — one implementation, not two. Calling
   // selectTab rather than btn.click() also keeps it clear of this
@@ -67,22 +74,29 @@ import "./photo-carousel.js"
 
   // ================= Tier carousel =================
   // All three tiers are laid out side by side at once in a flex track
-  // (.panels) inside an overflow:hidden window (.package-tier-view),
-  // rather than main.js's usual "show one .tab-panel, hide the rest".
-  // Two ways to change tier, with deliberately different motion:
+  // (.panels) inside .package-tier-view, rather than tabs.js's usual
+  // "show one .tab-panel, hide the rest". The window is a NATIVE
+  // horizontal scroll-snap container (see its CSS above for why the
+  // hand-rolled pointer drag this replaces could never work on
+  // touch), so the browser owns all swiping and this file owns none
+  // of it. Two ways to change tier, with deliberately different
+  // motion:
   //
-  //   • Click (tab bar, tier card, sticky switcher) — the track cuts
+  //   • Click (tab bar, tier card, sticky switcher) — the window cuts
   //     straight to the new tier with no visible movement, and the
   //     content plays its vertical fade. Same as this page behaved
   //     before it had swipe at all.
-  //   • Touch drag — the track follows the finger and eases to the
-  //     nearest tier on release, with no fade at all: the content is
-  //     simply already there, the way a photo carousel behaves.
+  //   • Swipe — the browser scrolls and snaps; no fade at all, since
+  //     the content is simply already there, the way a photo carousel
+  //     behaves.
   //
-  // The drag handling is a port of this site's own homepage carousel
-  // (.carousel-view/.carousel-track, styles.css + main.js) with an
-  // axis lock added — see the drag section below. This package has
-  // exactly three tiers, so none of this generalises to N slides.
+  // Which tier is active is DERIVED FROM SCROLL POSITION, never
+  // stored separately: a click scrolls, and the scroll handler is
+  // what updates the tab bar, cards and sticky switcher. One-way
+  // flow, so a swipe and a click cannot disagree about which tier is
+  // showing — the same model the stations carousel on this page
+  // already documents. Generic over however many tiers the tab bar
+  // lists (three, or Beverage's four categories).
 
   var view = document.getElementById("packageTierView")
   var track = document.getElementById("packageTierTrack")
@@ -110,73 +124,31 @@ import "./photo-carousel.js"
   }
   // Distance from one slide's left edge to the next: the window's own
   // width plus the real gap between slides, measured rather than
-  // hardcoded — same approach as the homepage carousel.
+  // hardcoded — same approach as the homepage carousel. Now used to
+  // convert between scrollLeft and a tier index in both directions.
   function slideStep() {
     return view.clientWidth + parseFloat(getComputedStyle(track).gap || 0)
   }
-  // Which tier the window is parked on (or nearest to, mid-scroll).
-  // Rounding is what makes a half-finished swipe resolve to whichever
-  // tier it is closest to.
+  // Which tier the window is currently parked on (or nearest to,
+  // mid-scroll). Rounding is what makes a half-finished swipe resolve
+  // to whichever tier it is closest to.
   function indexFromScroll() {
     var step = slideStep()
     if (!step) return index
     return Math.max(0, Math.min(TIERS.length - 1, Math.round(view.scrollLeft / step)))
   }
 
-  // ---- Per-item reveal ----
-  // The dish tiles and menu groups (.package-reveal) stagger in on
-  // scroll through their own observer, not main.js's shared
-  // [data-reveal] one — see .package-reveal's CSS comment for why it
-  // can't share that property. Two cases override the scroll
-  // behaviour:
-  //   • A tier switch isn't a scroll — the visitor is already looking
-  //     at it. Its items are revealed outright rather than waiting on
-  //     an intersection that may never come, since an off-screen tier
-  //     sits outside the viewport horizontally.
-  //   • On a swipe they're revealed with no motion at all
-  //     (.package-reveal-instant): content assembling itself while
-  //     the track is still moving is what read as "layout shift".
-  var itemObserver = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return
-        entry.target.classList.add("is-revealed")
-        itemObserver.unobserve(entry.target)
-      })
-    },
-    { threshold: 0.18, rootMargin: "0px 0px -8% 0px" },
-  )
-  ;[].slice.call(document.querySelectorAll(".package-reveal")).forEach(function (el) {
-    itemObserver.observe(el)
-  })
-
-  function revealItems(root, instant) {
-    if (!root) return
-    ;[].slice.call(root.querySelectorAll(".package-reveal")).forEach(function (el) {
-      if (instant) el.classList.add("package-reveal-instant")
-      el.classList.add("is-revealed")
-      itemObserver.unobserve(el)
-    })
-  }
-  // Runs once, when a touch drag first starts: every tier's items land
-  // in final position immediately, so whatever slides into view is
-  // already fully formed. All three at once costs one repaint rather
-  // than one per tier, mid-swipe. Clicks never trigger it, so the tab
-  // bar keeps its staggered reveal.
-  var itemsAllRevealed = false
-  function revealEverythingInstantly() {
-    if (itemsAllRevealed) return
-    itemsAllRevealed = true
-    revealItems(track, true)
-  }
-
   // ---- The two motions ----
   // Parks the window on a tier. Always instant: a click is the only
   // caller, and a click's motion is the content fade below, not
   // visible travel — which is also why .package-tier-view carries no
-  // scroll-behavior: smooth. A swipe never comes through here; the
-  // browser is already scrolling, and scrollLeft is what this reads
-  // the result back from.
+  // scroll-behavior: smooth. A swipe never comes through here at all;
+  // the browser is already scrolling, and scrollLeft is where this
+  // reads the result back from rather than something it sets.
+  //
+  // Writing scrollLeft (not scrollTo with a behavior) keeps it a
+  // single synchronous jump that cannot interleave with a snap
+  // animation already in flight.
   function positionWindow() {
     view.scrollLeft = index * slideStep()
   }
@@ -199,10 +171,12 @@ import "./photo-carousel.js"
   // the new height (init, resize — neither is "a tier change" with
   // motion of its own); true lets the CSS transition ease it,
   // alongside the content fade / swipe snap already playing.
-  // heightLocked is held while the window is scrolling, when
-  // expandViewForScroll() owns the height instead — without it the
-  // observer below would re-collapse the window mid-swipe and
-  // re-clip the incoming tier.
+  //
+  // heightLocked is held for as long as the window is scrolling,
+  // while expandViewForScroll() below owns the height instead.
+  // Without it the observer further down would re-collapse the window
+  // to the active panel mid-swipe, re-clipping the incoming tier that
+  // expansion exists to stop clipping.
   var heightLocked = false
   var heightSettleTimer = null
   function syncViewHeight(animate) {
@@ -219,15 +193,22 @@ import "./photo-carousel.js"
     view.style.transition = ""
   }
   // ---- Height while the window is scrolling ----
-  // A swipe shows two panels at once while the window is sized to
-  // one, so scrolling towards a taller tier brought it in with its
-  // lower items clipped for the whole gesture. Expanding to the
-  // tallest for the duration means nothing is clipped while anything
-  // moves; a short tier briefly carries dead space instead, which is
-  // the lesser evil. Instant, not animated: an animated height forces
-  // layout and paint of every tier panel on each frame it runs for,
-  // and doing that mid-scroll is exactly the main-thread work native
-  // scrolling was adopted to avoid.
+  // A swipe shows TWO panels at once, side by side, while the window
+  // is only ever sized to ONE of them — so scrolling towards a taller
+  // tier brought it in with its lower items cut off by the window's
+  // own overflow, for the whole gesture. Expanding to the tallest of
+  // the three for the duration means nothing is clipped while
+  // anything is moving. A short tier briefly carries dead space below
+  // it instead, which is the lesser evil of the two and only lasts
+  // the gesture.
+  //
+  // Deliberately instant (animate=false): an animated height forces
+  // layout and paint of a subtree holding all three full tier panels
+  // on every frame it runs for, and doing that while the browser is
+  // mid-scroll is exactly the kind of main-thread work that makes a
+  // native scroll stutter — the one thing moving to native scrolling
+  // was meant to stop. One instant resize as the scroll starts, one
+  // eased settle once it has stopped.
   function tallestPanelHeight() {
     return TIERS.reduce(function (tallest, tierKey) {
       var panel = panelFor(tierKey)
@@ -244,10 +225,13 @@ import "./photo-carousel.js"
     void view.offsetHeight
     view.style.transition = ""
   }
-  // Re-armed on every scroll event, so it fires only once the window
-  // has stopped — including when a half-swipe snaps back to the tier
-  // it started from, which changes no tier and would otherwise leave
-  // the window expanded indefinitely.
+  // Armed by the scroll handler and re-armed on every scroll event,
+  // so it only fires once the window has actually stopped — including
+  // when a half-swipe snaps back to the tier it started from, which
+  // changes no tier at all and so would otherwise leave the window
+  // expanded indefinitely. Eased, not instant: by then the height is
+  // the only thing moving, so it costs nothing to let it ease rather
+  // than snapping the page shorter underfoot.
   function settleViewHeightAfterScroll() {
     clearTimeout(heightSettleTimer)
     heightSettleTimer = setTimeout(function () {
@@ -255,13 +239,24 @@ import "./photo-carousel.js"
       syncViewHeight(true)
     }, SCROLL_SETTLE_MS)
   }
-  // The explicit height was only ever measured on init, tier change
-  // and window resize. Any other reason a panel's height changes went
-  // unnoticed, and since the window clips, a height measured too
-  // short silently swallows the bottom of the panel — the webfonts
-  // are the clearest case, since line counts shift when they swap in
-  // and no resize event fires for that. Watching the panels catches
-  // the whole class of causes. Guarded per CLAUDE.md bug #4.
+  // ---- Keeping that height honest ----
+  // The explicit height above was only ever (re)measured on init, on
+  // a tier change, and on window resize. Any OTHER reason a panel's
+  // own height changes went unnoticed, and since the window clips,
+  // a height measured too short silently swallowed the bottom of the
+  // panel — items simply missing, with nothing to hint why. The
+  // webfonts are the clearest case: all three load async, and when
+  // Fraunces/Newsreader/Inter swap in, line counts shift and every
+  // panel's real height moves with them — no resize event fires for
+  // that. The damage scales with how narrow the layout is, because
+  // one column wraps far more lines than three, which is why this
+  // showed up on phones and tablets specifically.
+  //
+  // Watching the panels themselves fixes the whole class of causes at
+  // once (fonts, a late image decode, anything that reflows) rather
+  // than chasing each trigger separately. Guarded for ResizeObserver
+  // per CLAUDE.md bug #4 — where it's missing, behaviour is simply
+  // what it was before.
   if (window.ResizeObserver) {
     var panelHeightObserver = new ResizeObserver(function () {
       if (heightLocked) return
@@ -274,8 +269,8 @@ import "./photo-carousel.js"
   }
 
   // ---- Committing a tier change ----
-  // A second handle on main.js's shared tab-group helper for the real
-  // .tab-bar (main.js already wired one itself on load). Holding one
+  // A second handle on tabs.js's shared tab-group helper for the real
+  // .tab-bar (tabs.js already wired one itself on load). Holding one
   // here lets a swipe move the pill and set aria-selected directly,
   // instead of faking a click on the tab button to reach that.
   var tabGroup = window.BacchusTabs
@@ -295,11 +290,13 @@ import "./photo-carousel.js"
   // The single path every tier change goes through, whichever control
   // triggered it.
   //
-  // viaScroll separates the two callers, and the difference is not
-  // cosmetic: a click has to MOVE the window, whereas a scroll has
-  // already moved it and must not be told to move again — writing
-  // scrollLeft from inside a scroll handler is how a scroll-driven
-  // carousel fights its own momentum.
+  // viaScroll distinguishes the two callers, and the difference is
+  // not cosmetic: a click has to MOVE the window (positionWindow),
+  // whereas a scroll has already moved it and must not be told to
+  // move again — writing scrollLeft from inside a scroll handler is
+  // how a scroll-driven carousel ends up fighting its own momentum.
+  // It is also the "did this gesture have motion of its own" flag the
+  // fade and reveal already keyed off.
   function goToIndex(newIndex, viaScroll) {
     newIndex = Math.max(0, Math.min(TIERS.length - 1, newIndex))
     var changed = newIndex !== index
@@ -309,11 +306,12 @@ import "./photo-carousel.js"
     var tierKey = TIERS[index]
     history.replaceState(null, "", "#" + tierKey)
     applyTierState(tierKey)
-    // A swipe's height is owned by expandViewForScroll() /
-    // settleViewHeightAfterScroll() instead; animating it here too
-    // would put per-frame layout back under a live scroll.
+    // Clicks still ease the height as part of their own motion. A
+    // swipe's height is owned by expandViewForScroll() /
+    // settleViewHeightAfterScroll() instead — animating it here as
+    // well would put per-frame layout back underneath a live scroll,
+    // which is exactly what those two exist to avoid.
     if (!viaScroll) syncViewHeight(true)
-    revealItems(panelFor(tierKey), viaScroll)
     if (!viaScroll) playContentFade()
   }
 
@@ -334,26 +332,28 @@ import "./photo-carousel.js"
 
   // ---- Swipe ----
   // There is no swipe code any more, and that is the point. The
-  // browser scrolls and snaps the window itself; everything below
-  // only watches that happen and keeps the rest of the UI in step. A
+  // browser scrolls and snaps the window on its own; everything below
+  // only WATCHES that happen and keeps the rest of the UI in step. A
   // swipe never writes scrollLeft (only positionWindow() does, for
   // clicks, resize and the initial landing), so a gesture in progress
-  // and this file cannot disagree about where the track is.
+  // and this file can never disagree about where the track is.
   //
-  // Nothing writes to .panels any more either: it is the scroll
-  // CONTENT now, so a leftover transform would shift it on top of the
-  // scroll offset and push the tier the window had correctly scrolled
-  // to straight back out of sight — which looks exactly like "the
-  // items are missing". If a transform ever reappears on this
-  // element, suspect that first.
+  // Nothing anywhere writes to .panels any more, which is worth
+  // stating outright: .panels is the scroll CONTENT now, so the old
+  // drag's `track.style.transform` left in place alongside native
+  // scrolling shifted it on top of the scroll offset, and the tier
+  // the window had correctly scrolled to got pushed straight back
+  // out of sight. That was a real build, and it looked exactly like
+  // "the items are missing" — so if a transform ever reappears on
+  // this element, that is the first thing to suspect.
   var scrollFrame = null
   var scrollingClassTimer = null
 
   // Suppresses the two effects that otherwise recompute against the
   // moving content every frame (see body.package-tier-dragging in the
-  // <style> above). Re-armed on every scroll event and timed off once
-  // the scroll settles — no event reliably reports "a scroll has
-  // finished" across the browsers this has to support.
+  // <style> above). Re-armed on every scroll event and timed off
+  // after the scroll settles — there is no event that reliably says
+  // "a scroll has finished" in the browsers this has to support.
   function setScrollingState() {
     clearTimeout(scrollingClassTimer)
     document.body.classList.add("package-tier-dragging")
@@ -367,15 +367,20 @@ import "./photo-carousel.js"
     var i = indexFromScroll()
     if (i !== index) goToIndex(i, true)
   }
-  // Whether the window sits exactly on the active tier rather than
-  // between two. This is what separates a real swipe from the scroll
-  // event a CLICK causes by writing scrollLeft: a click lands exactly
-  // on a tier, reads as parked, and skips the motion handling below —
-  // which it must, since it has already set the correct height, and
-  // letting the swipe path also expand to the tallest tier made every
-  // click flicker. Derived from position rather than a "this scroll
-  // was mine" flag, because such a flag leaks whenever the write
-  // doesn't actually move anything.
+  // Whether the window is sitting exactly on the active tier, as
+  // opposed to somewhere between two of them. This is what separates
+  // a real swipe from the scroll event that a CLICK causes by writing
+  // scrollLeft: a click lands exactly on a tier, so it reads as
+  // parked and skips the motion handling below, which it must — the
+  // click has already set the correct height itself, and letting the
+  // swipe path also expand to the tallest tier made every click
+  // flicker (right height, tallest, right height again).
+  //
+  // Derived from the scroll position rather than a "this scroll was
+  // mine" flag on purpose: a flag set before writing scrollLeft
+  // leaks when the write doesn't actually move anything (clicking the
+  // tier already showing fires no scroll event at all), and would
+  // then swallow the start of the next real swipe.
   function isParkedOnActiveTier() {
     var step = slideStep()
     return !step || Math.abs(view.scrollLeft - index * step) < 1
@@ -387,19 +392,27 @@ import "./photo-carousel.js"
         setScrollingState()
         if (!heightLocked) expandViewForScroll()
       }
-      // Armed unconditionally and re-armed each event, so heightLocked
-      // always has something coming to release it.
+      // Armed unconditionally, and re-armed on every event, so it
+      // fires once the window has come to rest — and so heightLocked
+      // always has something coming to release it, whichever branch
+      // above ran.
       settleViewHeightAfterScroll()
-      // At most one position read per rendered frame.
+      // At most one position read per rendered frame; scroll events
+      // fire faster than the display refreshes.
       if (scrollFrame === null) scrollFrame = requestAnimationFrame(readScrollPosition)
     },
     { passive: true },
   )
-  // Re-parks the window: slideStep() is read live, so an offset that
-  // pointed at a tier before a resize or rotation would otherwise
-  // point between two afterwards. The re-arm matters because
-  // heightLocked stays true through the settle window and
-  // expandViewForScroll() clears the pending settle.
+  // Re-parks the window: slideStep() is read live, so the scroll
+  // offset that pointed at a tier before a resize or rotation would
+  // otherwise point between two of them afterwards.
+  //
+  // The re-arm matters: heightLocked stays true through the settle
+  // window after a scroll stops, and expandViewForScroll() clears
+  // that pending settle. Without arming a fresh one here, a resize
+  // landing in those few hundred milliseconds would strand the
+  // window expanded with heightLocked on — which also disables the
+  // observer above, so the height would stay wrong permanently.
   window.addEventListener("resize", function () {
     positionWindow()
     if (!heightLocked) {
@@ -427,9 +440,6 @@ import "./photo-carousel.js"
   applyTierState(TIERS[index])
   syncViewHeight(false)
   playContentFade()
-  // A hash landing straight on a tier is "already looking at it", so
-  // its items skip the scroll-stagger; a plain load keeps it.
-  if (landedOnHash) revealItems(panelFor(TIERS[index]), false)
 
   // Shows the sticky switcher once its trigger point has scrolled out
   // of view above AND hides it again once the NEXT section's own
