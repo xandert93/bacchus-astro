@@ -3,6 +3,7 @@
 // section, footer, script) comes from BaseLayout; this file holds only what
 // is unique to the homepage.
 import BaseLayout from "../layouts/BaseLayout.astro"
+import HeroFrame from "../components/HeroFrame.astro"
 import HeroImage from "../components/HeroImage.astro"
 import EnquirySection from "../components/EnquirySection.astro"
 import Testimonials from "../components/Testimonials.astro"
@@ -11,18 +12,15 @@ import Photo from "../components/Photo.astro"
 ---
 
 <BaseLayout title="Bacchus — Events in Mdina, Malta" showEnquireLink>
-  <section class="hero" id="top">
-    <div class="hero-media">
-      <HeroImage
-        id="heroImg"
-        src="venue/ballroom-night"
-        alt="The Bacchus function room lit for an evening reception, with chandeliers and candlelight"
-        heroHeightVh={100}
-      />
-    </div>
-    <div class="hero-scrim"></div>
-    <div class="particles" id="particles"></div>
-    <div class="portcullis">
+  <HeroFrame id="top">
+    <HeroImage
+      slot="media"
+      id="heroImg"
+      src="venue/ballroom-night"
+      alt="The Bacchus function room lit for an evening reception, with chandeliers and candlelight"
+      heroHeightVh={100}
+    />
+    <div slot="overlay" class="portcullis">
       <div class="bar"></div>
       <div class="bar"></div>
       <div class="bar"></div>
@@ -32,48 +30,44 @@ import Photo from "../components/Photo.astro"
       <div class="bar"></div>
       <div class="bar"></div>
     </div>
-    <div class="hero-content">
-      <div class="wrap">
-        <h1>
-          <span class="hero-text-mask">
-            <span style="transition-delay: 1.55s">The Silent City</span>
-          </span>
-          <span class="hero-text-mask">
-            <span style="transition-delay: 1.72s">
-              keeps <em>one</em> table
-            </span>
-          </span>
-        </h1>
-        <p class="sub fade-up" style="transition-delay: 1.95s">
-          Two vaulted 17th-century chambers hold our restaurant table, while weddings and
-          private events unfold separately across the Hall, Terrace and Secret Garden.
-        </p>
-        <div class="kicker fade-up" style="transition-delay: 2.15s">
-          Mdina, Malta — within the walls since 1660
-        </div>
-        <div class="hero-ctas fade-up" style="transition-delay: 2.32s">
-          <a href="#enquire" class="button button-gradient button-shimmer">
-            <span>Plan your event</span>
-            <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-              <path
-                d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
-                stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </a>
-          <a href="/gallery" class="button button-ghost">
-            <span>See the rooms</span>
-          </a>
-        </div>
-      </div>
+    <h1>
+      <span class="hero-text-mask">
+        <span style="transition-delay: 1.55s">The Silent City</span>
+      </span>
+      <span class="hero-text-mask">
+        <span style="transition-delay: 1.72s">
+          keeps <em>one</em> table
+        </span>
+      </span>
+    </h1>
+    <p class="sub fade-up" style="transition-delay: 1.95s">
+      Two vaulted 17th-century chambers hold our restaurant table, while weddings and
+      private events unfold separately across the Hall, Terrace and Secret Garden.
+    </p>
+    <div class="kicker fade-up" style="transition-delay: 2.15s">
+      Mdina, Malta — within the walls since 1660
     </div>
-    <div class="scroll-cue">
+    <div class="hero-ctas fade-up" style="transition-delay: 2.32s">
+      <a href="#enquire" class="button button-gradient button-shimmer">
+        <span>Plan your event</span>
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path
+            d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+      <a href="/gallery" class="button button-ghost">
+        <span>See the rooms</span>
+      </a>
+    </div>
+    <div slot="after" class="scroll-cue">
       Scroll<i></i>
     </div>
-  </section>
+  </HeroFrame>
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track" id="mtrack">
       <span>Weddings</span>
@@ -985,5 +979,13 @@ import Photo from "../components/Photo.astro"
     .arch-dish {
       aspect-ratio: 4/5;
     }
+  }
+  .hero-text-mask > :global(span) {
+    display: block;
+    transform: translateY(105%);
+    transition: transform 1.15s var(--ease);
+  }
+  :global(.loaded) .hero-text-mask > :global(span) {
+    transform: translateY(0);
   }
 </style>

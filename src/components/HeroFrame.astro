@@ -1,0 +1,206 @@
+---
+// The shell every hero shares — the homepage's portcullis hero and each
+// subpage's PageHero: a full-bleed photograph, the scrim over it, ambient
+// particles and the content column, plus the staggered fade-up entrance.
+// Callers fill it:
+//   slot "media"   — inside .hero-media, normally a <HeroImage>
+//   slot "overlay" — layered over the photograph (the homepage's portcullis
+//                    bars, the package pages' "photography to follow" label).
+//                    Rendered before the particles, so at an equal z-index
+//                    the particles drift over it.
+//   default slot   — the content column: h1, paragraph, CTAs
+//   slot "after"   — after the content (the homepage's scroll cue)
+//
+// The content arrives through slots, so it carries the CALLER's scoping
+// attribute, not this one's — which is why the rules below that style the
+// h1, the paragraph and the fade-up elements wrap them in :global().
+import Particles from "./Particles.astro"
+
+interface Props {
+  // The compact 62vh subpage variant.
+  small?: boolean
+  id?: string
+  // An extra class on .hero-media (the package pages' black placeholder).
+  mediaClass?: string
+}
+
+const { small = false, id, mediaClass } = Astro.props
+---
+
+<section class:list={["hero", { "hero-sm": small }]} id={id}>
+  <div class:list={["hero-media", mediaClass]}>
+    <slot name="media" />
+  </div>
+  <div class="hero-scrim"></div>
+  <slot name="overlay" />
+  <Particles id="particles" />
+  <div class="hero-content">
+    <div class="wrap">
+      <slot />
+    </div>
+  </div>
+  <slot name="after" />
+</section>
+
+<style>
+  /* The content column arrives through slots, so its elements carry the
+     caller's scoping attribute rather than this file's: hence :global()
+     around the h1, the paragraph, the CTA row and .fade-up. */
+  .hero :global(.eyebrow) {
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .hero :global(.eyebrow)::before {
+    background: var(--gold-2);
+  }
+  .hero :global(.sub) {
+    font-family: "Newsreader", Georgia, serif;
+  }
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .hero-media {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    /* Entrance "settle" (2026-10-04): the photo arrives slightly enlarged and
+       eases back to its resting size as the hero copy animates in, so the
+       image is part of the entrance rather than sitting static under it.
+       On the WRAPPER, not the <img>: the img already carries the endless
+       Ken Burns drift below and, on the homepage, a scroll parallax — a
+       transform here composes with both instead of replacing either.
+       Transform only, no opacity: the hero photo is usually the page's
+       Largest Contentful Paint, which is timed from when it first becomes
+       visible, so fading it in would make every page measure slower. Scale
+       costs nothing there. On the homepage it runs behind the portcullis
+       bars, finishing as the last bar clears. */
+    animation: hero-settle 1.8s var(--ease) both;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-media {
+      animation: none;
+    }
+  }
+  .hero-media :global(img) {
+    width: 100%;
+    height: 118%;
+    object-fit: cover;
+    object-position: center 42%;
+    transform: scale(1.12);
+    animation: kenburns 26s var(--ease-io) infinite alternate;
+    will-change: transform;
+  }
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(10, 9, 6, 0.72) 0%,
+        rgba(10, 9, 6, 0.28) 30%,
+        rgba(10, 9, 6, 0.72) 68%,
+        rgba(10, 9, 6, 0.96) 100%
+      ),
+      radial-gradient(
+        120% 80% at 50% 100%,
+        rgba(var(--oxblood-rgb), 0.28),
+        transparent 60%
+      );
+  }
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    padding-bottom: clamp(50px, 8vh, 90px);
+    padding-top: 140px;
+  }
+  .hero :global(h1) {
+    color: var(--limestone-2);
+    font-size: clamp(34px, 6.9vw, 99px);
+    font-weight: 300;
+    max-width: 15ch;
+  }
+  .hero :global(h1) :global(em) {
+    /* Gold gradient text, same recipe as .on-dark h2 em — replaces the flat
+       --gold-2. Padding/negative-margin trick matches h2 em above: em is
+       italic by default (UA stylesheet), and the slant can lean a glyph's
+       tip past the element's own content box, which background-clip:text
+       has no gradient painted past. */
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    padding: 0 0.16em;
+    margin: 0 -0.16em;
+  }
+  .hero :global(.sub) {
+    max-width: 46ch;
+    color: rgba(var(--limestone-rgb), 0.74);
+    margin-top: 24px;
+    font-size: clamp(14px, 1.3vw, 16px);
+    font-weight: 300;
+  }
+  :global(.hero-ctas) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 24px;
+  }
+  :global(.fade-up) {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+      opacity 0.9s var(--ease),
+      transform 1s var(--ease);
+  }
+  :global(.loaded) :global(.fade-up) {
+    opacity: 1;
+    transform: none;
+  }
+  .hero-sm .hero-content {
+    padding-top: 160px;
+    padding-bottom: clamp(46px, 7vh, 76px);
+  }
+  @media (max-width: 820px) {
+    .hero-content {
+      padding-top: 120px;
+    }
+  }
+  @media (max-width: 820px) {
+    .hero-sm .hero-content {
+      padding-top: 128px;
+    }
+  }
+  @media (max-width: 620.98px) {
+    :global(.hero-ctas) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  @media (max-width: 620.98px) {
+    :global(.hero-ctas) :global(.button) {
+      width: 100%;
+      max-width: 300px;
+      justify-content: center;
+    }
+  }
+  /* Compact sub-page hero (shorter than the homepage hero). Last, so it
+     wins over the .hero rules above at equal specificity */
+  .hero-sm {
+    min-height: 62vh;
+    min-height: 62svh;
+  }
+  .hero-sm :global(h1) {
+    font-size: clamp(32px, 6vw, 74px);
+  }
+</style>

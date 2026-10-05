@@ -1,4 +1,5 @@
 ---
+import Particles from "./Particles.astro"
 import Photo from "./Photo.astro"
 // "From our guestbook" rotator. Empty shells here; the four testimonials
 // themselves live in testimonials.js, which fills the quote, meta and picker cards.
@@ -11,7 +12,7 @@ const { backgroundImage } = Astro.props
 
 <section class="section-padding quote testimonials" id="testimonials">
   <Photo class="bgimg" src={backgroundImage} alt="" sizes="100vw" loading="lazy" />
-  <div class="particles" id="particles2"></div>
+  <Particles id="particles2" />
   <div class="wrap">
     <div class="eyebrow" data-reveal>
       From our guestbook

@@ -1,0 +1,40 @@
+---
+// A layer of slowly rising specks behind a section's content (the heroes and
+// the testimonials). The specks themselves are created by site.js, which
+// finds the layer by id and fills it — 20 in a hero, 10 in the testimonials —
+// and skips it entirely under reduced motion. Because a script creates them,
+// they never carry this component's scoping attribute, so their rules below
+// are :global().
+interface Props {
+  // Must match an entry in site.js's particle list.
+  id: "particles" | "particles2"
+}
+---
+
+<div class="particles" id={Astro.props.id}></div>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 2;
+    pointer-events: none;
+  }
+  :global(.particle) {
+    position: absolute;
+    bottom: -10px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(var(--gold-rgb), 0.55);
+    animation: drift linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.particle) {
+      display: none;
+    }
+  }
+</style>
