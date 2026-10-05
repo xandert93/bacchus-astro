@@ -1,8 +1,10 @@
 // Enquiry-form copy shared by every page's wizard.
 //
-// CHIP_NOTES duplicates the object of the same name in main.js, which swaps
-// the note when a visitor changes chip. Both must stay in step until main.js
-// is split up and can import this file instead.
+// CHIP_NOTES is read by both EnquirySection.astro (the note rendered on the
+// server for the page's default event type) and enquiry.js (the note swapped
+// in when a visitor changes chip). Kept close in length to each other on
+// purpose (79-88 characters): they swap in place, and very different lengths
+// wrapped to different line counts, causing layout shift on every switch.
 
 export const EVENT_TYPES = ["Wedding", "Corporate", "Celebration", "Other"] as const
 export type EventType = (typeof EVENT_TYPES)[number]
