@@ -97,13 +97,23 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 - `src/data/enquiry.ts` — event types and chip notes. Read by both
   `EnquirySection.astro` and `enquiry.js` — one list.
 - `src/styles/global.css` — the prototype's `styles.css`, imported once by
-  the layout. Being moved, a component at a time, into each component's own
-  scoped `<style>` — FAQ done first (2026-10-05). The recipe: take a
-  baseline with `scripts/style-snapshot.mjs`, move the rules, re-snapshot,
-  `scripts/style-diff.mjs` must show 0 changes. Watch for styles of
-  elements a SCRIPT creates (testimonial cards, calendar cells): those never
-  get Astro's scoping attribute, so they need `:global()` or must stay
-  global.
+  the layout. Rules that belong to one component or one page now live in
+  that file's own scoped `<style>` (2026-10-05: 16 components, plus the
+  homepage, weddings and gallery pages — 10,299 lines down to ~5,460). What
+  is left is genuinely shared (tokens, base type, buttons, tabs, the wizard,
+  the calendar, package grids) or styles elements a SCRIPT creates or
+  toggles (calendar cells, nav dropdown state), which never get Astro's
+  scoping attribute and so must stay global.
+  The recipe for any further move: `scripts/scope-styles.mjs <Component |
+  pages/route>` does it mechanically; take a `scripts/style-snapshot.mjs`
+  baseline before, re-snapshot after, `scripts/style-diff.mjs` must show 0
+  changes, and `scripts/state-diff.mjs <old dist> <new dist>` must say
+  "same" for every interaction state. One known blind spot in the mover: a
+  bare-tag rule (`.nav-dd-panel-media img`) passes if the component's markup
+  has that tag ANYWHERE, even when the matching element is rendered by a
+  child component (NavPanelPhoto) — which is why SiteHeader still reports
+  11 movable rules that must not move. Node in Git Bash: `/tmp` means
+  `C:\tmp`, not Git Bash's `/tmp`.
 - `src/scripts/` — one module per feature, each loaded by the component or
   page that needs it, so a page only ships the JS it uses. `BaseLayout` loads
   `site.js` (loaded class, particles, `[data-reveal]`, safe reveals) and

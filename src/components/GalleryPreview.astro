@@ -63,3 +63,13 @@ const tag = category[0].toUpperCase() + category.slice(1)
     </div>
   </div>
 </section>
+
+<style>
+  /* Scoped to this component (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  @media (min-width: 981px) {
+    .gallery-grid.gallery-grid-four-col {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

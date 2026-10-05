@@ -27,3 +27,54 @@ const { steps } = Astro.props
     </div>
   </div>
 </section>
+
+<style>
+  /* Scoped to this component (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* ---------- FAQ accordion: styles live in FaqSection.astro ---------- */
+  /* ---------- Process steps ---------- */
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(20px, 2.4vw, 30px);
+    counter-reset: step;
+  }
+  .process-step {
+    position: relative;
+    padding-top: 22px;
+    border-top: 1px solid rgba(var(--gold-rgb), 0.35);
+  }
+  .process-step::before {
+    counter-increment: step;
+    content: counter(step, decimal-leading-zero);
+    font-family: "Fraunces", serif;
+    font-size: 15px;
+    color: var(--gold-2);
+    display: block;
+    margin-bottom: 16px;
+  }
+  .process-step h4 {
+    font-size: 17px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+  .process-step p {
+    font-size: 13.5px;
+    color: var(--muted);
+  }
+  @media (max-width: 980.98px) {
+    .process-steps {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 620.98px) {
+    .process-steps {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 620.98px) {
+    .process-step:first-child {
+      border-top: none;
+    }
+  }
+</style>

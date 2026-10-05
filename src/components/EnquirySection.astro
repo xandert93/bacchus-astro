@@ -824,3 +824,779 @@ const isWedding = eventType === "Wedding"
 <script>
   import "../scripts/enquiry.js"
 </script>
+
+<style>
+  /* Scoped to this component (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .enquire {
+    position: relative;
+    background:
+      radial-gradient(120% 80% at 85% 0%, rgba(var(--gold-rgb), 0.1), transparent 60%),
+      linear-gradient(180deg, #f3eddf, var(--paper) 55%, var(--paper));
+    overflow: hidden;
+  }
+  .enquire::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(var(--bronze-rgb), 0.45),
+      transparent
+    );
+  }
+  /* Same trick the wizard steps use (.wizard-step.active{display:contents})
+       — removes .enquiry-intro's own box so its children (eyebrow, h2, lead,
+       trust-rail) become direct items of .grid's own grid, sitting alongside
+       .enquiry-form as genuine siblings, which is what lets .trust-rail below get
+       reordered after the form specifically rather than always sitting right
+       after the lead paragraph. Needs to beat .enquiry-form's own order:2 (set at
+       the shared 980px breakpoint above and still in effect here) — anything
+       less than that just lands it back before the form. */
+  @media (max-width: 920.98px) {
+    .enquiry-intro {
+      display: contents;
+    }
+  }
+  @media (max-width: 920.98px) {
+    .enquire .trust-rail {
+      order: 3;
+    }
+  }
+  @media (max-width: 920.98px) {
+    .enquiry-form {
+      margin-top: clamp(32px, 5vw, 72px);
+    }
+  }
+  .enquire .trust-rail {
+    /* Flat 24px, matching the sitewide convention for a list following intro
+       copy (e.g. .split ul.check, .tab-panel ul, .deposit-box). */
+    margin-top: 24px;
+    display: grid;
+    gap: clamp(8px, 2vw, 12px);
+  }
+  .enquire .trust-rail .trust-item-icon {
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    color: var(--bronze);
+  }
+  .enquire .trust-rail p {
+    margin-top: clamp(8px, 2vw, 12px);
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--muted-ink);
+  }
+  .enquire .rail-photo {
+    margin-top: 26px;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 16 / 10;
+  }
+  .enquire .rail-photo figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 40px 20px 16px;
+    background: linear-gradient(transparent, rgba(var(--ink-rgb), 0.82));
+    color: rgba(var(--limestone-rgb), 0.9);
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 13.5px;
+    font-style: italic;
+  }
+  @media (max-width: 920.98px) {
+    .enquire .rail-photo {
+      display: none;
+    }
+  }
+  /* The gold sweep-underline is part of the recessed-panel treatment being
+     replaced above. */
+  :global(.field-input) .field-underline {
+    display: none;
+  }
+  /* Custom calendar icon (.field-date-icon in the markup), matching the
+     trust-rail icons' own line-icon treatment (stroke-width 1.6, bronze)
+     instead of the browser's default grey glyph. The native
+     ::-webkit-calendar-picker-indicator stays in place underneath (just
+     invisible), so it's still the thing actually receiving the click — this
+     SVG is purely visual. */
+  .field-date-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--bronze);
+    pointer-events: none;
+  }
+  .field-note {
+    font-size: 12px;
+    color: var(--muted-ink);
+    margin-top: 8px;
+    font-family: "Newsreader", Georgia, serif;
+  }
+  .error {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 11.5px;
+    color: var(--oxblood);
+    margin-top: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s var(--ease);
+  }
+  :global(.field.bad) .error {
+    margin-top: 8px;
+    height: 18px;
+    opacity: 1;
+  }
+  :global(.field.bad) .field-underline {
+    background: rgba(var(--oxblood-rgb), 0.4);
+  }
+  :global(.field.bad) .field-underline::after {
+    width: 100%;
+    background: var(--oxblood);
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 5px;
+  }
+  .chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 0px;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
+    border-radius: var(--radius-card);
+    font-family: "Inter", sans-serif;
+    font-size: 10.5px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
+    background: var(--paper);
+    color: var(--ink);
+    transition:
+      background-color 0.3s var(--ease),
+      border-color 0.3s var(--ease),
+      color 0.3s var(--ease),
+      transform 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+  @media (hover: hover) {
+    .chip:hover {
+      background-color: var(--limestone);
+    }
+  }
+  .chip.is-selected {
+    background: var(--ink);
+    color: var(--limestone);
+    border-color: var(--ink);
+    box-shadow: 0 3px 12px rgba(var(--ink-rgb), 0.12);
+  }
+  @media (hover: hover) {
+    .chip.is-selected:hover {
+      background: var(--ink-2);
+      border-color: var(--ink-2);
+    }
+  }
+  @media (hover: none) {
+    .chip:active {
+      background-color: var(--limestone);
+    }
+  }
+  @media (hover: none) {
+    .chip.is-selected:active {
+      background: var(--ink-2);
+      border-color: var(--ink-2);
+    }
+  }
+  /* Equal-width chips (event type + "how should we get back to you") for
+       non-mobile only — content-hugging below 620px instead. */
+  @media (min-width: 621px) {
+    :global(#chips) .chip,
+    :global(#prefer) .chip {
+      flex: 1 1 0;
+      text-align: center;
+    }
+  }
+  /* ---------- Enquiry form wizard ---------- */
+  .wizard-step {
+    display: none;
+  }
+  .wizard-step.active {
+    display: contents;
+  }
+  .wizard-progress {
+    flex: 1 1 100%;
+    margin-bottom: 0;
+    position: relative;
+    /* 8px is the default (matches the section's own 1-column collapse below
+       920px); 4px above that, once the rail sits beside the form as a
+       genuine 2-column layout — see the min-width:921px override below. */
+    padding-top: 8px;
+  }
+  .wizard-count {
+    flex: 1 1 100%;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: -6px;
+  }
+  .wizard-count .wizard-count-title {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(21px, 2.4vw, 27px);
+    line-height: 1.15;
+  }
+  .wizard-steps {
+    display: flex;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .wizard-step-tab {
+    flex: 1;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.4;
+    transition: opacity 0.3s var(--ease);
+  }
+  .wizard-step-tab:disabled {
+    cursor: auto;
+  }
+  .wizard-step-tab.active,
+  .wizard-step-tab.done {
+    opacity: 1;
+  }
+  .wizard-step-tab .wizard-step-number {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.25);
+    display: grid;
+    place-items: center;
+    font-family: "Fraunces", serif;
+    font-size: 12px;
+    flex: none;
+    color: var(--ink);
+    background: #fff;
+    transition:
+      background-color 0.3s var(--ease),
+      border-color 0.3s var(--ease),
+      color 0.3s var(--ease);
+  }
+  .wizard-step-tab.active .wizard-step-number {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--limestone-2);
+  }
+  .wizard-step-tab.done .wizard-step-number {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+  .wizard-step-tab .wizard-step-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--muted-ink);
+  }
+  /* --wiz-tab-count (set inline on .wizard-progress, default 3 for pages not yet
+     migrated to the 4-step wizard) keeps this insets formula correct
+     regardless of how many .wizard-step-tabs actually exist: each tab's center
+     sits at 50%/N in from its edge, plus 11px to reach the tab circle's own
+     center (half its 22px width). .wizard-progress-line is absolutely positioned, so its
+     top is measured from .wizard-progress's own padding edge — a fixed origin
+     that doesn't shift just because padding-top grows, unlike the step
+     circles (real, in-flow content), which do — so top needs the same
+     padding-top added on top of its own 11px to stay centered on them, at
+     each of .wizard-progress's own two padding-top breakpoints below. */
+  .wizard-progress-line {
+    position: absolute;
+    top: 19px;
+    left: calc(50% / var(--wiz-tab-count, 3) + 11px);
+    right: calc(50% / var(--wiz-tab-count, 3) + 11px);
+    display: flex;
+    gap: 22px;
+    z-index: 0;
+  }
+  @media (min-width: 921px) {
+    .wizard-progress {
+      padding-top: 4px;
+    }
+  }
+  @media (min-width: 921px) {
+    .wizard-progress-line {
+      top: 15px;
+    }
+  }
+  .wizard-progress-line .wizard-progress-segment {
+    flex: 1;
+    border-top: 2px dotted rgba(var(--muted-ink-rgb), 0.2);
+    transition:
+      border-color 0.3s var(--ease),
+      border-top-style 0.3s var(--ease);
+  }
+  .wizard-progress-line .wizard-progress-segment.done {
+    border-top-style: solid;
+    border-top-color: var(--gold);
+  }
+  @media (max-width: 560px) {
+    .wizard-step-tab .wizard-step-label {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .wizard-progress-line {
+      left: calc(50% / var(--wiz-tab-count, 3) + 9px);
+      right: calc(50% / var(--wiz-tab-count, 3) + 9px);
+    }
+  }
+  .wizard-nav {
+    flex: 1 1 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    /* No margin-top of its own — the form's own flex gap (22px, see form{})
+       already spaces every row consistently, this one included; a bespoke
+       extra nudge here just meant the gap above the buttons didn't match
+       every other inter-field gap. */
+  }
+  .wizard-nav .wizard-spacer {
+    flex: 1;
+  }
+  /* .wizard-back-hidden (toggled by main.js instead of inline style.visibility —
+     see showStep()) keeps Back's layout space via visibility:hidden on step 1,
+     so Continue doesn't shift position once Back becomes visible on later
+     steps. Used to need a sub-480px override dropping this to display:none,
+     because Back's old ~125px text+icon pill plus Continue's own width
+     didn't fit even the narrowest phones — moot now that Back is a 50px
+     icon-only circle (see .wizard-back-circle below); that reserved space is
+     small enough to keep at every width, so the override was removed rather
+     than kept as dead weight. */
+  /* De-emphasized relative to Continue/Submit on purpose — a back action
+     shouldn't visually compete with the form's forward momentum, but
+     shouldn't be hard to find either. Reuses .availability.diary's own prev/next
+     circle-button treatment (styles.css), just sized up to 50px to match
+     .button's own height, so it reads as an
+     existing pattern on this site, not a one-off. */
+  .wizard-back-circle {
+    /* Matches .button's own height exactly (--button-height), so Back and
+       Continue/Submit sit at the same height in the row — still a circle
+       (equal width), just a bigger one than the original 40px. */
+    width: var(--button-height);
+    height: var(--button-height);
+    border-radius: 50%;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
+    background: transparent;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex: none;
+    transition:
+      background 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+  @media (hover: hover) {
+    .wizard-back-circle:hover {
+      background: var(--paper);
+      border-color: rgba(var(--muted-ink-rgb), 0.3);
+    }
+  }
+  @media (hover: none) {
+    .wizard-back-circle:active {
+      background: var(--paper);
+      border-color: rgba(var(--muted-ink-rgb), 0.3);
+    }
+  }
+  /* ---------- Guest-count stepper ---------- */
+  .guest-count-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 5px;
+  }
+  .guest-count-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.18);
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    display: grid;
+    place-items: center;
+    transition: all 0.3s var(--ease);
+  }
+  @media (hover: hover) {
+    .guest-count-button:hover {
+      background: var(--ink);
+      color: var(--limestone);
+      border-color: var(--ink);
+    }
+  }
+  @media (hover: none) {
+    .guest-count-button:active {
+      background: var(--ink);
+      color: var(--limestone);
+      border-color: var(--ink);
+    }
+  }
+  .guest-count-row input {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 22px;
+    text-align: center;
+    -moz-appearance: textfield;
+  }
+  .guest-count-row input::-webkit-outer-spin-button,
+  .guest-count-row input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .guest-count-hint {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 12px;
+    color: var(--muted-ink);
+    margin-top: 8px;
+    min-height: 20px;
+    transition: color 0.3s var(--ease);
+  }
+  /* ---------- Toggle-list (spaces / event style) ---------- */
+  .option-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 5px;
+  }
+  .option-card {
+    text-align: left;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
+    border-radius: var(--radius-card);
+    background: var(--paper);
+    padding: 13px 14px;
+    cursor: pointer;
+    transition: all 0.35s var(--ease);
+  }
+  @media (hover: hover) {
+    .option-card:hover {
+      border-color: rgba(var(--gold-rgb), 0.4);
+    }
+  }
+  .option-card.is-selected {
+    border-color: var(--gold);
+    background: var(--limestone-2);
+    box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.5);
+  }
+  /* ---------- "Anything else" character count ---------- */
+  .field-note-top {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+  /* Ring sits below the textarea, right-aligned, in normal flow — not
+     overlaid on the textarea's own corner, so .field-input's box never
+     carries reserved-but-invisible space. */
+  .message-field-input {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .character-count {
+    display: flex;
+    align-items: center;
+    margin-top: 6px;
+  }
+  .character-count-label {
+    font-family: "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-ink);
+  }
+  .character-count-label::after {
+    content: "·";
+    margin: 0 6px;
+    color: rgba(var(--muted-ink-rgb), 0.4);
+  }
+  .character-ring {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+  }
+  .character-ring-track {
+    fill: none;
+    stroke: rgba(var(--muted-ink-rgb), 0.14);
+    stroke-width: 2;
+  }
+  .character-ring-fill {
+    fill: none;
+    stroke: #2fae5c;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 87.96;
+    stroke-dashoffset: 87.96;
+    transition:
+      stroke-dashoffset 0.2s var(--ease),
+      stroke 0.2s var(--ease);
+  }
+  .character-ring-number {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Inter", sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--muted-ink);
+  }
+  /* Green (plenty of room) -> amber (200 chars left) -> red (50 chars left).
+     Deliberately true/vivid semantic colors rather than the calendar's own
+     muted green/amber/oxblood, which read too dark and close together to
+     tell apart at this small a size. */
+  .character-ring.amber .character-ring-fill {
+    stroke: #f2a30f;
+  }
+  .character-ring.amber .character-ring-number {
+    color: #b97800;
+  }
+  .character-ring.near-limit .character-ring-fill {
+    stroke: #e0413a;
+  }
+  .character-ring.near-limit .character-ring-number {
+    color: #d1372f;
+  }
+  /* ---------- Review step ---------- */
+  .review-note {
+    flex: 1 1 100%;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    border-radius: var(--radius-card);
+    background: rgba(var(--gold-rgb), 0.1);
+    box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.34);
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .review-list {
+    flex: 1 1 100%;
+    display: grid;
+    gap: 0;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.12);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+  .review-edit-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.18);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    padding: 6px 13px;
+    font-family: "Inter", sans-serif;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    transition:
+      border-color 0.3s var(--ease),
+      background-color 0.3s var(--ease),
+      transform 0.3s var(--ease);
+  }
+  @media (hover: hover) {
+    .review-edit-button:hover {
+      border-color: rgba(var(--gold-rgb), 0.4);
+      background: rgba(var(--gold-rgb), 0.06);
+      transform: translateY(-1px);
+    }
+  }
+  .consent {
+    flex: 1 1 100%;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    cursor: pointer;
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 12px;
+    color: var(--muted-ink);
+    line-height: 1.5;
+  }
+  .consent input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .consent .box {
+    flex: none;
+    width: 21px;
+    height: 21px;
+    margin-top: 2px;
+    border-radius: 5px;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.28);
+    display: grid;
+    place-items: center;
+    transition: all 0.3s var(--ease);
+  }
+  .consent input:checked + .box {
+    background: var(--gold);
+    border-color: var(--gold);
+    /* Matches .button-gradient's --fg on the same --gold background (submit button
+       included), rather than --paper, so the checkmark reads as the same "ink
+       on gold" combination used everywhere else that pairs the two. */
+    color: var(--ink);
+  }
+  .consent.bad .box {
+    border-color: var(--oxblood);
+    animation: shake 0.4s;
+  }
+  /* ---------- Sent state ---------- */
+  .availability.sent {
+    display: none;
+    text-align: center;
+    padding: clamp(30px, 5vw, 56px) clamp(18px, 3vw, 34px);
+  }
+  .availability.sent.show {
+    display: block;
+    animation: sentIn 0.7s var(--ease) both;
+  }
+  .availability.sent .seal {
+    width: 74px;
+    height: 74px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--bronze);
+    background: rgba(var(--gold-rgb), 0.14);
+    box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.5);
+  }
+  .availability.sent h3 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(26px, 3.2vw, 36px);
+  }
+  .availability.sent > p {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 16px;
+    color: var(--muted-ink);
+    max-width: 46ch;
+    margin: 12px auto 0;
+  }
+  .next-steps {
+    margin: 28px auto 0;
+    max-width: 420px;
+    text-align: left;
+    display: grid;
+    gap: 18px;
+  }
+  .next-steps .next-step-number {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: "Fraunces", serif;
+    font-size: 12px;
+    background: var(--ink);
+    color: var(--limestone-2);
+  }
+  .next-steps p {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 14px;
+    color: var(--muted-ink);
+    margin-top: 2px;
+  }
+  /* ---------- Sticky mobile reassurance ---------- */
+  /* Disabled as soon as the section collapses to one column (920px) — the
+     trust-rail (moved below the form at that same breakpoint) already says
+     the same thing, and a bar pinned to the bottom of the viewport eats
+     permanently into already-limited screen space. */
+  .trust-sticky {
+    display: none;
+  }
+  .availability.compact {
+    background: none;
+    border: none;
+    box-shadow: none;
+    /* Explicit 0 (not just "no override"), since without this it silently falls
+       back to plain .availability's own padding: clamp(22px,3vw,34px) on all four
+       sides — the wizard's own form card (see form{} above) already provides
+       its own padding, so this widget shouldn't add a second layer inside it. */
+    padding: 0;
+  }
+  /* weddings.html only: wizard step 1 has no grid of its own, just this
+     picked-date summary + a button back to the real calendar — laid out as one
+     row (summary at the start, button pinned to the far end via space-between).
+     #availFormPicked is always in layout (same as the AC showcase's own
+     .availability-foot-label instances — no .availability-picked-style show/hide here), so
+     space-between always has just two items: the summary text, and the button. */
+  .availability-form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  /* #availability .availability.diary's own margin-inline:auto (added above, near
+       #availability .split) is scoped to that section's own later, 920px
+       collapse point instead of living here — this section's own two-column
+       split now holds past 980px, so centering it here as well would be
+       wrong for the 921-980px gap. */
+  @media (max-width: 980.98px) {
+    .enquiry-intro,
+    .enquiry-form {
+      grid-column: 1;
+      grid-row: auto;
+    }
+  }
+  @media (max-width: 980.98px) {
+    .enquiry-intro {
+      order: 1;
+    }
+  }
+  @media (max-width: 980.98px) {
+    .enquiry-form {
+      order: 2;
+    }
+  }
+  /* Content-width chips get too narrow for "Something else" to fit on one
+       line once the form itself has gone single-column — same lesson as the
+       tab-bar overflow (see CLAUDE.md bug #14): fit a small fixed item count
+       with equal-width rows rather than letting text wrap inside a pill.
+       Desktop keeps the original content-hugging size. */
+  @media (max-width: 620.98px) {
+    .chip {
+      flex: 1 1 calc(50% - 5px);
+      text-align: center;
+    }
+  }
+</style>

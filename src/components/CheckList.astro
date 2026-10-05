@@ -24,3 +24,29 @@ const { items } = Astro.props
     </li>
   ))}
 </ul>
+
+<style>
+  /* Scoped to this component (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  :global(.split) ul.check {
+    list-style: none;
+    margin-top: 24px;
+    display: grid;
+    gap: 12px;
+  }
+  :global(.split) ul.check li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 15px;
+    font-family: "Newsreader", Georgia, serif;
+  }
+  :global(.split) ul.check li svg {
+    flex: none;
+    margin-top: 2px;
+    color: var(--gold);
+  }
+  :global(.on-dark) :global(.split) ul.check li {
+    color: var(--muted);
+  }
+</style>
