@@ -45,7 +45,11 @@ high-tea,beverage}` (the agreed URL scheme). `menu.html` is deliberately not
   likewise contains its own copy of `package-tiers.js`'s tier controller.
   Merge each pair deliberately, not as a side effect of other work.
 
-**Phase 2** — `astro:assets` for images (resizing + `srcset`). **Phase 3** —
+**Phase 2** — `astro:assets` for images (resizing + `srcset`). **Started
+2026-10-05 with the six hero photos** (`src/assets/images/`, rendered by
+`HeroImage.astro`); every other image still comes from `public/images/`,
+including duplicates of the hero files used elsewhere. Move the rest the
+same way: import the file, render with `<Image>`, give it real `sizes`. **Phase 3** —
 Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 — Vercel deploy, forms, payments.
 
@@ -111,7 +115,8 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   Largest Contentful Paint isn't delayed.
 - `/weddings/packages` redirects to `/weddings#packages` (`astro.config.mjs`).
 - `public/images/` — copied from the prototype minus `originals/`. Served
-  as-is from `/images/...`. Moves to `src/assets/` in phase 2.
+  as-is from `/images/...`, full size. Moving to `src/assets/` image by image
+  in phase 2 (heroes done).
 
 ## Conventions
 
