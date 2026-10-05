@@ -1,5 +1,7 @@
 // Weddings-only: the dining-card triptych's row-level reveal.
 
+import { REVEAL_ROOT_MARGIN } from "./lib/motion.js"
+
 // ---------- Weddings: package dining-card triptych reveal ----------
 // Triptych only (980px+). There, the three dining-format cards
 // (Reception/Banquet/High Tea) read as one composed row and should enter as
@@ -45,7 +47,7 @@
         obs.unobserve(entry.target)
       })
     },
-    { threshold: 0.18, rootMargin: "0px 0px -8% 0px" },
+    { threshold: 0, rootMargin: REVEAL_ROOT_MARGIN },
   )
   obs.observe(list)
 })()
