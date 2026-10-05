@@ -1,0 +1,40 @@
+---
+// One signature-dish tile above a tier's menu. With a photograph it's a
+// GalleryTile that opens the lightbox, grouped by tier so the lightbox's
+// arrows stay within it. Without one it's a black "photo to follow" tile
+// showing the dish's initials (styled in package-dish-placeholders.css):
+// a stand-in photo under a real dish name would be a false claim.
+import type { PackageDish } from "@data/packages/types"
+import GalleryTile from "@components/ui/GalleryTile.astro"
+
+interface Props {
+  dish: PackageDish
+  // The tier's id: the lightbox group this photo belongs to.
+  tierId: string
+}
+
+const { dish, tierId } = Astro.props
+---
+
+<figure class="package-dish">
+  {dish.photo ? (
+    <GalleryTile
+      data-lb-group={tierId}
+      data-title={dish.name}
+      data-tag={dish.category}
+      tag={dish.category ?? ""}
+      photo={{
+        src: dish.photo.src,
+        sizes: "(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw",
+        decoding: "async",
+        alt: dish.photo.alt,
+      }}
+    />
+  ) : (
+    <div class="package-dish-placeholder" aria-hidden="true">
+      <span class="package-dish-placeholder-initials">{dish.initials}</span>
+      <span class="package-dish-placeholder-note">Photo to follow</span>
+    </div>
+  )}
+  <figcaption class="package-dish-name">{dish.name}</figcaption>
+</figure>
