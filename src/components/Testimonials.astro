@@ -1,8 +1,11 @@
 ---
 import Particles from "./Particles.astro"
 import Photo from "./Photo.astro"
-// "From our guestbook" rotator. Empty shells here; the four testimonials
-// themselves live in testimonials.js, which fills the quote, meta and picker cards.
+import { TESTIMONIALS } from "../data/testimonials"
+// "From our guestbook" rotator. The picker cards and dots are rendered here
+// from src/data/testimonials.ts; testimonials.js fills the active quote and
+// its meta line (the quote is measured in the browser to cap it at five
+// lines) and runs the autoplay.
 interface Props {
   // The darkened photo behind the section — a key from src/lib/images.ts.
   backgroundImage: string
@@ -50,7 +53,19 @@ const { backgroundImage } = Astro.props
       aria-label="Choose a testimonial"
       data-reveal
       style="--d: 240ms"
-    ></div>
+    >
+      {TESTIMONIALS.map((item) => (
+        <button
+          type="button"
+          class="testimonial-card"
+          role="tab"
+          aria-label={`Read testimonial from ${item.name}`}
+        >
+          <span class="testimonial-card-name">{item.name}</span>
+          <span class="testimonial-card-category">{item.category}</span>
+        </button>
+      ))}
+    </div>
     <div class="testimonial-controls" data-reveal style="--d: 300ms">
       <button
         type="button"
@@ -68,7 +83,11 @@ const { backgroundImage } = Astro.props
           />
         </svg>
       </button>
-      <div class="testimonial-dots" id="tDots" aria-hidden="true"></div>
+      <div class="testimonial-dots" id="tDots" aria-hidden="true">
+        {TESTIMONIALS.map(() => (
+          <span class="testimonial-dot" />
+        ))}
+      </div>
       <button
         type="button"
         class="testimonial-arrow t-arrow-next"
@@ -157,7 +176,7 @@ const { backgroundImage } = Astro.props
       opacity 0.35s var(--ease),
       transform 0.35s var(--ease);
   }
-  :global(#tStars.is-in-view) .star {
+  #tStars.is-in-view .star {
     opacity: 1;
     transform: scale(1);
   }
@@ -168,19 +187,19 @@ const { backgroundImage } = Astro.props
      an unconditional delay left its leaving transition never even starting in
      that window — it just sat unchanged, with nothing to visibly animate back
      from on re-entry. Leaving now happens uniformly with no delay instead. */
-  :global(#tStars.is-in-view) .star:nth-child(1) {
+  #tStars.is-in-view .star:nth-child(1) {
     transition-delay: 0ms;
   }
-  :global(#tStars.is-in-view) .star:nth-child(2) {
+  #tStars.is-in-view .star:nth-child(2) {
     transition-delay: 70ms;
   }
-  :global(#tStars.is-in-view) .star:nth-child(3) {
+  #tStars.is-in-view .star:nth-child(3) {
     transition-delay: 140ms;
   }
-  :global(#tStars.is-in-view) .star:nth-child(4) {
+  #tStars.is-in-view .star:nth-child(4) {
     transition-delay: 210ms;
   }
-  :global(#tStars.is-in-view) .star:nth-child(5) {
+  #tStars.is-in-view .star:nth-child(5) {
     transition-delay: 280ms;
   }
   .stars .star.is-empty {
@@ -370,7 +389,7 @@ const { backgroundImage } = Astro.props
   /* Same gap on the picker cards below: tappable, never navigate, and
        had a hover state only. Mirrors their hover exactly. */
   @media (hover: none) {
-    :global(.testimonial-card:active) {
+    .testimonial-card:active {
       border-color: rgba(var(--gold-rgb), 0.5);
       background: rgba(var(--gold-rgb), 0.06);
     }
@@ -383,7 +402,7 @@ const { backgroundImage } = Astro.props
      (tried inverting it to ink; it read worse). While hovered, its progress
      stroke sits on the gold fill and is hard to see — which is also when
      autoplay is paused, so nothing is lost. */
-  :global(.testimonial-dot) {
+  .testimonial-dot {
     width: 5px;
     height: 5px;
     border-radius: 999px;
@@ -394,11 +413,11 @@ const { backgroundImage } = Astro.props
       width 0.35s var(--ease),
       background 0.35s var(--ease);
   }
-  :global(.testimonial-dot.is-active) {
+  .testimonial-dot.is-active {
     width: 16px;
     background: var(--gold);
   }
-  :global(.testimonial-card) {
+  .testimonial-card {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -419,7 +438,7 @@ const { backgroundImage } = Astro.props
       border-color 0.3s var(--ease);
   }
   @media (hover: hover) {
-    :global(.testimonial-card:hover) {
+    .testimonial-card:hover {
       border-color: rgba(var(--gold-rgb), 0.5);
       background: rgba(var(--gold-rgb), 0.06);
     }
@@ -427,11 +446,11 @@ const { backgroundImage } = Astro.props
   /* Hover sits between resting and .is-active (0.05 -> 0.06 -> 0.12) rather than
      matching .is-active outright — keeping a lower intensity than the selected
      state avoids the two being visually ambiguous with each other. */
-  :global(.testimonial-card.is-active) {
+  .testimonial-card.is-active {
     border-color: var(--gold);
     background: rgba(var(--gold-rgb), 0.12);
   }
-  :global(.testimonial-card-name) {
+  .testimonial-card-name {
     font-family: "Fraunces", serif;
     font-size: 15px;
     color: var(--limestone-2);
@@ -440,7 +459,7 @@ const { backgroundImage } = Astro.props
     text-overflow: ellipsis;
     min-width: 0;
   }
-  :global(.testimonial-card-category) {
+  .testimonial-card-category {
     font-size: 10px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
