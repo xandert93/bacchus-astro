@@ -92,10 +92,12 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   `motion.js` (reduced motion), `scroll-lock.js`, `safe-reveal.js`,
   `availability-hooks.js` (the two calls enquiry needs from the calendar).
 - **Scroll lock:** every overlay calls `lockScroll(owner)` /
-  `unlockScroll(owner)` — never sets `body.style.overflow` itself. The lock
-  pads the page and the fixed nav by the scrollbar width so nothing shifts
-  on desktop. A new fixed-position element that must not shift needs the
-  same `html.is-scroll-locked` padding rule.
+  `unlockScroll(owner)` — never touches body overflow itself. The lock pins
+  the page (body `position: fixed` at its scroll offset) and keeps the root's
+  scrollbar track, so nothing shifts and no blank strip appears where the
+  scrollbar was. (Padding the page by the scrollbar width was tried first
+  and left a bright strip — see `lib/scroll-lock.js`.) Code that reads
+  `window.scrollY` on scroll should ignore events while `isScrollLocked()`.
 - **One lightbox:** `Lightbox.astro` + `lightbox.js` serve every photo on the
   site. Group photos with `data-lb-group`; `#ggrid .gallery-item`s group
   automatically and follow the gallery filter.
@@ -129,6 +131,14 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   the old photo otherwise. Found and fixed in three separate controllers
   (2026-09-30 and 2026-10-04) because each had its own copy — one reason
   the lightbox becomes a single component in the main.js split.
+- **Whitespace is JSX-style (Astro 7's default `compressHTML: "jsx"`).** A
+  line break between text and an inline element is DELETED, not rendered as a
+  space. Write the space explicitly with `{" "}` at the end of the line
+  (Prettier preserves these and adds them itself when it re-wraps a line that
+  had a space). Porting the prototype lost 54 spaces this way ("ourBanquet",
+  "RedLeicester") until a rendered-text diff against the prototype caught
+  them. `compressHTML: true` (HTML rules) was tried and rejected: Prettier's
+  Astro plugin formats with JSX rules, so the two would fight.
 - Commits: Conventional Commits, **always with a scope**:
   `type(scope): description` — e.g. `feat(weddings): port weddings page`,
   `fix(nav): ...`, `chore(repo): ...`. Lower-case imperative description, no
