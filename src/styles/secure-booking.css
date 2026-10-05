@@ -1,0 +1,818 @@
+/* The secure-booking ("secure your date") deposit page's styles, set aside
+   from global.css on 2026-10-05. That page lives only in the prototype's
+   sandboxes/ for now and isn't ported, so NOTHING imports this file yet:
+   it is parked here, intact, for when roadmap step 4 brings the page over.
+   It was always its own namespace (secure-booking-*), deliberately kept
+   apart from the site's shared component classes. */
+
+/* ==========================================================================
+   secure-booking.html — literal port of an external (Lovable) design.
+   Deliberately its own namespace (`sb-*`), not reusing site-wide component
+   classes, since this section mirrors a specific outside layout as closely
+   as possible rather than extending our own design-system components.
+   See CLAUDE.md "Deposit collection preview" for what was substituted
+   (real logo/photo/footer facts) vs. ported as-is.
+   ========================================================================== */
+.secure-booking-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+}
+
+.hero .secure-booking-eyebrow {
+  margin-bottom: 24px;
+}
+
+.secure-booking-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+}
+
+.secure-booking-eyebrow-bronze {
+  color: var(--bronze);
+  margin-bottom: 20px;
+}
+
+.secure-booking-rule {
+  height: 1px;
+  width: 32px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.secure-booking-hide-mobile {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .secure-booking-hide-mobile {
+    display: inline;
+  }
+}
+
+@media (max-width: 639.98px) {
+  .secure-booking-nav svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.8;
+  }
+}
+
+.secure-booking-container-large {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 44px);
+}
+
+.secure-booking-summary-section {
+  position: relative;
+  z-index: 10;
+  /* Top stays deliberately smaller than the standard section gap below —
+     the hero already provides its own visual separation right above this
+     one, so it doesn't need the full rhythm on that side too. */
+  padding: clamp(32px, 7vw, 96px) 0 calc(var(--sb-gap) / 2);
+}
+
+.secure-booking-summary-card {
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(var(--ink-rgb), 0.1);
+  background: #fff;
+  box-shadow: 0 24px 80px -24px rgba(var(--ink-rgb), 0.18);
+}
+
+/* Trial: cardless summary on mobile — no outer chrome, content sits flat. */
+@media (max-width: 640px) {
+  .secure-booking-summary-card {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
+  }
+}
+
+.secure-booking-summary-topbar {
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.1);
+  background: rgba(var(--limestone-2-rgb), 0.5);
+  padding: clamp(18px, 2.6vw, 24px) clamp(20px, 3vw, 40px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.secure-booking-eyebrow-plain {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bronze);
+}
+
+.secure-booking-summary-topbar h2 {
+  margin-top: 4px;
+  font-size: clamp(24px, 3vw, 30px);
+  font-weight: 400;
+}
+
+.secure-booking-quote-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(var(--gold-rgb), 0.3);
+  background: rgba(var(--gold-rgb), 0.1);
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--bronze);
+}
+
+.secure-booking-summary-grid {
+  display: grid;
+}
+
+@media (min-width: 1024px) {
+  .secure-booking-summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.secure-booking-summary-col {
+  padding: clamp(20px, 3vw, 40px);
+  border-bottom: 1px solid rgba(var(--ink-rgb), 0.1);
+}
+
+@media (min-width: 1024px) {
+  .secure-booking-summary-col {
+    border-bottom: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .secure-booking-summary-col-right {
+    border-left: 1px solid rgba(var(--ink-rgb), 0.1);
+  }
+}
+
+.secure-booking-summary-col h3 {
+  margin-bottom: 20px;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: inherit;
+  color: var(--muted-ink);
+}
+
+.secure-booking-field-list {
+  display: grid;
+  gap: clamp(12px, 3vw, 20px);
+}
+
+.secure-booking-field {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.secure-booking-field > div {
+  margin-top: 4px;
+}
+
+.secure-booking-field-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: clamp(34px, 9vw, 40px);
+  height: clamp(34px, 9vw, 40px);
+  border-radius: 50%;
+  border: 1px solid rgba(var(--gold-rgb), 0.3);
+  background: var(--limestone-2);
+  color: var(--bronze);
+}
+
+.secure-booking-field dt {
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+
+.secure-booking-field dd {
+  margin-top: 2px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: clamp(16px, 4vw, 18px);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.secure-booking-items {
+  display: grid;
+  gap: 16px;
+}
+
+.secure-booking-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.secure-booking-item-amount {
+  flex: none;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.secure-booking-totals {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(var(--ink-rgb), 0.1);
+  display: grid;
+  gap: 16px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+}
+
+.secure-booking-totals-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-ink);
+}
+
+.secure-booking-totals-discount span:last-child {
+  color: var(--avail-green-fg);
+}
+
+.secure-booking-totals-total {
+  margin-top: 8px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(var(--ink-rgb), 0.1);
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 20px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.secure-booking-per-person {
+  margin-top: -6px;
+  text-align: right;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: rgba(var(--muted-ink-rgb), 0.72);
+}
+
+.secure-booking-deposit-terms {
+  margin-top: 12px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.secure-booking-deposit-box {
+  margin-top: 16px;
+  padding: clamp(18px, 2.4vw, 24px);
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(var(--gold-rgb), 0.2);
+  background: var(--limestone-2);
+  box-shadow: 0 4px 14px -8px rgba(var(--ink-rgb), 0.15);
+}
+
+.secure-booking-deposit-label {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bronze);
+}
+
+.secure-booking-deposit-amount {
+  margin-top: 4px;
+  font-family: "Fraunces", serif;
+  font-size: clamp(30px, 4vw, 36px);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.secure-booking-deposit-note {
+  margin-top: 8px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.secure-booking-summary-footbar {
+  border-top: 1px solid rgba(var(--oxblood-rgb), 0.25);
+  background: rgba(var(--oxblood-rgb), 0.08);
+  padding: clamp(14px, 2vw, 16px) clamp(20px, 3vw, 40px);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 14px;
+  color: var(--oxblood);
+}
+
+.secure-booking-summary-footbar svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--oxblood);
+}
+
+/* Cardless mobile trial (cont'd): must come after the base rules above,
+     since they use the padding/background shorthand and would otherwise
+     win the cascade regardless of viewport. */
+@media (max-width: 640px) {
+  .secure-booking-summary-topbar {
+    background: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .secure-booking-summary-topbar,
+  .secure-booking-summary-col {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Swap the top-divider bar for a self-contained callout, matching the
+     "Demo bank details..." warning box's layout instead of a divided bar. */
+@media (max-width: 640px) {
+  .secure-booking-summary-footbar {
+    margin-top: 24px;
+    padding: clamp(12px, 2vw, 16px);
+    border-top: none;
+    border: 1px solid rgba(var(--oxblood-rgb), 0.4);
+    border-radius: var(--radius-card);
+    background: rgba(var(--oxblood-rgb), 0.12);
+    color: var(--oxblood);
+  }
+}
+
+@media (max-width: 640px) {
+  .secure-booking-summary-footbar svg {
+    color: var(--oxblood);
+  }
+}
+
+/* Match the 24px above/below rhythm already used by the two dividers in
+     the price breakdown (before Subtotal, before Total). */
+@media (max-width: 640px) {
+  .secure-booking-summary-col {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+}
+
+/* The right column's own border-bottom (from the shared .secure-booking-summary-col
+     rule) leaves a stray divider under the deposit box — only the left/
+     right column boundary itself should show one. */
+@media (max-width: 640px) {
+  .secure-booking-summary-col-right {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+/* Drop the pill chrome — quote ref reads as plain sub-text under the
+     heading instead, icon + label, left-aligned, own line. */
+@media (max-width: 640px) {
+  .secure-booking-summary-topbar > div:first-child {
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .secure-booking-quote-badge {
+    flex: 1 1 100%;
+    margin-top: 6px;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--muted-ink);
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 640px) {
+  .secure-booking-quote-badge svg {
+    color: var(--bronze);
+  }
+}
+
+.secure-booking-pay-section {
+  background: var(--limestone-2);
+  padding: calc(var(--sb-gap) / 2) 0;
+}
+
+.secure-booking-pay-intro {
+  max-width: 760px;
+  margin-bottom: clamp(24px, 6vw, 48px);
+}
+
+.secure-booking-faq .secure-booking-pay-intro {
+  margin-bottom: 28px;
+}
+
+.secure-booking-pay-intro h2 {
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 400;
+}
+
+.secure-booking-pay-intro h2 em {
+  background: var(--bronze-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-style: italic;
+}
+
+.secure-booking-pay-intro > p {
+  margin-top: 20px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: clamp(17px, 1.6vw, 20px);
+  color: var(--muted-ink);
+}
+
+.secure-booking-pay-grid {
+  display: grid;
+  gap: clamp(16px, 4vw, 24px);
+}
+
+@media (min-width: 1024px) {
+  .secure-booking-pay-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.secure-booking-hover-card {
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(var(--ink-rgb), 0.1);
+  background: #fff;
+  transition:
+    opacity 0.9s var(--ease),
+    transform 1s var(--ease),
+    border-color 0.5s var(--ease),
+    box-shadow 0.5s var(--ease);
+}
+
+.secure-booking-hover-card:hover {
+  border-color: rgba(var(--gold-rgb), 0.4);
+  box-shadow: 0 24px 70px -24px rgba(var(--ink-rgb), 0.16);
+}
+
+.secure-booking-pay-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(24px, 3vw, 40px);
+}
+
+.secure-booking-card-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.secure-booking-icon-badge {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: clamp(40px, 10vw, 48px);
+  height: clamp(40px, 10vw, 48px);
+  border-radius: 50%;
+  color: var(--bronze);
+}
+
+.secure-booking-pay-icon-gold {
+  background: rgba(var(--gold-rgb), 0.1);
+}
+
+.secure-booking-pay-icon-cream {
+  background: var(--limestone-2);
+}
+
+.secure-booking-pay-card h3 {
+  font-size: clamp(20px, 4vw, 24px);
+  font-weight: 400;
+}
+
+.secure-booking-pay-card > p {
+  margin-top: 24px;
+  font-family: "Newsreader", Georgia, serif;
+  color: var(--muted-ink);
+}
+
+.secure-booking-pay-card .button {
+  margin-top: 24px;
+  font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .secure-booking-pay-card .button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.secure-booking-button-arrow {
+  transition: transform 0.3s var(--ease);
+}
+
+.secure-booking-pay-caption {
+  margin-top: 24px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 12px;
+  color: rgba(var(--muted-ink-rgb), 0.5);
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+
+.secure-booking-pay-caption.show {
+  display: block;
+}
+
+.secure-booking-pay-caption.is-revealed {
+  opacity: 1;
+}
+
+.secure-booking-bank-details {
+  margin-top: 24px;
+  display: grid;
+  gap: 12px;
+}
+
+.secure-booking-bank-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: clamp(12px, 2vw, 16px);
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(var(--ink-rgb), 0.1);
+  background: var(--paper);
+}
+
+.secure-booking-bank-row > div {
+  min-width: 0;
+}
+
+.secure-booking-bank-label {
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted-ink);
+}
+
+.secure-booking-bank-value {
+  margin-top: 2px;
+  font-family: "Inter", sans-serif;
+  font-size: clamp(13px, 3.5vw, 15px);
+  text-transform: uppercase;
+  color: var(--ink);
+  overflow-wrap: break-word;
+}
+
+.secure-booking-copy-button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--ink-rgb), 0.1);
+  background: none;
+  color: var(--muted-ink);
+  cursor: pointer;
+  transition:
+    border-color 0.3s var(--ease),
+    color 0.3s var(--ease);
+}
+
+@media (hover: hover) {
+  .secure-booking-copy-button:hover {
+    border-color: rgba(var(--gold-rgb), 0.4);
+    color: var(--gold);
+  }
+}
+
+.secure-booking-copy-button.copied {
+  color: var(--avail-green-fg);
+}
+
+.secure-booking-support-section {
+  padding: calc(var(--sb-gap) / 2) 0;
+  scroll-margin-top: 90px;
+}
+
+.secure-booking-support-grid {
+  display: grid;
+  gap: clamp(14px, 3vw, 20px);
+}
+
+@media (min-width: 640px) {
+  .secure-booking-support-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .secure-booking-support-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.secure-booking-support-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(22px, 2.8vw, 28px);
+}
+
+.secure-booking-support-icon {
+  background: var(--limestone-2);
+}
+
+.secure-booking-support-card h3 {
+  font-size: clamp(17px, 3.5vw, 20px);
+  font-weight: 400;
+}
+
+.secure-booking-support-card > p {
+  margin-top: 8px;
+  flex: 1;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 14px;
+  color: var(--muted-ink);
+}
+
+.secure-booking-support-action {
+  margin-top: 20px;
+}
+
+.secure-booking-support-value {
+  display: block;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.secure-booking-support-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bronze);
+  transition: color 0.3s var(--ease);
+}
+
+.secure-booking-support-card:hover .secure-booking-support-cta {
+  color: var(--gold);
+}
+
+.secure-booking-support-card:hover
+  .secure-booking-support-cta
+  .secure-booking-button-arrow {
+  transform: translateX(4px);
+}
+
+.secure-booking-faq-section {
+  background: var(--limestone-2);
+  padding: calc(var(--sb-gap) / 2) 0;
+}
+
+.secure-booking-faq-section .faq-item {
+  background: var(--limestone-2);
+}
+
+.secure-booking-trust-footer-section {
+  border-top: 1px solid rgba(var(--ink-rgb), 0.1);
+  padding: calc(var(--sb-gap) / 2) 0;
+}
+
+.secure-booking-trust-footer-grid {
+  display: grid;
+  gap: clamp(24px, 6vw, 40px);
+}
+
+@media (min-width: 768px) {
+  .secure-booking-trust-footer-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.secure-booking-trust-footer-item {
+  text-align: center;
+}
+
+.secure-booking-trust-footer-icon {
+  margin: 0 auto 16px;
+  border: 1px solid rgba(var(--gold-rgb), 0.3);
+  background: var(--paper);
+}
+
+.secure-booking-trust-footer-item h4 {
+  font-size: clamp(16px, 3.5vw, 18px);
+  font-weight: 400;
+}
+
+.secure-booking-trust-footer-item p {
+  margin-top: 8px;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 14px;
+  color: var(--muted-ink);
+}
+
+.secure-booking-warning-box {
+  margin-top: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: clamp(12px, 2vw, 16px);
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(var(--oxblood-rgb), 0.4);
+  background: rgba(var(--oxblood-rgb), 0.12);
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 14px;
+  color: var(--oxblood);
+}
+.secure-booking-warning-box svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--oxblood);
+}
+.secure-booking-float-help {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  border: 1px solid rgba(var(--gold-rgb), 0.4);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.95);
+  backdrop-filter: blur(8px);
+  color: var(--gold);
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 12px 40px -12px rgba(var(--ink-rgb), 0.35);
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .secure-booking-float-help:hover {
+    background: var(--ink);
+    color: var(--gold-2);
+    transform: scale(1.05);
+  }
+}

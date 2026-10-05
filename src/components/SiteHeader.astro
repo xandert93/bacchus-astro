@@ -880,20 +880,6 @@ import Photo from "./Photo.astro"
       display: none;
     }
   }
-  /* Scoped override, not a change to .nav-dd-panel-heading's own defaults —
-     that class is shared with Events 1, which wasn't asked for either change
-     here. margin-bottom: 8px tighter than the shared default, on request.
-     color: the shared class's var(--ink) (near-black) is illegible now that
-     this panel's own background is the dark rgba(--muted-ink-rgb) treatment
-     above — not something explicitly requested, but a necessary consequence
-     of that change. --limestone-2 matches the caption text already sitting on
-     this same panel's photo (.nav-dd-v2-caption), for consistency within the
-     one component, rather than the dimmer rgba(--limestone-rgb) treatment
-     used for the interactive row labels below (this heading isn't a link). */
-  :global(.nav-dd-v2-content) .nav-dd-panel-heading {
-    margin-bottom: 12px;
-    color: var(--limestone-2);
-  }
   /* Plain descendant selectors again — .nav-dd-panel is back to being a real
      child of .nav-dd (see the comment above .nav-dd-panel), so it no longer
      needs :has() to reach it. */

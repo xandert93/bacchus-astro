@@ -99,16 +99,26 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 - `src/styles/global.css` — the prototype's `styles.css`, imported once by
   the layout. Rules that belong to one component or one page now live in
   that file's own scoped `<style>` (2026-10-05: 16 components, plus the
-  homepage, weddings and gallery pages — 10,299 lines down to ~5,460). What
-  is left is genuinely shared (tokens, base type, buttons, tabs, the wizard,
-  the calendar, package grids) or styles elements a SCRIPT creates or
-  toggles (calendar cells, nav dropdown state), which never get Astro's
-  scoping attribute and so must stay global.
-  The recipe for any further move: `scripts/scope-styles.mjs <name>` (a component, or `pages/<route>`)
-  does the move mechanically; take a `scripts/style-snapshot.mjs`
-  baseline before, re-snapshot after, `scripts/style-diff.mjs` must show 0
-  changes, and `scripts/state-diff.mjs <old dist> <new dist>` must say
-  "same" for every interaction state. One known blind spot in the mover: a
+  homepage, weddings and gallery pages), and rules for prototype sandboxes
+  that were never ported (the rejected "Events 2" nav panel, the rejected
+  inline waitlist panel, the old single-button dropdown trigger) are gone —
+  10,299 lines down to ~4,100. What is left is genuinely shared (tokens,
+  base type, buttons, tabs, the wizard, the calendar, package grids) or
+  styles elements a SCRIPT creates or toggles (calendar cells, nav dropdown
+  state), which never get Astro's scoping attribute and so must stay global.
+- `src/styles/secure-booking.css` — the prototype's deposit page styles,
+  parked: nothing imports it until that page is ported (roadmap step 4).
+- Moving more styles: `scripts/scope-styles.mjs <name>` (a component, or
+  `pages/<route>`) does the move mechanically; take a
+  `scripts/style-snapshot.mjs` baseline before, re-snapshot after,
+  `scripts/style-diff.mjs` must show 0 changes, and
+  `scripts/state-diff.mjs <old dist> <new dist>` must say "same" for every
+  interaction state. Expect run-to-run noise of a few hundredths of a pixel
+  in mobile text widths (seen between two snapshots of the SAME build), and
+  in the photo carousel's transition timing; anything else is real. If
+  Playwright fails with "Target page, context or browser has been closed",
+  that's the machine running out of headroom with too many parallel
+  browsers, not the site — `--workers=2` passes. One known blind spot in the mover: a
   bare-tag rule (`.nav-dd-panel-media img`) passes if the component's markup
   has that tag ANYWHERE, even when the matching element is rendered by a
   child component (NavPanelPhoto) — which is why SiteHeader still reports
