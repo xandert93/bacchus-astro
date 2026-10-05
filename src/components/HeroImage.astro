@@ -1,0 +1,55 @@
+---
+// A hero photograph, served through Astro's image pipeline (astro:assets)
+// rather than straight out of public/.
+//
+// What that buys, and why it matters here: the source files are 2400–3700px
+// wide and ~1 MB each, and the browser used to download the whole file on
+// every device — which is what painted the hero top-down, half black, on a
+// slow connection. At build time <Image> now writes a set of resized,
+// recompressed copies, and the srcset/sizes attributes let each browser
+// download only the smallest one that's still sharp on its screen.
+//
+// `sizes` is the part worth understanding. It tells the browser how wide the
+// image will be DRAWN, before any CSS has loaded, so it can pick a file. A
+// hero is object-fit: cover at 118% of the hero's height (see .hero-media img
+// in global.css), so it is either as wide as the viewport, or — on a narrow
+// or tall screen — wider than it, because its height is what's being filled:
+// 1.18 × hero height × the photo's aspect ratio. The media condition below
+// switches between the two at exactly the viewport shape where they cross.
+import { Image } from "astro:assets"
+import type { ImageMetadata } from "astro"
+
+interface Props {
+  src: ImageMetadata
+  alt: string
+  // The hero's height as a percentage of the viewport (100 on the homepage,
+  // 62 for .hero-sm).
+  heroHeightVh: number
+  id?: string
+}
+const { src, alt, heroHeightVh, id } = Astro.props
+
+const IMG_HEIGHT_RATIO = 1.18 // .hero-media img { height: 118% }
+const aspect = src.width / src.height
+// Drawn width when height-bound, in vh.
+const heightBoundVw = IMG_HEIGHT_RATIO * heroHeightVh * aspect
+// Viewport aspect (w/h) below which the image is height-bound, as an integer
+// ratio for the media query.
+const crossover = Math.round(heightBoundVw * 10)
+const sizes = `(max-aspect-ratio: ${crossover}/1000) ${Math.ceil(heightBoundVw)}vh, 100vw`
+
+// Never upscale: widths above the source's own are dropped.
+const widths = [640, 960, 1280, 1600, 1920, 2400, 2880, src.width]
+  .filter((w, i, all) => w <= src.width && all.indexOf(w) === i)
+  .sort((a, b) => a - b)
+---
+
+<Image
+  src={src}
+  alt={alt}
+  id={id}
+  widths={widths}
+  sizes={sizes}
+  loading="eager"
+  fetchpriority="high"
+/>
