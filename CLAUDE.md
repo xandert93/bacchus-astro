@@ -96,9 +96,14 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 - `src/data/gallery.ts` — the full gallery's photos and filters.
 - `src/data/enquiry.ts` — event types and chip notes. Read by both
   `EnquirySection.astro` and `enquiry.js` — one list.
-- `src/styles/global.css` — the prototype's `styles.css`, copied verbatim,
-  imported once by the layout. Splitting it into component-scoped styles is
-  a later job.
+- `src/styles/global.css` — the prototype's `styles.css`, imported once by
+  the layout. Being moved, a component at a time, into each component's own
+  scoped `<style>` — FAQ done first (2026-10-05). The recipe: take a
+  baseline with `scripts/style-snapshot.mjs`, move the rules, re-snapshot,
+  `scripts/style-diff.mjs` must show 0 changes. Watch for styles of
+  elements a SCRIPT creates (testimonial cards, calendar cells): those never
+  get Astro's scoping attribute, so they need `:global()` or must stay
+  global.
 - `src/scripts/` — one module per feature, each loaded by the component or
   page that needs it, so a page only ships the JS it uses. `BaseLayout` loads
   `site.js` (loaded class, particles, `[data-reveal]`, safe reveals) and
