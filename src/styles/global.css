@@ -8002,6 +8002,30 @@ form.wl-form {
   opacity: 0;
   transform: scale(0.97);
 }
+/* The two optional caption paragraphs under a lightbox photo — the
+   serving note and the item list that reception's station photos carry
+   in data-detail (see lightbox.js). Moved here from the reception page's
+   stylesheet with the lightbox itself (2026-10-05). The items line has no
+   colour of its own: its old value referenced a token scoped to the
+   stations section, which never reached the lightbox, so it has always
+   rendered in the inherited caption colour — kept as-is. */
+.lightbox-detail {
+  margin-top: 8px;
+  max-width: 56ch;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 12.5px;
+  font-style: italic;
+  color: var(--muted);
+}
+.lightbox-detail-items {
+  margin-top: 4px;
+  font-style: normal;
+  color: inherit;
+}
+.lightbox-detail-items .package-veg-marker {
+  margin-inline-start: 1px;
+}
 /* Taken out of normal flow — otherwise .lightbox centers the whole figure
    (image + caption) as one block, and the caption's own height pushes the
    image itself above true vertical center. Absolute + top:100% keeps it

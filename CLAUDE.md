@@ -40,17 +40,11 @@ high-tea,beverage}` (the agreed URL scheme). `menu.html` is deliberately not
 - `main.js` split into per-component scripts (see Current structure).
 - Next: decide what sections the package pages carry (Visit, enquiry,
   gallery) and in what order — open question with the user.
-- Phase-1 debt worth knowing: `reception-package.css` and `package-page.css`
-  are two drifted copies of the same package styles; `reception-package.js`
-  likewise contains its own copy of `package-tiers.js`'s tier controller.
-  Merge each pair deliberately, not as a side effect of other work.
-
-**Phase 2** — `astro:assets` for images. **Done for every photo,
-2026-10-05.** Everything lives in `src/assets/images/`, organised by SUBJECT
-(`venue/`, `weddings/`, `corporate/`, `celebrations/`, `food-and-drink/`,
-`reception-menu/{dishes,stations}/`, `brand/`), never by page or role.
-`public/` now holds only `favicon.png` and `docs/`.
-
+- Package styles merged 2026-10-05: `package-page.css` is shared by all four
+  pages; `package-stations.css` is Reception's Stations section only. A
+  computed-style diff (`scripts/style-snapshot.mjs`, before vs after)
+  showed zero change on Reception. Still duplicated: `reception-package.js`
+  carries its own copy of `package-tiers.js`'s tier controller.
 - **Use a key, never a path:** `src/lib/images.ts` looks photos up as
   `"venue/ballroom-night"`; an unknown key fails the build. Render with
   `<Photo src="key" alt sizes>` (any photo), `<HeroImage>` (page heroes),
@@ -93,7 +87,7 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   named slots `heading` and `lead`.
 - Package pages (`src/pages/weddings/packages/`) import their own CSS
   after `BaseLayout` (`package-page.css` + `package-dish-placeholders.css` /
-  `package-beverage.css`, or `reception-package.css`) and their own script
+  `package-beverage.css`, or `package-stations.css`) and their own script
   (`package-tiers.js` / `reception-package.js`). Those scripts
   `import "./tabs.js"` themselves, so `window.BacchusTabs` exists before
   they run regardless of `<script>` order. Small CSS files are

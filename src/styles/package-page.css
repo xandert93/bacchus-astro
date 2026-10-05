@@ -1,11 +1,14 @@
-/* Shared by the package pages (banquet, high tea, beverage): the tier
-   switcher, tier cards, sticky switcher, menu groups and the photo
-   carousel. Was an identical <style> block copied into each prototype
-   page; imported once per page now, after global.css so it wins ties on
-   source order exactly as the inline block did.
+/* Shared by all four package pages: the tier switcher, tier cards,
+   sticky switcher, signature-dish tiles, menu groups and the photo
+   carousel. Imported after global.css (so it wins ties on source order,
+   as the prototype's inline blocks did) and before any page's own file:
+   package-dish-placeholders.css, package-beverage.css or
+   package-stations.css.
 
-   reception-package has its own, much larger copy (stations included)
-   which has drifted from this one — merging the two is a separate job. */
+   Merged 2026-10-05 from two copies that had drifted: this one (from the
+   prototype's banquet/high tea/beverage pages) and reception's (its
+   original). Where they differed, reception's newer version won — see the
+   git history for the comparison. */
 .package-now-viewing {
   font-family: "Inter", sans-serif;
   font-size: 10px;
@@ -523,48 +526,156 @@
   }
 }
 
-/* Per-item scroll-stagger reveal for the menu groups —
-   own class/property (.package-reveal / --package-d), deliberately NOT the
-   sitewide [data-reveal] attribute + --d property. Two reasons:
-   1) [data-reveal]'s shared observer (main.js, threshold: 0.18) is
-   tuned for elements roughly this size, so reusing it here is fine
-   size-wise — but --d is also the property .gallery-item img's
-   hover-zoom transition-delay reads sitewide; a second unrelated user
-   of the same property name risks exactly the leak already fixed on
-   reception-package.html's dish tiles. 2) A visitor switching tiers (tab click) needs
-   every item in the newly active panel to appear immediately — not
-   wait for a scroll that isn't happening — so this is force-applied
-   by the page's own tab-switch JS below (revealItems(), called from
-   goToIndex()), which plain [data-reveal] elements have no hook
-   for. */
-.package-reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity 0.7s var(--ease),
-    transform 0.8s var(--ease);
-  transition-delay: var(--package-d, 0ms);
+/* Three signature-dish tiles per tier, shown before the full
+   ingredient lists. Reuses .gallery-item/.gallery-tag as-is for the
+   photo itself (see gallery.html) — this just supplies the 3-col grid
+   and the name caption underneath. Shared by Reception (real photos, .gallery-item tiles) and
+   Banquet / High Tea (black placeholders, package-dish-placeholders.css). */
+.package-dishes-label {
+  font-family: "Inter", sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin: 0;
+  /* Gold gradient text, same recipe as .package-menu-group h4 above —
+     this label was previously a plain div at flat --gold-2, but it
+     heads the dish-tile grid the same way .package-menu-group h4
+     heads each ingredient-list group, so it's now a real h4 (was a
+     div) styled to match. */
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Was a flat 14px, read as too tight against the photo grid below
+     on every breakpoint, on request — sized up and made responsive
+     to match the pattern already used elsewhere in this component
+     (.package-dishes-grid/.package-menu-groups both use clamp()). No hidden
+     leak involved this time (.package-dishes-grid is a plain div, not a
+     ul/li .tab-panel could reach into) — just a bigger value. */
+  margin-bottom: clamp(20px, 2.5vw, 28px);
 }
-.package-reveal.is-revealed {
+/* The real dish photography here is shot square (1:1) — .gallery-item's
+   sitewide aspect-ratio (4/5, styles.css) is tuned for gallery.html's
+   own portrait shots, and would crop ~10% off each side of these to
+   force them into that ratio. Scoped to just this grid so gallery.html's
+   real grid is untouched. */
+.package-dishes-grid .gallery-item {
+  aspect-ratio: 1/1;
+}
+/* There was a filter override here until 2026-09-24, softening the
+   sitewide .gallery-item mute for these three dish tiles: rest moved
+   30% of the way toward the hover values (grayscale 0.3 -> 0.21,
+   brightness 0.95 -> 0.965) on the grounds that a big desaturation
+   jump suited a wall of gallery tiles but not three dish photos that
+   are the point of the panel. Its hover line restated the sitewide
+   end state purely to win on specificity (CLAUDE.md bug #2).
+
+   Both are gone because the premise is. .gallery-item is no longer
+   muted at rest anywhere — see its own note in styles.css — so this
+   block would have been the only thing on the site still dimming a
+   photograph, and its hover line would have out-specified the new
+   sitewide bloom and quietly reverted these nine tiles to the old
+   behaviour. Worth recording that the instinct behind it was right
+   and simply scoped too small: muting food photography reads as
+   washed out, and that is exactly the reasoning the sitewide change
+   now follows.
+
+   These tiles now inherit the sitewide treatment, which also keeps
+   them matching the Reception stations grid they will sit beside
+   once that section merges into this page. */
+.package-dish {
+  margin: 0;
+}
+/* .package-reveal used to be a per-item scroll-stagger reveal for these
+   tiles and the menu groups. It was switched off on 2026-10-01 because
+   content kept going missing (see the project notes), and the class now
+   has no styles at all: it is still on elements in the markup, inert.
+   Entrances for this section come from lib/safe-reveal.js instead
+   (data-reveal-group / data-reveal-safe), which keeps content visible by
+   default. */
+/* THE SECOND HIDING MECHANISM, and the one that survived three passes
+   at the first. styles.css carries a sitewide
+   `.tab-panel li { opacity: 0; transform: translateX(-14px);
+   animation: liIn 0.6s forwards }`, and every menu item in every tier
+   is a .tab-panel li, so all of them start invisible and depend on
+   that animation finishing to ever be seen. Nothing in this page's
+   own reveal code touched them — they were never .package-reveal
+   elements — which is why fixing that observer repeatedly never
+   fixed them.
+
+   It is also a rule written for a different component: the homepage's
+   tab panels hold four-item lists (hence stagger delays stopping at
+   :nth-child(4)). Here it lands on ~100+ items across three panels
+   that are ALL laid out at once for the swipe carousel, so every one
+   of those animations starts together on load — the entrance stutter
+   in this section, measured in elements rather than milliseconds.
+
+   (0,2,1) against the sitewide rule's (0,1,1), so it wins on
+   specificity rather than source order (CLAUDE.md bug #14). Scoped to
+   .panels so menu.html's own unrelated .tab-panel lists keep theirs. */
+.panels .tab-panel li {
   opacity: 1;
   transform: none;
+  animation: none;
 }
-/* Lands an item in final position with no stagger and no motion —
-   the touch-swipe path only (revealEverythingInstantly() in the
-   script). The staggered version above is right for a scroll or a
-   tab click, but on a swipe it meant a tier arriving for the first
-   time slid in half-empty and then lifted ~9 items into place while
-   the track was still moving. Higher specificity (0,2,0) than
-   .package-reveal's own transition rule (0,1,0), so it wins outright
-   rather than by source order (CLAUDE.md bug #2/#14). */
-.package-reveal.package-reveal-instant {
-  transition: none;
+.package-dish-name {
+  margin-top: 10px;
+  text-align: center;
+  font-family: "Newsreader", serif;
+  font-style: italic;
+  font-size: clamp(12.5px, 1.4vw, 13.5px);
+  color: rgba(var(--limestone-rgb), 0.85);
 }
-@media (prefers-reduced-motion: reduce) {
-  .package-reveal {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
+/* .package-dishes-grid stays 3 columns at every width (no breakpoint of
+   its own), so each dish tile gets narrow on tablet/mobile — the
+   expand-hint icon (.gallery-item::before, bottom-right sitewide) and
+   the category pill (.gallery-tag, bottom-left) end up fighting for
+   the same cramped bottom edge. Moving just the icon to the top-right
+   on narrower widths keeps both readable without touching the
+   sitewide bottom-right placement used everywhere else (gallery.html's
+   real grid, where tiles are never this narrow). */
+@media (max-width: 980px) {
+  .package-dishes-grid .gallery-item::before {
+    top: 12px;
+    bottom: auto;
+  }
+}
+/* Tiles get narrower still below the page's own mobile breakpoint —
+   pull the icon closer to the corner AND shrink it.
+
+   These exact values (22px circle, 11px glyph, 5px inset) are shared
+   with .package-station-expand-badge in
+   sandboxes/reception-stations.html, which takes the same step at
+   the same width. That is deliberate: the two are the same badge,
+   and on merge the station photos and these dish tiles land on one
+   page. Change both or neither.
+
+   The size step is needed for the same reason the corner move above
+   is — .package-dishes-grid stays repeat(3, 1fr) at every width, so
+   each tile is near 100px square on a 360px phone and the shared
+   28px badge covers roughly a third of it. It lives HERE rather than
+   in styles.css because this file already owns the badge's override
+   for this grid; a second rule there would sit at the same (0,2,0)
+   specificity and be settled by load order alone (CLAUDE.md bug #2).
+
+   background-size has to come down with the box: a 13px glyph left
+   inside a 22px ring has 4.5px of clearance and reads cramped. It
+   wins over the base rule's `background` shorthand on specificity,
+   so the shorthand doesn't need restating.
+
+   620.98, not the 620 this was written at, so it hands over to the
+   621px rules without a gap at fractional widths (CLAUDE.md bug #22)
+   — and, more to the point here, so it flips at exactly the same
+   width the station badge does. */
+@media (max-width: 620.98px) {
+  .package-dishes-grid .gallery-item::before {
+    top: 5px;
+    right: 5px;
+    width: 22px;
+    height: 22px;
+    background-size: 11px;
   }
 }
 .package-menu-group h4 {
@@ -660,6 +771,8 @@
    between the lists and the legend, so it lives in its own scoped
    rule below. */
 .package-veg-marker {
+  /* Never inherit a hanging list indent into the badge. */
+  text-indent: 0;
   /* One definition feeding both the ring and the letter, so the two
      can never drift apart — the same reason --gold-gradient is a
      single token rather than a recipe copied per component
@@ -919,32 +1032,6 @@
    a px one. Sizing the track at 300% with 33.3334% children also
    works, but then `gap` has to be subtracted back out of every
    child; this way it just works. */
-/* 2026-10-01 — tier content is VISIBLE BY DEFAULT. Full reasoning
-   lives on reception-package.html's own copy of these rules; the short
-   version is that both of the things hiding this content could fail
-   and leave it permanently invisible on phones and tablets:
-   .package-reveal waited on an IntersectionObserver that could lose an
-   element outright, and every menu item is also a `.tab-panel li`,
-   which styles.css starts at opacity: 0 behind a `liIn` animation
-   written for the homepage's four-item lists — here it lands on 100+
-   items across three always-rendered panels, all animating at once,
-   which is what made this section's entrance stutter.
-
-   No entrance animation is worth content that can go missing, so both
-   are switched off here. Specificity, not source order, does the work:
-   (0,2,0) over .package-reveal's (0,1,0), (0,2,1) over .tab-panel li's
-   (0,1,1) — CLAUDE.md bug #14. The JS that adds .is-revealed is left
-   alone; it is simply a no-op now.
-
-   NOTE: this page still has the hand-rolled pointer-drag swipe that
-   reception-package.html replaced with native scroll-snap. That is a
-   separate outstanding fix — see reception's .package-tier-view. */
-.panels .package-reveal,
-.panels .tab-panel li {
-  opacity: 1;
-  transform: none;
-  animation: none;
-}
 .package-tier-view::-webkit-scrollbar {
   display: none;
 }
