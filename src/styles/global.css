@@ -10233,20 +10233,21 @@ body.menu-open .mobile-nav-cta-row {
 /* ============================================================
    SCROLL LOCK — driven by src/scripts/lib/scroll-lock.js
    ============================================================
-   The page is pinned rather than having its overflow hidden: body becomes
-   position: fixed, offset upward by the scroll position (set inline by the
-   script), so the visitor sees exactly what they were looking at. Where
-   the browser has a classic scrollbar, the root keeps its track with
-   overflow-y: scroll, so nothing changes width and nothing shifts. See the
-   script's header for why this replaced padding the page. */
+   Overflow hidden everywhere; on browsers with a classic scrollbar the page
+   is also pinned (body position: fixed, offset by the scroll position set
+   inline by the script) and the root keeps its scrollbar track, so nothing
+   changes width. Phones aren't pinned — see the script's header for why. */
 html.is-scroll-locked body {
+  overflow: hidden;
+}
+/* Pinned mode — browsers with a classic scrollbar only (see the script). */
+html.is-scroll-locked-pinned {
+  overflow-y: scroll;
+}
+html.is-scroll-locked-pinned body {
   position: fixed;
   left: 0;
   right: 0;
-  overflow: hidden;
-}
-html.is-scroll-locked-keep-scrollbar {
-  overflow-y: scroll;
 }
 
 /* ============================================================

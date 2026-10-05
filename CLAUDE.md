@@ -92,10 +92,12 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   `motion.js` (reduced motion), `scroll-lock.js`, `safe-reveal.js`,
   `availability-hooks.js` (the two calls enquiry needs from the calendar).
 - **Scroll lock:** every overlay calls `lockScroll(owner)` /
-  `unlockScroll(owner)` — never touches body overflow itself. The lock pins
-  the page (body `position: fixed` at its scroll offset) and keeps the root's
-  scrollbar track, so nothing shifts and no blank strip appears where the
-  scrollbar was. (Padding the page by the scrollbar width was tried first
+  `unlockScroll(owner)` — never touches body overflow itself. Where scrollbars
+  take up space (desktop) the lock pins the page (body `position: fixed` at
+  its scroll offset) and keeps the root's scrollbar track, so nothing shifts
+  and no blank strip appears; on phones it's plain `overflow: hidden`, since
+  pinning there moves scrollY to 0 and mobile Chrome's address bar reappears
+  and resizes the viewport. (Padding the page by the scrollbar width was tried first
   and left a bright strip — see `lib/scroll-lock.js`.) Code that reads
   `window.scrollY` on scroll should ignore events while `isScrollLocked()`.
 - **One lightbox:** `Lightbox.astro` + `lightbox.js` serve every photo on the

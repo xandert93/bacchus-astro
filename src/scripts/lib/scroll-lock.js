@@ -1,50 +1,58 @@
 // One page-scroll lock for every overlay: the mobile drawer, the lightbox and
 // the weddings quick-pick modal.
 //
-// How it locks: the page is pinned in place (body position: fixed, offset by
-// the current scroll) rather than having its overflow hidden, and on a
-// browser with a classic scrollbar the root keeps `overflow-y: scroll`, so
-// the scrollbar's track STAYS where it is. Nothing changes width, so nothing
-// shifts, and there's no gap where a scrollbar used to be. Only the thumb
-// disappears, because there's briefly nothing to scroll.
+// Two ways of locking, chosen by whether the browser's scrollbar takes up
+// space:
 //
-// History, so it isn't re-tried: the first version (2026-10-04) hid the
-// overflow and padded the page by the scrollbar's width. That stopped the
-// shift, but the 15px strip the scrollbar left behind showed the page's own
-// near-white background, which read as a bright flash beside a dark overlay
-// as it faded in and out. `scrollbar-gutter: stable` has the same strip
-// problem permanently. Pinning the page avoids the strip entirely, and is
-// also what actually stops iOS Safari scrolling underneath an overlay,
-// which `overflow: hidden` on the body doesn't.
+//   • Classic scrollbar (most desktop browsers): the page is PINNED — body
+//     position: fixed at its scroll offset — and the root keeps its
+//     scrollbar track (overflow-y: scroll). Nothing changes width, so
+//     nothing shifts, and there's no gap where the scrollbar was; only the
+//     thumb disappears.
+//   • Overlay scrollbars (phones, tablets, macOS by default): plain
+//     overflow: hidden, because there is no scrollbar width to lose.
+//
+// History, so neither is re-tried:
+//   1. 2026-10-04: overflow hidden + padding the page by the scrollbar width.
+//      No shift, but the 15px strip the scrollbar left showed the page's
+//      near-white background — a bright flash beside every dark overlay.
+//      (`scrollbar-gutter: stable` has the same strip, permanently.)
+//   2. 2026-10-05: pinning everywhere. Fixed the strip, but on phones it
+//      caused a flash of its own: pinning drops window.scrollY to 0, and
+//      mobile Chrome shows its address bar whenever the page is at the
+//      top, so the viewport resized under the opening overlay and again on
+//      close. Phones never had the strip problem, so they don't pin.
 //
 // Keyed by owner rather than counted, so a close path that runs without its
 // open (the drawer's bfcache guard does) can't release someone else's lock.
 
 const holders = new Set()
 const root = document.documentElement
-let lockedScrollY = 0
+let pinnedScrollY = null
 
 export function lockScroll(owner) {
   if (holders.size === 0) {
-    lockedScrollY = window.scrollY
-    // Only reserve the track where a scrollbar actually takes up space;
-    // forcing one onto a page that had none would itself cause a shift.
     const hasScrollbar = window.innerWidth - root.clientWidth > 0
-    root.classList.toggle("is-scroll-locked-keep-scrollbar", hasScrollbar)
     root.classList.add("is-scroll-locked")
-    document.body.style.top = -lockedScrollY + "px"
+    if (hasScrollbar) {
+      pinnedScrollY = window.scrollY
+      root.classList.add("is-scroll-locked-pinned")
+      document.body.style.top = -pinnedScrollY + "px"
+    }
   }
   holders.add(owner)
 }
 
 export function unlockScroll(owner) {
   if (!holders.delete(owner) || holders.size > 0) return
-  root.classList.remove("is-scroll-locked", "is-scroll-locked-keep-scrollbar")
+  root.classList.remove("is-scroll-locked", "is-scroll-locked-pinned")
+  if (pinnedScrollY === null) return
   document.body.style.top = ""
   // Back to exactly where the visitor was, instantly: the site sets
   // scroll-behavior: smooth on <html>, which would otherwise animate this
   // from the top of the page.
-  window.scrollTo({ top: lockedScrollY, behavior: "instant" })
+  window.scrollTo({ top: pinnedScrollY, behavior: "instant" })
+  pinnedScrollY = null
 }
 
 export function isScrollLocked() {
