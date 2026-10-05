@@ -74,10 +74,15 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   section, footer, the script. Props: `title`, `showEnquireLink`,
   `menuBackgroundImage`. Has a named slot `after-footer` for page overlays.
 - `src/components/` — chrome (`SiteHeader`, `MobileMenu`, `SocialLinks`,
-  `VisitSection`, `SiteFooter`), shared sections (`PageHero`,
+  `VisitSection`, `SiteFooter`), shared sections (`PageHero` on top of
+  `HeroFrame`, which the homepage's portcullis hero also uses,
   `EnquirySection`, `FaqSection`, `ProcessSteps`, `GalleryPreview`,
-  `Testimonials`, `OccasionCards`, `WaitlistPopover`, `Lightbox`) and small parts
-  (`CheckList`, `ArrowIcon`). Repeating content (FAQ entries, process
+  `Testimonials`, `OccasionCards`, `WaitlistPopover`, `Lightbox`), widgets
+  that used to be copy-pasted markup (`AvailabilityCalendar` — the weddings
+  diary, its modal copy and the form's compact picker; `PhotoCarousel` — the
+  homepage and package-page photo strips; `GalleryTile` — gallery, previews
+  and Reception's dish tiles) and small parts (`CheckList`, `ArrowIcon`,
+  `Particles`). Repeating content (FAQ entries, process
   steps, gallery photos, checklist items) is passed as arrays and rendered
   with `map()` — the shape Sanity data will arrive in later.
 - `EnquirySection` props: `eventType` (sets the selected chip AND the
@@ -96,20 +101,33 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 - `src/data/gallery.ts` — the full gallery's photos and filters.
 - `src/data/enquiry.ts` — event types and chip notes. Read by both
   `EnquirySection.astro` and `enquiry.js` — one list.
-- `src/styles/global.css` — the prototype's `styles.css`, imported once by
-  the layout. Rules that belong to one component or one page now live in
-  that file's own scoped `<style>` (2026-10-05: 16 components, plus the
-  homepage, weddings and gallery pages), and rules for prototype sandboxes
-  that were never ported (the rejected "Events 2" nav panel, the rejected
-  inline waitlist panel, the old single-button dropdown trigger) are gone —
-  10,299 lines down to ~4,100. What is left is genuinely shared (tokens,
-  base type, buttons, tabs, the wizard, the calendar, package grids) or
-  styles elements a SCRIPT creates or toggles (calendar cells, nav dropdown
-  state), which never get Astro's scoping attribute and so must stay global.
+- `src/data/testimonials.ts` — the four testimonials. `Testimonials.astro`
+  renders the picker cards and dots from it at build time; `testimonials.js`
+  renders the active quote (it has to measure it to cap it at five lines).
+- **Styles: global.css holds only what is genuinely sitewide** (cleaned
+  2026-10-06, 10,299 lines down to ~870): design tokens, the reset and base
+  element styles, the shared primitives (`.button` family, `.eyebrow`,
+  `.lead`, headings, `.link-underline-inline`, `.wrap`, section padding,
+  `.on-dark`, `.section-head`, `.split`, `.arch`), and sitewide behaviour
+  hooks (`[data-reveal]`, the scroll lock, safe reveals, reduced motion).
+  Everything else lives with what it styles: a component's or page's own
+  scoped `<style>`, or, for styles several pages share without one owning
+  component, a plain stylesheet those pages import (`tabs.css`,
+  `gallery-grid.css`, `package-page.css` and its siblings).
+  **Keep it that way: a new rule goes in the file that renders the element.**
+  Elements a SCRIPT creates (calendar cells, particles, the testimonial
+  quote's `<em>`) and elements rendered through a slot or by a child
+  component don't carry the file's scoping attribute, so their rules wrap
+  them in `:global()`, e.g. `.availability-grid :global(.availability-cell)`.
+  `@keyframes` names are never scoped by Astro, so a component's keyframes
+  live in its own `<style>` too; `shake` and `btn-shimmer-sweep` stay global
+  because more than one component uses them.
 - `src/styles/secure-booking.css` — the prototype's deposit page styles,
   parked: nothing imports it until that page is ported (roadmap step 4).
-- Moving more styles: `scripts/scope-styles.mjs <name>` (a component, or
-  `pages/<route>`) does the move mechanically; take a
+- Moving styles: `scripts/scope-styles.mjs <target> --select <regex>`
+  moves matching rules out of global.css (or out of another file with
+  `--from <file>`, or copies with `--keep`) and wraps foreign elements in
+  `:global()` itself; take a
   `scripts/style-snapshot.mjs` baseline before, re-snapshot after,
   `scripts/style-diff.mjs` must show 0 changes, and
   `scripts/state-diff.mjs <old dist> <new dist>` must say "same" for every
@@ -118,18 +136,16 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   in the photo carousel's transition timing; anything else is real. If
   Playwright fails with "Target page, context or browser has been closed",
   that's the machine running out of headroom with too many parallel
-  browsers, not the site — `--workers=2` passes. One known blind spot in the mover: a
-  bare-tag rule (`.nav-dd-panel-media img`) passes if the component's markup
-  has that tag ANYWHERE, even when the matching element is rendered by a
-  child component (NavPanelPhoto) — which is why SiteHeader still reports
-  11 movable rules that must not move. Node in Git Bash: `/tmp` means
+  browsers, not the site — `--workers=2` passes. A baseline taken on an
+  earlier DAY shows calendar cells changing state (the seeded statuses are
+  relative to today), so re-take it. Node in Git Bash: `/tmp` means
   `C:\tmp`, not Git Bash's `/tmp`.
 - `src/scripts/` — one module per feature, each loaded by the component or
   page that needs it, so a page only ships the JS it uses. `BaseLayout` loads
   `site.js` (loaded class, particles, `[data-reveal]`, safe reveals) and
   `site-nav.js` (bar, drawer, dropdowns). Components: `testimonials.js`,
-  `enquiry.js` (imports `availability.js`), `faq.js`, `lightbox.js`. Pages:
-  `tabs.js` + `photo-carousel.js` + `home.js` (homepage), `availability.js` +
+  `enquiry.js` (imports `availability.js`), `faq.js`, `lightbox.js`,
+  `photo-carousel.js` (PhotoCarousel). Pages: `tabs.js` + `home.js` (homepage), `availability.js` +
   `weddings.js`, `gallery-filter.js`, `package-tiers.js` /
   `reception-package.js`. Shared helpers in `src/scripts/lib/`:
   `motion.js` (reduced motion), `scroll-lock.js`, `safe-reveal.js`,
