@@ -11,15 +11,11 @@ import { lockScroll, unlockScroll } from "./lib/scroll-lock.js"
 // a date is shared: every instance re-syncs to show the same selected date, and all of
 // them write to the same #date field.
 ;(function () {
-  // :not(.sent) excludes the wizard's own success panel (.availability.sent),
-  // which reuses the .availability class purely for its card styling (rounded
-  // corner/shadow), not because it's an actual calendar instance —
-  // without this, this widget tried to treat it as one, found no
-  // .availability-month/.availability-grid inside it, and threw on the first render() call,
-  // silently killing every line of code after it in this block
-  // (including the "Pick a date" modal wiring below) since nothing here
-  // is wrapped in try/catch.
-  var availEls = document.querySelectorAll(".availability:not(.sent)")
+  // Every .availability is a calendar (AvailabilityCalendar.astro). The
+  // enquiry form's sent panel used to borrow the class for its card styling
+  // and had to be excluded here — it threw on render() and took the modal
+  // wiring below down with it. It has its own class now.
+  var availEls = document.querySelectorAll(".availability")
   if (!availEls.length) return
   var names = [
     "January",

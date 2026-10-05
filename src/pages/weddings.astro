@@ -4,6 +4,7 @@
 // (#availability) and its quick-pick modal are weddings-only, so they stay
 // inline here.
 import BaseLayout from "../layouts/BaseLayout.astro"
+import AvailabilityCalendar from "../components/AvailabilityCalendar.astro"
 import EnquirySection from "../components/EnquirySection.astro"
 import ArrowIcon from "../components/ArrowIcon.astro"
 import CheckList from "../components/CheckList.astro"
@@ -451,162 +452,29 @@ import Photo from "../components/Photo.astro"
           </div>
         </div>
         <div data-reveal style="--d: 340ms">
-          <div class="availability diary" id="avail">
-            <div class="availability-head">
-              <button type="button" class="availability-prev" aria-label="Previous month">
-                <svg width="12" height="9" viewBox="0 0 14 10" fill="none">
-                  <path
-                    d="M13 5H2m3.5-3.5L2 5l3.5 3.5"
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-              <div class="availability-title">
-                <div class="availability-month">Month</div>
-                <div class="availability-sub">One celebration each day</div>
-              </div>
-              <button type="button" class="availability-next" aria-label="Next month">
-                <svg width="12" height="9" viewBox="0 0 14 10" fill="none">
-                  <path
-                    d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div class="availability-day-of-week">
-              <span>Mon</span>
-              <span>Tue</span>
-              <span>Wed</span>
-              <span>Thu</span>
-              <span>Fri</span>
-              <span>Sat</span>
-              <span>Sun</span>
-            </div>
-            <div class="availability-grid"></div>
-            <div class="availability-legend">
-              <span class="availability-legend-open">
-                <i></i>Available
-              </span>
-              <span class="availability-legend-interest">
-                <i></i>Enquiries Received
-              </span>
-              <span class="availability-legend-taken">
-                <i></i>Booked
-              </span>
-            </div>
-            {/* Without this, a Booked date being clickable at all is invisible —
-                 cursor:pointer/a hover ring are easy to miss, and there's nothing to
-                 notice on a touch device until you happen to tap one. Shown
-                 unconditionally (not just on touch) since a mouse user hovering a
-                 date without knowing anything happens is the same discoverability
-                 gap, just solved by a different affordance. Icon travels with its
-                 own text as one toggled group (display:contents — see styles.css),
-                 not one shared icon for both, so a touch visitor never sees a
-                 mouse-pointer glyph next to "Tap it...". */}
-            <div class="availability-note">
-              <span class="wl-hint-hover">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M4 4l7.07 16.97 2.51-7.39 7.39-2.51L4 4Z"
-                    stroke="currentColor"
-                    stroke-width="1.3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M13.5 13.5 19 19"
-                    stroke="currentColor"
-                    stroke-width="1.3"
-                    stroke-linecap="round"
-                  />
-                </svg>
-                <span>
-                  Date unavailable? Click it to join the waitlist — we'll email you if it
-                  opens up.
-                </span>
-              </span>
-              <span class="wl-hint-touch">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="2.5"
-                    stroke="currentColor"
-                    stroke-width="1.3"
-                  />
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="6"
-                    stroke="currentColor"
-                    stroke-width="1.3"
-                    opacity="0.6"
-                  />
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="9.5"
-                    stroke="currentColor"
-                    stroke-width="1.1"
-                    opacity="0.35"
-                  />
-                </svg>
-                <span>
-                  Date unavailable? Tap it to join the waitlist — we'll email you if it
-                  opens up.
-                </span>
-              </span>
-            </div>
-            <div class="availability-foot">
-              <span class="availability-foot-label">
-                <span class="availability-foot-label-date">No date selected</span>
-                <span class="availability-picked-status"></span>
-              </span>
-              <button
-                type="button"
-                class="button button-gradient button-small"
-                id="goToFormBtn"
-              >
-                <span>Enquire now</span>
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-                  <path
-                    d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
-            <p class="availability-foot-note">
-              The Prince De Redin Hall, Terrace and Secret Garden are reserved together
-              for your day. Your date stays unconfirmed until we reply.
-            </p>
-            <div class="availability-note">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <AvailabilityCalendar
+            variant="diary"
+            id="avail"
+            noticeSuffix="Weddings need at least 3 months' notice."
+          >
+            <button
+              slot="foot-action"
+              type="button"
+              class="button button-gradient button-small"
+              id="goToFormBtn"
+            >
+              <span>Enquire now</span>
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
                 <path
-                  d="M12 9v4m0 4h.01M10.3 3.9 2.5 17.5A1.5 1.5 0 0 0 3.8 20h16.4a1.5 1.5 0 0 0 1.3-2.5L13.7 3.9a1.5 1.5 0 0 0-2.6 0Z"
+                  d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
                   stroke="currentColor"
-                  stroke-width="1.3"
+                  stroke-width="1.4"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
               </svg>
-              <span>
-                Illustrative only — the dates shown are placeholder data. We'll connect
-                this to real availability with Bacchus before we go live. Weddings need at
-                least 3 months' notice.
-              </span>
-            </div>
-          </div>
+            </button>
+          </AvailabilityCalendar>
         </div>
       </div>
     </div>
@@ -634,156 +502,30 @@ import Photo from "../components/Photo.astro"
           />
         </svg>
       </button>
-      <div
-        class="availability diary"
+      <AvailabilityCalendar
+        variant="diary"
         id="availModalGrid"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Choose your wedding date"
+        dialogLabel="Choose your wedding date"
       >
-        <div class="availability-head">
-          <button type="button" class="availability-prev" aria-label="Previous month">
-            <svg width="12" height="9" viewBox="0 0 14 10" fill="none">
-              <path
-                d="M13 5H2m3.5-3.5L2 5l3.5 3.5"
-                stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-          <div class="availability-title">
-            <div class="availability-month">Month</div>
-            <div class="availability-sub">One celebration each day</div>
-          </div>
-          <button type="button" class="availability-next" aria-label="Next month">
-            <svg width="12" height="9" viewBox="0 0 14 10" fill="none">
-              <path
-                d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
-                stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
-        <div class="availability-day-of-week">
-          <span>Mon</span>
-          <span>Tue</span>
-          <span>Wed</span>
-          <span>Thu</span>
-          <span>Fri</span>
-          <span>Sat</span>
-          <span>Sun</span>
-        </div>
-        <div class="availability-grid"></div>
-        <div class="availability-legend">
-          <span class="availability-legend-open">
-            <i></i>Available
-          </span>
-          <span class="availability-legend-interest">
-            <i></i>Enquiries Received
-          </span>
-          <span class="availability-legend-taken">
-            <i></i>Booked
-          </span>
-        </div>
-        {/* Same hint as the showcase calendar above (see its own comment) — the
-             modal is the same widget, so a Booked date needs the same
-             discoverability affordance here too. */}
-        <div class="availability-note">
-          <span class="wl-hint-hover">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M4 4l7.07 16.97 2.51-7.39 7.39-2.51L4 4Z"
-                stroke="currentColor"
-                stroke-width="1.3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M13.5 13.5 19 19"
-                stroke="currentColor"
-                stroke-width="1.3"
-                stroke-linecap="round"
-              />
-            </svg>
-            <span>
-              Date unavailable? Click it to join the waitlist — we'll email you if it
-              opens up.
-            </span>
-          </span>
-          <span class="wl-hint-touch">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.3" />
-              <circle
-                cx="12"
-                cy="12"
-                r="6"
-                stroke="currentColor"
-                stroke-width="1.3"
-                opacity="0.6"
-              />
-              <circle
-                cx="12"
-                cy="12"
-                r="9.5"
-                stroke="currentColor"
-                stroke-width="1.1"
-                opacity="0.35"
-              />
-            </svg>
-            <span>
-              Date unavailable? Tap it to join the waitlist — we'll email you if it opens
-              up.
-            </span>
-          </span>
-        </div>
-        <div class="availability-foot">
-          <span class="availability-foot-label">
-            <span class="availability-foot-label-date">No date selected</span>
-            <span class="availability-picked-status"></span>
-          </span>
-          <button
-            type="button"
-            class="button button-gradient button-small availability-modal-done"
-            id="availModalDone"
-            disabled
-          >
-            <span>Use this date</span>
-            <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-              <path
-                d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
-                stroke="currentColor"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
-        <p class="availability-foot-note">
-          The Prince De Redin Hall, Terrace and Secret Garden are reserved together for
-          your day. Your date stays unconfirmed until we reply.
-        </p>
-        <div class="availability-note">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <button
+          slot="foot-action"
+          type="button"
+          class="button button-gradient button-small availability-modal-done"
+          id="availModalDone"
+          disabled
+        >
+          <span>Use this date</span>
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
             <path
-              d="M12 9v4m0 4h.01M10.3 3.9 2.5 17.5A1.5 1.5 0 0 0 3.8 20h16.4a1.5 1.5 0 0 0 1.3-2.5L13.7 3.9a1.5 1.5 0 0 0-2.6 0Z"
+              d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
               stroke="currentColor"
-              stroke-width="1.3"
+              stroke-width="1.4"
               stroke-linecap="round"
               stroke-linejoin="round"
             />
           </svg>
-          <span>
-            Illustrative only — the dates shown are placeholder data. We'll connect this
-            to real availability with Bacchus before we go live.
-          </span>
-        </div>
-      </div>
+        </button>
+      </AvailabilityCalendar>
     </div>
   </div>
 
@@ -879,7 +621,7 @@ import Photo from "../components/Photo.astro"
        (now 920px, not 980px); center-ing it while it's still sharing a
        two-column row with the intro text (the 921-980px gap) would be wrong. */
   @media (max-width: 920.98px) {
-    :global(#availability) .availability.diary {
+    #availability :global(.availability.diary) {
       margin-inline: auto;
     }
   }
@@ -1755,13 +1497,6 @@ import Photo from "../components/Photo.astro"
     font-weight: 400;
     color: var(--ink);
   }
-  :global(.availability.compact) .availability-picked {
-    margin-top: 20px;
-    gap: 4px;
-  }
-  :global(.availability.compact) .availability-picked-date {
-    font-size: 16px;
-  }
   /* ---------- Availability calendar: premium "Venue Diary" treatment ----------
      #availability on weddings.html. Reuses the shared .availability widget in main.js
      completely unchanged (same class hooks it always looked for: .availability-month,
@@ -1773,9 +1508,7 @@ import Photo from "../components/Photo.astro"
     flex-direction: column;
     gap: 22px;
   }
-  /* Unlike the compact/pointer instances (plain text, no card — see
-     .availability.compact .availability-picked above), the showcase's "Your selection" panel
-     keeps the boxed-card treatment: background, border, status-colored left
+  /* The showcase's "Your selection" panel keeps the boxed-card treatment: background, border, status-colored left
      accent, shadow. Only shown once a date's picked (.show — see main.js),
      same as every other .availability-picked instance — no longer forced visible via
      .always with a placeholder. */
@@ -1806,67 +1539,6 @@ import Photo from "../components/Photo.astro"
     font-family: "Newsreader", Georgia, serif;
     border-top: 1px solid rgba(var(--muted-ink-rgb), 0.1);
     padding-top: 16px;
-  }
-  .availability.diary {
-    /* 480px + 20px, matching .availability's own padding increase above (max raised
-       10px per side) — keeps the same inner content width the day-grid had
-       before, rather than the extra padding eating into it. */
-    max-width: 500px;
-    border-radius: calc(var(--radius-card) * 2);
-    box-shadow: 0 24px 60px -30px rgba(var(--muted-ink-rgb), 0.32);
-  }
-  /* Reverts to the original 480px at true mobile — the padding increase
-       above is already excluded there (unchanged clamp min), so there's no
-       extra padding to account for at this width either. */
-  @media (max-width: 620.98px) {
-    .availability.diary {
-      max-width: 480px;
-    }
-  }
-  .availability.diary .availability-foot {
-    margin-top: 24px;
-    padding-top: 22px;
-    border-top: 1px solid rgba(var(--muted-ink-rgb), 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .availability-foot-note {
-    display: none;
-    margin-top: 14px;
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: var(--muted-ink);
-    font-family: "Newsreader", Georgia, serif;
-  }
-  /* Shown once a date's picked — mirrors .availability-select-note's copy, which used to
-     be the only place this reassurance text lived (inside the section's own
-     .availability-intro callout). :has() keys off the same status class the dot above
-     uses, so no extra JS is needed just to toggle this line. */
-  .availability-foot:has(.availability-foot-label.status-open) + .availability-foot-note,
-  .availability-foot:has(.availability-foot-label.status-interest)
-    + .availability-foot-note {
-    display: block;
-  }
-  @media (min-width: 981px) {
-    :global(#availability) .availability-foot-note {
-      display: none;
-    }
-  }
-  @media (max-width: 480px) {
-    .availability-foot {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 20px;
-    }
-  }
-  @media (max-width: 480px) {
-    .availability-foot-note {
-      margin-top: 20px;
-    }
   }
   /* ---------- Quick-pick calendar modal (weddings.html only) ----------
      Reuses .availability.diary + .availability-foot unchanged inside a fixed overlay — same
@@ -1939,7 +1611,7 @@ import Photo from "../components/Photo.astro"
       border-color: var(--gold);
     }
   }
-  .availability-modal-panel .availability.diary {
+  .availability-modal-panel :global(.availability.diary) {
     margin: 0;
     max-width: none;
   }
@@ -2173,6 +1845,43 @@ import Photo from "../components/Photo.astro"
   @media (max-width: 620.98px) {
     .package-dining-card-body :global(h4) {
       font-size: clamp(18px, 4.6vw, 21px);
+    }
+  }
+  .availability-picked-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .availability-picked-status:not(:empty)::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+  .availability-picked.status-open .availability-picked-status {
+    color: var(--avail-green-fg);
+  }
+  .availability-picked.status-interest .availability-picked-status {
+    color: var(--avail-amber-fg);
+  }
+  .availability-intro .eyebrow {
+    margin-bottom: 0;
+  }
+  /* Same reasoning as the note above: the section's own callout in the left
+       column already spells out "Available"/"Enquiries received" once a date's
+       picked, so showing it a second time next to "Enquire now" here just
+       duplicates it. The date line ("Selected · 26 Sep 2026") predates tonight
+       and was never part of that duplication, so it stays. The modal has no
+       callout at any width, so its own status word is untouched. */
+  @media (min-width: 981px) {
+    #availability :global(.availability-foot-label .availability-picked-status) {
+      display: none;
     }
   }
 </style>
