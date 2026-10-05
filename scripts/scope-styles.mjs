@@ -1,6 +1,7 @@
 // Move global.css rules into the file that owns them.
 //
-//   node scripts/scope-styles.mjs <target> [--select <regex>] [--keep] [--dry]
+//   node scripts/scope-styles.mjs <target> [--select <regex>] [--from <source>]
+//                                 [--keep] [--dry]
 //
 // <target> is a component name ("SiteHeader" -> src/components/SiteHeader.astro),
 // a path under src/ for a page ("pages/index"), or a stylesheet
@@ -11,6 +12,11 @@
 //     split: matching ones move, the rest stay).
 //   • Without it, selectors whose styled element carries a class that appears
 //     in the target's markup and in no other file's.
+//
+// --from takes rules out of another file's <style> instead of global.css
+// (same naming as <target>) — for when markup moves into a child component
+// and its rules have to follow it. Compounds already wrapped in :global()
+// are left as they are.
 //
 // --keep copies instead of moving, leaving global.css untouched: for a rule
 // two components both need (copy into the first with --keep, then move into
@@ -39,12 +45,16 @@ const dry = args.includes("--dry")
 const keep = args.includes("--keep")
 const selectIndex = args.indexOf("--select")
 const select = selectIndex > -1 ? new RegExp(args[selectIndex + 1]) : null
+const fromIndex = args.indexOf("--from")
 const SRC = "src"
-const targetFile = name.endsWith(".css")
-  ? path.join(SRC, name)
-  : name.includes("/")
-    ? path.join(SRC, `${name}.astro`)
-    : path.join(SRC, "components", `${name}.astro`)
+const fileFor = (n) =>
+  n.endsWith(".css")
+    ? path.join(SRC, n)
+    : n.includes("/")
+      ? path.join(SRC, `${n}.astro`)
+      : path.join(SRC, "components", `${n}.astro`)
+const targetFile = fileFor(name)
+const sourceFile = fromIndex > -1 ? fileFor(args[fromIndex + 1]) : null
 const cssTarget = targetFile.endsWith(".css")
 
 const walk = (dir) =>
@@ -151,6 +161,7 @@ const classesOf = (c) => c.filter((n) => n.type === "class").map((n) => n.value)
 const idsOf = (c) => c.filter((n) => n.type === "id").map((n) => n.value)
 
 function isLocal(compound) {
+  if (compound.some((n) => n.type === "pseudo" && n.value === ":global")) return true
   const cls = classesOf(compound)
   if (cls.some((c) => localClasses.has(c) && !created.has(c))) return true
   if (idsOf(compound).some((i) => localIds.has(i))) return true
@@ -191,8 +202,13 @@ function convert(selector) {
   }).processSync(selector)
 }
 
-const globalFile = path.join(SRC, "styles", "global.css")
-const root = postcss.parse(fs.readFileSync(globalFile, "utf8"))
+// The source: global.css, or the last <style> block of --from's file.
+const globalFile = sourceFile ?? path.join(SRC, "styles", "global.css")
+const sourceText = fs.readFileSync(globalFile, "utf8")
+const styleMatch = sourceFile
+  ? [...sourceText.matchAll(/<style>([\s\S]*?)<\/style>/g)].pop()
+  : null
+const root = postcss.parse(styleMatch ? styleMatch[1] : sourceText)
 const moved = []
 root.walkRules((rule) => {
   if (rule.parent.type === "atrule" && /keyframes/.test(rule.parent.name)) return
@@ -242,7 +258,15 @@ if (dry) {
   process.exit(0)
 }
 if (!moved.length) process.exit(0)
-if (!keep) fs.writeFileSync(globalFile, root.toString())
+if (!keep)
+  fs.writeFileSync(
+    globalFile,
+    styleMatch
+      ? sourceText.slice(0, styleMatch.index) +
+          `<style>${root.toString()}</style>` +
+          sourceText.slice(styleMatch.index + styleMatch[0].length)
+      : root.toString(),
+  )
 if (cssTarget) {
   const existing = fs.existsSync(targetFile)
     ? fs.readFileSync(targetFile, "utf8").trimEnd() + "\n\n"

@@ -207,6 +207,26 @@ const SCENARIOS = [
       await p.waitForTimeout(700)
     },
   ],
+  [
+    "mobile",
+    "/weddings",
+    "#wlPopover",
+    async (p) => {
+      await p.click("#avail .availability-cell.taken >> nth=0")
+      await p.waitForTimeout(600)
+    },
+  ],
+  [
+    "mobile",
+    "/",
+    "#enquire",
+    async (p) => {
+      await p.click("#chips .chip >> nth=0")
+      await p.waitForTimeout(600)
+      await p.click("#availForm .availability-cell.taken >> nth=0")
+      await p.waitForTimeout(600)
+    },
+  ],
 ]
 const s1 = serve(process.argv[2], 4511),
   s2 = serve(process.argv[3], 4512)
