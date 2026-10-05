@@ -354,12 +354,7 @@ body.menu-open .grain {
 .on-dark p {
   color: var(--muted);
 }
-p,
-.story p,
-.tab-panel p,
-.tab-panel li,
-.field input,
-.field textarea {
+p, .tab-panel p, .tab-panel li, .field input, .field textarea {
   font-family: "Newsreader", Georgia, serif;
 }
 .hero .sub {
@@ -560,18 +555,6 @@ p,
     animation: none;
   }
 }
-.button-light {
-  /* Filled (not outline) at rest, at reduced opacity — hover intensifies to
-     full solid rather than dropping to transparent. --bd matches --bg so
-     the border reads as part of the fill, not a separate outline. Used for
-     non-hero secondary CTAs on dark backgrounds (the hero's own secondary
-     CTA uses the real .button-ghost below instead). */
-  --bg: rgba(var(--limestone-rgb), 0.88);
-  --fg: var(--ink);
-  --bd: rgba(var(--limestone-rgb), 0.88);
-  --bg-h: var(--limestone);
-  --fg-h: var(--ink);
-}
 .button-dark {
   /* Same idea as .button-light above, light-background equivalent. */
   --bg: rgba(var(--ink-rgb), 0.88);
@@ -696,61 +679,6 @@ p,
   height: var(--button-compact-height);
   padding: 0 var(--button-compact-padding-x);
   font-size: var(--button-compact-font-size);
-}
-/* a.link-underline (not just .link-underline) so this beats [data-reveal]'s
-   own transition list on specificity — the "View Gallery" links also carry
-   data-reveal, and two same-specificity rules both setting `transition` on
-   one element means the later rule (here, [data-reveal] below) wins
-   wholesale and silently drops color from the list otherwise. */
-a.link-underline {
-  position: relative;
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  font-weight: 600;
-  padding-bottom: 6px;
-  display: inline-flex;
-  gap: 4px;
-  align-items: center;
-  color: var(--ink);
-  border-bottom: 1px solid rgba(var(--muted-ink-rgb), 0.22);
-  transition: color 0.35s var(--ease);
-}
-.link-underline::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  height: 1px;
-  width: 100%;
-  background: var(--gold);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.45s var(--ease);
-}
-.link-underline:hover {
-  color: var(--gold);
-}
-.link-underline:hover::after {
-  transform: scaleX(1);
-}
-.link-underline .arrow {
-  display: inline-block;
-  transition: transform 0.35s var(--ease);
-}
-.link-underline:hover .arrow {
-  transform: translateX(4px);
-}
-@media (hover: none) {
-  .link-underline:active {
-    color: var(--gold);
-  }
-  .link-underline:active::after {
-    transform: scaleX(1);
-  }
-  .link-underline:active .arrow {
-    transform: translateX(4px);
-  }
 }
 /* Same underline/gold-on-hover language as .link-underline, scaled to body
    text instead — for a link sitting mid-sentence (e.g. "...the full
@@ -1638,55 +1566,12 @@ picture {
     opacity: 0;
   }
 }
-.portcullis {
-  position: absolute;
-  inset: 0;
-  z-index: 25;
-  display: flex;
-  pointer-events: none;
-}
-.portcullis .bar {
-  flex: 1;
-  background: linear-gradient(180deg, #2c2820 0%, #14120d 100%);
-  border-left: 1px solid rgba(0, 0, 0, 0.4);
-  border-right: 1px solid rgba(var(--bronze-rgb), 0.2);
-  transform: translateY(0%);
-  animation: rise 1.05s cubic-bezier(0.7, 0, 0.2, 1) forwards;
-}
-.portcullis .bar:nth-child(1) {
-  animation-delay: 0.1s;
-}
-.portcullis .bar:nth-child(2) {
-  animation-delay: 0.18s;
-}
-.portcullis .bar:nth-child(3) {
-  animation-delay: 0.26s;
-}
-.portcullis .bar:nth-child(4) {
-  animation-delay: 0.34s;
-}
-.portcullis .bar:nth-child(5) {
-  animation-delay: 0.42s;
-}
-.portcullis .bar:nth-child(6) {
-  animation-delay: 0.5s;
-}
-.portcullis .bar:nth-child(7) {
-  animation-delay: 0.58s;
-}
-.portcullis .bar:nth-child(8) {
-  animation-delay: 0.66s;
-}
 @keyframes rise {
   to {
     transform: translateY(-115%);
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .portcullis .bar {
-    animation: none;
-    transform: translateY(-115%);
-  }
   .particle {
     display: none;
   }
@@ -1697,17 +1582,6 @@ picture {
   width: 100%;
   padding-bottom: clamp(50px, 8vh, 90px);
   padding-top: 140px;
-}
-.hero .kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--gold-2);
-  font-size: 10px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  margin-top: 24px;
-  margin-bottom: 24px;
 }
 .hero h1 {
   color: var(--limestone-2);
@@ -1728,10 +1602,6 @@ picture {
   color: transparent;
   padding: 0 0.16em;
   margin: 0 -0.16em;
-}
-.hero-text-mask {
-  display: block;
-  overflow: hidden;
 }
 .hero-text-mask > span {
   display: block;
@@ -1754,11 +1624,6 @@ picture {
   gap: 14px;
   margin-top: 24px;
 }
-.cta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-}
 .fade-up {
   opacity: 0;
   transform: translateY(26px);
@@ -1769,27 +1634,6 @@ picture {
 .loaded .fade-up {
   opacity: 1;
   transform: none;
-}
-.scroll-cue {
-  position: absolute;
-  right: clamp(20px, 5vw, 44px);
-  bottom: clamp(58px, 9vh, 104px);
-  z-index: 4;
-  writing-mode: vertical-rl;
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.scroll-cue i {
-  display: block;
-  width: 1px;
-  height: 64px;
-  background: linear-gradient(180deg, var(--gold), transparent);
-  animation: cue 2.2s var(--ease-io) infinite;
 }
 @keyframes cue {
   0% {
@@ -1852,24 +1696,6 @@ picture {
 }
 [data-reveal="scale"] {
   transform: scale(0.94);
-}
-
-.marquee {
-  background: var(--ink);
-  color: var(--limestone);
-  padding: 16px 0;
-  overflow: hidden;
-  border-top: 1px solid rgba(var(--gold-rgb), 0.2);
-  border-bottom: 1px solid rgba(var(--gold-rgb), 0.2);
-}
-.marquee-track {
-  display: flex;
-  gap: 0;
-  width: max-content;
-  animation: slide 38s linear infinite;
-}
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
 }
 .marquee span {
   font-family: "Fraunces", serif;
@@ -2019,10 +1845,6 @@ h2 em {
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
-
-.story {
-  background: linear-gradient(180deg, var(--paper), #f3eddf);
-}
 .story .grid {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
@@ -2036,46 +1858,6 @@ h2 em {
   .story .grid {
     grid-template-columns: 1fr;
   }
-}
-.story p {
-  color: var(--muted-ink);
-  margin-bottom: 18px;
-  max-width: 52ch;
-}
-/* Below ~900px, .section-head's own max-width (760px, or #events's/.story's
-   column width once narrower than that) is already doing the narrowing —
-   the extra 52ch cap on top of it just makes the paragraph noticeably
-   narrower than the heading above it instead of matching it. Placed after
-   the base rule above, not before (CLAUDE.md bug #2: same selector, same
-   specificity — source order decides). */
-@media (max-width: 900px) {
-  .story p {
-    max-width: none;
-  }
-}
-.facts {
-  display: flex;
-  gap: clamp(20px, 4vw, 48px);
-  margin-top: 38px;
-  flex-wrap: wrap;
-}
-.facts .fact-number {
-  font-family: "Fraunces", serif;
-  font-size: clamp(30px, 4.4vw, 50px);
-  color: var(--ink);
-  display: block;
-  line-height: 1;
-}
-.facts .label {
-  font-size: 10.5px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-top: 10px;
-  display: block;
-}
-.on-dark .facts .fact-number {
-  color: var(--limestone-2);
 }
 .arch {
   position: relative;
@@ -2092,63 +1874,14 @@ h2 em {
 .arch:hover img {
   transform: scale(var(--image-hover-zoom-feature));
 }
-.story-visual {
-  position: relative;
-}
 .story-visual .arch {
   aspect-ratio: 3/4;
-}
-.story-visual .badge {
-  position: absolute;
-  bottom: -26px;
-  left: -26px;
-  background: var(--ink);
-  color: var(--limestone);
-  padding: clamp(16px, 3.5vw, 22px) clamp(18px, 4.5vw, 26px);
-  border-radius: 3px;
-  border: 1px solid rgba(var(--gold-rgb), 0.3);
-  max-width: clamp(150px, 34vw, 230px);
-  box-shadow: 0 26px 60px -24px rgba(var(--muted-ink-rgb), 0.6);
-}
-/* Scales with the badge's own padding/max-width above (clamp, not fixed
-   34px) — needed now that .story-visual goes full-width at 760px and below
-   instead of staying capped at 440px, so the badge itself must shrink to
-   match a much smaller image instead of overwhelming it. */
-.story-visual .badge .badge-number {
-  font-family: "Fraunces", serif;
-  font-size: clamp(24px, 6vw, 34px);
-  color: var(--gold-2);
-  line-height: 1;
-}
-.story-visual .badge .badge-caption {
-  font-size: 10.5px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 8px;
 }
 /* Placed after the base .story-visual/.story-visual .badge rules above,
    not before (CLAUDE.md bug #2): a same-specificity media-query override
    living earlier in the file than the unconditional base rule it's meant
    to override gets silently beaten by it — which is exactly what happened
    the first time this was written above .story .grid's own block. */
-@media (max-width: 760.98px) {
-  .story-visual {
-    order: -1;
-  }
-  /* Previously overhung past the image's own edge (right:-6px;
-     bottom:-20px) — fine while .story-visual was capped at 440px, well
-     clear of the wrap's own edge, but now that the image is full-width
-     here, that same overhang tracks the image's edge straight out to the
-     wrap padding, landing within a few px of the actual screen edge on a
-     narrow phone. Inset instead, so it sits inside the image regardless of
-     how much wrap padding there is. */
-  .story-visual .badge {
-    left: auto;
-    right: 20px;
-    bottom: 20px;
-  }
-}
 
 .tab-bar {
   display: inline-flex;
@@ -2228,26 +1961,6 @@ h2 em {
     color: var(--limestone-2);
   }
 }
-/* Fully-rounds a .tab-bar (bar, buttons, active pill) instead of the
-   plain 3px-radius default — actually brings it in line with the design
-   system's own pill-shaped-buttons rule better than that default did.
-   Originally built for the Reception Menus sandbox
-   (sandboxes/reception-package.html, née reception-menus.html before it was
-   split into reception-package.html/reception-stations.html) alongside
-   repositioning it inline with
-   its heading — that inline placement didn't generalize here (this
-   section's heading is long enough to wrap 2–3 lines on its own, and
-   bottom-aligning a tab-bar to a line count that shifts with viewport
-   width never looked stable), so on this page it's kept stacked below the
-   full eyebrow/h2/lead block like before — just with this shape/color
-   treatment layered on. */
-.tabs-bar {
-  border-radius: var(--radius-pill);
-  /* Matches #events .section-head's own margin-bottom (32px) rather than
-     the shared .tab-bar clamp(18-24px) above — .tabs-bar is only ever used
-     here, so this is effectively an #events-specific value already. */
-  margin-bottom: 32px;
-}
 .tabs-bar .pill {
   border-radius: var(--radius-pill);
 }
@@ -2278,10 +1991,6 @@ h2 em {
    doesn't reach — matches #events's own 760px collapse point instead of
    leaving the tab-bar compact against a now full-width stacked panel. */
 @media (max-width: 760.98px) {
-  #events .tabs-bar {
-    display: flex;
-    width: 100%;
-  }
   #events .tabs-bar button {
     flex: 1;
   }
@@ -2321,10 +2030,6 @@ h2 em {
 @media (max-width: 760.98px) {
   #events .tab-panel.active {
     grid-template-columns: 1fr;
-  }
-  #events .arch-tab {
-    order: -1;
-    margin-top: clamp(18px, 5vw, 32px);
   }
 }
 @keyframes panelIn {
@@ -2457,48 +2162,6 @@ h2 em {
   width: 12px;
   height: 1px;
   background: var(--gold);
-}
-.tab-panel .capacity {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 9px;
-  margin-bottom: 20px;
-  color: var(--gold-2);
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-/* .arch-tab/.arch-dish are modifiers, not ancestor-scoped rules — menu.html
-   nests .dish inside its own (unrelated) .tab-panel tab system, so a
-   .tab-panel .arch / .dish .arch pair would both match the same element
-   there, silently resolving by CSS source order alone (see CLAUDE.md bug
-   #2). Applying the modifier directly to the element sidesteps that. */
-.arch-tab {
-  position: relative;
-  aspect-ratio: 4/5;
-  border-radius: 260px 260px 6px 6px;
-  overflow: hidden;
-  /* .tab-panel no longer sets align-items: center (removed so the text
-     column isn't force-stretched/centered against a taller image row) —
-     but that leaves .arch-tab's own height subject to stretch too, which
-     wins over aspect-ratio in a grid row taller than the image (e.g. a
-     longer bullet list), distorting it. align-self keeps it centered at
-     its own true aspect-ratio height regardless of the row's height. */
-  align-self: center;
-}
-.arch-tab::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 55%, rgba(10, 9, 6, 0.55));
-  pointer-events: none;
-}
-.tab-panel .actions {
-  margin-top: 32px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  align-items: center;
 }
 
 .gallery {
@@ -2689,21 +2352,6 @@ h2 em {
   color: var(--bronze);
   font-variant-numeric: tabular-nums;
 }
-
-.dishes {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(18px, 2.6vw, 34px);
-}
-.dish {
-  position: relative;
-}
-.arch-dish {
-  overflow: hidden;
-  border-radius: 200px 200px 4px 4px;
-  aspect-ratio: 3/4;
-  background: #211d17;
-}
 .dish img {
   width: 100%;
   height: 100%;
@@ -2717,38 +2365,6 @@ h2 em {
   font-size: 20px;
   font-weight: 400;
   margin-top: 22px;
-}
-.dish p {
-  color: var(--muted);
-  font-size: 14px;
-  margin-top: 6px;
-}
-.dish .course-number {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 2;
-  font-size: 10.5px;
-  letter-spacing: 0.2em;
-  color: var(--gold-2);
-  background: rgba(var(--muted-ink-rgb), 0.6);
-  backdrop-filter: blur(6px);
-  padding: 7px 12px;
-  border-radius: 2px;
-}
-.dish:nth-child(2) {
-  transform: translateY(clamp(16px, 3vw, 44px));
-}
-.dishes.four-column-grid {
-  grid-template-columns: repeat(4, 1fr);
-}
-.dishes.four-column-grid .dish:nth-child(2) {
-  transform: none;
-}
-@media (max-width: 980.98px) {
-  .dishes.four-column-grid {
-    grid-template-columns: 1fr 1fr;
-  }
 }
 .quote .wrap {
   position: relative;
@@ -3423,13 +3039,6 @@ footer a:hover {
   #availability .split {
     grid-template-columns: 1fr;
   }
-  /* Moved here from the shared 980px block below — .availability.diary should
-     only re-center once this section has actually collapsed to one column
-     (now 920px, not 980px); center-ing it while it's still sharing a
-     two-column row with the intro text (the 921-980px gap) would be wrong. */
-  #availability .availability.diary {
-    margin-inline: auto;
-  }
 }
 .split > * {
   min-width: 0;
@@ -3514,291 +3123,6 @@ footer a:hover {
     grid-template-columns: 1fr;
   }
 }
-
-/* ============================================================
-   Weddings → Packages: a numbered two-step choice.
-   Replaces the old flat 4-card .package-grid above (that component
-   stays live for Corporate/Celebrations). Built via a Lovable redesign
-   pass, hand-integrated after being proven out in
-   sandboxes/packages-section.html — see that file's own history comment
-   for the full trail (original flat grid → grouped rework → Lovable
-   export → this).
-   ============================================================ */
-.package-step {
-  margin-bottom: clamp(24px, 3vw, 36px);
-}
-.package-step-note {
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 14px;
-  color: var(--muted);
-  max-width: 56ch;
-}
-
-.package-dining-card-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: clamp(18px, 2.2vw, 30px);
-}
-.package-dining-card-item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(18px, 2.2vw, 30px);
-}
-/* Two-up tablet tier: a leftover third card centers itself on its own row
-   rather than forcing a premature drop to one column. The floating "or"
-   disc and the triptych's middle-card offset (980px+ below) both assume a
-   deterministic three-in-a-row layout, so this tier keeps the same
-   stacked/inline "or" treatment as the single-column layout instead.
-
-   621px lower bound (was 700px): this tier now runs the whole way down to
-   the mobile breakpoint, so the section has exactly two boundaries — 620 and
-   980 — instead of an island in the middle. Previously 621-699 fell through
-   to the base rule: a single column of full-width stacked cards, and above
-   640 the figure reverted from the old mobile 3/2 crop to the base 1/1, so a
-   ~660px viewport rendered a ~620px-tall square image inside a 900px+ card
-   sitting between two compact layouts.
-
-   Why 700 existed, and why coming below it is safe now: CLAUDE.md bug #20.
-   At a 50/50 split the card's own .package-card-link (a .button, deliberately
-   flex-shrink:0 with a nowrap label) stops fitting and overflows rather than
-   compressing — measured as a ~10px deficit right around 620-626px once
-   .package-dining-card-body's own padding came out of the column width, and
-   700px was the measured floor for the full-size button. At 621px there is
-   ~230px of usable width inside the card body against a full .button's
-   ~252px with a long label. The 621-699.98px block further down sizes the
-   button to .button-small's own dimensions in that band, bringing it to
-   ~222px, which fits. Keep the two together — that button rule is what makes
-   this lower bound safe, not an optional polish on top of it. */
-/* 979.98, not 979: paired with the triptych's `min-width: 980px` below, an
-   integer bound leaves everything from 979.01 to 979.99 matching neither
-   query, so a fractional viewport (browser zoom, fractional device pixel
-   ratios, a dragged desktop window) fell through to the base rule and
-   showed a single column of full-width stacked cards. Caught after the same
-   hole was hit for real at 699.2px on the tier below. The 0.02 offset is
-   the Bootstrap convention — browsers round reported widths to two decimal
-   places — and is preferred over overlapping the two ranges, which would
-   make the outcome depend on source order (CLAUDE.md bug #10).
-   The same hole existed on every other paired breakpoint in this file
-   (620/621, 639/640, 760/761, 920/921, 980/981) and all of them were closed
-   the same way in the same pass — see CLAUDE.md bug #22. Every max-width
-   query here now ends .98 below the min-width it hands over to. */
-@media (min-width: 621px) and (max-width: 979.98px) {
-  .package-dining-card-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .package-dining-card-item {
-    flex: 0 1 calc(50% - clamp(18px, 2.2vw, 30px) / 2);
-  }
-  /* Reception and Banquet share a row at this width, so their "or" (in-flow
-     above Banquet in the stacked/mobile treatment) floats into the gap
-     between the two cards instead — otherwise it reads as sitting on top of
-     Banquet rather than dividing the pair. High Tea wraps alone onto its own
-     row below with nothing beside it, so its "or" stays in normal flow. */
-  .package-dining-card-item:nth-child(2) .package-dining-card-or {
-    position: absolute;
-    top: 50%;
-    left: calc(clamp(18px, 2.2vw, 30px) / -2 - 23px);
-    transform: translateY(-50%);
-    z-index: 2;
-  }
-  /* High Tea wraps alone onto row 2, centered by .package-dining-card-list's
-     justify-content:center — and since row 1's two cards exactly fill the
-     container width, that centering lands High Tea's own horizontal center
-     right on the seam between Reception and Banquet above it. Same floating
-     disc, rotated: top/translateX (a vertical gap, horizontally centered)
-     instead of left/translateY. */
-  .package-dining-card-item:nth-child(3) .package-dining-card-or {
-    position: absolute;
-    top: calc(clamp(18px, 2.2vw, 30px) / -2 - 23px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-  }
-}
-/* The CLAUDE.md bug #20 guard that lets the 2-up tier above start at 621px
-   rather than 700px (see its comment for the measurements). .button-small's
-   own dimensions reused rather than a new size invented. Belt-and-braces
-   against today's copy — the four visible labels all read "View menu" now,
-   which fits either way — but the moment any of them is lengthened again the
-   bottom of this band overflows exactly as bug #20 describes. */
-@media (min-width: 621px) and (max-width: 699.98px) {
-  .package-card-link {
-    height: var(--button-compact-height);
-    padding: 0 var(--button-compact-padding-x);
-    font-size: var(--button-compact-font-size);
-  }
-}
-@media (min-width: 980px) {
-  .package-dining-card-list {
-    grid-template-columns: repeat(3, 1fr);
-    align-items: start;
-  }
-  .package-dining-card-item {
-    display: block;
-  }
-  /* The middle format sits a little lower so the row reads as a composed
-     triptych rather than three identical tiles in a row. */
-  .package-dining-card-item:nth-child(2) {
-    margin-top: clamp(20px, 3vw, 46px);
-  }
-  /* Reveal stagger, triptych only. The three cards enter left-to-right one
-     after another rather than as a single block — main.js reveals all three
-     the moment the row crosses the threshold (see its own comment for why
-     the middle card can't be left to its own intersection), and this is what
-     spaces them out once they do.
-
-     Deliberately CSS rather than the inline `style="--d: …"` these cards used
-     to carry: an inline custom property beats every stylesheet rule at every
-     width (CLAUDE.md bug #10), so a mobile query could never have cancelled
-     it. Below 980px the cards are stacked or 2-up and reveal individually as
-     each scrolls into view, where a delay is just lag on a card the visitor
-     is already looking at — so the stagger has to be able to switch off, and
-     living here is what lets it. */
-  /* Slowed deliberately, and much further than a normal reveal: this is the
-     one moment the page states outright that there are three options, and
-     the cards arriving one at a time over a couple of seconds is what makes
-     that land rather than three tiles appearing at once.
-
-     Timing: each card takes ~1.1s to fade and ~1.2s to settle, and they
-     start 600ms apart — so the sequence opens immediately, the third card
-     begins at 1.2s, and the whole thing resolves around 2.4s. The gap
-     between starts is longer than half a card's own fade on purpose; any
-     tighter and they read as overlapping rather than as one-then-the-next.
-
-     Declared at 0,2,0 (.package-dining-card-item .package-dining-card), not
-     as a bare .package-dining-card — this media query sits ABOVE the base
-     .package-dining-card rule in the file, so an equal-specificity override
-     here would lose on source order (CLAUDE.md bug #14: check what is
-     already targeting the element, and at what weight, before assuming a
-     later-looking rule wins).
-
-     The full transition list is restated, not just the durations, because
-     `transition` is a shorthand: setting transition-duration alone would
-     stretch border-color to 1.1s too and turn the hover border glow into a
-     slow smear. The delay is restated for the same reason — the shorthand
-     resets it, which is precisely the bug that kept the original stagger
-     from ever running — but PER ENTRY, on opacity and transform only.
-     A standalone `transition-delay` longhand here would hand the --d
-     values below to border-color as well, which is what made the hover
-     border on cards 2 and 3 arrive 0.6s and 1.2s late. See the matching
-     note on .package-dining-card's own transition, and CLAUDE.md bug #12. */
-  .package-dining-card-item .package-dining-card {
-    transition:
-      opacity 1.1s var(--ease) var(--d, 0ms),
-      transform 1.2s var(--ease) var(--d, 0ms),
-      border-color 0.5s var(--ease);
-  }
-  .package-dining-card-item:nth-child(2) .package-dining-card {
-    --d: 600ms;
-  }
-  .package-dining-card-item:nth-child(3) .package-dining-card {
-    --d: 1200ms;
-  }
-}
-
-/* The "or" marker: a gold-ringed disc between two formats. Stacked between
-   cards on narrow screens, floated into the column gap on wide ones. */
-.package-dining-card-or {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-self: center;
-  width: 46px;
-  height: 46px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--gold-rgb), 0.4);
-  background: var(--ink-2);
-  color: var(--gold-2);
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  flex: none;
-}
-@media (min-width: 980px) {
-  .package-dining-card-or {
-    position: absolute;
-    top: clamp(90px, 11vw, 150px);
-    left: calc(clamp(18px, 2.2vw, 30px) / -2 - 23px);
-    z-index: 2;
-  }
-  .package-dining-card-item:nth-child(2) .package-dining-card-or {
-    top: clamp(70px, 8vw, 104px);
-  }
-}
-
-.package-dining-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: var(--ink-2);
-  border: 1px solid rgba(var(--limestone-rgb), 0.12);
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  /* Restates [data-reveal]'s own opacity/transform transition (same
-     specificity, 0,1,0) alongside the new border-color entry — per CLAUDE.md
-     bug #2, a same-specificity rule wins wholesale, not per-property, so
-     adding border-color alone here would've silently dropped the reveal
-     animation. */
-  /* And the same bug once more, one property further out: `transition` is a
-     shorthand, so it also resets transition-delay to 0s. [data-reveal] sets
-     `transition-delay: var(--d, 0ms)` as a separate longhand at the same
-     0,1,0 specificity, but it is declared far earlier in this file, so the
-     shorthand here won and silently killed the stagger — the triptych's own
-     --d values were a no-op from the day the section shipped.
-
-     The delay is therefore restated — but PER ENTRY, on opacity and
-     transform only, NOT as a standalone `transition-delay` longhand
-     (2026-09-25). A standalone delay applies to every transition on the
-     element, border-color included, so the triptych's own stagger
-     (--d: 600ms / 1200ms on cards 2 and 3, further down this file) was
-     also delaying the hover border: the third card waited 1.2s before its
-     border even began to move, then took another 0.5s to arrive. Read as
-     a broken hover, and was reported as one.
-
-     Exactly CLAUDE.md bug #12, which records the same mistake on the
-     mobile drawer's link stagger and the same fix: put the delay on the
-     entries that want it via a custom property and leave the others with
-     no var, rather than reaching for the shorthand's delay slot. */
-  transition:
-    opacity 0.9s var(--ease) var(--d, 0ms),
-    transform 1s var(--ease) var(--d, 0ms),
-    border-color 0.5s var(--ease);
-}
-/* Whole-card link: the card already reacts to hover everywhere (border glow
-   + photo zoom below), so only the small pill at its foot being clickable
-   read as a mismatch (same affordance issue as .package-station-card
-   elsewhere on this page). One real hit target stretched over the whole
-   card, rather than wrapping all of it in an <a> — the card holds an <ol> of
-   tier names, and a whole-card <a> would read all of that aloud as part of
-   its accessible name. A single <a> with its own concise aria-label
-   sidesteps that. The visible pill (.package-card-link) becomes a
-   non-interactive, aria-hidden visual echo of the same label. Shared class
-   (not scoped to .package-dining-card) since .package-beverage-card below
-   wants the identical treatment. */
-.package-card-hit {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  appearance: none;
-}
-.package-card-hit:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 3px;
-}
 /* Touch: the gold border is on at rest. Everything that marks these cards as
    interactive — the border glow, the photo zoom, the button fill — lives in
    the (hover: hover) block below, so on a touch device none of it has ever
@@ -3846,45 +3170,10 @@ footer a:hover {
    this is a background it follows border-radius for free. Note the single
    box keyword in each layer sets both background-origin and background-clip;
    --ink-2 has to stay fully opaque or the gradient shows through the card. */
-@media (hover: none) {
-  .package-dining-card {
-    border-color: transparent;
-    background:
-      linear-gradient(var(--ink-2), var(--ink-2)) padding-box,
-      var(--gold-gradient-soft) border-box;
-  }
-}
 @media (hover: hover) {
-  .package-dining-card:hover {
-    border-color: rgba(var(--gold-rgb), 0.38);
-  }
-  /* .package-card-hit sits above everything in the card, so the visible pill
-     no longer receives its own native :hover — this restores its fill-on-
-     hover (background/color/shadow/lift, sheen sweep, arrow nudge) via the
-     card's :hover instead. Transitions still animate smoothly since they're
-     declared on .package-card-link itself (via .button); only the trigger
-     moved. background-color is a no-op once .button-gradient's opaque
-     gradient layer covers it — filter:brightness(1.07) (mirroring
-     .button-gradient:hover) is what actually needs restoring for a gradient
-     pill under this hit-target setup. */
-  .package-dining-card:hover .package-card-link {
-    background-color: var(--bg-h);
-    color: var(--fg-h);
-    filter: brightness(1.07);
-    box-shadow: 0 14px 30px -16px rgba(var(--muted-ink-rgb), 0.4);
-    transform: translateY(-1px);
-  }
-  .package-dining-card:hover .package-card-link::after {
-    left: 130%;
-  }
   .package-dining-card:hover .package-card-link svg {
     transform: translateX(4px);
   }
-}
-.package-dining-card-figure {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
 }
 /* There used to be a `@media (max-width: 640px) { aspect-ratio: 3/2 }` rule
    here — a landscape crop for the old single-column mobile tier, to stop
@@ -3918,90 +3207,9 @@ footer a:hover {
     filter: var(--image-hover-filter-boost);
   }
 }
-.package-dining-card-figure::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(var(--ink-rgb), 0) 40%,
-    rgba(var(--ink-rgb), 0.82)
-  );
-  pointer-events: none;
-}
-.package-dining-card-numeral {
-  position: absolute;
-  bottom: 14px;
-  /* Matches .package-dining-card-body's own horizontal padding clamp below,
-     so the numeral's left edge lines up with the card copy's left edge. */
-  left: clamp(20px, 2vw, 26px);
-  z-index: 2;
-  font-family: "Fraunces", Georgia, serif;
-  font-size: clamp(30px, 3.4vw, 44px);
-  line-height: 1;
-  letter-spacing: 0.02em;
-  /* Gold gradient text — same background-clip:text recipe as .on-dark
-     .eyebrow, rather than a flat gold. */
-  background: var(--gold-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-.package-dining-card-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: clamp(16px, 2vw, 20px);
-  padding: clamp(22px, 2.4vw, 30px) clamp(20px, 2vw, 26px) clamp(24px, 2.6vw, 30px);
-}
 .package-dining-card-body h4 {
   font-size: clamp(22px, 2.2vw, 27px);
   font-weight: 400;
-}
-.package-dining-card-body p {
-  font-size: 13.5px;
-  color: var(--muted);
-}
-.package-dining-card-tiers {
-  /* Pushes the tier list (and the button after it) to the bottom of the
-     card once .package-dining-card's height:100% stretches it to match its
-     row siblings — sits on top of the gap above, not instead of it. */
-  margin-top: auto;
-  /* Centered as its own unit (label + names both), rather than following
-     the h4/p's left alignment — centering just the names row read as
-     misaligned against the label sitting above it. */
-  text-align: center;
-}
-.package-dining-card-tiers-label {
-  display: block;
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 9.5px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-  /* Gold gradient text, same recipe as .package-dining-card-numeral above —
-     a flat --bronze here measured ~3.9:1 contrast against this card's
-     --ink-2 background, short of WCAG's 4.5:1 small-text minimum. */
-  background: var(--gold-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-/* Single row, not a stacked list — the three tier names are short enough to
-   sit side by side, and a horizontal run reads as "pick one of these three"
-   more directly. Divider is a vertical rule *between* names only (never
-   framing the whole row), matching this site's usual divided-list
-   convention (see .tab-panel li elsewhere). */
-.package-dining-card-tiers ol {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  row-gap: 6px;
 }
 .package-dining-card-tiers li {
   position: relative;
@@ -4034,100 +3242,6 @@ footer a:hover {
   width: 1px;
   background: linear-gradient(180deg, var(--gold-2), var(--gold) 55%, #b8902c);
 }
-/* One shared rule for all four buttons (Reception/Banquet/High Tea and
-   Beverage): full-width, centered, capped. 300px reuses the site's existing
-   full-width-CTA convention (.hero-ctas .button etc.) rather than a new
-   arbitrary cap. */
-.package-card-link {
-  margin-top: 4px;
-  align-self: center;
-  width: 100%;
-  max-width: 300px;
-  justify-content: center;
-}
-/* The 4px nudge above reads fine after the dining cards' tiers row, but is a
-   stray gap after Beverage's own flex gap — zeroed out here instead of
-   removing it from the shared rule, so the dining cards keep it. */
-.package-beverage-card-body .package-card-link {
-  margin-top: 0;
-}
-/* Beverage's own button stays centered (the shared default above) only
-   while the dining triptych above it is also single-column — once the
-   dining cards move to their 2-up/3-up tier, left-align it instead so it
-   matches the card body's own left-aligned h4/p/eyebrow rather than sitting
-   centered under left-aligned copy. Moved 700px → 621px with that tier's own
-   lower bound, so the two still change over together. */
-@media (min-width: 621px) {
-  .package-beverage-card-body .package-card-link {
-    align-self: flex-start;
-  }
-}
-
-/* The "+" joint: makes the additive relationship structural. */
-.package-join {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  /* Matches .section-head's own margin-bottom (clamp(44px, 6vw, 72px)) so
-     the gap above "Then add your bar" equals the gap above "Choose your
-     dining experience". */
-  margin: clamp(40px, 5vw, 72px) 0 clamp(44px, 6vw, 72px);
-}
-.package-join-line {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    rgba(var(--limestone-rgb), 0.04),
-    rgba(var(--gold-rgb), 0.35)
-  );
-}
-.package-join-line:last-child {
-  background: linear-gradient(
-    90deg,
-    rgba(var(--gold-rgb), 0.35),
-    rgba(var(--limestone-rgb), 0.04)
-  );
-}
-.package-join-plus {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--gold-rgb), 0.45);
-  color: var(--gold-2);
-  font-family: "Inter", system-ui, sans-serif;
-  font-size: 18px;
-  line-height: 1;
-  flex: none;
-}
-
-/* Beverage: one wide additive band, deliberately not a fourth card. */
-.package-beverage-card {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr;
-  /* Same ground and same resting edge as .package-dining-card
-     (2026-09-25) — was linear-gradient(120deg, --ink-3, --ink-2) with a
-     gold 0.22 border. The gradient and the gold edge were marking this
-     out as a different KIND of card, but the section's numbered steps,
-     the "+" joint and the full-width band already say that structurally,
-     and three package cards carrying three different surfaces read as
-     three unrelated components rather than one family. Distinction now
-     comes from shape and position, not from its own palette. */
-  background: var(--ink-2);
-  border: 1px solid rgba(var(--limestone-rgb), 0.12);
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  /* Same [data-reveal] restatement as .package-dining-card above, same
-     reason — this card also carries data-reveal. */
-  transition:
-    opacity 0.9s var(--ease),
-    transform 1s var(--ease),
-    border-color 0.5s var(--ease);
-}
 /* Touch: the same gradient ring the dining cards get (see the (hover: none)
    block above .package-dining-card's own hover rules for how the padding-box
    /border-box clip works). Beverage needs its own block rather than being
@@ -4142,20 +3256,7 @@ footer a:hover {
    Beverage as a different kind of thing, so it has to be reproduced exactly
    rather than flattened. Its own resting border was already gold (0.22),
    so unlike the dining cards this is a change of texture, not of colour. */
-@media (hover: none) {
-  .package-beverage-card {
-    border-color: transparent;
-    background:
-      linear-gradient(120deg, var(--ink-3), var(--ink-2)) padding-box,
-      var(--gold-gradient-soft) border-box;
-  }
-}
 @media (hover: hover) {
-  /* 0.38, matching .package-dining-card:hover exactly — was 0.5, which
-     paired with the stronger resting border this card used to carry. */
-  .package-beverage-card:hover {
-    border-color: rgba(var(--gold-rgb), 0.38);
-  }
   /* Matches .package-dining-card-figure img's hover exactly (2026-10-01) —
      this card was previously the one outlier missing both the permanent
      mute its three siblings had AND the hover lift, rather than a
@@ -4165,48 +3266,8 @@ footer a:hover {
     transform: scale(var(--image-hover-zoom-card));
     filter: var(--image-hover-filter-boost);
   }
-  .package-beverage-card:hover .package-card-link {
-    background-color: var(--bg-h);
-    color: var(--fg-h);
-    filter: brightness(1.07);
-    box-shadow: 0 14px 30px -16px rgba(var(--muted-ink-rgb), 0.4);
-    transform: translateY(-1px);
-  }
-  .package-beverage-card:hover .package-card-link::after {
-    left: 130%;
-  }
   .package-beverage-card:hover .package-card-link svg {
     transform: translateX(4px);
-  }
-}
-@media (min-width: 621px) {
-  .package-beverage-card {
-    grid-template-columns: 0.95fr 1.05fr;
-    align-items: stretch;
-  }
-}
-.package-beverage-card-figure {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  /* width:100%/max-width:100% caps this back to the grid track's own width
-     regardless of what aspect-ratio would otherwise compute from a
-     stretched row height — confirmed live at 861px, where the grid
-     correctly assigned this column 367px but the rendered element came out
-     533px wide (533 = the row's stretched height × 16/11), aspect-ratio
-     pulling width back FROM the taller sibling column instead of staying
-     capped. min-width:0 kept as the secondary, more usual fix for this
-     class of grid-track overflow (see .split > * elsewhere), but it wasn't
-     what was actually overflowing here. */
-  min-width: 0;
-}
-@media (min-width: 621px) {
-  /* Wide-and-low keeps the band reading as a horizontal add-on strip rather
-     than a tall fourth card. */
-  .package-beverage-card-figure {
-    aspect-ratio: 16 / 11;
   }
 }
 .package-beverage-card-figure img {
@@ -4217,25 +3278,9 @@ footer a:hover {
     transform 1.2s var(--ease),
     filter 0.45s var(--ease);
 }
-.package-beverage-card-body {
-  min-width: 0;
-  padding: clamp(26px, 3.4vw, 46px) clamp(22px, 3.4vw, 48px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: clamp(16px, 2vw, 20px);
-}
-.package-beverage-card-eyebrow {
-  margin-bottom: 0;
-}
 .package-beverage-card-body h4 {
   font-size: clamp(26px, 3.4vw, 40px);
   font-weight: 400;
-}
-.package-beverage-card-body p {
-  font-size: clamp(15px, 1.5vw, 17px);
-  color: var(--muted);
-  max-width: 44ch;
 }
 
 /* ---------- Packages: horizontal cards (mobile only, ≤620px) ----------
@@ -4250,61 +3295,6 @@ footer a:hover {
    for why the max side is fractional. Everything from 621px up (the 2-up
    tablet tier and the 980px+ triptych) is untouched by this block. */
 @media (max-width: 620.98px) {
-  /* One source of truth for the thumbnail column: the grid track below and
-     the "or" badge's own horizontal centering (further down) both read this,
-     so the badge can't drift off the image's centre line if the width is
-     ever retuned. Declared on the <li> rather than the card, since the badge
-     is the card's sibling, not its child. */
-  .package-dining-card-item {
-    /* The +4px is bought from .package-dining-card-body's right padding
-       below, not from the copy: the body is a 1fr track, so widening this
-       one narrows that one by exactly the same amount, and trimming the
-       padding by 4px hands the copy's usable width straight back. Net effect
-       is a slightly larger photo and an identical text column at every
-       viewport — the column-gap is deliberately untouched, since that
-       separation was tuned on its own merits.
-
-       Written as calc(… + 4px) around the original clamp rather than folded
-       into new literals so the borrowed 4px stays visible as a borrowed 4px,
-       and reverting is one edit at each end. */
-    --package-thumbnail-width: calc(clamp(110px, 34vw, 160px) + 4px);
-  }
-  /* Image sits flush against the card like .package-beverage-card's own
-     figure does — no card-level padding inset around it, corners left
-     unrounded on the figure and clipped by the card's own overflow:hidden +
-     border-radius. Padding lives on the text column only (below), so the gap
-     between image and copy is real column-gap rather than competing with an
-     equally-sized outer inset that made it read as barely-there. */
-  .package-dining-card {
-    display: grid;
-    grid-template-columns: var(--package-thumbnail-width) 1fr;
-    align-items: start;
-    column-gap: clamp(18px, 4.5vw, 24px);
-  }
-  /* No declared ratio here, deliberately: the card's height is the copy
-     column's height, full stop, and the image takes whatever that turns out
-     to be.
-
-     Any aspect-ratio on this figure acts as a minimum height on the whole
-     row, because the figure is a grid item in the same row as the copy — so
-     the card could never get shorter than the ratio demanded even when the
-     content didn't need the space. That showed as dead space in the copy
-     column, and it got worse as the viewport widened: at 620px the track
-     hits its 160px cap, and a 2:3 ratio forced a ~240px floor while the
-     copy, wrapping to roughly two lines by then, needed about 175px.
-
-     `auto` is stated explicitly rather than just omitted — it has to beat the
-     base .package-dining-card-figure rule's own 1/1. It also cancels the
-     CLAUDE.md bug #21 mechanism, which needs an aspect-ratio to compute a
-     width from; the width caps below are kept anyway as cheap insurance, the
-     grid track already being what sets the width. */
-  .package-dining-card-figure {
-    align-self: stretch;
-    aspect-ratio: auto;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
   /* Taking the image out of flow is the other half of "height comes from the
      copy". Left in flow, the <img> still contributes an intrinsic height of
      its own to the row — height:100% against an as-yet-undetermined row
@@ -4320,170 +3310,8 @@ footer a:hover {
     position: absolute;
     inset: 0;
   }
-  /* The numeral and the figure's bottom scrim both stay at this width. They
-     travel together rather than being separable: the numeral is
-     gold-gradient text sitting directly on photography, and the dark bottom
-     fade is what keeps it legible over a bright plate of food. The shared
-     180deg fade works unchanged on a tall, narrow thumbnail.
-
-     Only the numeral's own scale and inset are retuned — the shared rule's
-     clamp(30px, 3.4vw, 44px) and clamp(20px, 2vw, 26px) inset were sized
-     against a full-width card image and read oversized, pushed too far in,
-     on a ~133px thumbnail. */
-  .package-dining-card-numeral {
-    font-size: clamp(24px, 6.5vw, 30px);
-    bottom: 10px;
-    left: 12px;
-  }
-  .package-dining-card-body {
-    /* Matches .package-beverage-card-body's own min-width:0 — stops the 1fr
-       track's automatic `auto` minimum letting this column's least-shrinkable
-       content (the button: nowrap label, flex-shrink:0) push the track wider
-       than the space actually available. */
-    min-width: 0;
-    /* Top/right/bottom only — left is 0 since column-gap already separates
-       this from the image. The right side is 4px short of the other two:
-       that's the 4px handed to --package-thumbnail-width above, given back
-       here so the copy's usable width is unchanged by the wider photo. The
-       asymmetry is deliberate and invisible — text-to-card-edge is the one
-       inset with slack in it, since nothing sits against that edge. */
-    padding: clamp(16px, 4vw, 20px) calc(clamp(16px, 4vw, 20px) - 4px)
-      clamp(16px, 4vw, 20px) 0;
-    /* One flat gap between the body's children (heading, copy, button —
-       tiers are hidden at this width). */
-    gap: 12px;
-  }
   .package-dining-card-body h4 {
     font-size: clamp(18px, 4.6vw, 21px);
-  }
-  /* A ceiling, not a target: line-clamp only truncates once the text actually
-     exceeds the limit, so anything up to five lines renders in full with no
-     ellipsis and the descriptions read complete at normal phone widths (the
-     current three are ~91-100 characters, landing around four lines at
-     ~390px). It only starts biting at the narrow end — around 320px the text
-     column is down to ~144px, roughly 22 characters a line, which is where
-     the longest description reaches five. So this is a guard against a card
-     running away if the copy is ever rewritten longer, not a crop applied to
-     today's copy.
-
-     Native -webkit-line-clamp is fine here: CLAUDE.md bug #18 only rules it
-     out for *centered* text (where it can silently fail to truncate at all,
-     hence the JS-measured approach used for the testimonials quote). This
-     copy is left-aligned. */
-  .package-dining-card-body p {
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
-    line-clamp: 5;
-    overflow: hidden;
-  }
-  /* Tiers hidden on mobile for now. Kept in the markup rather than removed
-     from the HTML so this is one line to reverse and every larger breakpoint
-     is untouched — but note display:none drops them from the accessibility
-     tree too, so the tier names genuinely aren't available to a screen reader
-     at this width, not merely hidden visually. That's fine while it's a
-     deliberate content call (the card's own accessible name comes from
-     .package-card-hit's aria-label regardless); it would need revisiting if
-     the tiers ever became load-bearing information. The body's flex gap
-     closes up on its own — a display:none child consumes no gap. */
-  .package-dining-card-tiers {
-    display: none;
-  }
-  /* Sized down to .button-small's own dimensions (the --button-compact-*
-     tokens, reused rather than inventing a new size) so the label fits the
-     narrow text column comfortably — the shared full-size .button is what
-     CLAUDE.md bug #20 catches here — but stretched edge to edge across that column
-     rather than shrink-wrapped, so it lines up with the copy above it. */
-  .package-card-link {
-    height: var(--button-compact-height);
-    padding: 0 var(--button-compact-padding-x);
-    font-size: var(--button-compact-font-size);
-    align-self: stretch;
-    width: 100%;
-    max-width: none;
-    margin-top: 6px;
-  }
-  /* Beverage never got the thumbnail-left/text-column split above — it
-     stays single-column at this width (its own two-column layout only
-     starts at 621px+), so the unscoped rule above sees a full-card-width
-     parent instead of a narrow text column and stretches edge to edge
-     across the whole card, wider than the three dining buttons beside it.
-     300px matches the sitewide capped-CTA convention (.package-card-link's
-     own base rule, .hero-ctas .button, etc.); centered per request, same
-     as the base rule's own default align-self:center — the 621px+ rule
-     below switches this to flex-start once the dining triptych above it
-     is also left-aligned, but at this single-column mobile width centered
-     is what's wanted. Higher specificity than the bare .package-card-link
-     above (0,2,0 vs 0,1,0) wins regardless of declaration order. */
-  .package-beverage-card-body .package-card-link {
-    max-width: 300px;
-    align-self: center;
-  }
-  /* The two "or" badges interlock with the images at this width rather than
-     dividing whole cards: each straddles the seam between the card above and
-     the card below, centred on the thumbnail column so it overlaps the
-     bottom of one image and the top of the next.
-
-     Taken out of flow entirely (the <li> is already position:relative
-     above), so the list's own grid gap alone sets the distance between cards
-     and the badge just sits on top of it — nothing here changes spacing.
-
-     top: half the list's row gap, minus half the badge's 46px height, puts
-     the badge's centre exactly on the seam. The gap literal has to match
-     .package-dining-card-list's own gap above; the horizontal centring reads
-     --package-thumbnail-width (set on the <li>) so it stays locked to the
-     real track width.
-
-     z-index 4, not the 2 the other breakpoints use: those sit in the empty
-     gap between cards, but this one overlaps the cards themselves, and
-     .package-card-hit (the stretched whole-card link) is z-index 3. Neither
-     the card nor the <li> opens a stacking context (both position:relative,
-     z-index auto), so without this the hit target would take pointer events
-     over the badge. */
-  .package-dining-card-item:nth-child(2) .package-dining-card-or,
-  .package-dining-card-item:nth-child(3) .package-dining-card-or {
-    position: absolute;
-    top: calc(clamp(18px, 2.2vw, 30px) / -2 - 23px);
-    left: calc(var(--package-thumbnail-width) / 2);
-    transform: translateX(-50%);
-    z-index: 4;
-  }
-  /* Beverage deliberately stays a different shape from the triptych — that
-     contrast is existing design intent (a wide band, not a fourth card) and
-     it marks the change of domain from choosing a format to choosing a bar.
-     The problem was the direction of the contrast, not the contrast itself.
-
-     On desktop Beverage is distinct by being wide and SHORT — a secondary
-     strip under the triptych. On mobile it goes single-column, so at 16/10
-     the image alone came out ~219px at a ~350px card and the whole band ran
-     ~410px: roughly twice a dining card, making the add-on the most dominant
-     thing in the section and inverting the hierarchy desktop establishes.
-     21/9 brings the image back to ~150px so it reads as a strip again.
-
-     Safe to use a plain aspect-ratio here, unlike the dining figure above:
-     this card is single-column at mobile, so the figure sits in its own grid
-     row rather than sharing one with the copy. Its width is definite and the
-     height derives from it — the normal direction. CLAUDE.md bug #21 needs
-     the opposite and can't arise. Note the banner still scales with width,
-     so it is tallest at the top of this range (~249px at 620px, vs ~362px
-     before); worth a max-height if that end ever looks heavy, left off for
-     now rather than adding a second lever to reason about. */
-  .package-beverage-card-figure {
-    aspect-ratio: 21 / 9;
-  }
-  /* "Your bar, your way" hidden at this width. It's the only eyebrow on a
-     card in this section — the dining cards don't carry one — so on mobile,
-     where the band is trimmed back to a strip anyway, it reads as an extra
-     line of chrome above a heading that already says Beverage.
-
-     Specificity checked rather than assumed (CLAUDE.md bug #14): the element
-     carries both .eyebrow and .package-beverage-card-eyebrow, and the only
-     `display` in play is .eyebrow's own `flex` at the same 0,1,0 weight, so
-     this wins on source order — .eyebrow is declared near the top of this
-     file, this block near the end. `.on-dark .eyebrow` is higher (0,2,0) but
-     only sets the gold gradient, no display, so it doesn't interfere. */
-  .package-beverage-card-eyebrow {
-    display: none;
   }
 }
 
@@ -4665,49 +3493,6 @@ footer a:hover {
   background: var(--avail-grey-bg);
   box-shadow: inset 0 0 0 1px var(--avail-grey-fg);
 }
-/* The compact/pointer instances are plain text, not a boxed callout — the
-   status color/dot on .availability-picked-status below already carries the same information
-   a card's border-left accent used to (the showcase's own card is restored
-   separately via .availability-intro .availability-picked above).
-   Show/hide is a hard display:none/flex cut, not animated — an entrance/exit
-   fade was attempted and pulled back out after repeated attempts at getting
-   it smooth on the showcase's #availSelection instance didn't pan out (it
-   also carries data-reveal for its own one-time scroll-in fade, which kept
-   conflicting with any opacity-based show/hide state). The transition below
-   is only for .swapping (switching between two already-visible picks), which
-   never touches display and was never part of the problem. */
-.availability-picked {
-  margin-top: 20px;
-  display: none;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-  transition: opacity 0.2s var(--ease);
-}
-.availability-picked.show {
-  display: flex;
-}
-.availability-picked.swapping {
-  opacity: 0.35;
-}
-.availability-picked-info {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.availability-picked-label {
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--bronze);
-  font-weight: 500;
-}
-.availability-picked-date {
-  font-family: "Fraunces", serif;
-  font-size: 19px;
-  font-weight: 400;
-  color: var(--ink);
-}
 .availability-picked-status {
   display: inline-flex;
   align-items: center;
@@ -4783,13 +3568,6 @@ footer a:hover {
     width: 4px;
     height: 4px;
   }
-}
-.availability.compact .availability-picked {
-  margin-top: 20px;
-  gap: 4px;
-}
-.availability.compact .availability-picked-date {
-  font-size: 16px;
 }
 /* index/corporate/celebrations/gallery's inline wizard calendar (#availForm)
    — matches the diary showcase's own header exactly (centered title +
@@ -4894,71 +3672,8 @@ footer a:hover {
 #availChangeBtn svg {
   transition: none;
 }
-
-/* ---------- Availability calendar: premium "Venue Diary" treatment ----------
-   #availability on weddings.html. Reuses the shared .availability widget in main.js
-   completely unchanged (same class hooks it always looked for: .availability-month,
-   .availability-prev/.availability-next, .availability-grid, .availability-picked) — this only restyles the
-   wrapper via a .diary modifier and adds the always-visible intro column (a plain
-   hint before a date is picked, the real .availability-picked panel once one is). */
-.availability-intro {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
 .availability-intro .eyebrow {
   margin-bottom: 0;
-}
-/* Unlike the compact/pointer instances (plain text, no card — see
-   .availability.compact .availability-picked above), the showcase's "Your selection" panel
-   keeps the boxed-card treatment: background, border, status-colored left
-   accent, shadow. Only shown once a date's picked (.show — see main.js),
-   same as every other .availability-picked instance — no longer forced visible via
-   .always with a placeholder. */
-.availability-intro .availability-picked {
-  /* transition intentionally not re-declared here — the base .availability-picked
-     rule already lists border-left-color alongside opacity/transform, and two
-     same-property transition declarations at different specificities have the
-     more specific one win wholesale, not per-property (bug #2 in CLAUDE.md),
-     which would silently drop the transform entrance animation on this card. */
-  margin-top: 0;
-  padding: 18px 20px;
-  border-radius: var(--radius-card);
-  background: #fff;
-  border: 1px solid rgba(var(--muted-ink-rgb), 0.08);
-  border-left: 3px solid rgba(var(--muted-ink-rgb), 0.18);
-  box-shadow: 0 10px 24px -18px rgba(var(--muted-ink-rgb), 0.22);
-}
-.availability-intro .availability-picked.status-open {
-  border-left-color: var(--avail-green-fg);
-}
-.availability-intro .availability-picked.status-interest {
-  border-left-color: var(--avail-amber-fg);
-}
-.availability-select-note {
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--muted-ink);
-  font-family: "Newsreader", Georgia, serif;
-  border-top: 1px solid rgba(var(--muted-ink-rgb), 0.1);
-  padding-top: 16px;
-}
-
-.availability.diary {
-  /* 480px + 20px, matching .availability's own padding increase above (max raised
-     10px per side) — keeps the same inner content width the day-grid had
-     before, rather than the extra padding eating into it. */
-  max-width: 500px;
-  border-radius: calc(var(--radius-card) * 2);
-  box-shadow: 0 24px 60px -30px rgba(var(--muted-ink-rgb), 0.32);
-}
-@media (max-width: 620.98px) {
-  /* Reverts to the original 480px at true mobile — the padding increase
-     above is already excluded there (unchanged clamp min), so there's no
-     extra padding to account for at this width either. */
-  .availability.diary {
-    max-width: 480px;
-  }
 }
 .availability.diary .availability-head {
   margin-bottom: 26px;
@@ -5062,16 +3777,6 @@ footer a:hover {
     height: 4px;
   }
 }
-.availability.diary .availability-foot {
-  margin-top: 24px;
-  padding-top: 22px;
-  border-top: 1px solid rgba(var(--muted-ink-rgb), 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
 /* Two deliberate lines (date, then status) instead of one flowing string —
    a single "Selected · 16 Sep 2026 · Enquiries received" line wraps at
    whatever point the device's actual width/font metrics happen to land on,
@@ -5097,32 +3802,12 @@ footer a:hover {
 .availability-foot-label.status-interest .availability-picked-status {
   color: var(--avail-amber-fg);
 }
-.availability-foot-note {
-  display: none;
-  margin-top: 14px;
-  font-size: 12.5px;
-  line-height: 1.6;
-  color: var(--muted-ink);
-  font-family: "Newsreader", Georgia, serif;
-}
-/* Shown once a date's picked — mirrors .availability-select-note's copy, which used to
-   be the only place this reassurance text lived (inside the section's own
-   .availability-intro callout). :has() keys off the same status class the dot above
-   uses, so no extra JS is needed just to toggle this line. */
-.availability-foot:has(.availability-foot-label.status-open) + .availability-foot-note,
-.availability-foot:has(.availability-foot-label.status-interest)
-  + .availability-foot-note {
-  display: block;
-}
 /* The quick-pick modal has no separate callout at any width, so its copy of
    this note always shows once picked — but the section's own callout (with
    this exact same text) is only hidden below 980px (see .availability-intro
    .availability-picked's mobile rule), so above that width the section's copy here
    would just repeat it a second time on the same page. */
 @media (min-width: 981px) {
-  #availability .availability-foot-note {
-    display: none;
-  }
   /* Same reasoning as the note above: the section's own callout in the left
      column already spells out "Available"/"Enquiries received" once a date's
      picked, so showing it a second time next to "Enquire now" here just
@@ -5143,12 +3828,6 @@ footer a:hover {
     width: 4px;
     height: 4px;
   }
-  .availability-foot {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 20px;
-  }
   .availability-foot-label {
     align-items: center;
   }
@@ -5163,9 +3842,6 @@ footer a:hover {
     height: var(--button-height);
     padding: 0 var(--button-padding-x);
     font-size: var(--button-font-size);
-  }
-  .availability-foot-note {
-    margin-top: 20px;
   }
 }
 
@@ -5306,205 +3982,6 @@ footer a:hover {
   margin-top: 6px;
   margin-bottom: 18px;
 }
-
-/* ---------- Quick-pick calendar modal (weddings.html only) ----------
-   Reuses .availability.diary + .availability-foot unchanged inside a fixed overlay — same
-   show/hide technique as .lightbox below (opacity+visibility with a matched
-   transition-delay, not display:none, so it can actually fade — see main.js
-   for why display-based show/hide caused so much trouble on .availability-picked). */
-.availability-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 970;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  overflow-y: auto;
-  background: rgba(10, 9, 6, 0.7);
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.35s var(--ease),
-    visibility 0s linear 0.35s;
-}
-.availability-modal.show {
-  opacity: 1;
-  visibility: visible;
-  transition:
-    opacity 0.35s var(--ease),
-    visibility 0s linear 0s;
-}
-.availability-modal-backdrop {
-  position: absolute;
-  inset: 0;
-}
-.availability-modal-panel {
-  position: relative;
-  width: 100%;
-  max-width: 480px;
-  margin: auto;
-  padding-top: 48px;
-}
-.availability-modal-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: transparent;
-  border: 1px solid rgba(var(--limestone-rgb), 0.4);
-  color: var(--limestone);
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  transition:
-    background 0.3s var(--ease),
-    color 0.3s var(--ease),
-    border-color 0.3s var(--ease);
-}
-@media (hover: hover) {
-  .availability-modal-close:hover {
-    background: var(--gold);
-    color: var(--ink);
-    border-color: var(--gold);
-  }
-}
-@media (hover: none) {
-  .availability-modal-close:active {
-    background: var(--gold);
-    color: var(--ink);
-    border-color: var(--gold);
-  }
-}
-.availability-modal-panel .availability.diary {
-  margin: 0;
-  max-width: none;
-}
-.availability-modal-done {
-  flex: none;
-}
-.availability-modal-done:disabled {
-  opacity: 0.3;
-  cursor: auto;
-  /* .button's hover (translateY + box-shadow) and ::after sheen sweep, plus its
-     :active scale-down, aren't guarded by :disabled anywhere in the shared
-     .button rules (styles.css) — browsers don't reliably suppress :hover/:active
-     on a disabled native <button> on their own, so without this the full
-     button animation set still fires while it's supposed to be inert. */
-  pointer-events: none;
-}
-
-/* ---------- View Gallery grid + lightbox ---------- */
-.gallery-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: clamp(30px, 4vw, 44px);
-}
-/* Standard visually-hidden-but-focusable pattern — not display:none, which
-   would drop these out of tab order and break the label-click/keyboard
-   arrow-key selection that's the actual point of using real radios here. */
-.gallery-filter-input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-/* Same chip style as the enquiry form's .chip (event type, contact
-   preference) — same filter/choice pattern, so it reads as one shared
-   component — except border-radius and padding, kept as this page's own
-   (a fully round pill with room for longer labels like "Venue & Dining",
-   vs .chip's tighter card radius sized for its own fixed-width layout). */
-.gallery-filter-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 20px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
-  background: var(--paper);
-  cursor: pointer;
-  font-size: 10.5px;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  line-height: 1.2;
-  text-align: center;
-  color: var(--ink);
-  transition:
-    background-color 0.3s var(--ease),
-    border-color 0.3s var(--ease),
-    color 0.3s var(--ease),
-    box-shadow 0.3s var(--ease);
-}
-@media (hover: hover) {
-  .gallery-filter-label:hover {
-    background-color: var(--limestone);
-  }
-}
-.gallery-filter-input:checked + .gallery-filter-label {
-  background: var(--ink);
-  color: var(--limestone);
-  border-color: var(--ink);
-  box-shadow: 0 3px 12px rgba(var(--ink-rgb), 0.12);
-  /* Selection is the one transition on this chip that must not be slow,
-     on ANY input type. The 0.3s above is tuned for the hover crossfade
-     (paper to limestone, a few percent of lightness) — but hovering
-     previews the HOVER state, not this one, so a click still runs an
-     unpreviewed 300ms ease from near-white to near-black, and that fade
-     IS the "did my click register?" gap. It also lands on top of the
-     filter change's own main-thread cost (23 tiles toggling display,
-     newly-in-view images decoding), so the two stack. Same reasoning as
-     the touch override below, which only ever covered touch because the
-     hover preview was assumed to do this job on a pointer; it doesn't.
-     Scoped to the checked rule rather than the base so LEAVING the
-     selected state keeps the slower crossfade and only the chip the
-     visitor is waiting on snaps. Duration-only, so the property list
-     above stays the single source of truth for WHICH properties animate
-     (bug #2). Note this rule is (0,2,0) and so outranks the base-level
-     (0,1,0) duration override in the @media (hover: none) block below —
-     deliberately the same 0.1s, so touch is unchanged either way rather
-     than silently governed by whichever rule wins. */
-  transition-duration: 0.1s;
-}
-@media (hover: hover) {
-  .gallery-filter-input:checked + .gallery-filter-label:hover {
-    background: var(--ink-2);
-    border-color: var(--ink-2);
-  }
-}
-@media (hover: none) {
-  /* Touch has no hover state at all, so unlike a pointer there is nothing
-     the 0.3s crossfade is there to serve — it only ever shows up as the
-     "did my tap register?" gap described on the checked rule above. So the
-     whole chip goes fast here, both directions, not just the entering one.
-     Duration-only override rather than a fresh `transition` shorthand, so
-     the property list above stays the single source of truth for WHICH
-     properties animate (bug #2). */
-  .gallery-filter-label {
-    transition-duration: 0.1s;
-  }
-  .gallery-filter-label:active {
-    background-color: var(--limestone);
-  }
-  .gallery-filter-input:checked + .gallery-filter-label:active {
-    background: var(--ink-2);
-    border-color: var(--ink-2);
-  }
-}
-/* The input itself is visually hidden, so its own default focus ring would
-   never be seen — forwarded onto the label it's paired with instead. */
-.gallery-filter-input:focus-visible + .gallery-filter-label {
-  outline: 2px solid var(--gold);
-  outline-offset: 2px;
-}
 /* Filtering itself, in place of the old JS click handler that toggled a
    .hide class on non-matching .gallery-item elements: #gfilter and #ggrid
    are plain siblings under one .wrap (same shape the mega-menu scrim
@@ -5641,9 +4118,6 @@ footer a:hover {
     opacity: 1;
   }
 }
-.gallery-item.gallery-item-span-two {
-  grid-column: span 2;
-}
 /* "This photo opens in a lightbox" hint. cursor:zoom-in alone gives touch
    nothing — no hover, no cursor to change — so this gives every input type
    a visible affordance. Hidden until hover on devices that actually have
@@ -5747,19 +4221,6 @@ footer a:hover {
     order: -1;
     max-width: 440px;
   }
-  /* The SAC's "Your selection" callout duplicated the calendar's own
-     .availability-foot bar (which also shows "SELECTED · date" + a status dot, see
-     above) once the two columns stack — dropped in favor of the foot bar
-     alone rather than showing the same "you picked X" twice down the page. */
-  .availability-intro .availability-picked {
-    display: none;
-  }
-  .dishes {
-    grid-template-columns: 1fr 1fr;
-  }
-  .dish:nth-child(2) {
-    transform: none;
-  }
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -5805,9 +4266,6 @@ footer a:hover {
        arbitrary value of its own. */
     margin-top: 40px;
   }
-  .gallery-item.gallery-item-span-two {
-    grid-column: span 2;
-  }
   .split.review-block > *:first-child {
     order: 0;
   }
@@ -5822,9 +4280,6 @@ footer a:hover {
   .hero-sm .hero-content {
     padding-top: 128px;
   }
-  .scroll-cue {
-    display: none;
-  }
 }
 @media (max-width: 620.98px) {
   form {
@@ -5835,9 +4290,7 @@ footer a:hover {
   .field {
     flex-basis: 100%;
   }
-  .hero-ctas,
-  .cta-row,
-  .tab-panel .actions {
+  .hero-ctas {
     flex-direction: column;
     align-items: center;
   }
@@ -5871,21 +4324,11 @@ footer a:hover {
     font-size: 10px;
     letter-spacing: 0.1em;
   }
-  .dishes {
-    grid-template-columns: 1fr;
-    gap: 34px;
-  }
-  .arch-dish {
-    aspect-ratio: 4/5;
-  }
   .slide {
     width: 76vw;
   }
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-  .gallery-item.gallery-item-span-two {
-    grid-column: span 1;
   }
 }
 
