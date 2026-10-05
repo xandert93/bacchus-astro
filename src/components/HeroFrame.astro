@@ -203,4 +203,20 @@ const { small = false, id, mediaClass } = Astro.props
   .hero-sm :global(h1) {
     font-size: clamp(32px, 6vw, 74px);
   }
+  @keyframes hero-settle {
+    from {
+      transform: scale(1.08);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes kenburns {
+    from {
+      transform: scale(1.12) translate3d(0, 0, 0);
+    }
+    to {
+      transform: scale(1.24) translate3d(-2%, -1.5%, 0);
+    }
+  }
 </style>

@@ -670,7 +670,7 @@ import Photo from "./Photo.astro"
   }
   /* Pairs with .nav .wrap's flex-start above — this is what pushes the links and
      the CTAs to the right edge together. */
-  .nav :global(.wrap) nav {
+  .nav .wrap nav {
     margin-left: auto;
   }
   .nav-links > li > a {
@@ -1802,6 +1802,52 @@ import Photo from "./Photo.astro"
     .nav-dd-panel-caption[data-state="spaces"] {
     opacity: 1;
   }
+  /* ============================================================
+     (j) COMPACT NAV BAND — 980px to 1179.98px
+     ============================================================
+     REAL BUG, reported from the demo 2026-10-01: the Enquire button runs
+     off screen at 1015px, and the bar already looks overfull at 1092px.
+     Confirmed by adding the content up from the CSS rather than
+     eyeballing it, which is where an earlier estimate of ~890px went
+     wrong — it forgot that each dropdown label now has a 29px chevron
+     button beside it:
+
+       brand          34px mark + 13px gap + ~154px lockup   ~201px
+                      (the "MDINA · EST. 1660" sub-line is WIDER than
+                      "BACCHUS" itself — 0.42em tracking over 17
+                      characters — so it, not the name, sets this width)
+       nav links      Restaurant 130 + chevron 29, Events 91 + 29,
+                      Gallery 101, About 81, three 6px gaps      ~479px
+       CTAs           Book a table 174, Enquire 129, 18px gap    ~321px
+       wrap gaps      2 x 24px                                     48px
+                                                               --------
+                                                               ~1049px
+
+     Against that, .wrap offers (viewport - 88px) of room, capped at
+     1092px once the viewport passes 1180. So the bar needs ~1137px before
+     it sits comfortably, and it has been overflowing below that — not
+     only near the 980px cutover.
+
+     A MEDIA BAND, NOT clamp(), deliberately. The house preference is
+     clamp() for anything that should scale, but across a 200px-wide range
+     a vw-based clamp barely moves: 1.36vw on the link padding recovers
+     about 21px over the whole band, where this needs 120 or more. Getting
+     there with clamp() means the calc-interpolation form on six separate
+     properties, which is both less legible and harder to reason about
+     than one band. This is also bug #20's situation exactly — fixed-size
+     controls inside a fluid bar, where "the breakpoint floor is set by
+     the control, not by the layout" — and the fix there was a media band
+     swapping to existing smaller token values, which is what this does.
+
+     Bounded on BOTH sides on purpose: above 1180px .wrap stops growing
+     and there is ~43px of slack, so the designed spacing is untouched
+     there; below 980px the burger takes over. The .98 pairing follows bug
+     #22 so the handover to 1180px leaves no fractional gap.
+
+     Nothing here changes a font size, the 74px bar height, or any
+     colour — every line is spacing or a decorative glyph, so the bar
+     compresses rather than restyling. Running total of what it recovers
+     is noted per block. */
   /* -48px. 16px to 10px each side; the links keep 20px of total
        horizontal padding, which is still comfortably above their 11.5px
        type. */
@@ -1881,6 +1927,16 @@ import Photo from "./Photo.astro"
       gap: 10px;
     }
   }
+  /* ---------- (c) Burger cutover at 980px, not 820px ----------
+     Measured, not guessed: brand lockup ~200px + four nav items ~400px
+     + two compact pills ~250px + gaps lands around 890px of content,
+     which overflows .wrap's available width anywhere below roughly
+     940px. The real site's 820px cutover is sized for four plain text
+     links and ONE pill. 979.98px is the site's own established tablet
+     cutover (the copy+image reorder, .nav-dd-panel-media's own hide)
+     rather than a number invented here, and the .98 follows CLAUDE.md
+     bug #22's house rule so the handover to 980px leaves no fractional
+     gap. */
   @media (max-width: 979.98px) {
     .nav-links {
       display: none;
@@ -1891,6 +1947,32 @@ import Photo from "./Photo.astro"
       display: block;
     }
   }
+  /* ============================================================
+     NAV ENTRANCE (2026-10-05)
+     ============================================================
+     The bar used to be the one thing on the page with no entrance: fully
+     formed from the first frame, and on the homepage sitting on top of the
+     still-closed portcullis, ahead of the gate it's meant to arrive behind.
+     It now fades down into place: with the bars lifting on the homepage,
+     and alongside the hero copy everywhere else.
+
+     Pure CSS on purpose. A script-triggered entrance would leave the nav
+     invisible until the script arrived, which on a slow connection means a
+     site with no navigation for seconds; a CSS animation runs from the
+     first paint regardless.
+
+     `backwards` fill, never `both`/`forwards`: the from-state applies during
+     the delay, and once the animation ends the element is handed back to its
+     normal styles entirely. A held end-state would keep overriding things
+     the bar does later — `.nav.stuck::before` fading its gradient out, for
+     one — since animations beat ordinary declarations. It also means no
+     transform lingers on the bar's contents, which matters: a transform on
+     an ancestor of the dropdown panels makes it their containing block and
+     kills their backdrop blur (see the dark-card notes further up). During
+     the brief entrance itself, no panel can be open yet.
+
+     The contents (.wrap) and the top gradient (::before) are animated, not
+     .nav itself, for the same transform reason. */
   .nav::before {
     animation: nav-backdrop-enter 0.6s var(--ease) 0.05s backwards;
   }
@@ -2243,6 +2325,17 @@ import Photo from "./Photo.astro"
   @media (prefers-reduced-motion: reduce) {
     .nav > .wrap {
       animation: none;
+    }
+  }
+  @keyframes nav-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-14px);
+    }
+  }
+  @keyframes nav-backdrop-enter {
+    from {
+      opacity: 0;
     }
   }
 </style>

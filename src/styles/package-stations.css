@@ -2920,8 +2920,8 @@
 
 @media (hover: hover) {
   .package-station-card-figure:hover img,
-.package-stations-stage-figure:hover img,
-.package-stations-thumbnail:hover img {
+  .package-stations-stage-figure:hover img,
+  .package-stations-thumbnail:hover img {
     transform: scale(var(--image-hover-zoom-feature));
     filter: var(--image-hover-filter-boost);
   }

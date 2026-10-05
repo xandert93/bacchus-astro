@@ -643,7 +643,7 @@ const carouselSlides = [
     margin-top: 10px;
     display: block;
   }
-  :global(.on-dark) .facts .fact-number {
+  .on-dark .facts .fact-number {
     color: var(--limestone-2);
   }
   .story-visual {
@@ -718,18 +718,18 @@ const carouselSlides = [
     margin-bottom: 32px;
   }
   @media (max-width: 760.98px) {
-    :global(#events) .tabs-bar {
+    #events .tabs-bar {
       display: flex;
       width: 100%;
     }
   }
   @media (max-width: 760.98px) {
-    :global(#events) .arch-tab {
+    #events .arch-tab {
       order: -1;
       margin-top: clamp(18px, 5vw, 32px);
     }
   }
-  :global(.tab-panel) .capacity {
+  .tab-panel .capacity {
     display: inline-flex;
     align-items: baseline;
     gap: 9px;
@@ -764,7 +764,7 @@ const carouselSlides = [
     background: linear-gradient(180deg, transparent 55%, rgba(10, 9, 6, 0.55));
     pointer-events: none;
   }
-  :global(.tab-panel) .actions {
+  .tab-panel .actions {
     margin-top: 32px;
     display: flex;
     flex-wrap: wrap;
@@ -834,7 +834,7 @@ const carouselSlides = [
   }
   @media (max-width: 620.98px) {
     .cta-row,
-    :global(.tab-panel) .actions {
+    .tab-panel .actions {
       flex-direction: column;
       align-items: center;
     }
@@ -969,5 +969,33 @@ const carouselSlides = [
   .gallery {
     background: #f3eddf;
     overflow: hidden;
+  }
+  @keyframes rise {
+    to {
+      transform: translateY(-115%);
+    }
+  }
+  @keyframes cue {
+    0% {
+      transform: scaleY(0);
+      transform-origin: top;
+    }
+    50% {
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+    51% {
+      transform: scaleY(1);
+      transform-origin: bottom;
+    }
+    100% {
+      transform: scaleY(0);
+      transform-origin: bottom;
+    }
+  }
+  @keyframes slide {
+    to {
+      transform: translateX(-50%);
+    }
   }
 </style>

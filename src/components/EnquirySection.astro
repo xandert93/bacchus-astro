@@ -775,7 +775,7 @@ const isWedding = eventType === "Wedding"
   }
   /* The gold sweep-underline is part of the recessed-panel treatment being
      replaced above. */
-  :global(.field-input) .field-underline {
+  .field-input .field-underline {
     display: none;
   }
   /* Custom calendar icon (.field-date-icon in the markup), matching the
@@ -808,15 +808,15 @@ const isWedding = eventType === "Wedding"
     opacity: 0;
     transition: all 0.3s var(--ease);
   }
-  :global(.field.bad) .error {
+  .field.bad .error {
     margin-top: 8px;
     height: 18px;
     opacity: 1;
   }
-  :global(.field.bad) .field-underline {
+  .field.bad .field-underline {
     background: rgba(var(--oxblood-rgb), 0.4);
   }
-  :global(.field.bad) .field-underline::after {
+  .field.bad .field-underline::after {
     width: 100%;
     background: var(--oxblood);
   }
@@ -883,8 +883,8 @@ const isWedding = eventType === "Wedding"
   /* Equal-width chips (event type + "how should we get back to you") for
        non-mobile only — content-hugging below 620px instead. */
   @media (min-width: 621px) {
-    :global(#chips) .chip,
-    :global(#prefer) .chip {
+    #chips .chip,
+    #prefer .chip {
       flex: 1 1 0;
       text-align: center;
     }
@@ -1452,10 +1452,10 @@ const isWedding = eventType === "Wedding"
       text-align: center;
     }
   }
-  :global(.enquiry-sent-panel) .seal :global(svg) {
+  .enquiry-sent-panel .seal :global(svg) {
     animation: sealTick 0.7s 0.25s var(--ease) both;
   }
-  :global(.enquiry-sent-panel) h3 :global(em) {
+  .enquiry-sent-panel h3 :global(em) {
     font-family: "Newsreader", Georgia, serif;
     font-style: italic;
     color: var(--bronze);
@@ -1961,5 +1961,27 @@ const isWedding = eventType === "Wedding"
     font-size: 22px;
     text-align: center;
     -moz-appearance: textfield;
+  }
+  @keyframes sentIn {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  @keyframes sealTick {
+    from {
+      opacity: 0;
+      transform: scale(0.5) rotate(-12deg);
+    }
+  }
+  @keyframes revealUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 </style>

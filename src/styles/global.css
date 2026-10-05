@@ -117,20 +117,6 @@
   --button-compact-padding-x: 22px;
   --button-compact-font-size: 10.5px;
   --nav-h: 74px;
-  /* Single source of truth for vertical rhythm between sections on
-     secure-booking.html. Each section contributes half of this as its own
-     top/bottom padding, so two adjacent sections combine to exactly this
-     value; single-sided gaps (e.g. above the FAQ) use the full value.
-     Change this one line to rescale every section gap on that page. */
-  --sb-gap: clamp(64px, 8vw, 128px);
-  /* The column gutter shared by BOTH grids inside a package page's tier
-     panel — .package-menu-groups (the ingredient lists) and
-     .package-dishes-grid (the signature-dish tiles). They stack directly on
-     top of each other and are both repeat(3, 1fr), so they only read as one
-     column structure if their gaps match too; when they didn't, every column
-     after the first started somewhere different (CLAUDE.md bug #24). One
-     token rather than two equal literals, so they cannot drift apart again. */
-  --package-grid-column-gap: clamp(32px, 5.5vw, 72px);
   /* Single source of truth for hover-zoom scale on photographs, split into
      three tiers by visual role rather than one blanket number — a card with
      other content competing for attention wants a smaller scale than a
@@ -173,11 +159,10 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
-/* Prevents the text-selection cursor/highlight on interactive controls —
-   .availability-cell/.gallery-item/.carousel-view added on top of the standard button-like
-   selectors since they're clickable/draggable divs, not actual <button>
-   elements (see main.js: calendar cells and gallery thumbnails are built
-   with document.createElement("div")). */
+/* Prevents the text-selection cursor/highlight on interactive controls.
+   Clickable and draggable divs that aren't real buttons (calendar cells,
+   gallery tiles, the photo carousel) opt in with the same rule in their
+   own components. */
 button,
 svg,
 [role="button"],
@@ -233,27 +218,6 @@ em {
   background: var(--gold);
   color: var(--ink);
 }
-@keyframes grainShift {
-  0% {
-    transform: translate(0, 0);
-  }
-  20% {
-    transform: translate(-14px, 8px);
-  }
-  40% {
-    transform: translate(10px, -12px);
-  }
-  60% {
-    transform: translate(-8px, -6px);
-  }
-  80% {
-    transform: translate(12px, 10px);
-  }
-  100% {
-    transform: translate(0, 0);
-  }
-}
-
 .eyebrow {
   font-size: 11px;
   letter-spacing: 0.24em;
@@ -379,8 +343,8 @@ p {
 /* Gated to real hover-capable pointers — touch has no way to "leave" an
    element, so an unguarded :hover here would stick after tap on any button
    that doesn't navigate away (the wizard's Continue/Back/Submit, any
-   same-page #enquire scroll CTA, etc. — same root cause as .carousel-button
-   above). Touch gets the equivalent feedback via :active below instead. */
+   same-page #enquire scroll CTA, etc. — same root cause as the photo
+   carousel's arrows). Touch gets the equivalent feedback via :active below instead. */
 @media (hover: hover) {
   .button:hover {
     background-color: var(--bg-h);
@@ -463,7 +427,7 @@ p {
    oddly against the site's "doesn't need to try hard" positioning — real
    17th-century stone over any kind of hard-sell). animation-delay is timed
    to start once .hero-ctas has actually finished its own fade-up (transition-
-   delay 2.32s + ~1s transition, see .fade-up above) rather than burning part
+   delay 2.32s + ~1s transition, see .fade-up in HeroFrame.astro) rather than burning part
    of those 3 sweeps while the button's still invisible. */
 @keyframes btn-shimmer-sweep {
   0%,
@@ -505,7 +469,7 @@ p {
   }
 }
 .button-dark {
-  /* Same idea as .button-light above, light-background equivalent. */
+  /* A near-black filled button, for use on light backgrounds. */
   --bg: rgba(var(--ink-rgb), 0.88);
   --fg: var(--limestone-2);
   --bd: rgba(var(--ink-rgb), 0.88);
@@ -657,7 +621,7 @@ p {
    near-black (--ink text, a --muted-ink-rgb border), which reads as
    invisible against an .on-dark section's own --ink background until
    hovered. Same --muted/--gold-2 substitution already used elsewhere for
-   this exact on-dark-contrast problem (e.g. .pk-tiers-label). */
+   this exact on-dark-contrast problem. */
 .on-dark .link-underline-inline {
   color: var(--muted);
   border-color: rgba(var(--limestone-rgb), 0.35);
@@ -672,14 +636,6 @@ p {
     border-color: var(--gold-2);
   }
 }
-@keyframes hero-settle {
-  from {
-    transform: scale(1.08);
-  }
-  to {
-    transform: none;
-  }
-}
 /* Photo and HeroImage wrap photos in a <picture> (AVIF + WebP). display:
    contents takes the wrapper out of layout everywhere, so each <img> sizes
    against its real container exactly as it did when it sat there on its
@@ -688,54 +644,6 @@ p {
 picture {
   display: contents;
 }
-@keyframes kenburns {
-  from {
-    transform: scale(1.12) translate3d(0, 0, 0);
-  }
-  to {
-    transform: scale(1.24) translate3d(-2%, -1.5%, 0);
-  }
-}
-@keyframes drift {
-  0% {
-    transform: translateY(0) translateX(0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.75;
-  }
-  90% {
-    opacity: 0.45;
-  }
-  100% {
-    transform: translateY(-100vh) translateX(18px);
-    opacity: 0;
-  }
-}
-@keyframes rise {
-  to {
-    transform: translateY(-115%);
-  }
-}
-@keyframes cue {
-  0% {
-    transform: scaleY(0);
-    transform-origin: top;
-  }
-  50% {
-    transform: scaleY(1);
-    transform-origin: top;
-  }
-  51% {
-    transform: scaleY(1);
-    transform-origin: bottom;
-  }
-  100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
-  }
-}
-
 [data-reveal] {
   opacity: 0;
   transform: translateY(34px);
@@ -775,12 +683,6 @@ picture {
 [data-reveal="scale"] {
   transform: scale(0.94);
 }
-@keyframes slide {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 section {
   position: relative;
 }
@@ -810,12 +712,6 @@ section {
 .section-padding-small .section-head {
   margin-bottom: 32px;
 }
-/* Below ~900px, .section-head's own max-width is already doing the
-   narrowing, so .lead's extra 56ch cap (styles.css, .lead) just makes the
-   paragraph noticeably narrower than the heading above it instead of
-   matching it. #events .lead's specificity already beats the bare .lead
-   rule regardless of source order, unlike .story p below (same selector,
-   needs placing after — CLAUDE.md bug #2). */
 h2 {
   font-size: clamp(31px, 5.2vw, 62px);
   font-weight: 300;
@@ -846,9 +742,6 @@ h2 em {
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
-/* Moved down from the shared 980px collapse point (same reasoning and
-   breakpoint as #events .tab-panel above): the heading/paragraph/facts
-   column reads fine well past 980px — no reason to stack this early. */
 .arch {
   position: relative;
   overflow: hidden;
@@ -864,33 +757,6 @@ h2 em {
 .arch:hover img {
   transform: scale(var(--image-hover-zoom-feature));
 }
-/* #events's two equal 1fr 1fr columns shrink together (unlike the
-   asymmetric/narrower columns in .story .grid/.split, which collapse at the
-   shared 980px below), so its text column (heading + one short paragraph +
-   a handful of list items) stays comfortably readable well past that
-   shared breakpoint — restored to two columns through 761px here, with its
-   own later collapse at 760px instead. Same scoping trick as
-   #availability .split's later breakpoint: specific enough to win over the
-   shared rule without changing it for .tab-panel's other user (menu.html's
-   own, unrelated tab system). .arch-tab's order:-1 (image-before-text on
-   mobile, CLAUDE.md's image-led-section pattern) moves down to the same
-   760px point so it isn't applied while the grid is still two columns. */
-@keyframes panelIn {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes liIn {
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
 @keyframes shake {
   25% {
     transform: translateX(-5px);
@@ -899,29 +765,6 @@ h2 em {
     transform: translateX(5px);
   }
 }
-@keyframes sentIn {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-}
-@keyframes sealTick {
-  from {
-    opacity: 0;
-    transform: scale(0.5) rotate(-12deg);
-  }
-}
-@keyframes revealUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 /* ---------- Sub-page intro / split content blocks ---------- */
 .split {
   display: grid;
@@ -955,79 +798,12 @@ h2 em {
 .split .ph-wrap:hover img {
   transform: scale(var(--image-hover-zoom-feature));
 }
-@keyframes selPulse {
-  to {
-    box-shadow: 0 0 0 8px rgba(var(--gold-rgb), 0);
-  }
-}
-
 @media (max-width: 980.98px) {
   .split {
     grid-template-columns: 1fr;
   }
   .split .ph-wrap {
     order: -1;
-  }
-  /* Rolled out to all three mini-galleries (corporate.html, weddings.html,
-     celebrations.html), each scoped to its own id since they all share
-     the exact same .gallery/.head-row/.gallery-grid class names — a bare .gallery
-     selector here would apply to all three at once, which is fine now
-     that all three want it, but scoping stays explicit in case any one of
-     them needs to diverge later. Same display:contents reorder trick as
-     .enquiry-intro/.trust-rail: .head-row's box is removed so its children
-     become direct items of .wrap, letting the button be pushed after
-     .gallery-grid (a sibling, not a descendant, so plain order on .head-row
-     alone couldn't reach past it). */
-  #corpGalleryPreview .wrap,
-  #weddingsGalleryPreview .wrap,
-  #celebrationsGalleryPreview .wrap {
-    display: flex;
-    flex-direction: column;
-  }
-  #corpGalleryPreview .head-row,
-  #weddingsGalleryPreview .head-row,
-  #celebrationsGalleryPreview .head-row {
-    display: contents;
-  }
-  /* .head-row going display:contents means its own margin-bottom (the
-     .gallery .head-row rule, styles.css) can no longer render — a
-     display:contents element generates no box, so it has nothing to hang
-     a margin on. That was the gap between the heading block and .gallery-grid;
-     replacing it here on the text div directly (order:0, so it still
-     lands right before .gallery-grid) so the spacing survives the collapse. */
-  #corpGalleryPreview .head-row > div,
-  #weddingsGalleryPreview .head-row > div,
-  #celebrationsGalleryPreview .head-row > div {
-    margin-bottom: clamp(30px, 4vw, 48px);
-  }
-  #corpGalleryPreview .head-row .button,
-  #weddingsGalleryPreview .head-row .button,
-  #celebrationsGalleryPreview .head-row .button {
-    order: 2;
-    align-self: flex-start;
-    /* Matches the sitewide .cta-row convention (index.html, weddings.html
-       both use exactly this for a CTA following content) rather than an
-       arbitrary value of its own. */
-    margin-top: 40px;
-  }
-}
-@media (max-width: 620.98px) {
-  #corpGalleryPreview .head-row .button,
-  #weddingsGalleryPreview .head-row .button,
-  #celebrationsGalleryPreview .head-row .button {
-    width: 100%;
-    max-width: 300px;
-    justify-content: center;
-  }
-  /* The other three above sit in a row container that gets
-     align-items:center at this breakpoint (see above) — .wrap here can't,
-     since it also holds .gallery-grid, and centering that would break its 2-col
-     grid. align-self on the button alone gets the same centered look
-     without touching .gallery-grid. */
-  #corpGalleryPreview .head-row .button,
-  #weddingsGalleryPreview .head-row .button,
-  #celebrationsGalleryPreview .head-row .button {
-    align-self: center;
   }
 }
 
@@ -1046,67 +822,6 @@ h2 em {
     clip-path: none !important;
   }
 }
-
-/* ============================================================
-   (j) COMPACT NAV BAND — 980px to 1179.98px
-   ============================================================
-   REAL BUG, reported from the demo 2026-10-01: the Enquire button runs
-   off screen at 1015px, and the bar already looks overfull at 1092px.
-   Confirmed by adding the content up from the CSS rather than
-   eyeballing it, which is where an earlier estimate of ~890px went
-   wrong — it forgot that each dropdown label now has a 29px chevron
-   button beside it:
-
-     brand          34px mark + 13px gap + ~154px lockup   ~201px
-                    (the "MDINA · EST. 1660" sub-line is WIDER than
-                    "BACCHUS" itself — 0.42em tracking over 17
-                    characters — so it, not the name, sets this width)
-     nav links      Restaurant 130 + chevron 29, Events 91 + 29,
-                    Gallery 101, About 81, three 6px gaps      ~479px
-     CTAs           Book a table 174, Enquire 129, 18px gap    ~321px
-     wrap gaps      2 x 24px                                     48px
-                                                             --------
-                                                             ~1049px
-
-   Against that, .wrap offers (viewport - 88px) of room, capped at
-   1092px once the viewport passes 1180. So the bar needs ~1137px before
-   it sits comfortably, and it has been overflowing below that — not
-   only near the 980px cutover.
-
-   A MEDIA BAND, NOT clamp(), deliberately. The house preference is
-   clamp() for anything that should scale, but across a 200px-wide range
-   a vw-based clamp barely moves: 1.36vw on the link padding recovers
-   about 21px over the whole band, where this needs 120 or more. Getting
-   there with clamp() means the calc-interpolation form on six separate
-   properties, which is both less legible and harder to reason about
-   than one band. This is also bug #20's situation exactly — fixed-size
-   controls inside a fluid bar, where "the breakpoint floor is set by
-   the control, not by the layout" — and the fix there was a media band
-   swapping to existing smaller token values, which is what this does.
-
-   Bounded on BOTH sides on purpose: above 1180px .wrap stops growing
-   and there is ~43px of slack, so the designed spacing is untouched
-   there; below 980px the burger takes over. The .98 pairing follows bug
-   #22 so the handover to 1180px leaves no fractional gap.
-
-   Nothing here changes a font size, the 74px bar height, or any
-   colour — every line is spacing or a decorative glyph, so the bar
-   compresses rather than restyling. Running total of what it recovers
-   is noted per block. */
-
-/* ---------- (c) Burger cutover at 980px, not 820px ----------
-   Measured, not guessed: brand lockup ~200px + four nav items ~400px
-   + two compact pills ~250px + gaps lands around 890px of content,
-   which overflows .wrap's available width anywhere below roughly
-   940px. The real site's 820px cutover is sized for four plain text
-   links and ONE pill. 979.98px is the site's own established tablet
-   cutover (the copy+image reorder, .nav-dd-panel-media's own hide)
-   rather than a number invented here, and the .98 follows CLAUDE.md
-   bug #22's house rule so the handover to 980px leaves no fractional
-   gap. Same selectors and same properties as the 820px block in
-   styles.css, at equal specificity — this stylesheet simply comes
-   later, and the range is a strict superset, so there is no window
-   where the two disagree. */
 
 /* ============================================================
    SCROLL LOCK — driven by src/scripts/lib/scroll-lock.js
@@ -1155,43 +870,5 @@ html .reveal-armed-horizontal:not(.reveal-in) {
     opacity: 1;
     transform: none;
     transition: none;
-  }
-}
-
-/* ============================================================
-   NAV ENTRANCE (2026-10-05)
-   ============================================================
-   The bar used to be the one thing on the page with no entrance: fully
-   formed from the first frame, and on the homepage sitting on top of the
-   still-closed portcullis, ahead of the gate it's meant to arrive behind.
-   It now fades down into place: with the bars lifting on the homepage,
-   and alongside the hero copy everywhere else.
-
-   Pure CSS on purpose. A script-triggered entrance would leave the nav
-   invisible until the script arrived, which on a slow connection means a
-   site with no navigation for seconds; a CSS animation runs from the
-   first paint regardless.
-
-   `backwards` fill, never `both`/`forwards`: the from-state applies during
-   the delay, and once the animation ends the element is handed back to its
-   normal styles entirely. A held end-state would keep overriding things
-   the bar does later — `.nav.stuck::before` fading its gradient out, for
-   one — since animations beat ordinary declarations. It also means no
-   transform lingers on the bar's contents, which matters: a transform on
-   an ancestor of the dropdown panels makes it their containing block and
-   kills their backdrop blur (see the dark-card notes further up). During
-   the brief entrance itself, no panel can be open yet.
-
-   The contents (.wrap) and the top gradient (::before) are animated, not
-   .nav itself, for the same transform reason. */
-@keyframes nav-enter {
-  from {
-    opacity: 0;
-    transform: translateY(-14px);
-  }
-}
-@keyframes nav-backdrop-enter {
-  from {
-    opacity: 0;
   }
 }

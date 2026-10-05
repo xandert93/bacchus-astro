@@ -248,3 +248,19 @@
     letter-spacing: 0.1em;
   }
 }
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes liIn {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

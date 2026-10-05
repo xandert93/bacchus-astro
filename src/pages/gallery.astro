@@ -260,17 +260,15 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "../data/gallery"
      matching, no .gallery-item ever gets hidden, which is exactly "show
      everything." */
   .wrap:has(#gf-weddings:checked)
-    :global(#ggrid)
+    #ggrid
     :global(.gallery-item:not([data-cat="weddings"])),
   .wrap:has(#gf-corporate:checked)
-    :global(#ggrid)
+    #ggrid
     :global(.gallery-item:not([data-cat="corporate"])),
   .wrap:has(#gf-celebrations:checked)
-    :global(#ggrid)
+    #ggrid
     :global(.gallery-item:not([data-cat="celebrations"])),
-  .wrap:has(#gf-venue:checked)
-    :global(#ggrid)
-    :global(.gallery-item:not([data-cat="venue"])) {
+  .wrap:has(#gf-venue:checked) #ggrid :global(.gallery-item:not([data-cat="venue"])) {
     display: none;
   }
 </style>

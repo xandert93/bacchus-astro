@@ -11,6 +11,16 @@
    prototype's banquet/high tea/beverage pages) and reception's (its
    original). Where they differed, reception's newer version won — see the
    git history for the comparison. */
+:root {
+  /* The column gutter shared by BOTH grids inside a package page's tier
+     panel — .package-menu-groups (the ingredient lists) and
+     .package-dishes-grid (the signature-dish tiles). They stack directly on
+     top of each other and are both repeat(3, 1fr), so they only read as one
+     column structure if their gaps match too; when they didn't, every column
+     after the first started somewhere different (CLAUDE.md bug #24). One
+     token rather than two equal literals, so they cannot drift apart again. */
+  --package-grid-column-gap: clamp(32px, 5.5vw, 72px);
+}
 .package-now-viewing {
   font-family: "Inter", sans-serif;
   font-size: 10px;

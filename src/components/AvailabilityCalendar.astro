@@ -828,4 +828,9 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
          its own padding, so this widget shouldn't add a second layer inside it. */
     padding: 0;
   }
+  @keyframes selPulse {
+    to {
+      box-shadow: 0 0 0 8px rgba(var(--gold-rgb), 0);
+    }
+  }
 </style>
