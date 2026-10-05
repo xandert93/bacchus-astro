@@ -1,0 +1,49 @@
+---
+// The dropdown chevron, which turns 180° when its menu opens. Sizes must
+// keep the viewBox's 3:2 ratio AND land on even numbers both ways (12x8 in
+// the bar, 18x12 in the drawer): anything else letterboxes the path or puts
+// the rotation centre on a half pixel, and the glyph shimmers as it turns
+// (prototype bug #31).
+interface Props {
+  size?: "bar" | "drawer"
+}
+
+const { size = "bar" } = Astro.props
+const [width, height] = size === "bar" ? [12, 8] : [18, 12]
+---
+
+<svg
+  class="nav-dd-chevron"
+  width={width}
+  height={height}
+  viewBox="0 0 12 8"
+  fill="none"
+  aria-hidden="true"
+>
+  <path
+    d="M1.5 2l4.5 4 4.5-4"
+    stroke="currentColor"
+    stroke-width="1.4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  ></path>
+</svg>
+
+<style>
+  /* Promoted to its own compositing layer so the browser rasterises the
+     1.4px stroke once and composites the rotation, rather than
+     re-antialiasing it at every angle (which reads as shimmering rather than
+     turning). An attempted fix for prototype bug #31, still unconfirmed —
+     the prototype's notes record both attempts and the remaining suspects.
+     will-change keeps a standing layer, which is the right trade for two
+     small visible interactive glyphs; transform-origin is stated so it
+     can't drift if the box size changes. Who rotates it, and when, is the
+     parent's business (NavDropdown, MobileNavGroup). */
+  .nav-dd-chevron {
+    flex: none;
+    transition: transform 0.35s var(--ease);
+    will-change: transform;
+    backface-visibility: hidden;
+    transform-origin: 50% 50%;
+  }
+</style>

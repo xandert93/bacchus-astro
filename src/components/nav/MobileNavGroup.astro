@@ -1,0 +1,221 @@
+---
+// One accordion group in the mobile drawer: a numbered trigger, then the
+// menu's hub page and its items as plain links. The same list as the
+// desktop dropdown (src/data/navigation.ts). site-nav.js opens one group
+// at a time.
+import { hrefOf, type NavMenu } from "@data/navigation"
+import NavChevron from "./NavChevron.astro"
+
+interface Props {
+  menu: NavMenu
+  number: number
+}
+
+const { menu, number } = Astro.props
+const links = [menu.hub, ...menu.items]
+---
+
+<div class="mobile-nav-group">
+  <button class="mobile-nav-group-trigger" type="button" aria-expanded="false">
+    <span class="mobile-nav-number">{number}</span>
+    {menu.label}
+    <NavChevron size="drawer" />
+  </button>
+  <div class="mobile-nav-sub">
+    {/* The grid row collapses to 0fr; this wrapper is what clips, so the
+         links inside are never the thing being resized. */}
+    <div class="mobile-nav-sub-items">
+      {links.map((link) => (
+        <a
+          class="mobile-nav-sub-link"
+          href={hrefOf(link)}
+          {...(link.unbuilt ? { "data-unbuilt": "" } : {})}
+        >
+          {link.label}
+          {link.unbuilt && <span class="mobile-nav-proposed-badge">Proposed</span>}
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* --bronze-on-dark, not --bronze: the overlay's background is --ink, where
+       plain --bronze measures 3.85:1 — the same reason the panel icons needed the
+       token. */
+  .mobile-nav-proposed-badge {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px 8px;
+    border: 1px solid rgba(var(--bronze-on-dark-rgb), 0.45);
+    border-radius: 999px;
+    font-family: "Inter", sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bronze-on-dark);
+    vertical-align: middle;
+  }
+  /* grid-template-rows: 0fr -> 1fr, NOT max-height (changed 2026-10-02).
+       max-height needs a magic number large enough for the tallest group, and
+       every pixel of the difference between that number and the real content is
+       dead time in the animation. Measured here: the cap was 520px against ~164px
+       of Restaurant content and ~287px of Events. Opening therefore finished
+       moving a third of the way through, and CLOSING was worse - max-height has
+       to fall from 520 all the way to 164 before the Restaurant panel's bottom
+       edge starts moving at all, so roughly the first 0.3s of the close produced
+       no visible change. That reads as a dead tap, not a slow one.
+       0fr -> 1fr animates to whatever the content actually measures, so there is
+       no number to keep in sync with the row count. The cost is one wrapper
+       element per group, because the clipping has to happen INSIDE the grid row
+       rather than on the grid itself - hence .mobile-nav-sub-items below. */
+  .mobile-nav-sub {
+    display: grid;
+    grid-template-rows: 0fr;
+    padding-left: 34px;
+    transition: grid-template-rows 0.45s var(--ease);
+  }
+  .mobile-nav-sub-items {
+    overflow: hidden;
+  }
+  .mobile-nav-group.is-open .mobile-nav-sub {
+    grid-template-rows: 1fr;
+  }
+  /* TEMPORARY, for a look at the overlay with no accordion at all. Driven by
+       DRAWER_GROUPS_PINNED_OPEN in main.js - set that to false to get the
+       accordion back and these rules stop matching. The label stays (it is still
+       the section heading) but the chevron goes, since nothing collapses, and
+       the cursor stops claiming the row is clickable. */
+  .mobile-nav-group.is-pinned-open .mobile-nav-group-trigger {
+    cursor: default;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-nav-sub {
+      transition: none;
+    }
+  }
+  /* The accordion is motion like any other. It was never gated, which predates
+       the whole-site nav - the max-height version had the same gap. */
+  .mobile-nav-sub-link {
+    display: block;
+    font-family: "Newsreader", Georgia, serif;
+    font-size: clamp(18px, 4.5vw, 22px);
+    color: rgba(var(--limestone-rgb), 0.72);
+    padding: 8px 0;
+  }
+  /* Sub-links were the one thing in the overlay with no entrance at all, so
+       whichever group opens by default had its rows sitting there fully painted
+       while everything around them animated in — which read as them having been
+       left out rather than as a deliberate difference.
+       They take the same treatment as the rows above them, with a shorter lift
+       (18px against 28px) because they are smaller items and the same distance
+       reads as further on them. main.js folds the OPEN group's sub-links into the
+       same --m-delay sequence as the top-level rows, so the whole thing counts
+       down the list once rather than running two staggers side by side.
+       color stays out of the delay, per bug #12 — a delayed hover colour is what
+       made the top-level links feel laggy once. */
+  :global(.menu) .mobile-nav-sub-link {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.5s var(--ease) var(--m-delay, 0s),
+      transform 0.6s var(--ease) var(--m-delay, 0s),
+      color 0.3s;
+  }
+  :global(body.menu-open) :global(.menu) .mobile-nav-sub-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.menu) .mobile-nav-sub-link {
+      transform: none;
+      transition:
+        opacity 0.5s var(--ease) var(--m-delay, 0s),
+        color 0.3s;
+    }
+  }
+  .mobile-nav-sub-link[aria-current="page"] {
+    color: var(--gold-2);
+  }
+  @media (hover: hover) {
+    .mobile-nav-sub-link:hover {
+      color: var(--gold-2);
+    }
+  }
+  @media (hover: none) {
+    .mobile-nav-sub-link:active {
+      color: var(--gold-2);
+    }
+  }
+  /* ---------- (d) Mobile drawer ----------
+       The accordion trigger is .mobile-nav-group-trigger, NOT
+       .mobile-nav-link — see the conflict documented at the top of this
+       file: main.js closes the drawer on every .mobile-nav-link click,
+       first in the listener order, so a trigger carrying that class can
+       never expand. These are the only properties it loses by opting
+       out: the type treatment, and the drawer's staggered entrance
+       (whose --m-delay this page's own script recomputes across the
+       drawer's rows in DOM order, overwriting main.js's indices so the
+       stagger still counts 1,2,3,4 down the list). */
+  :global(.menu) .mobile-nav-group-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: "Fraunces", serif;
+    /* Declared on .menu near the top of this file — it has to match
+         .menu .mobile-nav-link exactly or the four rows stop reading as one
+         list. See that token's note. */
+    font-size: var(--mobile-nav-link-size);
+    letter-spacing: -0.02em;
+    color: var(--limestone);
+    background: none;
+    border: none;
+    padding: 5px 0;
+    text-align: left;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(28px);
+    /* Delay lives on the opacity/transform entries only, via the same
+         --m-delay custom property styles.css uses — never the
+         transitionDelay shorthand, which would also delay the colour
+         transition and make the tap feel laggy (CLAUDE.md bug #12). */
+    transition:
+      opacity 0.6s var(--ease) var(--m-delay, 0s),
+      transform 0.7s var(--ease) var(--m-delay, 0s),
+      color 0.3s;
+  }
+  :global(body.menu-open) :global(.menu) .mobile-nav-group-trigger {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  :global(.menu) .mobile-nav-group-trigger .mobile-nav-number {
+    color: var(--gold);
+    /* Matches .menu .mobile-nav-link span's 0.38em — see its note. */
+    font-size: 0.38em;
+    vertical-align: text-top;
+    letter-spacing: 0;
+    font-family: "Inter", sans-serif;
+  }
+  .mobile-nav-group.is-pinned-open .mobile-nav-group-trigger :global(.nav-dd-chevron) {
+    display: none;
+  }
+  /* 18x12 — the drawer trigger chevron. The viewBox is "0 0 12 8" (ratio
+       1.5), so 16x11 letterboxed the path and put the rotation centre on a half
+       pixel, which made the glyph shimmer through its 180deg turn instead
+       of rotating cleanly. Keep any replacement size on a 3:2 ratio with
+       even numbers on both axes. */
+  :global(.menu) .mobile-nav-group-trigger :global(.nav-dd-chevron) {
+    flex: none;
+    width: 18px;
+    height: 12px;
+    margin-left: auto;
+    transition: transform 0.35s var(--ease);
+  }
+  .mobile-nav-group.is-open .mobile-nav-group-trigger :global(.nav-dd-chevron) {
+    transform: rotate(180deg);
+  }
+</style>
