@@ -9,6 +9,8 @@
 //
 // Pages default to the four package pages; pass routes after the output
 // file to snapshot others: node scripts/style-snapshot.mjs out.json / /gallery
+// In Git Bash, prefix with MSYS_NO_PATHCONV=1, or it rewrites "/gallery"
+// into a Windows path before node ever sees it.
 import { chromium, devices } from "@playwright/test"
 import fs from "node:fs"
 import http from "node:http"
