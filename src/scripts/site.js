@@ -2,7 +2,12 @@
 // the .loaded class the hero entrance waits on, the footer year, the
 // ambient particles, and the scroll reveals for [data-reveal].
 
-import { reduce } from "./lib/motion.js"
+import {
+  isScrolledToBottom,
+  reduce,
+  REVEAL_ROOT_MARGIN,
+  REVEAL_SWEEP_LINE,
+} from "./lib/motion.js"
 import "./lib/safe-reveal.js"
 
 requestAnimationFrame(function () {
@@ -65,7 +70,7 @@ var revealPending = []
 var revealSweepTimer = null
 function revealSweep() {
   if (!revealPending.length) return
-  var limit = window.innerHeight * 0.92 // matches the rootMargin below
+  var limit = window.innerHeight * (isScrolledToBottom() ? 1 : REVEAL_SWEEP_LINE)
   revealPending.slice().forEach(function (entry) {
     var r = entry.el.getBoundingClientRect()
     // Horizontal check as well as vertical: an element parked off-screen
@@ -108,7 +113,7 @@ var revObs = new IntersectionObserver(
       }
     })
   },
-  { threshold: 0, rootMargin: "0px 0px -8% 0px" },
+  { threshold: 0, rootMargin: REVEAL_ROOT_MARGIN },
 )
 document
   .querySelectorAll('[data-reveal]:not([data-reveal="img"])')
@@ -156,7 +161,7 @@ document.querySelectorAll('[data-reveal="img"]').forEach(function (wrap) {
         }
       })
     },
-    { threshold: 0, rootMargin: "0px 0px -8% 0px" },
+    { threshold: 0, rootMargin: REVEAL_ROOT_MARGIN },
   )
   imgObs.observe(wrap)
 })

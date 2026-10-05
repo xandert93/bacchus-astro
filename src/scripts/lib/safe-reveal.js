@@ -23,9 +23,10 @@
 //                        strips). The stagger is capped so a long strip
 //                        doesn't keep someone waiting.
 
+import { isScrolledToBottom, REVEAL_ROOT_MARGIN, REVEAL_SWEEP_LINE } from "./motion.js"
+
 const STAGGER_MS = 90
 const MAX_STAGGER_STEPS = 5
-const SWEEP_LIMIT = 0.92 // matches the -8% bottom rootMargin below
 const REVEAL_MS = 800 // matches the CSS transition on .reveal-armed
 
 const pending = []
@@ -76,7 +77,7 @@ const observer = new IntersectionObserver(
       if (entry) reveal(entry)
     })
   },
-  { threshold: 0, rootMargin: "0px 0px -8% 0px" },
+  { threshold: 0, rootMargin: REVEAL_ROOT_MARGIN },
 )
 
 document.querySelectorAll("[data-reveal-safe]").forEach((el) => {
@@ -104,7 +105,8 @@ pending.forEach((entry) => observer.observe(entry.trigger))
 let sweepTimer = null
 function sweep() {
   pending.slice().forEach((entry) => {
-    if (entry.trigger.getBoundingClientRect().top < window.innerHeight * SWEEP_LIMIT) {
+    const line = isScrolledToBottom() ? 1 : REVEAL_SWEEP_LINE
+    if (entry.trigger.getBoundingClientRect().top < window.innerHeight * line) {
       reveal(entry)
     }
   })
