@@ -162,6 +162,51 @@ const SCENARIOS = [
       await p.waitForTimeout(700)
     },
   ],
+  [
+    "mobile",
+    "/",
+    "section:has(.tabs-bar)",
+    async (p) => {
+      await p.click('.tabs-bar [data-tab="celebrations"]')
+      await p.waitForTimeout(700)
+    },
+  ],
+  [
+    "desktop",
+    "/",
+    "section:has(#carView)",
+    async (p) => {
+      await p.click("#next")
+      await p.waitForTimeout(900)
+    },
+  ],
+  [
+    "desktop",
+    "/weddings",
+    "#availability",
+    async (p) => {
+      await p.click("#avail .availability-cell:not(.taken):not(.empty) >> nth=8")
+      await p.waitForTimeout(500)
+    },
+  ],
+  [
+    "mobile",
+    "/weddings",
+    "#availModal",
+    async (p) => {
+      await p.click("#availChangeBtn")
+      await p.waitForTimeout(700)
+    },
+  ],
+  [
+    "mobile",
+    "/gallery",
+    "section:has(#ggrid)",
+    async (p) => {
+      await p.click('label[for="gf-venue"]')
+      await p.waitForTimeout(700)
+    },
+  ],
 ]
 const s1 = serve(process.argv[2], 4511),
   s2 = serve(process.argv[3], 4512)

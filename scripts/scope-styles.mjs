@@ -6,7 +6,7 @@
 // like `body.menu-open` or a page wrapper like `.split` — are wrapped in
 // :global() so Astro's scoping leaves them alone.
 //
-//   node scripts/scope-styles.mjs <Component> [--dry]
+//   node scripts/scope-styles.mjs <Component | pages/route> [--dry]
 //
 // Always follow with a style snapshot + diff across every page; this is a
 // mechanical move and the diff is what proves it changed nothing.
@@ -18,7 +18,11 @@ import selectorParser from "postcss-selector-parser"
 const [name, flag] = process.argv.slice(2)
 const dry = flag === "--dry"
 const SRC = "src"
-const componentFile = path.join(SRC, "components", `${name}.astro`)
+// "SiteHeader" means src/components/SiteHeader.astro; anything with a slash
+// is a path under src/ (e.g. "pages/index", "pages/weddings/packages/reception").
+const componentFile = name.includes("/")
+  ? path.join(SRC, `${name}.astro`)
+  : path.join(SRC, "components", `${name}.astro`)
 
 const walk = (dir) =>
   fs
