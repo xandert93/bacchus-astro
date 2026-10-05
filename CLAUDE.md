@@ -104,8 +104,8 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   the calendar, package grids) or styles elements a SCRIPT creates or
   toggles (calendar cells, nav dropdown state), which never get Astro's
   scoping attribute and so must stay global.
-  The recipe for any further move: `scripts/scope-styles.mjs <Component |
-  pages/route>` does it mechanically; take a `scripts/style-snapshot.mjs`
+  The recipe for any further move: `scripts/scope-styles.mjs <name>` (a component, or `pages/<route>`)
+  does the move mechanically; take a `scripts/style-snapshot.mjs`
   baseline before, re-snapshot after, `scripts/style-diff.mjs` must show 0
   changes, and `scripts/state-diff.mjs <old dist> <new dist>` must say
   "same" for every interaction state. One known blind spot in the mover: a
