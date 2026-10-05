@@ -2,7 +2,23 @@
 // grouped by element class and property. Zero changes = a pure refactor.
 //   node scripts/style-diff.mjs before.json after.json
 import fs from "node:fs"
-const [a, b] = process.argv.slice(2).map((f) => JSON.parse(fs.readFileSync(f, "utf8")))
+// Elements are matched by DOM position, not by class list, so a refactor
+// that renames or removes a class still compares like with like.
+const byPath = (snapshot) =>
+  Object.fromEntries(
+    Object.entries(snapshot).map(([page, els]) => [
+      page,
+      Object.fromEntries(
+        Object.entries(els).map(([k, v]) => [
+          k.split(" .")[0],
+          { ...v, __class: k.split(" .")[1] ?? "" },
+        ]),
+      ),
+    ]),
+  )
+const [a, b] = process.argv
+  .slice(2)
+  .map((f) => byPath(JSON.parse(fs.readFileSync(f, "utf8"))))
 for (const page of Object.keys(a)) {
   const A = a[page],
     B = b[page] ?? {}
@@ -14,8 +30,8 @@ for (const page of Object.keys(a)) {
       continue
     }
     for (const prop of Object.keys(A[el])) {
-      if (A[el][prop] === B[el][prop]) continue
-      const cls = el.split(" .")[1] || el.split("/").pop()
+      if (prop === "__class" || A[el][prop] === B[el][prop]) continue
+      const cls = A[el].__class || el.split("/").pop()
       const key = `${cls} :: ${prop} :: ${A[el][prop]} -> ${B[el][prop]}`
       groups.set(key, (groups.get(key) ?? 0) + 1)
       total++
