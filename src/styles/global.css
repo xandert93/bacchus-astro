@@ -862,6 +862,11 @@ body.menu-open .nav::after {
 body.menu-open .nav::after {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
+  /* Fully opaque while the drawer is open (2026-10-05). The page bar's fill
+     is 0.86 alpha and relies on the blur above to hide what passes behind
+     it; with the blur off, the drawer's own links stayed legible through
+     the bar as they scrolled under it. Same colour, no transparency. */
+  background: rgb(var(--muted-ink-rgb));
 }
 /* NO unconditional darkening while the overlay is open — that was tried on
    2026-10-02 and replaced the same day. The bar should behave inside the
