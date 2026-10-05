@@ -1,28 +1,51 @@
-// Move the global.css rules that belong to one component into that
-// component's scoped <style>. A rule moves only if EVERY selector in it is
-// "owned" by the component: its last compound (the element being styled)
-// carries a class that appears in this component's markup and nowhere else
-// in the project. Compounds that aren't the component's own — an ancestor
-// like `body.menu-open` or a page wrapper like `.split` — are wrapped in
-// :global() so Astro's scoping leaves them alone.
+// Move global.css rules into the file that owns them.
 //
-//   node scripts/scope-styles.mjs <Component | pages/route> [--dry]
+//   node scripts/scope-styles.mjs <target> [--select <regex>] [--keep] [--dry]
 //
-// Always follow with a style snapshot + diff across every page; this is a
-// mechanical move and the diff is what proves it changed nothing.
+// <target> is a component name ("SiteHeader" -> src/components/SiteHeader.astro),
+// a path under src/ for a page ("pages/index"), or a stylesheet
+// ("styles/tabs.css").
+//
+// Which rules move:
+//   • With --select, every selector matching the regex (grouped selectors are
+//     split: matching ones move, the rest stay).
+//   • Without it, selectors whose styled element carries a class that appears
+//     in the target's markup and in no other file's.
+//
+// --keep copies instead of moving, leaving global.css untouched: for a rule
+// two components both need (copy into the first with --keep, then move into
+// the second).
+//
+// How a moved selector is rewritten for an .astro target: each compound
+// (".nav-dd.is-open", "li", "body.menu-open") stays scoped only if the
+// element it matches is rendered by the target's OWN markup — it has a class
+// or id written there, or it's a bare tag written there that no child
+// component and no script also renders. Every other compound is wrapped in
+// :global(), because the element it matches never gets this file's scoping
+// attribute: it belongs to an ancestor (body, a page wrapper), to a child
+// component, or is created by a script. A .css target is plain global CSS,
+// imported only where it's needed, so nothing is wrapped.
+//
+// Always follow with a style snapshot + diff and the state diff; this is a
+// mechanical move and the diffs are what prove it changed nothing.
 import fs from "node:fs"
 import path from "node:path"
 import postcss from "postcss"
 import selectorParser from "postcss-selector-parser"
 
-const [name, flag] = process.argv.slice(2)
-const dry = flag === "--dry"
+const args = process.argv.slice(2)
+const name = args[0]
+const dry = args.includes("--dry")
+const keep = args.includes("--keep")
+const selectIndex = args.indexOf("--select")
+const select = selectIndex > -1 ? new RegExp(args[selectIndex + 1]) : null
 const SRC = "src"
-// "SiteHeader" means src/components/SiteHeader.astro; anything with a slash
-// is a path under src/ (e.g. "pages/index", "pages/weddings/packages/reception").
-const componentFile = name.includes("/")
-  ? path.join(SRC, `${name}.astro`)
-  : path.join(SRC, "components", `${name}.astro`)
+const targetFile = name.endsWith(".css")
+  ? path.join(SRC, name)
+  : name.includes("/")
+    ? path.join(SRC, `${name}.astro`)
+    : path.join(SRC, "components", `${name}.astro`)
+const cssTarget = targetFile.endsWith(".css")
 
 const walk = (dir) =>
   fs
@@ -30,116 +53,142 @@ const walk = (dir) =>
     .flatMap((d) =>
       d.isDirectory() ? walk(path.join(dir, d.name)) : [path.join(dir, d.name)],
     )
+const files = walk(SRC)
 
-// Every class name a file's markup could carry: class="...", class:list
-// strings, and string literals in frontmatter expressions.
 // Markup only: frontmatter and comments removed, so a word in a comment
 // ("one <img> per state") can't pass for markup.
 function markupOf(text) {
   return text
     .replace(/^---[\s\S]*?\n---/, "")
+    .replace(/<style[\s\S]*?<\/style>/g, "")
+    .replace(/<script[\s\S]*?<\/script>/g, "")
     .replace(/\{\/\*[\s\S]*?\*\/\}/g, "")
     .replace(/<!--[\s\S]*?-->/g, "")
 }
-function classesIn(text) {
+// Classes and ids written on this file's own elements. A class passed to a
+// CHILD component (<SocialLinks class="menu-social">) lands on the child's
+// element, which carries the child's scoping attribute, so it doesn't count.
+function ownMarkup(text) {
+  return markupOf(text).replace(/<[A-Z][\w.]*\b[^>]*>/g, "")
+}
+function tokensIn(markup, attr) {
   const found = new Set()
-  // A class passed to a CHILD component (<SocialLinks class="menu-social">)
-  // lands on the child's element, which carries the child's scoping
-  // attribute, not this one's — so it doesn't count as this component's.
-  const markup = markupOf(text).replace(/<[A-Z][\w.]*\b[^>]*>/g, "")
-  for (const m of markup.matchAll(/class(?::list)?=(?:"([^"]*)"|\{([^}]*)\})/g)) {
-    const raw = m[1] ?? m[2] ?? ""
-    for (const s of raw.matchAll(/[\w-]+/g)) found.add(s[0])
-  }
+  const re = new RegExp(`${attr}(?::list)?=(?:"([^"]*)"|\\{([^}]*)\\})`, "g")
+  for (const m of markup.matchAll(re))
+    for (const s of (m[1] ?? m[2] ?? "").matchAll(/[\w-]+/g)) found.add(s[0])
   return found
 }
-// Classes a script creates or toggles (className =, classList.add/toggle,
-// el("tag", "cls")): never safe to scope, since script-made elements don't
-// get Astro's attribute.
-function scriptClasses(text) {
-  const found = new Set()
-  for (const m of text.matchAll(
-    /(?:className\s*=|classList\.(?:add|toggle|remove)\(|el\(\s*"[a-z0-9]+"\s*,)\s*"([^"]+)"/g,
-  ))
-    for (const s of m[1].split(/\s+/)) found.add(s)
-  return found
+const tagsIn = (markup) =>
+  new Set([...markup.matchAll(/<([a-z][a-z0-9]*)[\s>/]/g)].map((m) => m[1]))
+
+// Elements scripts CREATE (createElement + className, innerHTML strings,
+// el("tag", "cls")) have no scoping attribute. Classes merely toggled with
+// classList on existing elements are fine and aren't listed here.
+const created = new Set()
+const scriptTags = new Set()
+for (const f of files.filter((f) => f.endsWith(".js"))) {
+  const text = fs.readFileSync(f, "utf8")
+  for (const m of text.matchAll(/(?:className\s*=|el\(\s*"[a-z0-9]+"\s*,)\s*"([^"]+)"/g))
+    m[1].split(/\s+/).forEach((c) => created.add(c))
+  for (const m of text.matchAll(/["'`][^"'`\n]*<([a-z][a-z0-9]*)[^"'`\n]*["'`]/g)) {
+    scriptTags.add(m[1])
+    for (const c of m[0].matchAll(/class="([^"]+)"/g))
+      c[1].split(/\s+/).forEach((x) => created.add(x))
+  }
 }
 
-const files = walk(SRC)
+// Tags rendered by the child components a file uses, recursively.
+function childTags(file, seen = new Set()) {
+  const out = new Set()
+  const text = fs.readFileSync(file, "utf8")
+  for (const m of text.matchAll(/import (\w+) from "([^"]+\.astro)"/g)) {
+    const child = path.resolve(path.dirname(file), m[2])
+    if (seen.has(child) || !fs.existsSync(child)) continue
+    seen.add(child)
+    const childText = fs.readFileSync(child, "utf8")
+    tagsIn(markupOf(childText)).forEach((t) => out.add(t))
+    childTags(child, seen).forEach((t) => out.add(t))
+  }
+  return out
+}
+
+let localClasses = new Set()
+let localIds = new Set()
+let localTags = new Set()
+if (!cssTarget) {
+  const own = ownMarkup(fs.readFileSync(targetFile, "utf8"))
+  localClasses = tokensIn(own, "class")
+  localIds = tokensIn(own, "id")
+  const children = childTags(targetFile)
+  localTags = new Set(
+    [...tagsIn(own)].filter(
+      (t) => !children.has(t) && !scriptTags.has(t) && !["html", "body"].includes(t),
+    ),
+  )
+}
+
+// Default selection: the styled element's class is in this file's markup
+// and nobody else's.
 const owners = new Map()
-for (const f of files.filter((f) => f.endsWith(".astro"))) {
-  for (const c of classesIn(fs.readFileSync(f, "utf8"))) {
+for (const f of files.filter((f) => f.endsWith(".astro")))
+  for (const c of tokensIn(ownMarkup(fs.readFileSync(f, "utf8")), "class")) {
     if (!owners.has(c)) owners.set(c, new Set())
     owners.get(c).add(path.resolve(f))
   }
-}
-const scripted = new Set()
-for (const f of files.filter((f) => f.endsWith(".js")))
-  for (const c of scriptClasses(fs.readFileSync(f, "utf8"))) scripted.add(c)
-// Tags scripts write as HTML strings (innerHTML = "The <em>occasion</em>"):
-// elements made that way have no scoping attribute either.
-const scriptTags = new Set()
-for (const f of files.filter((f) => f.endsWith(".js")))
-  for (const m of fs
-    .readFileSync(f, "utf8")
-    .matchAll(/["'`][^"'`\n]*<([a-z][a-z0-9]*)[\s>]/g))
-    scriptTags.add(m[1])
+const me = path.resolve(targetFile)
+const uniquelyMine = (c) =>
+  owners.get(c)?.size === 1 && owners.get(c).has(me) && !created.has(c)
 
-const me = path.resolve(componentFile)
-const componentText = markupOf(fs.readFileSync(componentFile, "utf8"))
-const mine = (cls) =>
-  owners.get(cls)?.size === 1 && owners.get(cls).has(me) && !scripted.has(cls)
+const compoundsOf = (sel) => {
+  const parts = [[]]
+  sel.each((node) => {
+    if (node.type === "combinator") parts.push([])
+    else parts[parts.length - 1].push(node)
+  })
+  return parts
+}
+const classesOf = (c) => c.filter((n) => n.type === "class").map((n) => n.value)
+const idsOf = (c) => c.filter((n) => n.type === "id").map((n) => n.value)
+
+function isLocal(compound) {
+  const cls = classesOf(compound)
+  if (cls.some((c) => localClasses.has(c) && !created.has(c))) return true
+  if (idsOf(compound).some((i) => localIds.has(i))) return true
+  if (cls.length || idsOf(compound).length) return false
+  const tag = compound.find((n) => n.type === "tag")?.value
+  return !!tag && localTags.has(tag)
+}
+
+function selected(selector) {
+  if (select) return select.test(selector)
+  let ok = false
+  selectorParser((root) => {
+    root.each((sel) => {
+      const parts = compoundsOf(sel)
+      ok = classesOf(parts[parts.length - 1]).some(uniquelyMine)
+    })
+  }).processSync(selector)
+  return ok
+}
 
 function convert(selector) {
-  // Returns the scoped selector string, or null if this rule isn't ours.
-  let ok = true
-  const result = selectorParser((root) => {
+  if (cssTarget) return selector
+  return selectorParser((root) => {
     root.each((sel) => {
-      // split into compounds
-      const compounds = [[]]
-      sel.each((node) => {
-        if (node.type === "combinator") compounds.push(node, [])
-        else compounds[compounds.length - 1].push(node)
-      })
-      const parts = compounds.filter((c) => Array.isArray(c))
-      const subject = parts[parts.length - 1]
-      const classesOf = (c) => c.filter((n) => n.type === "class").map((n) => n.value)
-      // The styled element must be ours: either it carries one of our
-      // classes, or it's a bare tag (li, svg) inside a compound that does.
-      // ...and only if this component's own markup actually contains that
-      // tag. An <em> a script writes into a quote has no scoping attribute,
-      // so a rule for it has to stay global.
-      const subjectTag = subject.find((n) => n.type === "tag")?.value
-      const subjectIsBareTag =
-        !classesOf(subject).length &&
-        !!subjectTag &&
-        new RegExp(`<${subjectTag}[\\s>/]`).test(componentText) &&
-        !scriptTags.has(subjectTag)
-      const ours =
-        classesOf(subject).some(mine) ||
-        (subjectIsBareTag && parts.slice(0, -1).some((c) => classesOf(c).some(mine)))
-      if (!ours) ok = false
-      // wrap any compound with no class of ours in :global()
-      for (const c of parts) {
-        const cls = classesOf(c)
-        const hasTag = c.some((n) => n.type === "tag" || n.type === "universal")
-        if (cls.some(mine)) continue
-        if (!cls.length && hasTag && c !== parts[0]) continue // a bare tag inside our markup
-        const text = c.map(String).join("").trim()
-        const first = c[0]
+      for (const c of compoundsOf(sel)) {
+        if (isLocal(c)) continue
+        // :global(.x)::before — a pseudo-element has to stay outside.
         const pseudoElements = c.filter(
           (n) => n.type === "pseudo" && n.value.startsWith("::"),
         )
         const rest = c.filter((n) => !pseudoElements.includes(n))
+        if (!rest.length) continue
         const wrapped = selectorParser.pseudo({ value: ":global" })
         wrapped.append(selectorParser.selector({ nodes: rest.map((n) => n.clone()) }))
-        void text
         rest.forEach((n, i) => (i === 0 ? n.replaceWith(wrapped) : n.remove()))
-        void first
       }
     })
   }).processSync(selector)
-  return ok ? result : null
 }
 
 const globalFile = path.join(SRC, "styles", "global.css")
@@ -147,15 +196,10 @@ const root = postcss.parse(fs.readFileSync(globalFile, "utf8"))
 const moved = []
 root.walkRules((rule) => {
   if (rule.parent.type === "atrule" && /keyframes/.test(rule.parent.name)) return
-  // Split grouped selectors: the ones that are ours move, the rest stay.
-  // Moving only whole rules left behind grouped overrides like
-  // `.process-steps, .split { grid-template-columns: 1fr }` in a mobile
-  // query, which then lost to the moved (now more specific) base rule.
-  const pairs = rule.selectors.map((s) => [s, convert(s)])
-  const ours = pairs.filter(([, scoped]) => scoped !== null)
+  const ours = rule.selectors.filter(selected)
   if (!ours.length) return
-  const theirs = pairs.filter(([, scoped]) => scoped === null).map(([s]) => s)
-  const clone = rule.clone({ selector: ours.map(([, s]) => s).join(", ") })
+  const theirs = rule.selectors.filter((s) => !ours.includes(s))
+  const clone = rule.clone({ selector: ours.map(convert).join(",\n") })
   const comments = []
   if (!theirs.length) {
     // The whole rule moves: carry the comment block immediately above.
@@ -174,16 +218,19 @@ root.walkRules((rule) => {
     p = p.parent
   }
   moved.push({ comments: comments.map((c) => c.clone()), node })
-  if (dry) return
+  if (dry || keep) return
   if (theirs.length) {
-    rule.selector = theirs.join(", ")
+    rule.selector = theirs.join(",\n")
     return
   }
   comments.forEach((c) => c.remove())
-  const parent = rule.parent
+  let parent = rule.parent
   rule.remove()
-  if (parent.type === "atrule" && !parent.nodes.some((n) => n.type !== "comment"))
+  while (parent.type === "atrule" && !parent.nodes.some((n) => n.type !== "comment")) {
+    const up = parent.parent
     parent.remove()
+    parent = up
+  }
 })
 
 const css = moved
@@ -194,13 +241,24 @@ if (dry) {
   console.log(css)
   process.exit(0)
 }
-fs.writeFileSync(globalFile, root.toString())
-const comp = fs.readFileSync(componentFile, "utf8").trimEnd()
-const indented = css
-  .split("\n")
-  .map((l) => (l.trim() ? "  " + l : l))
-  .join("\n")
-const block = comp.includes("<style>")
-  ? comp.replace(/<\/style>\s*$/, `${indented}\n</style>\n`)
-  : `${comp}\n\n<style>\n  /* Scoped to this component (moved from global.css by\n     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */\n${indented}\n</style>\n`
-fs.writeFileSync(componentFile, block)
+if (!moved.length) process.exit(0)
+if (!keep) fs.writeFileSync(globalFile, root.toString())
+if (cssTarget) {
+  const existing = fs.existsSync(targetFile)
+    ? fs.readFileSync(targetFile, "utf8").trimEnd() + "\n\n"
+    : ""
+  fs.writeFileSync(targetFile, existing + css + "\n")
+} else {
+  const comp = fs.readFileSync(targetFile, "utf8").trimEnd()
+  const indented = css
+    .split("\n")
+    .map((l) => (l.trim() ? "  " + l : l))
+    .join("\n")
+  // Append to the file's own (last, non-global) <style>, or start one.
+  const styleOpen = /<style>(?![\s\S]*<style>)/
+  const block =
+    styleOpen.test(comp) && /<\/style>\s*$/.test(comp)
+      ? comp.replace(/<\/style>\s*$/, `${indented}\n</style>\n`)
+      : `${comp}\n\n<style>\n  /* Scoped to this file (moved from global.css by\n     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */\n${indented}\n</style>\n`
+  fs.writeFileSync(targetFile, block)
+}
