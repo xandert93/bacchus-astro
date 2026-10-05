@@ -43,8 +43,8 @@ high-tea,beverage}` (the agreed URL scheme). `menu.html` is deliberately not
 - Package styles merged 2026-10-05: `package-page.css` is shared by all four
   pages; `package-stations.css` is Reception's Stations section only. A
   computed-style diff (`scripts/style-snapshot.mjs`, before vs after)
-  showed zero change on Reception. Still duplicated: `reception-package.js`
-  carries its own copy of `package-tiers.js`'s tier controller.
+  showed zero change on Reception. `package-tiers.js` is the one tier controller for all four (2026-10-05);
+  `reception-package.js` holds only the Stations controllers.
 - **Use a key, never a path:** `src/lib/images.ts` looks photos up as
   `"venue/ballroom-night"`; an unknown key fails the build. Render with
   `<Photo src="key" alt sizes>` (any photo), `<HeroImage>` (page heroes),
@@ -94,9 +94,8 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   inlined into the page by Astro (`build.inlineStylesheets: "auto"`), after
   the linked ones, so cascade order is preserved.
 - `src/data/gallery.ts` — the full gallery's photos and filters.
-- `src/data/enquiry.ts` — event types and chip notes. `CHIP_NOTES` is
-  still duplicated inside `enquiry.js`; change both until the script imports
-  it.
+- `src/data/enquiry.ts` — event types and chip notes. Read by both
+  `EnquirySection.astro` and `enquiry.js` — one list.
 - `src/styles/global.css` — the prototype's `styles.css`, copied verbatim,
   imported once by the layout. Splitting it into component-scoped styles is
   a later job.
