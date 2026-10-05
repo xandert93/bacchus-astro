@@ -55,6 +55,11 @@ function markScrolling() {
 window.addEventListener(
   "scroll",
   function () {
+    // Pinning the page for an overlay (lib/scroll-lock.js) moves window.scrollY
+    // to 0 and back without the visitor scrolling. Ignore both, or the bar
+    // would un-stick, the progress bar empty and the homepage hero jump
+    // behind the overlay.
+    if (isScrollLocked()) return
     markScrolling()
     if (!ticking) {
       ticking = true
