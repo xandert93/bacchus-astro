@@ -29,9 +29,21 @@ const walk = (dir) =>
 
 // Every class name a file's markup could carry: class="...", class:list
 // strings, and string literals in frontmatter expressions.
+// Markup only: frontmatter and comments removed, so a word in a comment
+// ("one <img> per state") can't pass for markup.
+function markupOf(text) {
+  return text
+    .replace(/^---[\s\S]*?\n---/, "")
+    .replace(/\{\/\*[\s\S]*?\*\/\}/g, "")
+    .replace(/<!--[\s\S]*?-->/g, "")
+}
 function classesIn(text) {
   const found = new Set()
-  for (const m of text.matchAll(/class(?::list)?=(?:"([^"]*)"|\{([^}]*)\})/g)) {
+  // A class passed to a CHILD component (<SocialLinks class="menu-social">)
+  // lands on the child's element, which carries the child's scoping
+  // attribute, not this one's — so it doesn't count as this component's.
+  const markup = markupOf(text).replace(/<[A-Z][\w.]*\b[^>]*>/g, "")
+  for (const m of markup.matchAll(/class(?::list)?=(?:"([^"]*)"|\{([^}]*)\})/g)) {
     const raw = m[1] ?? m[2] ?? ""
     for (const s of raw.matchAll(/[\w-]+/g)) found.add(s[0])
   }
@@ -60,9 +72,17 @@ for (const f of files.filter((f) => f.endsWith(".astro"))) {
 const scripted = new Set()
 for (const f of files.filter((f) => f.endsWith(".js")))
   for (const c of scriptClasses(fs.readFileSync(f, "utf8"))) scripted.add(c)
+// Tags scripts write as HTML strings (innerHTML = "The <em>occasion</em>"):
+// elements made that way have no scoping attribute either.
+const scriptTags = new Set()
+for (const f of files.filter((f) => f.endsWith(".js")))
+  for (const m of fs
+    .readFileSync(f, "utf8")
+    .matchAll(/["'`][^"'`\n]*<([a-z][a-z0-9]*)[\s>]/g))
+    scriptTags.add(m[1])
 
 const me = path.resolve(componentFile)
-const componentText = fs.readFileSync(componentFile, "utf8")
+const componentText = markupOf(fs.readFileSync(componentFile, "utf8"))
 const mine = (cls) =>
   owners.get(cls)?.size === 1 && owners.get(cls).has(me) && !scripted.has(cls)
 
@@ -89,7 +109,8 @@ function convert(selector) {
       const subjectIsBareTag =
         !classesOf(subject).length &&
         !!subjectTag &&
-        new RegExp(`<${subjectTag}[\\s>/]`).test(componentText)
+        new RegExp(`<${subjectTag}[\\s>/]`).test(componentText) &&
+        !scriptTags.has(subjectTag)
       const ours =
         classesOf(subject).some(mine) ||
         (subjectIsBareTag && parts.slice(0, -1).some((c) => classesOf(c).some(mine)))
