@@ -26,7 +26,10 @@ const hasCtas = Astro.slots.has("ctas")
 <section class="hero hero-sm">
   {image ? (
     <div class="hero-media">
-      <img src={image.src} alt={image.alt} />
+      {/* The hero photo is the page's biggest paint, so it's fetched ahead
+          of everything else rather than queued behind fonts and scripts —
+          a slow download is what paints it top-down, half black. */}
+      <img src={image.src} alt={image.alt} fetchpriority="high" />
     </div>
   ) : (
     <div class="hero-media package-hero-placeholder" />
