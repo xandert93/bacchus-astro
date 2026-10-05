@@ -2441,6 +2441,12 @@ body.menu-open .menu-social {
     animation: none;
   }
 }
+/* HeroImage wraps the photo in a <picture> (AVIF + WebP). display: contents
+   takes the wrapper out of layout, so the <img> sizes against .hero-media
+   exactly as it did when it sat there on its own. */
+.hero-media picture {
+  display: contents;
+}
 .hero-media img {
   width: 100%;
   height: 118%;
