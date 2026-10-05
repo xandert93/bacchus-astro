@@ -184,8 +184,7 @@ svg,
 [draggable="true"],
 input[type="button"],
 input[type="submit"],
-input[type="reset"],
-.gallery-item {
+input[type="reset"] {
   user-select: none;
 }
 img {
@@ -961,188 +960,6 @@ h2 em {
     box-shadow: 0 0 0 8px rgba(var(--gold-rgb), 0);
   }
 }
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(12px, 1.6vw, 20px);
-}
-.gallery-item {
-  display: block;
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-card);
-  aspect-ratio: 4/5;
-  cursor: zoom-in;
-  transition:
-    opacity 0.4s var(--ease),
-    transform 0.5s var(--ease);
-}
-/* NOT muted at rest (changed 2026-09-24). These tiles used to sit at
-   grayscale(0.3) brightness(0.95) and return to exactly 1 on hover — .slide
-   (the homepage carousel) is the only component that still mutes at rest,
-   and even there at a lighter recipe since 2026-10-01.
-
-   Dropped here, kept there, on one distinction: .slide is CONTEXT — mood
-   frames behind a section lead, where a muted bed reads as deliberate.
-   .gallery-item is the PRODUCT. Someone on gallery.html is there to look
-   at the photographs, every tile opens a lightbox, and the 9 tiles on
-   reception-package.html are food. Desaturating those by a third makes
-   them read as washed out rather than atmospheric, and it made hover's
-   entire payoff "the image stops being dimmed" — the reward for pointing
-   at a photo was that it became the ordinary photo.
-
-   This is also not a new look for most visitors: the (hover: none) block
-   that used to sit here already dropped the mute wholesale on touch, so
-   every phone and tablet has always seen these un-muted. The change makes
-   desktop agree with them, and that block is gone as redundant — there is
-   no longer a resting filter for touch to undo.
-
-   Hover now lifts FROM the untouched image rather than back to it, via the
-   shared --image-hover-zoom-feature/--image-hover-filter-boost tokens
-   (:root, top of this file). This selector list is also where the three
-   Reception stations figures (cards/stage/thumbnails,
-   reception-package.html) plug in — folded into one rule on 2026-10-01,
-   where before each carried its own identical copy of the same numbers. */
-.gallery-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition:
-    opacity 0.9s var(--ease),
-    transform 0.9s var(--ease),
-    filter 0.45s var(--ease);
-}
-.gallery-item:not(.is-revealed) img {
-  transition-delay: var(--d, 0ms);
-}
-@media (hover: hover) {
-  .gallery-item:hover img,
-  .package-station-card-figure:hover img,
-  .package-stations-stage-figure:hover img,
-  .package-stations-thumbnail:hover img {
-    transform: scale(var(--image-hover-zoom-feature));
-    filter: var(--image-hover-filter-boost);
-  }
-}
-.gallery-item .gallery-tag {
-  position: absolute;
-  left: 12px;
-  bottom: 12px;
-  z-index: 2;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold-2);
-  background: rgba(var(--muted-ink-rgb), 0.55);
-  backdrop-filter: blur(6px);
-  padding: 6px 12px;
-  border-radius: var(--radius-pill);
-  opacity: 0;
-  transform: translateY(6px);
-  transition: all 0.4s var(--ease);
-}
-@media (hover: hover) {
-  .gallery-item:hover .gallery-tag {
-    opacity: 1;
-    transform: none;
-  }
-}
-/* The tag only ever appears on hover (its reveal rule above sits inside
-   @media (hover: hover)), so on touch it is a permanently invisible element
-   still carrying backdrop-filter: blur(6px) — one compositing layer per
-   tile, 23 of them on gallery.html, re-composited every time the filter
-   changes which tiles are laid out. display:none costs nothing visually
-   where it was never going to show, and takes those layers out of the
-   frame. The underlying data-tag attribute is what the lightbox reads, not
-   this span's text, so nothing downstream notices. */
-@media (hover: none) {
-  .gallery-item .gallery-tag {
-    display: none;
-  }
-}
-.gallery-item::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 55%, rgba(10, 9, 6, 0.5));
-  opacity: 0;
-  transition: opacity 0.5s var(--ease);
-}
-@media (hover: hover) {
-  .gallery-item:hover::after {
-    opacity: 1;
-  }
-}
-/* "This photo opens in a lightbox" hint. cursor:zoom-in alone gives touch
-   nothing — no hover, no cursor to change — so this gives every input type
-   a visible affordance. Hidden until hover on devices that actually have
-   one (keeps the photo clean at rest, same reveal pattern as .gallery-tag
-   above); always visible where hover doesn't exist, since that's the only
-   way touch would ever discover it. Uses ::before, not ::after — that's
-   already the gradient scrim above. Icon color is a literal hex baked into
-   the data-URI (--limestone, #efe7d4) rather than currentColor — a
-   background-image can't inherit `color` the way an inline SVG's
-   fill="currentColor" can. */
-.gallery-item::before {
-  content: "";
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  z-index: 3;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  backdrop-filter: blur(6px);
-  /* Scrim lightened 0.55 to 0.45 on 2026-09-24. The blur is doing most of
-     the legibility work, so the tint can sit back off the photograph.
-     Kept in lockstep with .package-station-expand-badge
-     (sandboxes/reception-stations.html), which is this same badge in a
-     different corner — the two are deliberately identical in every other
-     respect, so change both or neither. */
-  background: rgba(var(--muted-ink-rgb), 0.45)
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M1 5V1h4M9 1h4v4M13 9v4H9M5 13H1V9' stroke='%23efe7d4' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
-    center / 13px no-repeat;
-  pointer-events: none;
-}
-@media (hover: hover) {
-  .gallery-item::before {
-    opacity: 0;
-    transition: opacity 0.3s var(--ease);
-  }
-  .gallery-item:hover::before {
-    opacity: 1;
-  }
-}
-/* The badge is not part of the tile's entrance, and on touch that showed.
-   [data-reveal="img"] holds the CONTAINER at opacity 1 and fades only the
-   <img> inside it, so everything else the tile owns is painted from the
-   start — and on touch the badge has no hover state to hide behind. It
-   therefore floated at full opacity on an empty card for the whole ~0.9s
-   image fade, reading as a loading artefact rather than an affordance.
-
-   Folded into the entrance: suppressed until the tile reveals, then fading
-   in as one movement with its image — same --d stagger, same 0.9s duration,
-   no lead of its own, so badge and photograph resolve together rather than
-   the hint arriving as a second, later event. The suppression sits outside
-   any media query because the same mismatch exists with a pointer — hover
-   a tile whose photo hasn't arrived and the badge appears over nothing —
-   while only touch needs the fade-in timing, since hover already has its own.
-
-   Scoped to [data-reveal="img"], not to :not(.is-revealed) alone:
-   reception-package.html reuses .gallery-item for its dish tiles with no
-   data-reveal at all (they sit inside a display:none tab panel the scroll
-   observer never sees, so .is-revealed is never added there), and a bare
-   .is-revealed gate would hide their badge permanently. */
-.gallery-item[data-reveal="img"]:not(.is-revealed)::before {
-  opacity: 0;
-  transition-delay: 0s;
-}
-@media (hover: none) {
-  .gallery-item[data-reveal="img"]::before {
-    transition: opacity 0.9s var(--ease);
-    transition-delay: var(--d, 0ms);
-  }
-}
 
 @media (max-width: 980.98px) {
   .split {
@@ -1150,9 +967,6 @@ h2 em {
   }
   .split .ph-wrap {
     order: -1;
-  }
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
   }
   /* Rolled out to all three mini-galleries (corporate.html, weddings.html,
      celebrations.html), each scoped to its own id since they all share
@@ -1214,9 +1028,6 @@ h2 em {
   #weddingsGalleryPreview .head-row .button,
   #celebrationsGalleryPreview .head-row .button {
     align-self: center;
-  }
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
   }
 }
 

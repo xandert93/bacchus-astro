@@ -958,16 +958,6 @@ const carouselSlides = [
     font-weight: 400;
     margin-top: 22px;
   }
-  /* Hidden on the three page-specific mini-galleries (.gallery — every photo
-     in that grid is already the one category the section heading names) —
-     gallery.html's own full grid doesn't use this wrapper class, so its
-     .gallery-tag stays visible there, where it's actually load-bearing (mixed
-     categories + a filter bar). The underlying data-tag/data-title
-     attributes are untouched either way — the lightbox reads those directly,
-     not this span's text. */
-  .gallery :global(.gallery-tag) {
-    display: none;
-  }
   @media (max-width: 620.98px) {
     .cta-row :global(.button),
     .tab-panel .actions :global(.button) {

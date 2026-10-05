@@ -2,7 +2,8 @@
 // Four-photo strip linking through to the filtered full gallery. Tiles open
 // the page's <Lightbox /> (lightbox.js), so a page using this needs one.
 import ArrowIcon from "./ArrowIcon.astro"
-import Photo from "./Photo.astro"
+import GalleryTile from "./GalleryTile.astro"
+import "../styles/gallery-grid.css"
 
 interface Props {
   // Kept from the prototype because global.css targets these ids
@@ -44,21 +45,19 @@ const tag = category[0].toUpperCase() + category.slice(1)
     </div>
     <div class="gallery-grid gallery-grid-four-col" id="ggrid">
       {photos.map((photo, i) => (
-        <div
-          class="gallery-item"
+        <GalleryTile
           data-title={photo.title}
           data-tag={tag}
           data-reveal="img"
           style={i > 0 ? `--d: ${i * 80}ms` : undefined}
-        >
-          <Photo
-            src={photo.src}
-            alt={photo.alt}
-            sizes="(max-width: 620px) 50vw, (max-width: 980px) 50vw, 25vw"
-            maxWidth={1280}
-          />
-          <span class="gallery-tag">{tag}</span>
-        </div>
+          tag={tag}
+          photo={{
+            src: photo.src,
+            alt: photo.alt,
+            sizes: "(max-width: 620px) 50vw, (max-width: 980px) 50vw, 25vw",
+            maxWidth: 1280,
+          }}
+        />
       ))}
     </div>
   </div>
@@ -87,7 +86,7 @@ const tag = category[0].toUpperCase() + category.slice(1)
      categories + a filter bar). The underlying data-tag/data-title
      attributes are untouched either way — the lightbox reads those directly,
      not this span's text. */
-  .gallery .gallery-tag {
+  .gallery :global(.gallery-tag) {
     display: none;
   }
   .gallery {

@@ -4,7 +4,8 @@
 // step as the visitor clicks between categories.
 import BaseLayout from "../layouts/BaseLayout.astro"
 import PageHero from "../components/PageHero.astro"
-import Photo from "../components/Photo.astro"
+import GalleryTile from "../components/GalleryTile.astro"
+import "../styles/gallery-grid.css"
 import Lightbox from "../components/Lightbox.astro"
 import EnquirySection from "../components/EnquirySection.astro"
 import WaitlistPopover from "../components/WaitlistPopover.astro"
@@ -71,28 +72,25 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "../data/gallery"
       </script>
       <div class="gallery-grid" id="ggrid">
         {GALLERY_PHOTOS.map((photo, i) => (
-          <div
-            class:list={["gallery-item", { "gallery-item-span-two": photo.wide }]}
+          <GalleryTile
+            class:list={{ "gallery-item-span-two": photo.wide }}
             data-cat={photo.category}
             data-title={photo.title}
             data-tag={photo.tag}
             data-reveal="img"
             style={i === 0 ? undefined : `--d: ${photo.revealDelay}ms`}
-          >
-            {/* The first two load eagerly: they're in view on arrival. */}
-            <Photo
-              src={photo.src}
-              alt={photo.alt}
-              loading={i < 2 ? undefined : "lazy"}
-              sizes={
-                photo.wide
-                  ? "(max-width: 620px) 100vw, (max-width: 980px) 66vw, 50vw"
-                  : "(max-width: 620px) 50vw, (max-width: 980px) 33vw, 25vw"
-              }
-              maxWidth={photo.wide ? 1920 : 1280}
-            />
-            <span class="gallery-tag">{photo.badge ?? photo.tag}</span>
-          </div>
+            tag={photo.badge ?? photo.tag}
+            photo={{
+              src: photo.src,
+              alt: photo.alt,
+              // The first two load eagerly: they're in view on arrival.
+              loading: i < 2 ? undefined : "lazy",
+              sizes: photo.wide
+                ? "(max-width: 620px) 100vw, (max-width: 980px) 66vw, 50vw"
+                : "(max-width: 620px) 50vw, (max-width: 980px) 33vw, 25vw",
+              maxWidth: photo.wide ? 1920 : 1280,
+            }}
+          />
         ))}
       </div>
     </div>
@@ -240,16 +238,16 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "../data/gallery"
     outline: 2px solid var(--gold);
     outline-offset: 2px;
   }
-  .gallery-item.gallery-item-span-two {
+  :global(.gallery-item.gallery-item-span-two) {
     grid-column: span 2;
   }
   @media (max-width: 980.98px) {
-    .gallery-item.gallery-item-span-two {
+    :global(.gallery-item.gallery-item-span-two) {
       grid-column: span 2;
     }
   }
   @media (max-width: 620.98px) {
-    .gallery-item.gallery-item-span-two {
+    :global(.gallery-item.gallery-item-span-two) {
       grid-column: span 1;
     }
   }
