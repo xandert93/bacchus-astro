@@ -1,0 +1,264 @@
+---
+// The drag/swipe photo strip: the homepage's "Across the estate" and each
+// package page's "A closer look". The section around it (heading, lead) is
+// the page's own; this is the strip and its controls. photo-carousel.js
+// drives it — dragging, the arrows, the progress bar and the "1–2 / 5"
+// counter — and finds it by the fixed ids below, so it's one per page.
+import Photo from "./Photo.astro"
+
+interface Props {
+  // src is a key from src/lib/images.ts.
+  slides: { src: string; alt: string; caption: string }[]
+}
+
+const { slides } = Astro.props
+---
+
+<div class="wrap carousel-section">
+  <div class="carousel-view" id="carView">
+    <div class="carousel-track" id="carTrack" data-reveal-group>
+      {slides.map((slide, i) => (
+        <figure class="slide">
+          <div class="ph">
+            <Photo
+              src={slide.src}
+              sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+              maxWidth={960}
+              alt={slide.alt}
+              decoding="async"
+            />
+          </div>
+          <figcaption class="carousel-caption">
+            <b>{slide.caption}</b>
+            <i>{i + 1}</i>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+  <div class="carousel-controls">
+    <button class="carousel-button" id="prev" aria-label="Previous">
+      <svg width="16" height="12" viewBox="0 0 14 10" fill="none">
+        <path
+          d="M13 5H2m3.5-3.5L2 5l3.5 3.5"
+          stroke="currentColor"
+          stroke-width="1.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+    <button class="carousel-button" id="next" aria-label="Next">
+      <svg width="16" height="12" viewBox="0 0 14 10" fill="none">
+        <path
+          d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+          stroke="currentColor"
+          stroke-width="1.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+    <div class="carousel-progress-bar">
+      <i id="carBar"></i>
+    </div>
+    <div class="carousel-count">
+      <span id="carNow">1</span> / <span id="carTotal">{slides.length}</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  import "../scripts/photo-carousel.js"
+</script>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .carousel-view {
+    user-select: none;
+  }
+  .carousel-section {
+    position: relative;
+  }
+  .carousel-view {
+    overflow: hidden;
+    cursor: grab;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: pan-y;
+  }
+  .carousel-view.drag {
+    cursor: grabbing;
+  }
+  .carousel-track {
+    display: flex;
+    gap: clamp(14px, 2vw, 26px);
+    transition: transform 0.8s var(--ease);
+    will-change: transform;
+  }
+  .slide {
+    flex: 0 0 auto;
+    width: clamp(250px, 32vw, 420px);
+    position: relative;
+  }
+  .slide .ph {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-card);
+    aspect-ratio: 4/5;
+    background: #e2dbca;
+  }
+  .slide :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition:
+      transform 1.2s var(--ease),
+      filter 0.8s var(--ease);
+    /* Lightened from grayscale(0.35) brightness(0.94) on 2026-10-01 — the
+       original read as too heavy a mute for a resting state. Still enough to
+       read as a deliberately muted mood frame (see the CONTEXT vs PRODUCT
+       note below), just not as washed-out as the original figure. */
+    filter: grayscale(0.18) brightness(0.97);
+  }
+  @media (hover: hover) {
+    .slide:hover :global(img) {
+      transform: scale(var(--image-hover-zoom-ambient));
+      filter: grayscale(0) brightness(1);
+    }
+  }
+  @media (hover: none) {
+    .slide :global(img) {
+      filter: grayscale(0) brightness(1);
+    }
+  }
+  @media (hover: none) {
+    .slide:active :global(img) {
+      transform: scale(var(--image-hover-zoom-ambient));
+    }
+  }
+  /* Gated per CLAUDE.md bug #19 — same root cause already fixed on this
+     carousel's own .carousel-button arrows (touch has no real "pointer
+     leaves" event, so an unguarded :hover here reads as a permanently
+     zoomed/full-color slide sitting amid its still-muted siblings after a
+     tap or drag-release), just missed on the slides themselves at the time. */
+  /* Touch has no lingering :hover, only a momentary :active while a finger
+     is actually down — so gating this the same way as every other
+     hover-reveal on the site left touch seeing the dimmed resting filter
+     almost all the time (:active is too brief to register as "revealed").
+     Dropping the muted-at-rest filter entirely for hover:none, on request,
+     rather than only revealing it during that brief press. Zoom stays as a
+     nice :active touch flourish; only the filter is unconditional now.
+
+     .slide is now the ONLY component muted at rest (2026-09-24). This
+     comment used to name two siblings and both are gone: .pkg-station-photo
+     no longer exists as a class at all, and .gallery-item deliberately
+     stopped muting — see its own note, which carries the full reasoning.
+     The short version is that .gallery-item and the Reception stations show
+     the PRODUCT (photographs someone is there to look at, each opening a
+     lightbox), whereas these slides are CONTEXT — mood frames behind a
+     section lead, where a muted bed reads as deliberate rather than as
+     washed out. That is the line to test against before muting anything new
+     at rest, and the reason this block survives while the matching one under
+     .gallery-item was deleted as redundant. */
+  .slide .carousel-caption {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(var(--muted-ink-rgb), 0.14);
+    margin-top: 16px;
+  }
+  .slide .carousel-caption :global(b) {
+    font-family: "Fraunces", serif;
+    font-weight: 400;
+    font-size: 18px;
+  }
+  .slide .carousel-caption i {
+    font-style: normal;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--bronze);
+  }
+  .slide .ph::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(10, 9, 6, 0.35));
+    opacity: 0;
+    transition: opacity 0.6s var(--ease);
+  }
+  .slide:hover .ph::after {
+    opacity: 1;
+  }
+  .carousel-controls {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 34px;
+  }
+  .carousel-button {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.22);
+    background: transparent;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.4s var(--ease);
+    flex: none;
+  }
+  @media (hover: hover) {
+    .carousel-button:hover:not(:disabled) {
+      background: var(--ink);
+      color: var(--limestone);
+      border-color: var(--ink);
+      transform: scale(1.06);
+    }
+  }
+  @media (hover: none) {
+    .carousel-button:active:not(:disabled) {
+      background: var(--ink);
+      color: var(--limestone);
+      border-color: var(--ink);
+      transform: scale(1.06);
+    }
+  }
+  /* Touch has no real :hover to leave, so tapping this button would otherwise
+     leave the hover state stuck until the visitor tapped elsewhere (same root
+     cause noted for .button above) — gate :hover to real hover-capable pointers
+     and give touch its own :active feedback instead. */
+  .carousel-button:disabled {
+    opacity: 0.28;
+    cursor: not-allowed;
+  }
+  .carousel-progress-bar {
+    flex: 1;
+    height: 1px;
+    background: rgba(var(--muted-ink-rgb), 0.14);
+    position: relative;
+    overflow: hidden;
+  }
+  .carousel-progress-bar i {
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    transform-origin: left;
+    transform: scaleX(0.3);
+    transition: transform 0.8s var(--ease);
+  }
+  .carousel-count {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--bronze);
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 620.98px) {
+    .slide {
+      width: 76vw;
+    }
+  }
+</style>

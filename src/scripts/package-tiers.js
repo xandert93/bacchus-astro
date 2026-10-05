@@ -13,7 +13,6 @@
 // evaluate their imports first, and a module imported by several scripts
 // on a page still runs once — no reliance on <script> order.
 import "./tabs.js"
-import "./photo-carousel.js"
 
 // Page-specific tier controller. Drives every way of changing tier —
 // the tab bar, the tier cards, the sticky switcher and touch swipe —

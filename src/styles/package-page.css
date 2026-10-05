@@ -1,3 +1,5 @@
+@import "./tabs.css";
+
 /* Shared by all four package pages: the tier switcher, tier cards,
    sticky switcher, signature-dish tiles, menu groups and the photo
    carousel. Imported after global.css (so it wins ties on source order,

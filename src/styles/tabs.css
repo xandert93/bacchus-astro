@@ -1,0 +1,250 @@
+/* The tab bar (.tab-bar, with its sliding .pill) and the tab panels it
+   switches (.panels / .tab-panel), including the divided bullet lists the
+   panels hold. Shared by the homepage's Weddings / Corporate / Celebrations
+   tabs and the package pages' tier switcher, so it is its own file rather
+   than one component's styles: the homepage imports it directly and
+   package-page.css pulls it in at the top. tabs.js drives both. */
+
+.tab-panel p,
+.tab-panel li {
+  font-family: "Newsreader", Georgia, serif;
+}
+.tab-bar {
+  display: inline-flex;
+  position: relative;
+  padding: 5px;
+  border: 1px solid rgba(var(--limestone-rgb), 0.18);
+  border-radius: 3px;
+  background: rgba(var(--limestone-rgb), 0.04);
+  margin-bottom: clamp(18px, 2.4vw, 24px);
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar {
+  display: none;
+}
+.tab-bar .pill {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 0;
+  width: 0;
+  /* Was a flat var(--gold) fill, felt underwhelming — replaced sitewide
+     with a two-tone gold gradient after comparing this against a wider-
+     range "extreme" version and a few border treatments live on
+     sandboxes/reception-package.html; this safer, narrower version was the
+     final pick. Applies to every .tab-bar (this Events section, menu.html,
+     the reception sandbox). Now shared via --gold-gradient (see :root) with
+     .button-gradient, the sitewide solid CTA — same value, one definition. */
+  background: var(--gold-gradient);
+  border-radius: 2px;
+  transition:
+    transform 0.55s var(--ease),
+    width 0.55s var(--ease);
+  z-index: 0;
+}
+.tab-bar button {
+  position: relative;
+  z-index: 1;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 13px 26px;
+  font-size: 11.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(var(--limestone-rgb), 0.75);
+  transition: color 0.4s var(--ease);
+}
+.tab-bar button.active {
+  color: var(--ink);
+}
+@media (hover: hover) {
+  .tab-bar button:not(.active):hover {
+    color: var(--limestone-2);
+  }
+}
+@media (hover: none) {
+  .tab-bar button:not(.active):active {
+    color: var(--limestone-2);
+  }
+}
+/* Sitewide gap, not a deliberate omission — every .tab-bar instance (this
+   Events section, menu.html's own tab bar, sandboxes/reception-package.html's
+   tier switcher) gave inactive tabs zero hover feedback. Same
+   :not(.active) guard as .tab-bar button.active above (bug #2/#14: keeps
+   this from fighting that rule at equal specificity), and the usual
+   hover/touch split (bug #19) since these are same-page, non-navigating
+   controls. Resting/hover was first tried as plain --limestone (full
+   opacity) -> --limestone-2 — computed contrast ratio between those two
+   tokens is ~1.1:1, essentially imperceptible (anything under ~1.5:1 reads
+   as "no change" to most eyes), which is exactly what testing showed.
+   rgba(--limestone-rgb, 0.75) -> --limestone-2 computes to ~1.9:1, a real,
+   visible brightening on hover. This also replaces the page-specific
+   .tabs-bar/.pkg-tabs-tabbar overrides below, which used to bump resting
+   color straight to --limestone-2 — with nothing brighter left for hover
+   to escalate to, that was the original version of the same bug. */
+/* Equal button width above #events's own tab-panel collapse point (760px,
+   see .tab-panel.active above) — below it, full-width flex:1 takes over
+   instead (next block), same pairing the reception-package.html sandbox
+   uses between its own inline tab-bar and its wrapped one (at its own 840px
+   breakpoint). Raised from the sitewide mobile breakpoint (621px) once
+   .tab-panel's own collapse moved to 760px — otherwise the tab-bar stayed
+   compact/fixed-width for a stretch (621-760px) where the panel content
+   below it had already gone full-width single-column, an odd mismatch.
+   Fixed width rather than flex:1: flex:1 expands to flex-basis:0, and a
+   button can never shrink below its own text's min-content width (white-
+   space:nowrap), so the longest label ("Celebrations") would still end up
+   wider than the other two instead of all three matching. */
+/* Full width/equal-height counterpart to the block above, for the
+   621-760px stretch the sitewide .tab-bar bug-13 fix (max-width:620px)
+   doesn't reach — matches #events's own 760px collapse point instead of
+   leaving the tab-bar compact against a now full-width stacked panel. */
+.panels {
+  position: relative;
+}
+.tab-panel {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5.5vw, 72px);
+}
+.tab-panel.active {
+  display: grid;
+  animation: panelIn 0.7s var(--ease) both;
+}
+.tab-panel.full {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+.tab-panel h3 {
+  font-size: clamp(25px, 3.4vw, 40px);
+  margin-bottom: 18px;
+  font-weight: 300;
+}
+.tab-panel ul {
+  list-style: none;
+  margin-top: 26px;
+  display: grid;
+  /* Was 2px, and that 2px was why every item sat closer to the divider
+     above it than the one below. The divider IS each li's own border-top
+     and the padding below is symmetric, but a grid row gap lands BELOW an
+     item and ABOVE the next one's border — so the real measurements were
+     14px up, 16px down. Zeroed rather than compensated for with an
+     asymmetric padding, which would have left the same 2px to rediscover
+     if the gap ever came back. */
+  gap: 0;
+}
+.tab-panel li {
+  /* Newsreader's glyphs don't sit centred inside their own line box — its
+     descender is generous enough that the visible mass of a lowercase line
+     rides a couple of px above the line's geometric centre, so even with
+     the row made symmetric above, the copy still read as leaning toward
+     the divider above it. CLAUDE.md bug #8, same font, same cause: box
+     metrics correct, optics not, and a small nudge is the fix.
+
+     One dial rather than two literals — whatever comes off the bottom goes
+     onto the top, so the row's total height and the divider rhythm are
+     untouched and only the copy inside moves. */
+  --tab-panel-item-optical-nudge: 2px;
+  /* One value for the text's left offset, the bullet's hanging room and
+     where the divider starts, so those three can't drift apart. */
+  --tab-panel-item-indent: 30px;
+  /* The divider, as an image rather than a colour, so a page can swap in a
+     gradient by overriding this one property without touching any of the
+     background plumbing below — and so li:first-child can still switch it
+     off generically. Two identical stops is just "a flat colour, shaped
+     like a gradient". */
+  --tab-panel-divider: linear-gradient(
+    rgba(var(--limestone-rgb), 0.12),
+    rgba(var(--limestone-rgb), 0.12)
+  );
+  padding: calc(14px + var(--tab-panel-item-optical-nudge)) 0
+    calc(14px - var(--tab-panel-item-optical-nudge)) var(--tab-panel-item-indent);
+  position: relative;
+  /* The divider used to be this border, drawn edge to edge — so it started
+     to the LEFT of the hyphen bullet and the bullet read as sitting inside
+     a ruled row. Indenting it to where the copy starts turns the bullet
+     into a hanging mark in the margin and gives the list a clean left edge.
+
+     A border can't be inset, so it's painted as a background strip
+     instead. The border itself stays, at 1px transparent, purely to hold
+     the box metrics it always had: drop it and every row loses 1px of
+     height and the whole list shifts up. background-origin: border-box is
+     what lets `top 0` mean exactly where the visible border used to sit,
+     so the change is horizontal only. */
+  border-top: 1px solid transparent;
+  background-image: var(--tab-panel-divider);
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  background-size: calc(100% - var(--tab-panel-item-indent)) 1px;
+  background-position: var(--tab-panel-item-indent) 0;
+  color: rgba(var(--limestone-rgb), 0.76);
+  font-size: 14.5px;
+  opacity: 0;
+  transform: translateX(-14px);
+  animation: liIn 0.6s var(--ease) forwards;
+}
+/* No rule above the first item — framing the whole list in dividers reads
+   as boxed-in (see CLAUDE.md's "Divided lists"). border-top goes too, not
+   just the image: it keeps this row's spacing byte-identical to what it was
+   before the divider moved to a background. */
+.tab-panel li:first-child {
+  border-top: none;
+  background-image: none;
+}
+.tab-panel li:nth-child(1) {
+  animation-delay: 0.18s;
+}
+.tab-panel li:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.tab-panel li:nth-child(3) {
+  animation-delay: 0.42s;
+}
+.tab-panel li:nth-child(4) {
+  animation-delay: 0.54s;
+}
+.tab-panel li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  /* Was a flat 22px, ~3.5px above where the first line's centre actually
+     falls, which compounded with the old 2px row gap into a visible lean
+     toward the divider above. Derived from the li's own metrics now, so it
+     tracks font-size instead of needing retuning: 0.825em is half the
+     inherited 1.65 line-height, and -0.5px pulls this 1px rule's own
+     height back so its CENTRE, not its top edge, lands on the line's.
+
+     Pinned to the FIRST line rather than centred in the li (top: 50%) —
+     the longer items wrap to two lines in the homepage's narrow text
+     column, and a bullet floating between them would read as belonging to
+     neither.
+
+     Deliberately written against a literal 14px, NOT the nudged
+     padding-top above: the nudge moves the line box down by exactly the
+     amount the glyphs were riding high inside it, so the two cancel.
+     Following the live padding would drag the bullet down with the box and
+     re-open the gap the nudge just closed — the bullet tracks where the
+     copy optically sits, which is where it already was. */
+  top: calc(14px + 0.825em - 0.5px);
+  width: 12px;
+  height: 1px;
+  background: var(--gold);
+}
+@media (max-width: 620.98px) {
+  .tab-bar {
+    display: flex;
+    width: 100%;
+  }
+}
+@media (max-width: 620.98px) {
+  .tab-bar button {
+    flex: 1;
+    padding: 13px 6px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+}
