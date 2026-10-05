@@ -116,3 +116,49 @@ import Photo from "./Photo.astro"
     </div>
   </div>
 </section>
+
+<style>
+  /* Scoped to this component (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .visit {
+    border-bottom: 1px solid rgba(var(--limestone-rgb), 0.12);
+  }
+  .visit-list {
+    display: grid;
+    gap: 1px;
+    margin-top: clamp(18px, 2vw, 24px);
+  }
+  .visit-list a:hover {
+    padding-left: 10px;
+    color: var(--gold-2);
+  }
+  .visit-list .visit-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Inter", sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-2);
+    flex: none;
+  }
+  .visit-list .visit-item-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    color: var(--gold-2);
+  }
+  .visit-list .visit-value {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 16.5px;
+    font-weight: 500;
+    color: var(--limestone-2);
+    text-align: right;
+  }
+  .visit-note {
+    margin-top: clamp(22px, 3vw, 30px);
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+</style>

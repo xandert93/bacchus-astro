@@ -75,3 +75,35 @@ const hasCtas = Astro.slots.has("ctas")
     </div>
   </div>
 </section>
+
+<style>
+  /* Scoped to this component (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* Compact sub-page hero (shorter than the homepage hero) */
+  .hero-sm {
+    min-height: 62vh;
+    min-height: 62svh;
+  }
+  .hero-sm h1 {
+    font-size: clamp(32px, 6vw, 74px);
+  }
+  .crumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(var(--limestone-rgb), 0.55);
+    margin-bottom: 24px;
+  }
+  .crumb a {
+    transition: color 0.3s;
+  }
+  .crumb a:hover {
+    color: var(--gold-2);
+  }
+  .crumb svg {
+    opacity: 0.6;
+  }
+</style>

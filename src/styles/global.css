@@ -2682,37 +2682,9 @@ picture {
     transform-origin: bottom;
   }
 }
-
-/* Compact sub-page hero (shorter than the homepage hero) */
-.hero-sm {
-  min-height: 62vh;
-  min-height: 62svh;
-}
 .hero-sm .hero-content {
   padding-top: 160px;
   padding-bottom: clamp(46px, 7vh, 76px);
-}
-.hero-sm h1 {
-  font-size: clamp(32px, 6vw, 74px);
-}
-.crumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 10.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(var(--limestone-rgb), 0.55);
-  margin-bottom: 24px;
-}
-.crumb a {
-  transition: color 0.3s;
-}
-.crumb a:hover {
-  color: var(--gold-2);
-}
-.crumb svg {
-  opacity: 0.6;
 }
 
 [data-reveal] {
@@ -3651,51 +3623,14 @@ h2 em {
     grid-template-columns: 1fr 1fr;
   }
 }
-
-.quote {
-  background: var(--ink);
-  position: relative;
-  overflow: hidden;
-}
-.quote .bgimg {
-  position: absolute;
-  inset: 0;
-  opacity: 0.14;
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
-  filter: grayscale(0.4);
-}
 .quote .wrap {
   position: relative;
   z-index: 2;
   text-align: center;
   max-width: 940px;
 }
-.quote blockquote {
-  font-family: "Fraunces", serif;
-  font-weight: 300;
-  font-size: clamp(24px, 4.2vw, 50px);
-  line-height: 1.22;
-  color: var(--limestone-2);
-  letter-spacing: -0.02em;
-}
 .quote blockquote em {
   color: var(--gold-2);
-}
-.quote .who {
-  margin-top: 30px;
-  font-size: 11px;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.stars {
-  display: flex;
-  justify-content: center;
-  gap: 7px;
-  margin-bottom: 28px;
-  color: var(--gold);
 }
 
 /* ---- Testimonials rotator (extends .quote) ---- */
@@ -3748,111 +3683,8 @@ h2 em {
 .testimonials .eyebrow.is-revealed::after {
   transform: scaleX(1);
 }
-/* Per-star entrance, staggered by nth-child (fixed at 5 stars, so a static
-   CSS stagger works without JS needing to manage per-element delays — unlike
-   bug #13's mobile-drawer case, .star has no other transition for a shared
-   transition-delay to bleed into). #tStars.is-in-view is toggled from tRender() in
-   main.js on every testimonial change, not just once on page load, since the
-   rating is per-review data and the whole point is to replay this each time
-   a new review comes in — separate from the one-time [data-reveal] fade
-   already on the outer #tStars container itself. */
-.stars .star {
-  opacity: 0;
-  transform: scale(0.4);
-  transition:
-    opacity 0.35s var(--ease),
-    transform 0.35s var(--ease);
-}
-#tStars.is-in-view .star {
-  opacity: 1;
-  transform: scale(1);
-}
-/* Scoped to the entering direction only (#tStars.is-in-view), not the bare
-   .stars .star base state — the delay must not also apply when leaving
-   (is-in removed). tShow() only waits 250ms (220ms fade + 30ms) between
-   removing and re-adding is-in, shorter than the 5th star's 280ms delay, so
-   an unconditional delay left its leaving transition never even starting in
-   that window — it just sat unchanged, with nothing to visibly animate back
-   from on re-entry. Leaving now happens uniformly with no delay instead. */
-#tStars.is-in-view .star:nth-child(1) {
-  transition-delay: 0ms;
-}
-#tStars.is-in-view .star:nth-child(2) {
-  transition-delay: 70ms;
-}
-#tStars.is-in-view .star:nth-child(3) {
-  transition-delay: 140ms;
-}
-#tStars.is-in-view .star:nth-child(4) {
-  transition-delay: 210ms;
-}
-#tStars.is-in-view .star:nth-child(5) {
-  transition-delay: 280ms;
-}
-.stars .star.is-empty {
-  color: rgba(var(--limestone-rgb), 0.25);
-}
-@media (prefers-reduced-motion: reduce) {
-  /* Same specificity as the base .stars .star rule above and placed after it,
-     so it wins outright regardless of whether #tStars.is-in-view (a higher-
-     specificity ID selector) has been added yet — stars must never be stuck
-     at their hidden opacity:0 base state for reduced-motion users waiting on
-     a class toggle that's tied to a transition they won't otherwise see. */
-  .stars .star {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
-/* Selector matches `.quote blockquote`'s specificity (class+type) and beats
-   it on source order, instead of losing to it — a plain `.testimonial-quote` class
-   selector is less specific than `.quote blockquote` and silently lost the
-   font-size override entirely (bug #2 pattern in CLAUDE.md: a losing
-   override, not a dropped property, but the same root cause). Truncation
-   past 5 lines is done in JS (see tRender in main.js) rather than
-   `-webkit-line-clamp`, which doesn't reliably clamp centered text
-   (`.quote .wrap` is `text-align: center`) across engines. */
-.quote blockquote.testimonial-quote {
-  font-size: clamp(18px, 2.4vw, 36px);
-}
 .testimonial-quote-mark {
   color: var(--gold-2);
-}
-.testimonial-quote,
-.testimonial-meta {
-  transition:
-    opacity 0.3s var(--ease),
-    transform 0.3s var(--ease);
-}
-.testimonial-controls {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 22px;
-  margin-top: 34px;
-}
-/* Resting state matches .lightbox-prev/.lightbox-next (gallery lightbox) — the
-   site's one other "arrow button on a dark background" pattern: frosted dark
-   chip, gold-2 icon, no border. Hover/press inverts to gold, which the
-   lightbox doesn't (yet). */
-.testimonial-arrow {
-  position: relative;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background-color: rgba(var(--ink-rgb), 0.65);
-  backdrop-filter: blur(6px);
-  color: var(--gold-2);
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  /* Named properties rather than "all", so nothing else on this element
-     can pick up the timing by accident (bug #2). */
-  transition:
-    background-color 0.3s var(--ease),
-    color 0.3s var(--ease);
-  flex: none;
 }
 /* Hover (and press, on touch) inverts the chip: gold fill, ink icon. The
    original state (0.65 alpha ink to solid ink, gold-2 to gold) barely moved
@@ -3862,28 +3694,13 @@ h2 em {
    (tried inverting it to ink; it read worse). While hovered, its progress
    stroke sits on the gold fill and is hard to see — which is also when
    autoplay is paused, so nothing is lost. */
-@media (hover: hover) {
-  .testimonial-arrow:hover {
-    background-color: var(--gold);
-    color: var(--ink);
-  }
-}
 @media (hover: none) {
-  .testimonial-arrow:active {
-    background-color: var(--gold);
-    color: var(--ink);
-  }
   /* Same gap on the picker cards below: tappable, never navigate, and
      had a hover state only. Mirrors their hover exactly. */
   .testimonial-card:active {
     border-color: rgba(var(--gold-rgb), 0.5);
     background: rgba(var(--gold-rgb), 0.06);
   }
-}
-.testimonial-dots {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 .testimonial-dot {
   width: 5px;
@@ -3899,13 +3716,6 @@ h2 em {
 .testimonial-dot.is-active {
   width: 16px;
   background: var(--gold);
-}
-.testimonial-cards {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-top: 34px;
-  text-align: left;
 }
 .testimonial-card {
   position: relative;
@@ -3955,53 +3765,8 @@ h2 em {
   text-transform: uppercase;
   color: var(--muted);
 }
-@media (max-width: 980.98px) {
-  .testimonial-cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-/* An SVG ring (stroke-dashoffset animated from JS), not a conic-gradient
-   redrawn via a JS-updated custom property every animation frame — that
-   approach produced inconsistent fills and seam artifacts at the gold/grey
-   boundary in testing. stroke-dashoffset is the standard, artifact-free
-   technique for an animated circular progress indicator. Only the next
-   button has this ring — giving the prev button a matching static track
-   (an earlier attempt at equalizing their visual weight) made it read as if
-   it had a timer too; both are the same 48x48px box regardless, so the
-   ring isn't needed there for actual size parity. */
-.testimonial-ring {
-  position: absolute;
-  inset: 0;
-  transform: rotate(-90deg);
-  pointer-events: none;
-}
-.testimonial-ring-track,
-.testimonial-ring-fill {
-  fill: none;
-  stroke-width: 1.5;
-}
-.testimonial-ring-track {
-  stroke: rgba(var(--limestone-rgb), 0.28);
-}
-.testimonial-ring-fill {
-  stroke: var(--gold);
-  stroke-linecap: round;
-}
-.testimonial-arrow svg:last-child {
-  position: relative;
-  z-index: 1;
-}
-
-.visit {
-  border-bottom: 1px solid rgba(var(--limestone-rgb), 0.12);
-}
 .visit .arch {
   aspect-ratio: 4/5;
-}
-.visit-list {
-  display: grid;
-  gap: 1px;
-  margin-top: clamp(18px, 2vw, 24px);
 }
 .visit-list > * {
   display: flex;
@@ -4016,39 +3781,6 @@ h2 em {
 }
 .visit-list > *:last-child {
   border-bottom: none;
-}
-.visit-list a:hover {
-  padding-left: 10px;
-  color: var(--gold-2);
-}
-.visit-list .visit-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: "Inter", sans-serif;
-  font-size: 10.5px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold-2);
-  flex: none;
-}
-.visit-list .visit-item-icon {
-  flex: none;
-  display: grid;
-  place-items: center;
-  color: var(--gold-2);
-}
-.visit-list .visit-value {
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 16.5px;
-  font-weight: 500;
-  color: var(--limestone-2);
-  text-align: right;
-}
-.visit-note {
-  margin-top: clamp(22px, 3vw, 30px);
-  font-size: 12.5px;
-  color: var(--muted);
 }
 
 .enquire {
@@ -5216,18 +4948,6 @@ footer {
   color: var(--muted);
   padding: clamp(56px, 7vw, 84px) 0 34px;
 }
-.footer-top {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
-  gap: 40px;
-  padding-bottom: 44px;
-  border-bottom: 1px solid rgba(var(--limestone-rgb), 0.12);
-}
-@media (min-width: 981px) {
-  .footer-top.footer-top-two-col {
-    grid-template-columns: 1.4fr 1fr;
-  }
-}
 footer h5 {
   font-family: "Fraunces", serif;
   font-weight: 400;
@@ -5247,75 +4967,8 @@ footer ul {
 footer a:hover {
   color: var(--gold-2);
 }
-
-.footer-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.footer-brand-mark {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-}
 .footer-brand-mark img {
   width: 40px;
-}
-.footer-brand-text {
-  display: flex;
-  flex-direction: column;
-}
-.footer-brand-name {
-  font-family: "Fraunces", serif;
-  font-size: 15px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--limestone);
-}
-.footer-brand-sub {
-  margin-top: 3px;
-  font-family: "Inter", sans-serif;
-  font-size: 9px;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--gold-2);
-}
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
-  padding-top: 26px;
-  font-size: 12px;
-  font-family: "Newsreader", Georgia, serif;
-}
-
-.social-links {
-  display: flex;
-  gap: 10px;
-}
-.social-links a {
-  color: var(--muted);
-  transition: color 0.3s var(--ease);
-}
-/* Gated, and given the :active fallback it never had (bug #19). Reaches the
-   footer on every page as well as the drawer's own copy, deliberately — the
-   footer pair is less obvious about it only because tapping one leaves the
-   site entirely, whereas the drawer's sits on screen through the overlay's
-   0.5s fade. Same latch either way. */
-@media (hover: hover) {
-  .social-links a:hover {
-    color: var(--gold);
-  }
-}
-@media (hover: none) {
-  .social-links a:active {
-    color: var(--gold);
-  }
-}
-.social-links svg {
-  width: 32px;
-  height: 32px;
 }
 
 /* ---------- Sub-page intro / split content blocks ---------- */
@@ -5388,30 +5041,9 @@ footer a:hover {
 .split .ph-wrap:hover img {
   transform: scale(var(--image-hover-zoom-feature));
 }
-.split ul.check {
-  list-style: none;
-  margin-top: 24px;
-  display: grid;
-  gap: 12px;
-}
-.split ul.check li {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  font-size: 15px;
-  font-family: "Newsreader", Georgia, serif;
-}
-.split ul.check li svg {
-  flex: none;
-  margin-top: 2px;
-  color: var(--gold);
-}
-.on-dark .split ul.check li {
-  color: var(--muted);
-}
 
 /* ---------- Package menu grids (Reception, Banquet, High Tea, Beverage) ----------
-   Lives here, not in each page's own <style> block, because all four package
+   Lives here, not in each page's own \3c style> block, because all four package
    pages use it and the whole point of --package-grid-column-gap is that there
    is exactly one definition of it. Page-scoped rules in those files load after
    this and still win on equal specificity, so a page can still override its own
@@ -5462,48 +5094,6 @@ footer a:hover {
   .package-menu-groups {
     grid-template-columns: 1fr;
   }
-}
-
-/* ---------- Package / info cards (Corporate, Celebrations) ---------- */
-.package-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: clamp(14px, 2vw, 22px);
-}
-.package-card {
-  padding: clamp(24px, 2.6vw, 30px) clamp(20px, 2vw, 26px);
-  border: 1px solid rgba(var(--muted-ink-rgb), 0.12);
-  border-radius: var(--radius-card);
-  background: #fff;
-  color: var(--ink);
-  transition:
-    opacity 0.9s var(--ease),
-    transform 0.5s var(--ease),
-    box-shadow 0.5s var(--ease),
-    border-color 0.5s var(--ease);
-}
-.package-card:not(.is-revealed) {
-  transition-delay: var(--d, 0ms);
-}
-.package-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 30px 60px -34px rgba(var(--muted-ink-rgb), 0.35);
-  border-color: rgba(var(--gold-rgb), 0.4);
-}
-.package-card .card-icon {
-  width: 38px;
-  height: 38px;
-  margin-bottom: 18px;
-  color: var(--oxblood);
-}
-.package-card h4 {
-  font-size: 19px;
-  font-weight: 400;
-  margin-bottom: 10px;
-}
-.package-card p {
-  color: var(--muted-ink);
-  font-size: 13.5px;
 }
 
 /* ============================================================
@@ -7236,25 +6826,6 @@ footer a:hover {
   background: rgba(var(--muted-ink-rgb), 0.14);
   box-shadow: inset 0 0 0 1.5px var(--avail-grey-fg);
 }
-/* A real <form> (not just a styled div) so Enter in a field fires submit
-   natively — the popover's own field, see waitlist-prompt.html. That means it
-   also matches the sitewide bare `form` selector's own card look (white
-   background, border, shadow, padding, 500px max-width, meant for the full-
-   page enquiry form) — this strips all of that back off rather than fighting
-   its specificity, since form.wl-form is already more specific than the
-   plain element selector. */
-form.wl-form {
-  background: none;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  max-width: none;
-}
-.wl-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
 /* Overrides .field's own row-layout flex-basis (meant for two fields side by
    side in the site's wide enquiry form) — every .wl-form is single-column, in
    spaces too narrow for that to make sense. */
@@ -7267,145 +6838,9 @@ form.wl-form {
   color: var(--muted-ink);
   font-weight: 400;
 }
-.wl-form-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 2px;
-}
 .wl-form-actions .button {
   flex: 1;
   justify-content: center;
-}
-/* Matches .wl-popover h4's own margin-top (below) so the success state reads
-   with the same breathing room under the date heading that the form state
-   already gets from .wl-popover-copy's margin-top — put on the wrapping
-   .wl-popover-success rather than .wl-success p itself, since .wl-success is
-   a flex row (icon + text) and a margin on just the p would push the text
-   down without the icon, breaking their top alignment. */
-.wl-popover-success {
-  margin-top: clamp(10px, 2.5vw, 16px);
-}
-.wl-success {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-.wl-success-icon {
-  flex: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--avail-green-bg);
-  color: var(--avail-green-fg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.wl-success p {
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 13.5px;
-  line-height: 1.55;
-  color: var(--muted-ink);
-  padding-top: 3px;
-}
-.wl-success p b {
-  color: var(--ink);
-  font-weight: 600;
-}
-
-/* ---------- A: popover anchored to the clicked cell ---------- */
-.wl-popover {
-  position: fixed;
-  /* Above .availability-modal/.lightbox (970) on purpose — weddings.html's
-     quick-pick "Change date" modal reuses the same .diary calendar as the
-     showcase, so the popover has to be able to open from inside it too. Not
-     a "modal stacked on modal" problem, just this needing to be the topmost
-     thing on the page whenever it's open, same as any anchored
-     tooltip/popover pattern — a plain z-index miss (500) had it rendering
-     underneath the modal instead. */
-  z-index: 980;
-  width: min(300px, calc(100vw - 32px));
-  background: #fff;
-  border-radius: var(--radius-card);
-  box-shadow: 0 30px 70px -30px rgba(var(--muted-ink-rgb), 0.55);
-  padding: 20px 22px;
-  opacity: 0;
-  transform: translateY(6px) scale(0.98);
-  pointer-events: none;
-  transition:
-    opacity 0.2s var(--ease),
-    transform 0.2s var(--ease);
-}
-.wl-popover.show {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
-}
-.wl-popover-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  color: var(--muted-ink);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-@media (hover: hover) {
-  .wl-popover-close:hover {
-    background: rgba(var(--ink-rgb), 0.06);
-    color: var(--ink);
-  }
-}
-.wl-popover-eyebrow {
-  font-family: "Inter", sans-serif;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--bronze);
-}
-.wl-popover h4 {
-  font-family: "Fraunces", serif;
-  font-weight: 500;
-  font-size: 17px;
-  margin-top: clamp(10px, 2.5vw, 16px);
-  padding-right: 20px;
-}
-.wl-popover-copy {
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--muted-ink);
-  margin-top: 6px;
-  margin-bottom: 16px;
-}
-/* Follows the clicked cell's horizontal position via --wl-arrow-left (set in
-   JS, clamped so it never drifts past the popover's own rounded corners) —
-   the popover box itself is independently clamped to the viewport, so the
-   two can disagree once a cell sits near a screen edge; the arrow drifting
-   toward that edge rather than staying dead-center is what keeps it pointing
-   at the actual cell in that case. */
-.wl-popover-arrow {
-  position: absolute;
-  left: var(--wl-arrow-left, 50%);
-  width: 14px;
-  height: 14px;
-  background: #fff;
-  transform: translateX(-50%) rotate(45deg);
-}
-.wl-popover[data-placement="bottom"] .wl-popover-arrow {
-  top: -6px;
-  box-shadow: -2px -2px 4px -2px rgba(var(--muted-ink-rgb), 0.15);
-}
-.wl-popover[data-placement="top"] .wl-popover-arrow {
-  bottom: -6px;
-  box-shadow: 2px 2px 4px -2px rgba(var(--muted-ink-rgb), 0.15);
 }
 
 /* ---------- B: inline panel below the grid ---------- */
@@ -7695,11 +7130,6 @@ form.wl-form {
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(12px, 1.6vw, 20px);
 }
-@media (min-width: 981px) {
-  .gallery-grid.gallery-grid-four-col {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
 .gallery-item {
   display: block;
   position: relative;
@@ -7890,111 +7320,6 @@ form.wl-form {
     transition-delay: var(--d, 0ms);
   }
 }
-/* NOTE: .package-dishes-grid overrides this badge's corner AND size at
-   tablet/phone widths, in reception-package.html's own page-scoped block —
-   not here. That page already owned the positioning override before the
-   size one was needed, and splitting the two across two files would mean
-   two rules at equal specificity (0,2,0) settled by load order alone.
-   Change it there. */
-
-.lightbox {
-  /* Single source of truth for the figure/img width cap below — was two
-     separate `min(92vw, 1100px)` literals that had to be kept in sync by
-     hand. Changed 2026-09-30 from a pure vw percentage to
-     100vw-minus-a-fixed-gutter: at a plain 92vw, a ~1150-1300px browser
-     window (92vw already exceeding the 1100px cap only above ~1196px)
-     left as little as ~35-45px total between the image and the real
-     viewport edge — reported as the figcaption reading "pressed up
-     against" it. calc(100vw - 48px) guarantees at least 24px on each
-     side at every width instead of a percentage that happens to leave
-     more room at some widths than others. */
-  --lightbox-max-width: min(calc(100vw - 48px), 1100px);
-  position: fixed;
-  inset: 0;
-  z-index: 970;
-  background: rgba(10, 9, 6, 0.96);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Safety net for the actual bug this was pressing against: a tall photo
-     (near img's own 78vh cap) leaves very little room below it for the
-     caption, and this page's caption grew a line when the serving note
-     and item list split into two paragraphs (2026-09-30) — long item
-     lists on a short viewport could genuinely run past the bottom of the
-     screen with nothing to scroll to, i.e. content silently not shown at
-     all, not just tight. overflow-y:auto alone isn't enough while
-     align-items:center is centering the figure — a flex container can
-     still clip the START of an overflowing, centered item and refuse to
-     scroll to it in some engines. Paired with .lightbox figure's own
-     margin-block:auto below (the same auto-margins-inside-a-flex-item
-     centering trick already used for the station cards' add-button this
-     session): when content fits, the auto margins center it exactly like
-     align-items:center did; when it doesn't, they collapse to 0 and the
-     figure sits flush at the top, fully reachable by scrolling instead of
-     silently extending off-screen. */
-  overflow-y: auto;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.4s var(--ease),
-    visibility 0s linear 0.4s;
-}
-.lightbox.show {
-  opacity: 1;
-  visibility: visible;
-  transition:
-    opacity 0.4s var(--ease),
-    visibility 0s linear 0s;
-}
-.lightbox figure {
-  position: relative;
-  max-width: var(--lightbox-max-width);
-  /* 78vh, down from 86vh (2026-09-30, same pass as img's own drop below)
-     — see img's comment for why: this was leaving too little guaranteed
-     room below a tall photo for the caption, on request specifically to
-     reduce how often that happens rather than relying on the scroll
-     fallback as the primary fix. */
-  max-height: 78vh;
-  /* See .lightbox's own comment above — centers when there's room,
-     yields (rather than clips) when there isn't. Kept as a safety net
-     even after the height budgets below were tightened: no static
-     height cap can guarantee fitting every combination of a long item
-     list and a short browser window, so this still catches the genuine
-     edge cases rather than silently hiding content again. */
-  margin-block: auto;
-  /* Same reasoning as the homepage carousel (.carousel-view, bug #12 in
-     CLAUDE.md): without this, touch devices can't tell a horizontal swipe
-     (meant for prev/next here) from a vertical scroll and default to
-     treating it as the latter. */
-  touch-action: pan-y;
-}
-.lightbox img {
-  max-width: var(--lightbox-max-width);
-  /* 70vh, down from 78vh (2026-09-30) — on request, to shrink the image
-     itself as the primary fix for the caption-clipping bug rather than
-     leaning on .lightbox's overflow-y:auto scroll fallback: at the old
-     78vh cap, a maximally tall photo left only ~11vh below it for the
-     caption (100vh - 78vh, split above/below by the centering), which
-     the two-paragraph caption plus Pasta Table's own six-item list could
-     exceed. 70vh frees up ~15vh below at the same worst case — enough
-     headroom for the caption in ordinary use, with the scroll fallback
-     still there for genuinely short browser windows rather than as the
-     everyday behaviour. */
-  max-height: 70vh;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  border-radius: 2px;
-  opacity: 0;
-  transform: scale(0.97);
-  transition:
-    opacity 0.4s var(--ease),
-    transform 0.4s var(--ease);
-}
-.lightbox.show img {
-  opacity: 1;
-  transform: none;
-}
 /* Held back while a freshly opened photo decodes — see show() in main.js.
    (0,3,1), out-specifying .lightbox.show img above; keeps the closed-state
    values so removing it plays the normal open transition. */
@@ -8002,70 +7327,8 @@ form.wl-form {
   opacity: 0;
   transform: scale(0.97);
 }
-/* The two optional caption paragraphs under a lightbox photo — the
-   serving note and the item list that reception's station photos carry
-   in data-detail (see lightbox.js). Moved here from the reception page's
-   stylesheet with the lightbox itself (2026-10-05). The items line has no
-   colour of its own: its old value referenced a token scoped to the
-   stations section, which never reached the lightbox, so it has always
-   rendered in the inherited caption colour — kept as-is. */
-.lightbox-detail {
-  margin-top: 8px;
-  max-width: 56ch;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: 12.5px;
-  font-style: italic;
-  color: var(--muted);
-}
-.lightbox-detail-items {
-  margin-top: 4px;
-  font-style: normal;
-  color: inherit;
-}
 .lightbox-detail-items .package-veg-marker {
   margin-inline-start: 1px;
-}
-/* Taken out of normal flow — otherwise .lightbox centers the whole figure
-   (image + caption) as one block, and the caption's own height pushes the
-   image itself above true vertical center. Absolute + top:100% keeps it
-   sitting in the same visual spot (right below the image), just without
-   counting toward figure's box height for that centering. */
-.lightbox figcaption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 100%;
-  margin-top: 16px;
-  text-align: center;
-  color: var(--limestone);
-  font-size: 13.5px;
-}
-.lightbox figcaption b {
-  font-family: "Fraunces", serif;
-  font-weight: 400;
-  margin-right: 10px;
-}
-.lightbox figcaption i {
-  font-style: normal;
-  color: var(--muted);
-}
-/* Pill badge pinned to the image's own top-right corner (figure is
-   position:relative), same treatment as .gallery-item .gallery-tag elsewhere — ink
-   background, gold text — rather than a plain fixed-viewport label. */
-.lightbox-count {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  z-index: 2;
-  font-family: "Inter", sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: var(--gold-2);
-  background: rgba(var(--ink-rgb), 0.65);
-  backdrop-filter: blur(6px);
-  padding: 5px 12px;
-  border-radius: var(--radius-pill);
 }
 /* Crossfade between images on navigate (prev/next/swipe) — .lightbox.show
    img already forces opacity:1 for the initial open animation, so this
@@ -8076,104 +7339,6 @@ form.wl-form {
 .lightbox.show img.lightbox-fade {
   opacity: 0;
   transition: opacity 0.18s var(--ease);
-}
-/* Same ink-background/gold-text treatment as .lightbox-count below — rest at
-   reduced intensity, hover cranks both to full strength (same pairing
-   throughout, no color swap), consistent across all three overlay
-   controls rather than .lightbox-close having its own separate style. */
-.lightbox-close,
-.lightbox-prev,
-.lightbox-next {
-  border-radius: 50%;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  background: rgba(var(--ink-rgb), 0.65);
-  backdrop-filter: blur(6px);
-  border: none;
-  color: var(--gold-2);
-  transition: all 0.3s var(--ease);
-}
-@media (hover: hover) {
-  .lightbox-close:hover,
-  .lightbox-prev:hover,
-  .lightbox-next:hover {
-    background: var(--ink);
-    color: var(--gold);
-  }
-}
-@media (hover: none) {
-  .lightbox-close:active,
-  .lightbox-prev:active,
-  .lightbox-next:active {
-    background: var(--ink);
-    color: var(--gold);
-  }
-}
-.lightbox-close {
-  position: fixed;
-  top: 22px;
-  right: 22px;
-  width: 46px;
-  height: 46px;
-}
-.lightbox-prev,
-.lightbox-next {
-  position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 52px;
-  height: 52px;
-}
-/* Redundant on touch now that swipe works and the counter pill signals
-   there's more than one image — same discoverability job the arrows used
-   to do alone. Desktop keeps them: there's no expected "drag to navigate"
-   convention with a mouse, even though the swipe listener technically
-   also responds to pointer-drag. */
-@media (hover: none) {
-  .lightbox-prev,
-  .lightbox-next {
-    display: none;
-  }
-}
-.lightbox-prev {
-  left: 18px;
-}
-.lightbox-next {
-  right: 18px;
-}
-
-/* ---------- FAQ accordion: styles live in FaqSection.astro ---------- */
-
-/* ---------- Process steps ---------- */
-.process-steps {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: clamp(20px, 2.4vw, 30px);
-  counter-reset: step;
-}
-.process-step {
-  position: relative;
-  padding-top: 22px;
-  border-top: 1px solid rgba(var(--gold-rgb), 0.35);
-}
-.process-step::before {
-  counter-increment: step;
-  content: counter(step, decimal-leading-zero);
-  font-family: "Fraunces", serif;
-  font-size: 15px;
-  color: var(--gold-2);
-  display: block;
-  margin-bottom: 16px;
-}
-.process-step h4 {
-  font-size: 17px;
-  font-weight: 400;
-  margin-bottom: 8px;
-}
-.process-step p {
-  font-size: 13.5px;
-  color: var(--muted);
 }
 
 @media (max-width: 980.98px) {
@@ -8216,13 +7381,6 @@ form.wl-form {
   }
   .dish:nth-child(2) {
     transform: none;
-  }
-  .footer-top {
-    grid-template-columns: 1fr 1fr;
-  }
-  .package-grid,
-  .process-steps {
-    grid-template-columns: 1fr 1fr;
   }
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -8355,10 +7513,6 @@ form.wl-form {
   .arch-dish {
     aspect-ratio: 4/5;
   }
-  .footer-top {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
   .brand .name {
     font-size: 16px;
     letter-spacing: 0.24em;
@@ -8366,29 +7520,11 @@ form.wl-form {
   .slide {
     width: 76vw;
   }
-  .package-grid,
-  .process-steps {
-    grid-template-columns: 1fr;
-  }
-  .process-step:first-child {
-    border-top: none;
-  }
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   .gallery-item.gallery-item-span-two {
     grid-column: span 1;
-  }
-  .lightbox-prev,
-  .lightbox-next {
-    width: 42px;
-    height: 42px;
-  }
-  .lightbox-prev {
-    left: 12px;
-  }
-  .lightbox-next {
-    right: 12px;
   }
 }
 

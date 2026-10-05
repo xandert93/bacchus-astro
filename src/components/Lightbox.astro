@@ -53,3 +53,256 @@
 <script>
   import "../scripts/lightbox.js"
 </script>
+
+<style>
+  /* Scoped to this component (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* NOTE: .package-dishes-grid overrides this badge's corner AND size at
+     tablet/phone widths, in reception-package.html's own page-scoped block —
+     not here. That page already owned the positioning override before the
+     size one was needed, and splitting the two across two files would mean
+     two rules at equal specificity (0,2,0) settled by load order alone.
+     Change it there. */
+  .lightbox {
+    /* Single source of truth for the figure/img width cap below — was two
+       separate `min(92vw, 1100px)` literals that had to be kept in sync by
+       hand. Changed 2026-09-30 from a pure vw percentage to
+       100vw-minus-a-fixed-gutter: at a plain 92vw, a ~1150-1300px browser
+       window (92vw already exceeding the 1100px cap only above ~1196px)
+       left as little as ~35-45px total between the image and the real
+       viewport edge — reported as the figcaption reading "pressed up
+       against" it. calc(100vw - 48px) guarantees at least 24px on each
+       side at every width instead of a percentage that happens to leave
+       more room at some widths than others. */
+    --lightbox-max-width: min(calc(100vw - 48px), 1100px);
+    position: fixed;
+    inset: 0;
+    z-index: 970;
+    background: rgba(10, 9, 6, 0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Safety net for the actual bug this was pressing against: a tall photo
+       (near img's own 78vh cap) leaves very little room below it for the
+       caption, and this page's caption grew a line when the serving note
+       and item list split into two paragraphs (2026-09-30) — long item
+       lists on a short viewport could genuinely run past the bottom of the
+       screen with nothing to scroll to, i.e. content silently not shown at
+       all, not just tight. overflow-y:auto alone isn't enough while
+       align-items:center is centering the figure — a flex container can
+       still clip the START of an overflowing, centered item and refuse to
+       scroll to it in some engines. Paired with .lightbox figure's own
+       margin-block:auto below (the same auto-margins-inside-a-flex-item
+       centering trick already used for the station cards' add-button this
+       session): when content fits, the auto margins center it exactly like
+       align-items:center did; when it doesn't, they collapse to 0 and the
+       figure sits flush at the top, fully reachable by scrolling instead of
+       silently extending off-screen. */
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.4s var(--ease),
+      visibility 0s linear 0.4s;
+  }
+  .lightbox.show {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.4s var(--ease),
+      visibility 0s linear 0s;
+  }
+  .lightbox figure {
+    position: relative;
+    max-width: var(--lightbox-max-width);
+    /* 78vh, down from 86vh (2026-09-30, same pass as img's own drop below)
+       — see img's comment for why: this was leaving too little guaranteed
+       room below a tall photo for the caption, on request specifically to
+       reduce how often that happens rather than relying on the scroll
+       fallback as the primary fix. */
+    max-height: 78vh;
+    /* See .lightbox's own comment above — centers when there's room,
+       yields (rather than clips) when there isn't. Kept as a safety net
+       even after the height budgets below were tightened: no static
+       height cap can guarantee fitting every combination of a long item
+       list and a short browser window, so this still catches the genuine
+       edge cases rather than silently hiding content again. */
+    margin-block: auto;
+    /* Same reasoning as the homepage carousel (.carousel-view, bug #12 in
+       CLAUDE.md): without this, touch devices can't tell a horizontal swipe
+       (meant for prev/next here) from a vertical scroll and default to
+       treating it as the latter. */
+    touch-action: pan-y;
+  }
+  .lightbox img {
+    max-width: var(--lightbox-max-width);
+    /* 70vh, down from 78vh (2026-09-30) — on request, to shrink the image
+       itself as the primary fix for the caption-clipping bug rather than
+       leaning on .lightbox's overflow-y:auto scroll fallback: at the old
+       78vh cap, a maximally tall photo left only ~11vh below it for the
+       caption (100vh - 78vh, split above/below by the centering), which
+       the two-paragraph caption plus Pasta Table's own six-item list could
+       exceed. 70vh frees up ~15vh below at the same worst case — enough
+       headroom for the caption in ordinary use, with the scroll fallback
+       still there for genuinely short browser windows rather than as the
+       everyday behaviour. */
+    max-height: 70vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 2px;
+    opacity: 0;
+    transform: scale(0.97);
+    transition:
+      opacity 0.4s var(--ease),
+      transform 0.4s var(--ease);
+  }
+  .lightbox.show img {
+    opacity: 1;
+    transform: none;
+  }
+  /* The two optional caption paragraphs under a lightbox photo — the
+     serving note and the item list that reception's station photos carry
+     in data-detail (see lightbox.js). Moved here from the reception page's
+     stylesheet with the lightbox itself (2026-10-05). The items line has no
+     colour of its own: its old value referenced a token scoped to the
+     stations section, which never reached the lightbox, so it has always
+     rendered in the inherited caption colour — kept as-is. */
+  .lightbox-detail {
+    margin-top: 8px;
+    max-width: 56ch;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 12.5px;
+    font-style: italic;
+    color: var(--muted);
+  }
+  .lightbox-detail-items {
+    margin-top: 4px;
+    font-style: normal;
+    color: inherit;
+  }
+  /* Taken out of normal flow — otherwise .lightbox centers the whole figure
+     (image + caption) as one block, and the caption's own height pushes the
+     image itself above true vertical center. Absolute + top:100% keeps it
+     sitting in the same visual spot (right below the image), just without
+     counting toward figure's box height for that centering. */
+  .lightbox figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin-top: 16px;
+    text-align: center;
+    color: var(--limestone);
+    font-size: 13.5px;
+  }
+  .lightbox figcaption b {
+    font-family: "Fraunces", serif;
+    font-weight: 400;
+    margin-right: 10px;
+  }
+  .lightbox figcaption i {
+    font-style: normal;
+    color: var(--muted);
+  }
+  /* Pill badge pinned to the image's own top-right corner (figure is
+     position:relative), same treatment as .gallery-item .gallery-tag elsewhere — ink
+     background, gold text — rather than a plain fixed-viewport label. */
+  .lightbox-count {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--gold-2);
+    background: rgba(var(--ink-rgb), 0.65);
+    backdrop-filter: blur(6px);
+    padding: 5px 12px;
+    border-radius: var(--radius-pill);
+  }
+  /* Same ink-background/gold-text treatment as .lightbox-count below — rest at
+     reduced intensity, hover cranks both to full strength (same pairing
+     throughout, no color swap), consistent across all three overlay
+     controls rather than .lightbox-close having its own separate style. */
+  .lightbox-close,
+  .lightbox-prev,
+  .lightbox-next {
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    background: rgba(var(--ink-rgb), 0.65);
+    backdrop-filter: blur(6px);
+    border: none;
+    color: var(--gold-2);
+    transition: all 0.3s var(--ease);
+  }
+  @media (hover: hover) {
+    .lightbox-close:hover,
+    .lightbox-prev:hover,
+    .lightbox-next:hover {
+      background: var(--ink);
+      color: var(--gold);
+    }
+  }
+  @media (hover: none) {
+    .lightbox-close:active,
+    .lightbox-prev:active,
+    .lightbox-next:active {
+      background: var(--ink);
+      color: var(--gold);
+    }
+  }
+  .lightbox-close {
+    position: fixed;
+    top: 22px;
+    right: 22px;
+    width: 46px;
+    height: 46px;
+  }
+  .lightbox-prev,
+  .lightbox-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+  }
+  @media (hover: none) {
+    .lightbox-prev,
+    .lightbox-next {
+      display: none;
+    }
+  }
+  /* Redundant on touch now that swipe works and the counter pill signals
+     there's more than one image — same discoverability job the arrows used
+     to do alone. Desktop keeps them: there's no expected "drag to navigate"
+     convention with a mouse, even though the swipe listener technically
+     also responds to pointer-drag. */
+  .lightbox-prev {
+    left: 18px;
+  }
+  .lightbox-next {
+    right: 18px;
+  }
+  @media (max-width: 620.98px) {
+    .lightbox-prev,
+    .lightbox-next {
+      width: 42px;
+      height: 42px;
+    }
+  }
+  @media (max-width: 620.98px) {
+    .lightbox-prev {
+      left: 12px;
+    }
+  }
+  @media (max-width: 620.98px) {
+    .lightbox-next {
+      right: 12px;
+    }
+  }
+</style>
