@@ -795,79 +795,6 @@ a.link-underline {
     border-color: var(--gold-2);
   }
 }
-
-.nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 800;
-  height: var(--nav-h);
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.6s var(--ease);
-}
-.nav::before,
-.nav::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  transition: opacity 0.6s var(--ease);
-}
-.nav::before {
-  background: linear-gradient(180deg, rgba(10, 9, 6, 0.72), transparent);
-  opacity: 1;
-}
-.nav::after {
-  background: rgba(var(--muted-ink-rgb), 0.86);
-  backdrop-filter: blur(14px) saturate(1.2);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  opacity: 0;
-}
-.nav.stuck {
-  border-bottom-color: rgba(var(--gold-rgb), 0.22);
-}
-.nav.stuck::before {
-  opacity: 0;
-}
-.nav.stuck::after {
-  opacity: 1;
-}
-/* While the overlay is open the bar's fade is QUICK. Its own 0.6s is tuned
-   for page scroll, where the bar is pinned above content that is already
-   moving past it and a gentle fade reads well. Inside the overlay the first
-   row starts only 22px below the bar, so at 0.6s a fast flick put "Restaurant"
-   behind the lockup before the dark had arrived — reported 2026-10-02.
-   transition-duration only, not a fresh shorthand, so the property list stays
-   the single source of truth for what animates (bug #2). */
-body.menu-open .nav::before,
-body.menu-open .nav::after {
-  transition-duration: 0.18s;
-}
-/* No frost while the overlay is open. .stuck flips more often in here than it
-   does on a page: collapsing a group shrinks .menu-scroll's scrollHeight, the
-   browser clamps scrollTop, that fires the overlay's own scroll handler, and
-   the bar un-sticks — so ::after crossfades from opacity 0, and a
-   backdrop-filter layer initialising from nothing is a known source of a
-   one-frame flash.
-   Nothing is lost by dropping it: the only thing behind the bar while the
-   overlay is open is the overlay itself, which is --ink with a photograph at
-   0.16 over it, so there is essentially nothing for a 14px blur to pick up.
-   The fill and the border stay, so the dark state still reads as dark — same
-   treatment, and the same reasoning, as .package-sticky-switch under
-   body.is-scrolling. */
-body.menu-open .nav::after {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  /* Fully opaque while the drawer is open (2026-10-05). The page bar's fill
-     is 0.86 alpha and relies on the blur above to hide what passes behind
-     it; with the blur off, the drawer's own links stayed legible through
-     the bar as they scrolled under it. Same colour, no transparency. */
-  background: rgb(var(--muted-ink-rgb));
-}
 /* NO unconditional darkening while the overlay is open — that was tried on
    2026-10-02 and replaced the same day. The bar should behave inside the
    overlay exactly as it does on the page: transparent at the top, darkening
@@ -891,28 +818,10 @@ body.menu-open .nav::after {
   position: relative;
   z-index: 2;
 }
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-}
 .brand img {
   width: 34px;
   height: auto;
   filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.5));
-}
-.brand .brand-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-}
-.brand .name {
-  font-family: "Fraunces", serif;
-  font-size: 19px;
-  letter-spacing: 0.3em;
-  color: var(--limestone);
-  text-transform: uppercase;
-  padding-left: 2px;
 }
 .brand .sub {
   font-size: 8.5px;
@@ -941,24 +850,6 @@ body.menu-open .nav::after {
   display: flex;
   align-items: center;
 }
-.nav-links {
-  display: flex;
-  align-items: center;
-  /* 2px, not 6px (changed 2026-10-02). Each link already carries 16px of
-     padding a side, so adjacent labels have 32px between them before the gap
-     counts at all — 6px was adding a seventh of that again for no structural
-     reason, and the links now sit against the CTAs where a tight cluster reads
-     as one group. The compact band in the nav section at the foot of this file
-     takes it to 0 between 980px and 1180px. The hover underline is unaffected:
-     ::after is inset 16px from each link's own edges. */
-  gap: 2px;
-  list-style: none;
-}
-/* Pairs with .nav .wrap's flex-start above — this is what pushes the links and
-   the CTAs to the right edge together. */
-.nav .wrap nav {
-  margin-left: auto;
-}
 /* Scoped to DIRECT li children (">"), not a bare ".nav-links a" descendant
    selector — this is the real top-level nav-item treatment (underline-reveal
    included), and .nav-links now has more than plain <a> items nested inside
@@ -979,7 +870,6 @@ body.menu-open .nav::after {
    padding) stay on .nav-links > li > a alone — .nav-dd-v2-label is a plain
    inline span inside a flex row, not a block-level nav link, so those
    would break its layout if shared too. */
-.nav-links > li > a,
 .nav-dd-v2-label {
   font-size: 11.5px;
   font-weight: 500;
@@ -993,104 +883,18 @@ body.menu-open .nav::after {
   color: rgba(var(--limestone-rgb), 0.82);
   transition: color 0.35s;
 }
-/* The link's horizontal padding lives in two custom properties, and the
-   underline below reads the same two. Before 2026-10-04 they were separate
-   literals set by separate rules, and they drifted: the compact band set the
-   underline's left to 10px while the split trigger's own (0,2,2) padding rule
-   kept the text at 16px, so between 980px and 1180px the Restaurant/Events
-   underline started 6px before the first letter. Variants now change the
-   VARIABLE only, never padding or left/right directly, so the two cannot
-   disagree again however many variants or bands get added. */
-.nav-links > li > a {
-  --nav-link-padding-start: 16px;
-  --nav-link-padding-end: 16px;
-  position: relative;
-  display: block;
-  padding: 10px var(--nav-link-padding-end) 10px var(--nav-link-padding-start);
-}
-/* right is 16px PLUS the trailing letter-space, not a flat 16px. CSS applies
-   letter-spacing after every character including the last, so this element's
-   inline box ends 0.16em (1.84px at 11.5px) beyond the final glyph, and an
-   underline inset to the padding edge runs to the box rather than to the
-   letter. Reported 2026-10-02 as the bar "extending a bit too far" past the
-   last letter. left needs no equivalent, since nothing is added before the
-   first character. Any future change to .nav-links' letter-spacing has to
-   come with the one calc() below. */
-.nav-links > li > a::after {
-  content: "";
-  position: absolute;
-  left: var(--nav-link-padding-start);
-  right: calc(var(--nav-link-padding-end) + 0.16em);
-  bottom: 4px;
-  height: 1px;
-  background: var(--gold);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.4s var(--ease);
-}
-/* ---- split-trigger overrides, kept ADJACENT to what they override ----
-   These two lived ~7,900 lines further down, in the whole-site nav section at
-   the foot of this file, where they belong by topic. Moved here 2026-10-02
-   because a reported "the override isn't applying" could not be reproduced
-   from the file — the rule parsed, sat at brace depth 0, out-specified the
-   base at (0,2,2) against (0,1,2), and the markup matched — yet devtools
-   listed only the base rule as contributing. Proximity removes any dependency
-   on the tail of a 350KB stylesheet being read, which was the one variable
-   that could not be tested from the file alone. It is also simply better
-   organisation: a rule whose entire job is to override the rule above it
-   should not be eight thousand lines away from it. */
-.nav-links > li.nav-dd-split > a {
-  /* The split trigger is a label plus a separate chevron <button>, so the
-     pair has to read as ONE target — hence 6px here instead of the 16px
-     above, closing the gap to the chevron's own 2px padding-left. Only the
-     end variable changes; the start, and the underline, follow on their own. */
-  --nav-link-padding-end: 6px;
-}
 /* Shared with .nav-dd-v2-row:hover .nav-dd-v2-label (Events 2's row
    headings) — same single-source-of-truth reasoning as the resting-state
    rule above. */
-.nav-links > li:hover > a,
 .nav-dd-v2-row:hover .nav-dd-v2-label {
   color: #fff;
 }
-.nav-links > li:hover > a::after,
 .nav-links > li > a.active::after {
   transform: scaleX(1);
   transform-origin: left;
 }
 .nav-links > li > a.active {
   color: var(--gold-2);
-}
-/* Nav dropdown proposal (see navbar.html) — not yet adopted sitewide. Groups
-   Weddings/Corporate/Celebrations under one "Events" trigger. Inert unless
-   .nav-dd markup exists on the page, so safe to keep here even undecided.
-   .nav-dd-panel is "position: fixed" (see the comment above it), which
-   resolves against the viewport directly rather than the nearest positioned
-   ancestor, so it can be centered and sized independently of this small
-   trigger <li> while still living inside it in the DOM (kept there
-   deliberately — see that same comment for why moving it out was tried and
-   reverted).
-   The real remaining gap, found by pinning :hover in devtools and
-   confirming the panel itself works perfectly once truly hovered: .nav-dd's
-   own box only wraps its button as tightly as the button's own size, not
-   the full nav bar — .nav-links centers its items with room above and
-   below, so the trigger's rendered bottom edge sits noticeably above the
-   nav bar's actual bottom edge, where .nav-dd-panel starts. That gap
-   belongs to neither element, so moving the mouse straight down from the
-   button crosses dead space and drops :hover before ever reaching the
-   panel — no transition delay can save a gap that's never actually
-   entered. Explicit "height: var(--nav-h)" + flex centering on .nav-dd
-   stretches its own box down to the nav bar's real bottom edge (this
-   cascades: .nav-links, then <nav>, then .wrap all auto-size to their
-   tallest item in a flex row, so this one explicit height on .nav-dd pulls
-   all of them up to match .nav's own height too) — .nav-dd's hit-area now
-   touches .nav-dd-panel's with nothing in between, the same principle as
-   the pointer-events fix and the padding-top bridge above, just applied to
-   the one remaining real gap instead of an assumed one. */
-.nav-dd {
-  height: var(--nav-h);
-  display: flex;
-  align-items: center;
 }
 /* Mirrors .nav-links a's own typography/padding — a plain ".nav-dd-trigger"
    button gets none of that for free since ".nav-links a" is scoped to the
@@ -1152,114 +956,11 @@ body.menu-open .nav::after {
 .nav-dd:focus-within .nav-dd-chevron {
   transform: rotate(180deg);
 }
-/* .nav-dd-panel: previously "position: absolute" against .wrap, whose own
-   computed height (an auto-sized flex box centered inside .nav's 74px bar)
-   isn't something to eyeball confidently — two rounds of guessing at it got
-   the vertical gap wrong both times. Then tried moving the panel out to be
-   a direct sibling of .nav so "top: var(--nav-h)" could anchor to .nav's
-   own explicit height instead — that fixed the gap, but broke the hover
-   chain a different way: once the panel was no longer a DOM descendant of
-   .nav-dd, hovering the panel itself stopped counting as hovering .nav-dd,
-   so leaving the trigger started the close transition regardless of the
-   mouse now resting inside the panel — exactly the bug the pointer-events
-   fix above was trying to solve, just moved one level up.
-   "position: fixed" gets the same pixel-exact anchor as the sibling
-   approach (fixed positioning resolves against the viewport itself, not
-   the nearest positioned ancestor — and .nav starts at the viewport's own
-   top edge, so "top: var(--nav-h)" means exactly the same thing either
-   way) WITHOUT needing to move the panel out of .nav-dd — so it stays a
-   real descendant, the built-in ".nav-dd:hover .nav-dd-panel" hover chain
-   works again, and hovering the panel itself legitimately keeps .nav-dd
-   "hovered" the whole time your cursor is inside it. */
-.nav-dd-panel {
-  position: fixed;
-  top: var(--nav-h);
-  /* Centered on the viewport (left:50% + translateX(-50%) against a fixed
-     element resolves against the viewport, same as .nav's own center since
-     .wrap centers within it) — not left/right-anchored to an edge, since
-     this panel is meant to be wider than .wrap's own 1180px content column
-     (a mega-menu convention, not our normal reading-width container) and
-     needs to extend symmetrically past both edges without one-sided
-     clipping math. */
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(1376px, calc(100vw - 32px));
-  padding-top: 24px;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  /* pointer-events was missing from this list originally — with no
-     transition entry it flips to "none" the instant the mouse leaves the
-     trigger, before the 0.3s fade-out even starts. Kept as a second line of
-     defense even with the dead zone gone above (e.g. covers a mouse that
-     stops moving mid-transit for a beat). */
-  transition:
-    opacity 0.3s var(--ease),
-    visibility 0s linear 0.3s,
-    pointer-events 0s linear 0.3s;
-}
-.nav-dd-panel-card {
-  display: flex;
-  gap: 32px;
-  padding: 28px;
-  background: var(--limestone-2);
-  border-radius: var(--radius-card);
-  box-shadow: 0 30px 60px -24px rgba(var(--muted-ink-rgb), 0.5);
-  transform: translateY(8px);
-  transition: transform 0.3s var(--ease);
-}
-.nav-dd-panel-main {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-/* Fraunces stays reserved for the one genuine heading in here — lighter and
-   larger than the old 20px/400 (matching the weight-300 editorial voice h2
-   uses elsewhere) so it actually reads as a headline, not just a bolded
-   label sitting at the same weight as the item names below it. */
-.nav-dd-panel-heading {
-  font-family: "Fraunces", serif;
-  font-size: 23px;
-  font-weight: 300;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-  margin-bottom: 20px;
-}
-/* Three columns, one row — at the panel's real width (up to 1376px) a
-   two-column grid left each item too wide and the odd one out sitting alone
-   on its own row; one row of three uses the space evenly for exactly the
-   three items there are. */
-.nav-dd-items {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px 24px;
-}
-@media (max-width: 700px) {
-  /* Never actually reached today — the burger takes over at 820px, well
-     above this — but kept as a safety net rather than assuming that
-     breakpoint never changes. */
-  .nav-dd-items {
-    grid-template-columns: 1fr;
-  }
-}
-.nav-dd-panel-media {
-  flex: 0 0 340px;
-  border-radius: calc(var(--radius-card) - 2px);
-  overflow: hidden;
-}
 .nav-dd-panel-media img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-@media (max-width: 980.98px) {
-  /* Matches the site's own existing tablet-ish cutover (e.g. the
-     copy+image sections reordering at 980px) rather than a number invented
-     for this one component. Below it, .wrap is narrow enough that a fixed
-     340px image column would crowd the three-column item grid. */
-  .nav-dd-panel-media {
-    display: none;
-  }
 }
 
 /* ---------- Second dropdown exploration ("Events 2") ---------- */
@@ -1503,20 +1204,6 @@ body.menu-open .nav::after {
      item than above the first one. */
   padding: 24px 24px 16px;
 }
-/* Scoped override, not a change to .nav-dd-panel-heading's own defaults —
-   that class is shared with Events 1, which wasn't asked for either change
-   here. margin-bottom: 8px tighter than the shared default, on request.
-   color: the shared class's var(--ink) (near-black) is illegible now that
-   this panel's own background is the dark rgba(--muted-ink-rgb) treatment
-   above — not something explicitly requested, but a necessary consequence
-   of that change. --limestone-2 matches the caption text already sitting on
-   this same panel's photo (.nav-dd-v2-caption), for consistency within the
-   one component, rather than the dimmer rgba(--limestone-rgb) treatment
-   used for the interactive row labels below (this heading isn't a link). */
-.nav-dd-v2-content .nav-dd-panel-heading {
-  margin-bottom: 12px;
-  color: var(--limestone-2);
-}
 /* Was its own eyebrow style (small uppercase Inter, bronze) — replaced with
    the exact .nav-dd-panel-heading class Events 1 uses for its own "Explore
    events at Bacchus" heading (see navbar.html), on request, so the two
@@ -1736,62 +1423,6 @@ body.menu-open .nav::after {
     flex-basis: 180px;
   }
 }
-
-/* Plain descendant selectors again — .nav-dd-panel is back to being a real
-   child of .nav-dd (see the comment above .nav-dd-panel), so it no longer
-   needs :has() to reach it. */
-.nav-dd.is-open .nav-dd-panel {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transition:
-    opacity 0.3s var(--ease),
-    visibility 0s linear 0s;
-}
-.nav-dd.is-open .nav-dd-panel-card {
-  transform: translateY(0);
-}
-/* .is-hovering, not a bare ":hover" — see the long comment above .nav-dd.
-   CSS :hover propagation depends entirely on the literal pixel path the
-   cursor takes, and a narrow trigger next to a much wider, physically
-   distant panel means any diagonal drift toward the panel's visual center
-   can exit the trigger's hoverable box before ever touching the panel —
-   confirmed directly (pinning :hover in devtools works perfectly; the
-   failure is specifically in getting from trigger to panel by moving the
-   mouse there normally). No amount of widening hit-areas or bridging gaps
-   fixes that in general, because it's not really a size/position problem,
-   it's that CSS has no notion of "still heading toward the target." JS
-   mouseenter/mouseleave with a short close-delay (see the script at the
-   bottom of navbar.html) does: it tolerates a brief moment of being
-   "outside" while still moving, however the cursor got there, rather than
-   trying to guess the exact geometry that keeps it "inside." :focus-within
-   stays as plain CSS below — tabbing directly moves focus, no physical
-   path involved, so it never had this problem. */
-.nav-dd.is-hovering .nav-dd-panel {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transition:
-    opacity 0.3s var(--ease),
-    visibility 0s linear 0s;
-}
-.nav-dd.is-hovering .nav-dd-panel-card {
-  transform: translateY(0);
-}
-/* Not gated behind (hover: hover) — that media query separates touch from
-   mouse, which has nothing to do with keyboard focus. Gating this here
-   would break keyboard access on any touch+keyboard hybrid device. */
-.nav-dd:focus-within .nav-dd-panel {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transition:
-    opacity 0.3s var(--ease),
-    visibility 0s linear 0s;
-}
-.nav-dd:focus-within .nav-dd-panel-card {
-  transform: translateY(0);
-}
 /* v2-only open-state override, matching the base .nav-dd-v2-card override
    above — margin-top:0 is this panel's own version of the shared
    translateY(0), kept transform-free for the same backdrop-filter-isolation
@@ -1803,242 +1434,6 @@ body.menu-open .nav::after {
 .nav-dd:focus-within .nav-dd-v2-card {
   transform: none;
   margin-top: 0;
-}
-/* Scrim: dims the page below the nav while the dropdown is open, same trick
-   as the BNY reference — puts the panel's own content in relief instead of
-   competing with whatever's in the hero behind it. Sits as a direct child of
-   .nav (not inside .wrap), so it relies on .wrap's own explicit z-index: 2
-   to paint above it without needing a z-index of its own — giving the scrim
-   one risks it painting above the dropdown panel too, since both would then
-   have explicit stacking levels and DOM order (scrim comes last) would
-   decide, the wrong way. Toggled with :has() off the same .is-open,
-   .is-hovering and :focus-within states that already open the panel
-   itself, so there's no separate JS state to keep in sync. */
-.nav-dd-scrim {
-  position: fixed;
-  top: var(--nav-h);
-  left: 0;
-  right: 0;
-  bottom: 0;
-  /* 0.6 and blur(10px), up from 0.5 and blur(3px) (2026-10-02). The panel was
-     reading differently depending on which section happened to be behind it —
-     fine over a light section, muddy over a dark one. The variable that
-     actually controls that is not which section it is, it is how much of the
-     ground comes through at all, which is this layer's whole job and it was
-     set too gently to do it.
-     The blur is doing most of the work here, not the alpha: at 10px nothing
-     behind the panel resolves into legible text or a hard edge, so every
-     section presents the same TEXTURE regardless of its content, while the
-     panel keeps its relief against a ground that is still clearly there. More
-     alpha alone would have flattened that relief instead. The alternative
-     considered and rejected was switching the panel's own colour per section,
-     which needs every section tagged, fails silently when one is missed, and
-     cannot be followed by the bar — which is always dark while a panel is
-     open. */
-  background: rgba(var(--muted-ink-rgb), 0.6);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition:
-    opacity 0.3s var(--ease),
-    visibility 0s linear 0.3s;
-}
-/* Briefly excluded Events 2 here (":not(:has(.nav-dd-panel-v2))" on each
-   line) while its frosted panel was reading as muddy instead of light —
-   backdrop-filter samples whatever's actually painted behind it on screen,
-   scrim included, even though the scrim sits correctly *below* the panel in
-   stacking. Reverted: the real cause turned out to be a separate bug (a
-   `transform` on .nav-dd-v2-card was isolating its backdrop-filter from
-   seeing anything behind it at all, scrim or otherwise — see the comment
-   above .nav-dd-v2-card), now fixed there instead. With that fixed, the
-   frost genuinely blurs whatever's behind it, scrim included, same as
-   Events 1 was always meant to — so both dropdowns share one unscoped rule
-   again. */
-.nav:has(.nav-dd.is-open) .nav-dd-scrim,
-.nav:has(.nav-dd.is-hovering) .nav-dd-scrim,
-.nav:has(.nav-dd:focus-within) .nav-dd-scrim {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transition: opacity 0.3s var(--ease);
-}
-/* While a panel is open the BAR takes its scrolled appearance too, whatever
-   the scroll position. Without this the scrim dims everything from 74px down
-   and the bar keeps its near-transparent top-of-page gradient, leaving a hard
-   horizontal seam where the two meet and the hero still bright behind the
-   links while the panel hangs off a dimmed page.
-   Reuses .nav.stuck's own two declarations rather than inventing a treatment:
-   ::before's gradient out, ::after's frost in. So the bar, the panel and the
-   scrim read as one surface, and when the page IS scrolled this is already
-   the state, so nothing moves.
-   (0,3,0) via :has()'s own argument specificity, which beats both .nav::after
-   (0,1,0) and .nav.stuck::after (0,2,0) outright - it has to win over stuck
-   as well as over the base, since at the top of the page stuck is absent and
-   partway down it is present. The 0.6s transition on ::before/::after is
-   inherited, so the bar darkens rather than snapping. */
-.nav:has(.nav-dd.is-open)::before,
-.nav:has(.nav-dd.is-hovering)::before,
-.nav:has(.nav-dd:focus-within)::before {
-  opacity: 0;
-}
-.nav:has(.nav-dd.is-open)::after,
-.nav:has(.nav-dd.is-hovering)::after,
-.nav:has(.nav-dd:focus-within)::after {
-  opacity: 1;
-}
-.nav-dd-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  /* 12px of left padding at EVERY state; the 2px border sits outside it and is
-     always present, transparent until the row is hovered or current. Nothing
-     reflows when it lands, which is the whole reason it is declared here
-     rather than appearing on :hover. Ported from
-     .package-stations-index-row on the Reception stations page, along with
-     its asymmetric radius below. */
-  padding: 11px 12px;
-  border: 0;
-  border-left: 2px solid transparent;
-  /* Tight on the left where the marker sits, rounded on the right. A fully
-     rounded left edge would leave the 2px bar as a floating curved sliver
-     rather than a straight rule against the row. */
-  border-radius: 3px calc(var(--radius-card) - 2px) calc(var(--radius-card) - 2px) 3px;
-  text-decoration: none;
-  /* 0.18s, not the 0.4s this was ported with. 0.4s suits
-     .package-stations-index-row, which is a vertical index read slowly; a nav
-     panel is swept across, and at 0.4s the row has not finished arriving
-     before the pointer leaves — which reads as the hover being LATE rather
-     than as a slow fade. Reported that way 2026-10-02. The label, description
-     and icon transitions were shortened to match, or the row would arrive in
-     two stages. */
-  transition:
-    background 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-/* Ungated, unlike .nav-dd-trigger above — this is a real page link (like its
-   .nav-links a siblings), so a lingering :hover on tap is moot (bug #19's
-   documented exemption for controls that navigate away). */
-.nav-dd-item:hover {
-  background: rgba(var(--gold-rgb), 0.12);
-}
-.nav-dd-item.active {
-  background: rgba(var(--gold-rgb), 0.1);
-}
-.nav-dd-icon {
-  flex: none;
-  margin-top: 2px;
-  color: var(--bronze);
-}
-/* Inter uppercase here, not Fraunces — per the design system, Fraunces is
-   reserved for headings (the panel heading above already covers that role);
-   this label is functionally the same thing as "WEDDINGS" in the plain nav
-   bar, just relocated into a dropdown row, so it gets the same UI-chrome
-   treatment every other nav label uses rather than borrowing the heading
-   font a second time. */
-.nav-dd-label {
-  display: block;
-  font-family: "Inter", sans-serif;
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--ink);
-  margin-bottom: 5px;
-}
-.nav-dd-desc {
-  display: block;
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.45;
-  color: rgba(var(--ink-rgb), 0.62);
-}
-.nav-cta {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-.burger {
-  display: none;
-  width: 46px;
-  height: 46px;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-  position: relative;
-  cursor: pointer;
-  flex: none;
-  transition:
-    background 0.3s var(--ease),
-    transform 0.2s var(--ease);
-}
-.burger::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: rgba(var(--limestone-rgb), 0.1);
-  transform: scale(0.7);
-  opacity: 0;
-  transition:
-    transform 0.3s var(--ease),
-    opacity 0.3s var(--ease);
-}
-@media (hover: hover) {
-  .burger:hover::before {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-.burger:active {
-  transform: scale(0.94);
-}
-@media (hover: none) {
-  .burger:active::before {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-.burger i {
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  height: 1.5px;
-  background: var(--limestone);
-  transition:
-    transform 0.45s var(--ease),
-    opacity 0.3s;
-}
-.burger i:nth-child(1) {
-  top: 17px;
-}
-.burger i:nth-child(2) {
-  top: 22.5px;
-}
-.burger i:nth-child(3) {
-  top: 28px;
-}
-body.menu-open .burger i:nth-child(1) {
-  transform: translateY(5.5px) rotate(45deg);
-}
-body.menu-open .burger i:nth-child(2) {
-  opacity: 0;
-  transform: scaleX(0.4);
-}
-body.menu-open .burger i:nth-child(3) {
-  transform: translateY(-5.5px) rotate(-45deg);
-}
-.progress {
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  height: 2px;
-  width: 100%;
-  transform: scaleX(0);
-  transform-origin: left;
-  background: linear-gradient(90deg, var(--bronze), var(--gold), var(--gold-2));
 }
 /* Suppresses every transition and animation inside the drawer, for the frame
    or two it takes to force it closed without anything visibly moving. Used on
@@ -2054,149 +1449,9 @@ body.menu-open .burger i:nth-child(3) {
    which is bugs #2/#14/#15 waiting to happen. A blunt one-frame kill switch
    cannot drift. It is scoped to .menu and its descendants, so nothing outside
    the drawer is affected. */
-html.nav-no-anim .menu,
-html.nav-no-anim .menu *,
-html.nav-no-anim .nav,
-html.nav-no-anim .nav * {
+html.nav-no-anim .menu *, html.nav-no-anim .nav * {
   transition: none !important;
   animation: none !important;
-}
-.menu {
-  /* ONE value for the drawer's top-level row type, because it is set on two
-     rules thousands of lines apart — .menu .mobile-nav-link here, and
-     .menu .mobile-nav-group-trigger in the whole-site nav section at the foot
-     of this file. Restaurant/Events are buttons and Gallery/About are links,
-     so they can only read as one list while those two agree, and as two equal
-     literals they had every opportunity to drift (bug #24's lesson, same fix).
-     Declared on .menu rather than :root since it is this component's concern;
-     custom properties inherit, so the far rule picks it up.
-     Reduced twice on 2026-10-02, both on the user's call: from the original
-     clamp(26px, 7.5vw, 42px) to clamp(25px, 6.8vw, 36px), then to the value
-     below. Cumulatively ~16% off at phone widths and ~21% off the ceiling.
-     The ceiling took more at each step because it was the most oversized
-     part: 7.5vw pinned at 42px from 560px up, so the whole 560-980px tablet
-     range sat at the maximum while carrying the most rows.
-     The floor now engages below 381px, so unlike the first pass it IS the
-     size a 360-375px phone gets rather than mere insurance — which is the
-     constraint to know about before reducing again. Going lower means
-     lowering the floor, and the floor is what protects the tap target.
-     Tap targets were checked rather than assumed, since row height here is
-     almost entirely font-derived (only 5px of padding either side): at
-     line-height 1.65 the shortest row is ~52px against the 44px guideline, so
-     no padding compensation was needed. If a further reduction is wanted, the
-     ceiling is the knob to turn first. */
-  --mobile-nav-link-size: clamp(24px, 6.3vw, 33px);
-  position: fixed;
-  inset: 0;
-  z-index: 790;
-  background: var(--ink);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  justify-content: safe center;
-  /* .menu does NOT scroll — .menu-scroll inside it does. The padding and
-     the safe-centring moved there with it.
-     Why it matters: .menu carries a transform for its open/close animation,
-     and a transform makes an element the containing block for fixed
-     descendants. While .menu was also the scroll container, .menu-bg had no
-     good option — absolute meant it scrolled away with the content (the black
-     band), and fixed meant its containing block FLIPPED between .menu and the
-     viewport at the two ends of the transform transition, which repaints the
-     layer and produced a black flash on every open and close (reported
-     2026-10-02).
-     Moving the scroll one level in removes the conflict: .menu never scrolls,
-     so .menu-bg can be a plain absolute child of it and simply sits still. */
-  overflow: hidden;
-  opacity: 0;
-  visibility: hidden;
-  transform: scale(1.02);
-  transition:
-    opacity 0.5s var(--ease),
-    transform 0.5s var(--ease),
-    visibility 0s linear 0.5s;
-  pointer-events: none;
-}
-body.menu-open .menu {
-  opacity: 1;
-  visibility: visible;
-  transform: scale(1);
-  pointer-events: auto;
-  transition:
-    opacity 0.5s var(--ease),
-    transform 0.5s var(--ease),
-    visibility 0s linear 0s;
-}
-/* FIXED, not absolute (changed 2026-10-02). An absolutely positioned child
-   of a scroll container is placed in that container's scrollable coordinate
-   space, so once .menu had more content than fits — which it does as soon as
-   a group is expanded on a short phone — the photograph scrolled up with the
-   content and left .menu's own --ink background as a black band at the
-   bottom. Reported as the image shifting with a black bar under it.
-   This only works because body.menu-open .menu sets "transform: none" rather
-   than "scale(1)": ANY transform on an ancestor makes it the containing block
-   for fixed descendants, and a fixed element in that position behaves like an
-   absolute one — i.e. it would scroll again. The scale is still there in the
-   closed state, so the open/close animation is unchanged; it is only released
-   once the overlay has finished opening, which is also the only time it is
-   possible to scroll. */
-/* Takes .menu's old padding, centring and scrolling. min-height: 0 is the
-   part that is easy to miss — a flex child will not shrink below its content
-   and so will not scroll without it. */
-.menu-scroll {
-  position: relative;
-  z-index: 2;
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  justify-content: safe center;
-  padding: 96px clamp(24px, 7vw, 60px) 32px;
-  overflow-y: auto;
-  /* The one real DISCONTINUITY at the moment an expanding group takes the
-     content past the container height: a classic scrollbar appears and takes
-     layout width, so the whole column reflows and the centred rows re-wrap in
-     a single frame. Reserving the space means the crossover changes nothing.
-     Desktop/laptop only — a phone's overlay scrollbar floats and has never
-     taken width — so this is for the <=980px laptop view rather than the
-     device. The centring itself does NOT jump, which was the other suspect
-     and was wrong: free space is H - C, "safe center" offsets by half of it
-     and falls back to start once it goes negative, so the offset approaches
-     zero continuously and simply stays there. Same for .menu-inner's auto
-     margins. */
-  scrollbar-gutter: stable;
-}
-.menu-bg {
-  position: absolute;
-  inset: 0;
-  /* Absolute against .menu, which is fixed, viewport-sized and — crucially —
-     no longer scrolls. So this fills the overlay and stays put, with no
-     containing-block switching and nothing to lag behind a resizing URL bar.
-     The earlier fixed + 100lvh version solved the URL-bar band but caused the
-     open/close flash; see the note on .menu's overflow. */
-  opacity: 0.16;
-  background-size: cover;
-  background-position: center;
-  filter: grayscale(0.3);
-}
-.menu-inner {
-  position: relative;
-  z-index: 2;
-  margin: auto 0;
-}
-.menu .mobile-nav-link {
-  display: block;
-  font-family: "Fraunces", serif;
-  font-size: var(--mobile-nav-link-size);
-  color: var(--limestone);
-  padding: 5px 0;
-  letter-spacing: -0.02em;
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.6s var(--ease) var(--m-delay, 0s),
-    transform 0.7s var(--ease) var(--m-delay, 0s),
-    color 0.3s;
 }
 .menu .mobile-nav-link span {
   color: var(--gold);
@@ -2214,43 +1469,6 @@ body.menu-open .menu {
   letter-spacing: 0;
   margin-right: 12px;
   font-family: "Inter", sans-serif;
-}
-/* aria-current stays ungated — it marks which page you are on, and has
-   nothing to do with a pointer. Only :hover moves behind the gate. */
-.menu .mobile-nav-link[aria-current="page"] {
-  color: var(--gold-2);
-}
-/* GATED (2026-10-02). This rule and the sub-link one below used to carry an
-   explicit bug #19 exemption, on the grounds that these are real page links
-   and navigating away on tap makes a lingering hover moot. That premise is
-   false here, twice over:
-     • ELEVEN of the drawer's seventeen links are href="#" — every unbuilt row
-       behind a Proposed badge. Nothing navigates, and main.js deliberately
-       does NOT close the drawer for those (closing it while going nowhere
-       would be worse), so the row simply stays latched gold until you tap
-       something else. Touch has no "pointer left" event to clear it.
-     • Even the four real page links are visible after the tap: closeMenu()
-       fades the overlay over 0.5s while the browser waits on navigation, and
-       "color 0.3s" animates the row to gold through that fade. You watch it
-       turn gold on the way out.
-   Gated on POINTER CAPABILITY, not viewport, which is the important half: the
-   drawer only appears below 980px, but a laptop window dragged narrow still
-   has a mouse, and hover is right there. A viewport gate would break hover
-   during exactly the kind of desktop-at-mobile-width testing this is built
-   with. (hover: hover) draws that line by itself. */
-@media (hover: hover) {
-  .menu .mobile-nav-link:hover {
-    color: var(--gold-2);
-  }
-}
-@media (hover: none) {
-  .menu .mobile-nav-link:active {
-    color: var(--gold-2);
-  }
-}
-body.menu-open .menu .mobile-nav-link {
-  opacity: 1;
-  transform: translateY(0);
 }
 /* Mobile accordion — pairs with the .nav-dd desktop dropdown above (proposal,
    see navbar.html). Groups Weddings/Corporate/Celebrations under one tap
@@ -2291,104 +1509,13 @@ body.menu-open .menu .mobile-nav-link {
 .mobile-nav-group.is-open .mobile-nav-trigger .nav-dd-chevron {
   transform: rotate(180deg);
 }
-/* grid-template-rows: 0fr -> 1fr, NOT max-height (changed 2026-10-02).
-   max-height needs a magic number large enough for the tallest group, and
-   every pixel of the difference between that number and the real content is
-   dead time in the animation. Measured here: the cap was 520px against ~164px
-   of Restaurant content and ~287px of Events. Opening therefore finished
-   moving a third of the way through, and CLOSING was worse - max-height has
-   to fall from 520 all the way to 164 before the Restaurant panel's bottom
-   edge starts moving at all, so roughly the first 0.3s of the close produced
-   no visible change. That reads as a dead tap, not a slow one.
-   0fr -> 1fr animates to whatever the content actually measures, so there is
-   no number to keep in sync with the row count. The cost is one wrapper
-   element per group, because the clipping has to happen INSIDE the grid row
-   rather than on the grid itself - hence .mobile-nav-sub-items below. */
-.mobile-nav-sub {
-  display: grid;
-  grid-template-rows: 0fr;
-  padding-left: 34px;
-  transition: grid-template-rows 0.45s var(--ease);
-}
-.mobile-nav-sub-items {
-  overflow: hidden;
-}
-.mobile-nav-group.is-open .mobile-nav-sub {
-  grid-template-rows: 1fr;
-}
-/* TEMPORARY, for a look at the overlay with no accordion at all. Driven by
-   DRAWER_GROUPS_PINNED_OPEN in main.js - set that to false to get the
-   accordion back and these rules stop matching. The label stays (it is still
-   the section heading) but the chevron goes, since nothing collapses, and
-   the cursor stops claiming the row is clickable. */
-.mobile-nav-group.is-pinned-open .mobile-nav-group-trigger {
-  cursor: default;
-}
 .mobile-nav-group.is-pinned-open .mobile-nav-group-trigger .nav-dd-chevron {
   display: none;
-}
-/* The accordion is motion like any other. It was never gated, which predates
-   the whole-site nav - the max-height version had the same gap. */
-@media (prefers-reduced-motion: reduce) {
-  .mobile-nav-sub {
-    transition: none;
-  }
-}
-.mobile-nav-sub-link {
-  display: block;
-  font-family: "Newsreader", Georgia, serif;
-  font-size: clamp(18px, 4.5vw, 22px);
-  color: rgba(var(--limestone-rgb), 0.72);
-  padding: 8px 0;
-}
-/* Sub-links were the one thing in the overlay with no entrance at all, so
-   whichever group opens by default had its rows sitting there fully painted
-   while everything around them animated in — which read as them having been
-   left out rather than as a deliberate difference.
-   They take the same treatment as the rows above them, with a shorter lift
-   (18px against 28px) because they are smaller items and the same distance
-   reads as further on them. main.js folds the OPEN group's sub-links into the
-   same --m-delay sequence as the top-level rows, so the whole thing counts
-   down the list once rather than running two staggers side by side.
-   color stays out of the delay, per bug #12 — a delayed hover colour is what
-   made the top-level links feel laggy once. */
-.menu .mobile-nav-sub-link {
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity 0.5s var(--ease) var(--m-delay, 0s),
-    transform 0.6s var(--ease) var(--m-delay, 0s),
-    color 0.3s;
-}
-body.menu-open .menu .mobile-nav-sub-link {
-  opacity: 1;
-  transform: translateY(0);
-}
-@media (prefers-reduced-motion: reduce) {
-  .menu .mobile-nav-sub-link {
-    transform: none;
-    transition:
-      opacity 0.5s var(--ease) var(--m-delay, 0s),
-      color 0.3s;
-  }
-}
-.mobile-nav-sub-link[aria-current="page"] {
-  color: var(--gold-2);
 }
 /* Gated for the same reasons as .menu .mobile-nav-link above — see that
    rule's note. These rows are the worse case of the two: every sub-link in
    the Restaurant group currently points at "#", so on touch the latch had
    nothing at all to clear it. */
-@media (hover: hover) {
-  .mobile-nav-sub-link:hover {
-    color: var(--gold-2);
-  }
-}
-@media (hover: none) {
-  .mobile-nav-sub-link:active {
-    color: var(--gold-2);
-  }
-}
 .menu-social {
   margin-top: 28px;
   opacity: 0;
@@ -3782,26 +2909,6 @@ h2 em {
 .visit-list > *:last-child {
   border-bottom: none;
 }
-
-.enquire {
-  position: relative;
-  background:
-    radial-gradient(120% 80% at 85% 0%, rgba(var(--gold-rgb), 0.1), transparent 60%),
-    linear-gradient(180deg, #f3eddf, var(--paper) 55%, var(--paper));
-  overflow: hidden;
-}
-.enquire::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(var(--bronze-rgb), 0.45),
-    transparent
-  );
-}
 .enquire .wrap {
   position: relative;
 }
@@ -3823,20 +2930,6 @@ h2 em {
   .enquire .grid {
     grid-template-columns: 1fr;
   }
-  /* Same trick the wizard steps use (.wizard-step.active{display:contents})
-     — removes .enquiry-intro's own box so its children (eyebrow, h2, lead,
-     trust-rail) become direct items of .grid's own grid, sitting alongside
-     .enquiry-form as genuine siblings, which is what lets .trust-rail below get
-     reordered after the form specifically rather than always sitting right
-     after the lead paragraph. Needs to beat .enquiry-form's own order:2 (set at
-     the shared 980px breakpoint above and still in effect here) — anything
-     less than that just lands it back before the form. */
-  .enquiry-intro {
-    display: contents;
-  }
-  .enquire .trust-rail {
-    order: 3;
-  }
   /* .grid's own gap used to apply exactly once, between the rail block and
      the form — now that .enquiry-intro's children are direct grid items too, it
      was landing between every one of them instead, stacking on top of
@@ -3846,20 +2939,10 @@ h2 em {
   .enquire .grid {
     gap: 0;
   }
-  .enquiry-form {
-    margin-top: clamp(32px, 5vw, 72px);
-  }
 }
 .enquiry-intro .lead {
   margin-top: 20px;
   max-width: 42ch;
-}
-.enquire .trust-rail {
-  /* Flat 24px, matching the sitewide convention for a list following intro
-     copy (e.g. .split ul.check, .tab-panel ul, .deposit-box). */
-  margin-top: 24px;
-  display: grid;
-  gap: clamp(8px, 2vw, 12px);
 }
 .enquire .trust-rail > li {
   list-style: none;
@@ -3873,13 +2956,6 @@ h2 em {
 .enquire .trust-rail > li:last-child {
   border-bottom: none;
 }
-.enquire .trust-rail .trust-item-icon {
-  width: 24px;
-  height: 24px;
-  display: grid;
-  place-items: center;
-  color: var(--bronze);
-}
 .enquire .trust-rail b {
   display: block;
   font-family: "Fraunces", Georgia, serif;
@@ -3887,20 +2963,6 @@ h2 em {
   font-size: 17px;
   letter-spacing: -0.01em;
   line-height: 1.25;
-}
-.enquire .trust-rail p {
-  margin-top: clamp(8px, 2vw, 12px);
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 14.5px;
-  line-height: 1.55;
-  color: var(--muted-ink);
-}
-.enquire .rail-photo {
-  margin-top: 26px;
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  position: relative;
-  aspect-ratio: 16 / 10;
 }
 .enquire .rail-photo img {
   width: 100%;
@@ -3910,23 +2972,6 @@ h2 em {
 }
 .enquire .rail-photo:hover img {
   transform: scale(var(--image-hover-zoom-ambient));
-}
-.enquire .rail-photo figcaption {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 40px 20px 16px;
-  background: linear-gradient(transparent, rgba(var(--ink-rgb), 0.82));
-  color: rgba(var(--limestone-rgb), 0.9);
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 13.5px;
-  font-style: italic;
-}
-@media (max-width: 920.98px) {
-  .enquire .rail-photo {
-    display: none;
-  }
 }
 form {
   display: flex;
@@ -4019,11 +3064,6 @@ form {
   resize: vertical;
   min-height: 82px;
 }
-/* The gold sweep-underline is part of the recessed-panel treatment being
-   replaced above. */
-.field-input .field-underline {
-  display: none;
-}
 .field input::placeholder,
 .field textarea::placeholder {
   color: rgba(var(--muted-ink-rgb), 0.48);
@@ -4048,20 +3088,6 @@ input[type="date"].has-value {
   color-scheme: light;
   cursor: auto;
   padding-right: 42px;
-}
-/* Custom calendar icon (.field-date-icon in the markup), matching the
-   trust-rail icons' own line-icon treatment (stroke-width 1.6, bronze)
-   instead of the browser's default grey glyph. The native
-   ::-webkit-calendar-picker-indicator stays in place underneath (just
-   invisible), so it's still the thing actually receiving the click — this
-   SVG is purely visual. */
-.field-date-icon {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--bronze);
-  pointer-events: none;
 }
 #dateNative::-webkit-calendar-picker-indicator,
 #backupDate::-webkit-calendar-picker-indicator {
@@ -4090,34 +3116,6 @@ input[type="date"].has-value {
   opacity: 1;
   transform: none;
 }
-.field-note {
-  font-size: 12px;
-  color: var(--muted-ink);
-  margin-top: 8px;
-  font-family: "Newsreader", Georgia, serif;
-}
-.error {
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 11.5px;
-  color: var(--oxblood);
-  margin-top: 0;
-  height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: all 0.3s var(--ease);
-}
-.field.bad .error {
-  margin-top: 8px;
-  height: 18px;
-  opacity: 1;
-}
-.field.bad .field-underline {
-  background: rgba(var(--oxblood-rgb), 0.4);
-}
-.field.bad .field-underline::after {
-  width: 100%;
-  background: var(--oxblood);
-}
 .field.bad {
   animation: shake 0.4s;
 }
@@ -4127,64 +3125,6 @@ input[type="date"].has-value {
   }
   75% {
     transform: translateX(5px);
-  }
-}
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin-top: 5px;
-}
-.chip {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 9px 0px;
-  border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
-  border-radius: var(--radius-card);
-  font-family: "Inter", sans-serif;
-  font-size: 10.5px;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  line-height: 1.2;
-  text-align: center;
-  cursor: pointer;
-  background: var(--paper);
-  color: var(--ink);
-  transition:
-    background-color 0.3s var(--ease),
-    border-color 0.3s var(--ease),
-    color 0.3s var(--ease),
-    transform 0.3s var(--ease),
-    box-shadow 0.3s var(--ease);
-}
-@media (hover: hover) {
-  .chip:hover {
-    background-color: var(--limestone);
-  }
-}
-.chip.is-selected {
-  background: var(--ink);
-  color: var(--limestone);
-  border-color: var(--ink);
-  box-shadow: 0 3px 12px rgba(var(--ink-rgb), 0.12);
-}
-@media (hover: hover) {
-  .chip.is-selected:hover {
-    background: var(--ink-2);
-    border-color: var(--ink-2);
-  }
-}
-@media (hover: none) {
-  .chip:active {
-    background-color: var(--limestone);
-  }
-  .chip.is-selected:active {
-    background: var(--ink-2);
-    border-color: var(--ink-2);
   }
 }
 .chip svg {
@@ -4205,22 +3145,6 @@ input[type="date"].has-value {
 #chipNote.swapping {
   opacity: 0.35;
 }
-@media (min-width: 621px) {
-  /* Equal-width chips (event type + "how should we get back to you") for
-     non-mobile only — content-hugging below 620px instead. */
-  #chips .chip,
-  #prefer .chip {
-    flex: 1 1 0;
-    text-align: center;
-  }
-}
-/* ---------- Enquiry form wizard ---------- */
-.wizard-step {
-  display: none;
-}
-.wizard-step.active {
-  display: contents;
-}
 .wizard-step.active > * {
   opacity: 1;
   transform: translateY(0);
@@ -4240,197 +3164,15 @@ input[type="date"].has-value {
   transform: translateY(8px);
   transition: none;
 }
-.wizard-progress {
-  flex: 1 1 100%;
-  margin-bottom: 0;
-  position: relative;
-  /* 8px is the default (matches the section's own 1-column collapse below
-     920px); 4px above that, once the rail sits beside the form as a
-     genuine 2-column layout — see the min-width:921px override below. */
-  padding-top: 8px;
-}
-.wizard-count {
-  flex: 1 1 100%;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: -6px;
-}
-.wizard-count .wizard-count-title {
-  font-family: "Fraunces", Georgia, serif;
-  font-size: clamp(21px, 2.4vw, 27px);
-  line-height: 1.15;
-}
 .wizard-count .wizard-count-title em {
   font-family: "Newsreader", Georgia, serif;
   font-style: italic;
   color: var(--bronze);
 }
-.wizard-steps {
-  display: flex;
-  gap: 10px;
-  position: relative;
-  z-index: 1;
-}
-.wizard-step-tab {
-  flex: 1;
-  background: none;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  opacity: 0.4;
-  transition: opacity 0.3s var(--ease);
-}
-.wizard-step-tab:disabled {
-  cursor: auto;
-}
-.wizard-step-tab.active,
-.wizard-step-tab.done {
-  opacity: 1;
-}
-.wizard-step-tab .wizard-step-number {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1px solid rgba(var(--muted-ink-rgb), 0.25);
-  display: grid;
-  place-items: center;
-  font-family: "Fraunces", serif;
-  font-size: 12px;
-  flex: none;
-  color: var(--ink);
-  background: #fff;
-  transition:
-    background-color 0.3s var(--ease),
-    border-color 0.3s var(--ease),
-    color 0.3s var(--ease);
-}
-.wizard-step-tab.active .wizard-step-number {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--limestone-2);
-}
-.wizard-step-tab.done .wizard-step-number {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: var(--ink);
-}
-.wizard-step-tab .wizard-step-label {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 500;
-  color: var(--muted-ink);
-}
-/* --wiz-tab-count (set inline on .wizard-progress, default 3 for pages not yet
-   migrated to the 4-step wizard) keeps this insets formula correct
-   regardless of how many .wizard-step-tabs actually exist: each tab's center
-   sits at 50%/N in from its edge, plus 11px to reach the tab circle's own
-   center (half its 22px width). .wizard-progress-line is absolutely positioned, so its
-   top is measured from .wizard-progress's own padding edge — a fixed origin
-   that doesn't shift just because padding-top grows, unlike the step
-   circles (real, in-flow content), which do — so top needs the same
-   padding-top added on top of its own 11px to stay centered on them, at
-   each of .wizard-progress's own two padding-top breakpoints below. */
-.wizard-progress-line {
-  position: absolute;
-  top: 19px;
-  left: calc(50% / var(--wiz-tab-count, 3) + 11px);
-  right: calc(50% / var(--wiz-tab-count, 3) + 11px);
-  display: flex;
-  gap: 22px;
-  z-index: 0;
-}
-@media (min-width: 921px) {
-  .wizard-progress {
-    padding-top: 4px;
-  }
-  .wizard-progress-line {
-    top: 15px;
-  }
-}
-.wizard-progress-line .wizard-progress-segment {
-  flex: 1;
-  border-top: 2px dotted rgba(var(--muted-ink-rgb), 0.2);
-  transition:
-    border-color 0.3s var(--ease),
-    border-top-style 0.3s var(--ease);
-}
-.wizard-progress-line .wizard-progress-segment.done {
-  border-top-style: solid;
-  border-top-color: var(--gold);
-}
-@media (max-width: 560px) {
-  .wizard-step-tab .wizard-step-label {
-    display: none;
-  }
-  .wizard-progress-line {
-    left: calc(50% / var(--wiz-tab-count, 3) + 9px);
-    right: calc(50% / var(--wiz-tab-count, 3) + 9px);
-  }
-}
-.wizard-nav {
-  flex: 1 1 100%;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  /* No margin-top of its own — the form's own flex gap (22px, see form{})
-     already spaces every row consistently, this one included; a bespoke
-     extra nudge here just meant the gap above the buttons didn't match
-     every other inter-field gap. */
-}
-.wizard-nav .wizard-spacer {
-  flex: 1;
-}
 .wizard-back-hidden {
   visibility: hidden;
 }
-/* .wizard-back-hidden (toggled by main.js instead of inline style.visibility —
-   see showStep()) keeps Back's layout space via visibility:hidden on step 1,
-   so Continue doesn't shift position once Back becomes visible on later
-   steps. Used to need a sub-480px override dropping this to display:none,
-   because Back's old ~125px text+icon pill plus Continue's own width
-   didn't fit even the narrowest phones — moot now that Back is a 50px
-   icon-only circle (see .wizard-back-circle below); that reserved space is
-   small enough to keep at every width, so the override was removed rather
-   than kept as dead weight. */
-/* De-emphasized relative to Continue/Submit on purpose — a back action
-   shouldn't visually compete with the form's forward momentum, but
-   shouldn't be hard to find either. Reuses .availability.diary's own prev/next
-   circle-button treatment (styles.css), just sized up to 50px to match
-   .button's own height, so it reads as an
-   existing pattern on this site, not a one-off. */
-.wizard-back-circle {
-  /* Matches .button's own height exactly (--button-height), so Back and
-     Continue/Submit sit at the same height in the row — still a circle
-     (equal width), just a bigger one than the original 40px. */
-  width: var(--button-height);
-  height: var(--button-height);
-  border-radius: 50%;
-  border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
-  background: transparent;
-  color: var(--ink);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex: none;
-  transition:
-    background 0.3s var(--ease),
-    border-color 0.3s var(--ease);
-}
 @media (hover: hover) {
-  .wizard-back-circle:hover {
-    background: var(--paper);
-    border-color: rgba(var(--muted-ink-rgb), 0.3);
-  }
   /* Cancels .wizard-back-link:hover svg's inherited translateX(-4px) (this button
      keeps the .wizard-back-link class for the JS that selects it) — that nudge was
      built for a wide text+icon pill with room for the arrow to travel; the
@@ -4438,12 +3180,6 @@ input[type="date"].has-value {
      hover (see .availability-prev/.availability-next), so this stays consistent with it. */
   .wizard-back-circle:hover svg {
     transform: none;
-  }
-}
-@media (hover: none) {
-  .wizard-back-circle:active {
-    background: var(--paper);
-    border-color: rgba(var(--muted-ink-rgb), 0.3);
   }
 }
 .ok {
@@ -4459,83 +3195,12 @@ input[type="date"].has-value {
   opacity: 1;
   transform: none;
 }
-
-/* ---------- Guest-count stepper ---------- */
-.guest-count-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-top: 5px;
-}
-.guest-count-button {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid rgba(var(--muted-ink-rgb), 0.18);
-  background: transparent;
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
-  display: grid;
-  place-items: center;
-  transition: all 0.3s var(--ease);
-}
-@media (hover: hover) {
-  .guest-count-button:hover {
-    background: var(--ink);
-    color: var(--limestone);
-    border-color: var(--ink);
-  }
-}
-@media (hover: none) {
-  .guest-count-button:active {
-    background: var(--ink);
-    color: var(--limestone);
-    border-color: var(--ink);
-  }
-}
 .guest-count-row .field-input {
   flex: 1;
-}
-.guest-count-row input {
-  font-family: "Fraunces", Georgia, serif;
-  font-size: 22px;
-  text-align: center;
-  -moz-appearance: textfield;
-}
-.guest-count-row input::-webkit-outer-spin-button,
-.guest-count-row input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.guest-count-hint {
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 12px;
-  color: var(--muted-ink);
-  margin-top: 8px;
-  min-height: 20px;
-  transition: color 0.3s var(--ease);
 }
 .guest-count-hint b {
   color: var(--ink);
   font-weight: 500;
-}
-
-/* ---------- Toggle-list (spaces / event style) ---------- */
-.option-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px;
-  margin-top: 5px;
-}
-.option-card {
-  text-align: left;
-  border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
-  border-radius: var(--radius-card);
-  background: var(--paper);
-  padding: 13px 14px;
-  cursor: pointer;
-  transition: all 0.35s var(--ease);
 }
 .option-card b {
   display: block;
@@ -4550,132 +3215,19 @@ input[type="date"].has-value {
   color: var(--muted-ink);
   margin-top: 3px;
 }
-@media (hover: hover) {
-  .option-card:hover {
-    border-color: rgba(var(--gold-rgb), 0.4);
-  }
-}
-.option-card.is-selected {
-  border-color: var(--gold);
-  background: var(--limestone-2);
-  box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.5);
-}
-
-/* ---------- "Anything else" character count ---------- */
-.field-note-top {
-  margin-top: 0;
-  margin-bottom: 8px;
-}
 #msg {
   font-size: 14px;
   min-height: 122px;
-}
-/* Ring sits below the textarea, right-aligned, in normal flow — not
-   overlaid on the textarea's own corner, so .field-input's box never
-   carries reserved-but-invisible space. */
-.message-field-input {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-.character-count {
-  display: flex;
-  align-items: center;
-  margin-top: 6px;
-}
-.character-count-label {
-  font-family: "Inter", sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted-ink);
-}
-.character-count-label::after {
-  content: "·";
-  margin: 0 6px;
-  color: rgba(var(--muted-ink-rgb), 0.4);
-}
-.character-ring {
-  position: relative;
-  width: 30px;
-  height: 30px;
-  pointer-events: none;
 }
 .character-ring svg {
   width: 100%;
   height: 100%;
   transform: rotate(-90deg);
 }
-.character-ring-track {
-  fill: none;
-  stroke: rgba(var(--muted-ink-rgb), 0.14);
-  stroke-width: 2;
-}
-.character-ring-fill {
-  fill: none;
-  stroke: #2fae5c;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-dasharray: 87.96;
-  stroke-dashoffset: 87.96;
-  transition:
-    stroke-dashoffset 0.2s var(--ease),
-    stroke 0.2s var(--ease);
-}
-.character-ring-number {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Inter", sans-serif;
-  font-size: 9px;
-  font-weight: 500;
-  color: var(--muted-ink);
-}
-/* Green (plenty of room) -> amber (200 chars left) -> red (50 chars left).
-   Deliberately true/vivid semantic colors rather than the calendar's own
-   muted green/amber/oxblood, which read too dark and close together to
-   tell apart at this small a size. */
-.character-ring.amber .character-ring-fill {
-  stroke: #f2a30f;
-}
-.character-ring.amber .character-ring-number {
-  color: #b97800;
-}
-.character-ring.near-limit .character-ring-fill {
-  stroke: #e0413a;
-}
-.character-ring.near-limit .character-ring-number {
-  color: #d1372f;
-}
-
-/* ---------- Review step ---------- */
-.review-note {
-  flex: 1 1 100%;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 14px 16px;
-  border-radius: var(--radius-card);
-  background: rgba(var(--gold-rgb), 0.1);
-  box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.34);
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 14.5px;
-  line-height: 1.5;
-}
 .review-note svg {
   flex: none;
   color: var(--bronze);
   margin-top: 2px;
-}
-.review-list {
-  flex: 1 1 100%;
-  display: grid;
-  gap: 0;
-  border: 1px solid rgba(var(--muted-ink-rgb), 0.12);
-  border-radius: var(--radius-card);
-  overflow: hidden;
 }
 .review-group {
   border-bottom: 1px solid rgba(var(--muted-ink-rgb), 0.1);
@@ -4699,35 +3251,8 @@ input[type="date"].has-value {
   font-family: "Inter", sans-serif;
   font-weight: 500;
 }
-.review-edit-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: transparent;
-  border: 1px solid rgba(var(--muted-ink-rgb), 0.18);
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  padding: 6px 13px;
-  font-family: "Inter", sans-serif;
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--bronze);
-  transition:
-    border-color 0.3s var(--ease),
-    background-color 0.3s var(--ease),
-    transform 0.3s var(--ease);
-}
 .review-edit-button svg {
   flex: none;
-}
-@media (hover: hover) {
-  .review-edit-button:hover {
-    border-color: rgba(var(--gold-rgb), 0.4);
-    background: rgba(var(--gold-rgb), 0.06);
-    transform: translateY(-1px);
-  }
 }
 .review-rows {
   padding: 0 16px;
@@ -4774,81 +3299,20 @@ input[type="date"].has-value {
     gap: 6px;
   }
 }
-.consent {
-  flex: 1 1 100%;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  cursor: pointer;
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 12px;
-  color: var(--muted-ink);
-  line-height: 1.5;
-}
-.consent input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-.consent .box {
-  flex: none;
-  width: 21px;
-  height: 21px;
-  margin-top: 2px;
-  border-radius: 5px;
-  border: 1px solid rgba(var(--muted-ink-rgb), 0.28);
-  display: grid;
-  place-items: center;
-  transition: all 0.3s var(--ease);
-}
 .consent .box svg {
   opacity: 0;
   transform: scale(0.6);
   transition: all 0.3s var(--ease);
 }
-.consent input:checked + .box {
-  background: var(--gold);
-  border-color: var(--gold);
-  /* Matches .button-gradient's --fg on the same --gold background (submit button
-     included), rather than --paper, so the checkmark reads as the same "ink
-     on gold" combination used everywhere else that pairs the two. */
-  color: var(--ink);
-}
 .consent input:checked + .box svg {
   opacity: 1;
   transform: none;
-}
-.consent.bad .box {
-  border-color: var(--oxblood);
-  animation: shake 0.4s;
-}
-
-/* ---------- Sent state ---------- */
-.availability.sent {
-  display: none;
-  text-align: center;
-  padding: clamp(30px, 5vw, 56px) clamp(18px, 3vw, 34px);
-}
-.availability.sent.show {
-  display: block;
-  animation: sentIn 0.7s var(--ease) both;
 }
 @keyframes sentIn {
   from {
     opacity: 0;
     transform: translateY(14px);
   }
-}
-.availability.sent .seal {
-  width: 74px;
-  height: 74px;
-  margin: 0 auto 20px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  color: var(--bronze);
-  background: rgba(var(--gold-rgb), 0.14);
-  box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.5);
 }
 .availability.sent .seal svg {
   animation: sealTick 0.7s 0.25s var(--ease) both;
@@ -4859,29 +3323,10 @@ input[type="date"].has-value {
     transform: scale(0.5) rotate(-12deg);
   }
 }
-.availability.sent h3 {
-  font-family: "Fraunces", Georgia, serif;
-  font-weight: 400;
-  font-size: clamp(26px, 3.2vw, 36px);
-}
 .availability.sent h3 em {
   font-family: "Newsreader", Georgia, serif;
   font-style: italic;
   color: var(--bronze);
-}
-.availability.sent > p {
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 16px;
-  color: var(--muted-ink);
-  max-width: 46ch;
-  margin: 12px auto 0;
-}
-.next-steps {
-  margin: 28px auto 0;
-  max-width: 420px;
-  text-align: left;
-  display: grid;
-  gap: 18px;
 }
 .next-steps li {
   list-style: none;
@@ -4901,27 +3346,10 @@ input[type="date"].has-value {
 .next-steps li:nth-child(3) {
   animation-delay: 0.6s;
 }
-.next-steps .next-step-number {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  font-family: "Fraunces", serif;
-  font-size: 12px;
-  background: var(--ink);
-  color: var(--limestone-2);
-}
 .next-steps b {
   font-family: "Newsreader", Georgia, serif;
   font-weight: 500;
   font-size: 15.5px;
-}
-.next-steps p {
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 14px;
-  color: var(--muted-ink);
-  margin-top: 2px;
 }
 @keyframes revealUp {
   from {
@@ -4932,15 +3360,6 @@ input[type="date"].has-value {
     opacity: 1;
     transform: none;
   }
-}
-
-/* ---------- Sticky mobile reassurance ---------- */
-/* Disabled as soon as the section collapses to one column (920px) — the
-   trust-rail (moved below the form at that same breakpoint) already says
-   the same thing, and a bar pinned to the bottom of the viewport eats
-   permanently into already-limited screen space. */
-.trust-sticky {
-  display: none;
 }
 
 footer {
@@ -6312,17 +4731,6 @@ footer a:hover {
 .availability-picked.status-interest .availability-picked-status {
   color: var(--avail-amber-fg);
 }
-
-.availability.compact {
-  background: none;
-  border: none;
-  box-shadow: none;
-  /* Explicit 0 (not just "no override"), since without this it silently falls
-     back to plain .availability's own padding: clamp(22px,3vw,34px) on all four
-     sides — the wizard's own form card (see form{} above) already provides
-     its own padding, so this widget shouldn't add a second layer inside it. */
-  padding: 0;
-}
 .availability.compact .availability-head {
   margin-bottom: 14px;
 }
@@ -6468,20 +4876,6 @@ footer a:hover {
 }
 #availPicked.status-interest .availability-picked-status {
   color: var(--avail-amber-fg);
-}
-
-/* weddings.html only: wizard step 1 has no grid of its own, just this
-   picked-date summary + a button back to the real calendar — laid out as one
-   row (summary at the start, button pinned to the far end via space-between).
-   #availFormPicked is always in layout (same as the AC showcase's own
-   .availability-foot-label instances — no .availability-picked-style show/hide here), so
-   space-between always has just two items: the summary text, and the button. */
-.availability-form-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
 }
 /* Same markup/format as the AC showcase's own #availPicked (.availability-foot-label,
    below) — this one just sits inline in the .availability-form-row instead of below
@@ -7346,22 +5740,6 @@ footer a:hover {
   .split {
     grid-template-columns: 1fr;
   }
-  /* #availability .availability.diary's own margin-inline:auto (added above, near
-     #availability .split) is scoped to that section's own later, 920px
-     collapse point instead of living here — this section's own two-column
-     split now holds past 980px, so centering it here as well would be
-     wrong for the 921-980px gap. */
-  .enquiry-intro,
-  .enquiry-form {
-    grid-column: 1;
-    grid-row: auto;
-  }
-  .enquiry-intro {
-    order: 1;
-  }
-  .enquiry-form {
-    order: 2;
-  }
   .split .ph-wrap {
     order: -1;
   }
@@ -7435,12 +5813,8 @@ footer a:hover {
   }
 }
 @media (max-width: 820px) {
-  .nav-links,
   .nav-cta .button {
     display: none;
-  }
-  .burger {
-    display: block;
   }
   .hero-content {
     padding-top: 120px;
@@ -7460,15 +5834,6 @@ footer a:hover {
      old grid's single-column collapse at this breakpoint. */
   .field {
     flex-basis: 100%;
-  }
-  /* Content-width chips get too narrow for "Something else" to fit on one
-     line once the form itself has gone single-column — same lesson as the
-     tab-bar overflow (see CLAUDE.md bug #14): fit a small fixed item count
-     with equal-width rows rather than letting text wrap inside a pill.
-     Desktop keeps the original content-hugging size. */
-  .chip {
-    flex: 1 1 calc(50% - 5px);
-    text-align: center;
   }
   .hero-ctas,
   .cta-row,
@@ -7512,10 +5877,6 @@ footer a:hover {
   }
   .arch-dish {
     aspect-ratio: 4/5;
-  }
-  .brand .name {
-    font-size: 16px;
-    letter-spacing: 0.24em;
   }
   .slide {
     width: 76vw;
@@ -8237,378 +6598,6 @@ footer a:hover {
   }
 }
 
-/* ============================================================================
-   WHOLE-SITE NAV - dropdown panels, split triggers, drawer accordion
-   ============================================================================
-   Merged out of sandboxes/site-nav.html on 2026-10-02, live on index.html
-   only for now. Every rule below was page-local in that sandbox; the sandbox
-   keeps its own copy of the write-up styles and nothing else, so it still
-   renders, but THIS is now the source of truth for the component.
-
-   The sandbox's long-form reasoning comes with it deliberately - the
-   measurements (why the burger moves to 980px, why the panel photo shrinks in
-   the compact band), the specificity notes, and the two backdrop-filter bugs
-   that come back if anyone re-adds the blur are all things that cost real time
-   to find and are not re-derivable from the code.
-
-   Two values that live in the ORIGINAL rules rather than here, so there is one
-   source of truth per property: .nav .wrap's justify-content (now flex-start,
-   which right-aligns the links) and .nav-links' gap (now 2px). Both are
-   commented at their own definitions above.
-
-   Inert on any page without .nav-dd markup, so the nine pages still carrying
-   the old flat nav are unaffected.
-   ============================================================================ */
-
-/* ============================================================
-   Page-local only. The .nav-dd dropdown and .mobile-nav-group
-   accordion components themselves live in styles.css (see the
-   comment near .nav-dd there) — everything below is either this
-   demo page's own layout, or one of the four additions listed in
-   the comment at the top of this file.
-   ============================================================ */
-
-/* RIGHT-ALIGNED NAV LINKS — part of the proposal, not a demo leftover.
-   styles.css lays the real nav out as "justify-content: space-between",
-   which puts the links in the middle of the bar; this groups them
-   against the CTAs at the right edge instead, the treatment navbar.html
-   has carried all along.
-   Briefly removed on 2026-10-01 on the mistaken reading that it was a
-   sandbox convenience rather than an intended design — it is intended,
-   so it is restored and this comment exists so it does not get
-   "cleaned up" a second time. Adopting this proposal means changing
-   .nav .wrap in styles.css, which reaches every page's header; it is
-   not a page-local tweak, and it is the one change here that alters the
-   live nav's layout rather than only adding to it. */
-
-/* ---------- (a) .nav-dd-split: a trigger that both navigates and opens ----------
-   navbar.html's .nav-dd-trigger is a single <button>, which is right
-   for a pure grouping label but cannot navigate. This proposal wants
-   Restaurant and Events to be real destinations (decision 2), so the
-   label is a genuine <a> and the chevron is its own <button> beside
-   it. Consequences handled below, in order:
-     - The <a> is a DIRECT child of li.nav-dd, so it already inherits
-       every ".nav-links > li > a" treatment for free, hover underline
-       included. Nothing to restate.
-     - The pair must read as ONE target, so the gap between them is
-       closed by trimming the <a>'s right padding and the button's
-       left padding rather than letting two 16px paddings sit back to
-       back.
-     - Keyboard order is label → chevron → panel rows, which is the
-       reading order; :focus-within on .nav-dd (styles.css) opens the
-       panel for either. */
-/* The two .nav-links > li.nav-dd-split > a rules that used to sit here (the
-   padding that closes the gap to the chevron, and the underline inset that
-   follows it) now live next to .nav-links > li > a near the top of this file,
-   beside the rules they override. See the note there. */
-/* align-self: stretch, because .nav-dd is "align-items: center" on an
-   explicit 74px height, so this button otherwise sits at its content
-   height — 29 x 27px. That clears WCAG 2.5.8's 24px minimum but is well
-   short of the comfortable 44px, and it matters more than it looks:
-   between 980px and roughly 1100px there is no hover, so this chevron
-   is the ONLY way a touch user can open a panel. Stretching takes it to
-   29 x 74 at zero visual cost, since the button is already a centred
-   flex container and the SVG stays optically where it was.
-   The LABEL deliberately does not get the same treatment — it carries
-   the gold underline-reveal at "bottom: 4px" of its own box, so
-   stretching it would drop that underline to the bottom of the nav
-   bar. */
-/* 6px (styles.css) down to 2px. The links already carry 16px of
-   padding a side, so adjacent labels have 32px between them before the
-   gap is counted at all — 6px was adding a seventh of that again for no
-   structural reason. Reads tighter now that the links sit against the
-   CTAs rather than centred: a compact link cluster is legible as ONE
-   group distinct from the two buttons, where a loose one blurs into
-   them. The compact band below takes it the rest of the way to 0.
-   The hover underline is unaffected — .nav-links > li > a::after is
-   inset 16px from the link's own edges, so the visible gap between two
-   underlines is 32px + this, and 4px off that is imperceptible. */
-/* padding-left 4px -> 2px, so the chevron sits 2px nearer its word
-   (the seam was the link's 6px padding-right plus this, 10px total;
-   now 8px). Taken off THIS side rather than the link's padding-right
-   because that value also sets where the underline stops — moving it
-   would pull the gold bar in under the text. Cost worth stating: the
-   button is now 27px wide rather than 29px. Still over WCAG 2.5.8's
-   24px minimum, and the align-self below makes it 74px tall, so the
-   target area is comfortably larger than it was before either change. */
-.nav-dd-split-chevron-button {
-  display: flex;
-  align-items: center;
-  align-self: stretch;
-  padding: 10px 14px 10px 2px;
-  background: none;
-  border: none;
-  color: rgba(var(--limestone-rgb), 0.7);
-  cursor: pointer;
-  transition: color 0.35s;
-}
-/* Same-page toggle, not a page link, so it needs bug #19's touch
-   hover-gate: a tap would otherwise leave it looking permanently
-   hovered instead of clearing on release. Identical reasoning to
-   .nav-dd-trigger's own gate in styles.css. */
-@media (hover: hover) {
-  .nav-dd-split-chevron-button:hover {
-    color: #fff;
-  }
-}
-@media (hover: none) {
-  .nav-dd-split-chevron-button:active {
-    color: #fff;
-  }
-}
-/* Keeps the LABEL lit while the panel is open, so the pair reads as
-   one lit control rather than a lit chevron next to a dim word.
-   styles.css already does this for .nav-dd-trigger; the <a> needs
-   its own line. At (0,2,0) this beats ".nav-links > li > a"'s (0,1,2)
-   on class count, while ".nav-links > li > a.active" at (0,2,2) still
-   beats THIS — so an active page stays gold rather than going white
-   whenever its own dropdown is open. */
-.nav-dd.is-open > a,
-.nav-dd.is-hovering > a,
-.nav-dd:focus-within > a {
-  color: #fff;
-}
-.nav-dd.is-open .nav-dd-split-chevron-button,
-.nav-dd.is-hovering .nav-dd-split-chevron-button,
-.nav-dd:focus-within .nav-dd-split-chevron-button {
-  color: #fff;
-}
-
-/* ============================================================
-   (e) DARK CARD — .nav-dd-panel-card-dark
-   ============================================================
-   The light card was the one thing about this treatment that did not
-   match the plan: the nav is dark, so the dropdown was always meant to
-   be too. Colour is a property of the CARD, not of the layout, so this
-   keeps the three-column grid (which absorbs new links sideways —
-   nine items is three clean rows) and takes the Events #2 panel's
-   colour instead of its single-column shape.
-
-   Page-local, via a modifier stacked on the base class, exactly the
-   way .nav-dd-v2-card does it — NOT edited into .nav-dd-panel-card
-   itself, because navbar.html's Events #1 panel shares that class and
-   its whole purpose is to preserve the light treatment as a record of
-   what was compared.
-
-   NO backdrop-filter HERE, and that is the whole point of this rule
-   being three lines long. The Events #2 panel frosts its card the way
-   .nav::after does, which is where this colour comes from — but the
-   scrim behind an open panel is already rgba(--muted-ink, 0.5), and
-   0.86 on top of that puts the card at roughly 93% opaque against the
-   actual page. About 7% of a blur(14px) was reaching the eye, while
-   paying for the one declaration CLAUDE.md records as a dominant scroll
-   cost on .package-sticky-switch. Measured against that, the blur was
-   buying nothing. The flat alpha alone still carries the "extension of
-   the nav bar" read, because what does that work is the colour matching
-   .nav::after's, not the blur.
-
-   DROPPING IT REMOVED TWO WORKAROUNDS RATHER THAN ONE, which is why
-   this is a simplification and not just a deletion. Both are real bugs,
-   both were solved once on .nav-dd-v2-card, and BOTH COME BACK THE
-   MOMENT ANYONE RE-ADDS backdrop-filter HERE — so they are written down
-   rather than quietly discarded:
-
-   1. backdrop-filter AND border-radius on the SAME box produces a black
-      hairline seam along the rounded edge in Chromium/WebKit, worst
-      while the card is mid-transition. That forced the background onto
-      a ::before with inset:-1px so its antialiased boundary fell
-      outside the visible corner, with the card itself doing nothing but
-      clip. With no blur, background and border-radius coexist happily
-      on one box, so the ::before, its overflow:hidden, and the z-index
-      rules that lifted both children above it are all gone.
-   2. ANY transform on an ancestor of a backdrop-filter element isolates
-      it into its own compositing layer, cutting the blur off from
-      sampling the page behind it — the frost reads flatly opaque.
-      .nav-dd-panel-card's open/close lift is
-      "transform: translateY(8px) → translateY(0)", which made that
-      lift unusable and forced a margin-top re-implementation plus an
-      is-open override to match. With no blur, the base class's own
-      transform lift just works, so both are gone too.
-
-   What is left is one declaration.
-
-   ALPHA RAISED 0.86 → 0.97, then settled at 0.91 on review — enough to
-   stop the page reading through, with more of the frosted character
-   than 0.97 kept. Over the 0.5 scrim that is about 95.5% opaque.
-   (Original note follows.) Reported: too much of the page was reading
-   through the panel). Note this is the RIGHT lever for that complaint
-   and re-adding the blur is not: a blur softens what comes through, it
-   does not reduce how much does — that is what alpha controls, and
-   alpha is free where the blur was not. 0.97 over the 0.5 scrim puts
-   the card at about 98.5% opaque, so nothing legible survives behind
-   it, while the last whisper of transparency keeps it from reading as
-   a flat sheet pasted over the page. Going fully solid is the next
-   step if even that is too much.
-   The trade is worth naming: a genuinely frosted panel REQUIRES low
-   alpha, because frost is literally the page showing through blurred.
-   Frost and an opaque panel are mutually exclusive, so this is a choice
-   between them rather than a tuning problem. */
-/* THE HAIRLINE (added 2026-10-02). Over a light section the card's own
-   darkness defines its edge; over a DARK one the card and the scrimmed ground
-   behind it land close enough together that the panel stops reading as a card
-   at all. A border is the standard answer to "this surface has no edge", and
-   gold is not an invention here: .nav.stuck already defines the bar's own
-   bottom edge with rgba(--gold-rgb, 0.22) once scrolled, and this exact
-   1px/0.2 pairing is already used elsewhere in this file — so the panel
-   hanging off the bar picks up a line the site already speaks rather than
-   introducing a second vocabulary.
-   0.2 rather than something heavier on purpose: this has to define an edge,
-   not frame the panel in, which is the same judgement .tab-panel li makes
-   about its own dividers.
-   A GRADIENT border was considered and not taken for now — it needs either
-   border-image or a masked ::before, and on a surface this large it starts
-   reading as decoration rather than definition. The version worth revisiting
-   if a flat line proves too quiet is a TOP-WEIGHTED gradient: strongest where
-   the card meets the bar and fading down the sides, which is what an actual
-   light source would do. */
-.nav-dd-panel-card-dark {
-  background: rgba(var(--muted-ink-rgb), 0.91);
-  /* 1.5px, up from the 1px this started at. A hairline defined the card's
-     edge over a dark section but only just; half a pixel more gives it enough
-     presence to read as a card without becoming a frame.
-     Fractional borders antialias rather than landing on a device pixel, so on
-     a 1x display this renders as a soft line rather than a crisp one. If that
-     reads fuzzy, the alternative that avoids subpixels entirely is going back
-     to 1px and raising the alpha to around 0.28 — same perceived weight, no
-     antialiasing. Worth checking on an external monitor before settling.
-     A TOP-WEIGHTED GRADIENT version of this border was built and removed on
-     2026-10-02: brightest where the card met the bar and fading down the
-     sides, via a masked ::before. It worked, but it was more machinery than
-     the job needed and read as decoration on a surface this large. The flat
-     line does the actual work, which is telling you where the card ends. */
-  border: 1.5px solid rgba(var(--gold-rgb), 0.2);
-}
-/* ---------- Text recoloured for the dark card ----------
-   Values taken from .nav-dd-v2-* rather than invented, so the two
-   panels can't drift apart on a dark background. Each is scoped under
-   .nav-dd-panel-card-dark so navbar.html's light panel is untouched. */
-.nav-dd-panel-card-dark .nav-dd-panel-heading {
-  color: var(--limestone-2);
-}
-/* Rows now REST DIM and the hovered one lights up, rather than every row
-   sitting at full brightness with only the background moving. That is the
-   half of the stations treatment worth having on its own: with the label
-   already at --limestone-2 there was no headroom to brighten into, so hover
-   could only add a wash. The comment on that page puts it best - the current
-   row should be the LIT one, not the loud one, and most of that work is done
-   by its neighbours resting lower. */
-.nav-dd-panel-card-dark .nav-dd-label {
-  color: rgba(var(--limestone-rgb), 0.86);
-  transition: color 0.18s var(--ease);
-}
-.nav-dd-panel-card-dark .nav-dd-desc {
-  color: rgba(var(--limestone-rgb), 0.74);
-  transition: color 0.18s var(--ease);
-}
-/* The wash is LIMESTONE, not gold, and the gold is spent entirely on the
-   left border. This is the lesson the stations page already learned and
-   recorded: a gold tint behind a gold border beside a gold badge is three
-   golds at three strengths in one row, and the quietest of them stops
-   registering. These rows carry a Proposed badge and a bronze icon, so they
-   would have hit it immediately. One gold event per hover, and the surface
-   says "this row" while the border says "gold".
-   0.07 looks faint written down and is right rendered: it is doing far less
-   work than the old 0.16 gold wash because the border and the label
-   brightening now carry the state between them. */
-@media (hover: hover) {
-  .nav-dd-panel-card-dark .nav-dd-item:hover {
-    background: rgba(var(--limestone-rgb), 0.07);
-    border-left-color: var(--gold);
-  }
-  /* (0,4,0) - one more class than the [data-unbuilt] label rule below at
-     (0,3,0), so an unbuilt row brightens on hover too rather than staying
-     pinned at its dimmer resting value. */
-  .nav-dd-panel-card-dark .nav-dd-item:hover .nav-dd-label {
-    color: var(--limestone-2);
-  }
-  .nav-dd-panel-card-dark .nav-dd-item:hover .nav-dd-desc {
-    color: rgba(var(--limestone-rgb), 0.78);
-  }
-  /* (0,4,0), so it beats BOTH resting icon rules - the plain one at (0,2,0)
-     and the [data-unbuilt] one at (0,3,0). Without that, unbuilt rows would
-     be the only ones whose icon stayed dark on hover. */
-  .nav-dd-panel-card-dark .nav-dd-item:hover .nav-dd-icon {
-    color: var(--gold-2);
-  }
-}
-/* Current page. Not gated behind (hover: hover) - this is a persistent
-   state, not feedback, and a touch visitor needs to see where they are as
-   much as anyone.
-   Until 2026-10-04 this was the hover treatment exactly, held — wash,
-   border, label and icon — so on returning to a panel the current page's
-   row read as a hover that never cleared. Now it keeps the gold border,
-   brightened label and gold icon but NOT the limestone wash, which is left
-   to mean "pointer is here", and adds a gold dot after the label as its own
-   "you are here" mark.
-   background is set explicitly, not just omitted: the light card's
-   .nav-dd-item.active gold wash (0,2,0) would otherwise show through. That
-   makes this (0,3,0) rule beat the (0,3,0) hover wash above on source
-   order, so hovering the current row gets its own (0,4,0) rule below. */
-.nav-dd-panel-card-dark .nav-dd-item.active {
-  background: transparent;
-  border-left-color: var(--gold);
-}
-@media (hover: hover) {
-  .nav-dd-panel-card-dark .nav-dd-item.active:hover {
-    background: rgba(var(--limestone-rgb), 0.07);
-  }
-}
-/* A flex item in the label's baseline-aligned row (see the .nav-dd-label
-   override further down), so it centres itself rather than sitting on the
-   baseline, which an empty box would otherwise do. */
-.nav-dd-panel-card-dark .nav-dd-item.active .nav-dd-label::after {
-  content: "";
-  flex: none;
-  align-self: center;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--gold);
-}
-.nav-dd-panel-card-dark .nav-dd-item.active .nav-dd-label {
-  color: var(--limestone-2);
-}
-.nav-dd-panel-card-dark .nav-dd-item.active .nav-dd-icon {
-  color: var(--gold-2);
-}
-/* (0,3,0) with the attribute selector, beating the plain label rule
-   above at (0,2,0) — the dim treatment for an unbuilt row has to win
-   over the normal one. */
-.nav-dd-panel-card-dark .nav-dd-item[data-unbuilt] .nav-dd-label {
-  color: rgba(var(--limestone-rgb), 0.74);
-}
-.nav-dd-panel-card-dark .nav-dd-item[data-unbuilt] .nav-dd-icon {
-  color: rgba(var(--bronze-on-dark-rgb), 0.78);
-}
-/* The icon rests dim and lights with the label, rather than sitting at full
-   strength while the text around it moves. Same reasoning as the labels: at
-   full --bronze there was no headroom to brighten into, so the icon was the
-   one part of a hovered row that did not respond.
-   It brightens to --gold-2, not to full bronze, because bronze-to-bronze is
-   too small a move to read at 18px. That does put a second gold in the row
-   alongside the left border - which the stations page's own note warns
-   about - but the case there was gold tint BEHIND a gold border beside a
-   gold badge, three of them at three strengths with the background among
-   them. Here the wash is limestone and the badge is bronze, so the only two
-   gold things are the border and the icon, both of which appear together on
-   the same event. One gold moment, two marks. */
-.nav-dd-panel-card-dark .nav-dd-icon {
-  /* --bronze-on-dark at full strength, not --bronze at an alpha. See that
-     token's note: the previous 0.72 then 0.85 passes were both trying to
-     brighten a colour that is simply too dark for this surface, and alpha
-     only ever moves it toward the background. */
-  /* 0.85, not the 0.72 the labels rest at. Equal alpha is NOT equal
-     brightness: --limestone is #f7f2e6, so 0.72 of it over a dark card is
-     still clearly light, while --bronze is #8a7442 — already a dark colour —
-     and 0.72 of that lands close to the card itself. Matching the numbers
-     made the icon read as nearly off rather than as resting. The headroom for
-     the hover is carried by the jump to --gold-2, which is a hue change as
-     much as a brightness one, so it does not need the alpha gap the text
-     does. */
-  color: var(--bronze-on-dark);
-  transition: color 0.18s var(--ease);
-}
-
 /* ---------- Chevron rotation jitter, attempt 2 (2026-10-01) ----------
    Attempt 1 fixed the glyph's geometry: the viewBox is "0 0 12 8"
    (ratio 1.5) but the SVGs rendered at 11x7 and 16x11, so the path was
@@ -8636,204 +6625,12 @@ footer a:hover {
   backface-visibility: hidden;
   transform-origin: 50% 50%;
 }
-
-/* ---------- (b) Proposed-page markers ----------
-   Several rows in these panels point at pages that do not exist yet.
-   Rather than letting them look like working links in a pitch, each
-   carries a visible badge and the local JS preventDefault()s it.
-   Not oxblood: that is the sitewide "illustrative / unconfirmed data"
-   warning (per CLAUDE.md), and these are not unconfirmed facts — they
-   are real proposals that simply are not built. Different signal,
-   different colour.
-   --gold-2 rather than --bronze now that the card is dark — bronze
-   against rgba(--muted-ink) is too dim to read as a badge. The mobile
-   drawer's own badge below stays bronze, because that drawer's
-   background is --ink and bronze reads fine there; the two are not
-   meant to match, they are meant to each suit their own surface. */
-/* The badge's 8px margin-left used to follow it onto the next line
-   when the label wrapped, indenting it under nothing — reported on
-   "Preferred suppliers", which is the one label long enough to wrap and
-   push its badge down. The facetious version of the fix ("a media query
-   for whether it wrapped") is actually the right instinct: CSS has no
-   selector for that, so the answer is to stop using a margin and let a
-   GAP do the spacing, since a flex gap applies between items on a line
-   and never at the start of one.
-   So the label becomes a flex container. Its own text stays a bare text
-   node, which flex wraps in an anonymous item that still line-breaks
-   internally exactly as it did; the badge is the second item, and
-   flex-wrap drops it to its own flex line when it does not fit — flush
-   left, no phantom indent. align-items: baseline keeps the badge
-   sitting on the label's baseline rather than centred against a
-   two-line block, which is what inline-block was giving for free and
-   what a naive switch to flex would have quietly lost.
-   Scoped to the dark card rather than edited into styles.css's
-   .nav-dd-label, since navbar.html shares that class and has no badges
-   to need it. */
-.nav-dd-panel-card-dark .nav-dd-label {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 2px 8px;
-}
-/* nowrap so "PROPOSED" can never break across two lines in a narrow
-   column — it can fall to its own line after a wrapping label, which is
-   fine, but splitting the word itself is not. */
-.nav-dd-item-proposed-badge {
-  display: inline-block;
-  white-space: nowrap;
-  padding: 1px 6px;
-  /* Bronze, not gold - see the note by .nav-dd-item's hover rules. Gold is
-     now spent entirely on the row's left border, and a gold badge sitting
-     beside a gold border is two golds doing two different jobs. Bronze pairs
-     it with .nav-dd-icon instead, which is already bronze. */
-  border: 1px solid rgba(var(--bronze-rgb), 0.55);
-  border-radius: 999px;
-  font-family: "Inter", sans-serif;
-  font-size: 8.5px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  color: var(--bronze);
-  vertical-align: 1px;
-}
-/* --bronze-on-dark, not --bronze: the overlay's background is --ink, where
-   plain --bronze measures 3.85:1 — the same reason the panel icons needed the
-   token. */
-.mobile-nav-proposed-badge {
-  display: inline-block;
-  margin-left: 10px;
-  padding: 2px 8px;
-  border: 1px solid rgba(var(--bronze-on-dark-rgb), 0.45);
-  border-radius: 999px;
-  font-family: "Inter", sans-serif;
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--bronze-on-dark);
-  vertical-align: middle;
-}
-/* ".menu .mobile-nav-link span" is the big gold NUMBER treatment, and it
-   matches ANY span inside such a link — including a badge. At (0,2,1) it
-   beats the badge's own (0,1,0) class, so a badge in a top-level drawer row
-   would silently render as a 0.32em gold numeral with 12px of right margin.
-   Bug #14's shape exactly. Re-asserted here at (0,3,0); only the properties
-   the number rule actually sets need restating. */
-.menu .mobile-nav-link .mobile-nav-proposed-badge {
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  color: var(--bronze-on-dark);
-  margin-right: 0;
-  vertical-align: middle;
-}
-
-/* ============================================================
-   (f) THE HUB MOVED OUT OF THE GRID, into the heading row
-   ============================================================
-   The hub ("The restaurant" / "All events") is the dropdown's own
-   parent page, and it has to be reachable by tap, since on touch there
-   is no hover to separate "open the menu" from "go to the page". It was
-   a row spanning all three columns, with a hairline under it. That is
-   what made the Restaurant panel feel bloated, and the geometry says
-   exactly why:
-
-     RESTAURANT                        EVENTS
-     ┌───────────────────────────┐     ┌───────────────────────────┐
-     │ The restaurant      (hub) │     │ All events          (hub) │
-     ├───────────────────────────┤     ├───────────────────────────┤
-     │ Menus │ Chambers │ Vouch. │     │ Weddings │ Corp. │ Celebr.│
-     └───────────────────────────┘     │ Spaces   │ Suppl.│ Guides │
-                                       └───────────────────────────┘
-       hub = 1 of 2 rows → 50% of        hub = 1 of 3 rows → 33% of
-       the height for 1 of 4 links       the height for 1 of 6 links
-
-   Same component, different proportion — which is why one panel read
-   as mostly empty and the other read fine. On Restaurant the hub was
-   half the panel's height for a quarter of its content, a short label
-   and one line of description sprawled across the full 948px of the
-   content column.
-   Moving it onto the heading's own line costs no grid row at all, and
-   it stays reachable two ways on touch (this link, plus the nav label
-   itself, which is a real <a> — see .nav-dd-split). Measured result:
-   Restaurant drops from roughly 260px to 180px, Events from 365px to
-   270px.
-   Note the knock-on that makes Events tidier too: with the hub out of
-   the grid, adding Guides takes it to six items — two clean rows of
-   three, which also closes the empty third cell its bottom row used
-   to have. */
-.nav-dd-panel-heading-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  /* Takes over .nav-dd-panel-heading's own 20px bottom margin, zeroed
-     below — a margin on a flex item inside this row would push the
-     row's own height around instead of setting the gap beneath it. */
-  margin-bottom: 20px;
-}
-.nav-dd-panel-heading-row .nav-dd-panel-heading {
-  margin-bottom: 0;
-}
-/* Inter uppercase, matching every other piece of UI chrome rather than
-   borrowing Fraunces a second time — the same reasoning as
-   .nav-dd-label's own comment in styles.css. */
-/* Sized and lit as a PEER of the row labels below it, not as a caption.
-   It was 10.5px at 0.62 alpha with 0.14em tracking — smaller, dimmer
-   AND more letter-spaced than .nav-dd-label's 12.5px/0.07em, and wide
-   tracking makes uppercase read smaller still, so all three pushed the
-   same way and the panel's own parent page became the easiest link in
-   it to miss. Now 12px at 0.8, tracking pulled back to 0.12em.
-   Deliberately NOT gold at rest: that would compete with the Fraunces
-   heading it shares a baseline with, and gold is what the hover and
-   current-page states use. */
-.nav-dd-hub-link {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(var(--limestone-rgb), 0.9);
-  text-decoration: none;
-  transition: color 0.35s;
-}
 .nav-dd-hub-link svg {
   flex: none;
   transition: transform 0.35s var(--ease);
 }
-/* Ungated :hover — a real page link, so bug #19's touch exemption
-   applies: tapping navigates away and a lingering hover is moot. */
-.nav-dd-hub-link:hover {
-  color: var(--gold-2);
-}
 .nav-dd-hub-link:hover svg {
   transform: translateX(3px);
-}
-/* Gold rather than the rows' background wash: the rows are full-width
-   blocks, and a wash behind a short inline label in a heading row
-   would read as a stray chip. Without this the script's own .active
-   class would be a silent no-op here, since nothing else styles it. */
-.nav-dd-hub-link.active {
-  color: var(--gold-2);
-}
-
-/* ============================================================
-   (g) THE PHOTOGRAPH NOW ANSWERS THE HOVERED ROW
-   ============================================================
-   The best thing about the Events #2 panel was that its photo column
-   changed to match whichever row you were reading — for a venue, where
-   the product IS the room, that beats one static decorative image. The
-   mechanism is not specific to that panel's layout: it is :has()
-   keyed off each row's data-target, entirely in CSS, no JS. So it
-   ports onto this grid unchanged in principle.
-   It was expensive before, because one <img> per state meant every
-   photo downloading on page load. The deferred loading below (see
-   primeDropdownMedia in the script) makes it close to free, which is
-   what made this worth doing here at all. */
-.nav-dd-panel-media {
-  position: relative;
 }
 /* Stacked, all filling the same box — a real crossfade needs two
    images overlapping in opacity. Fading one <img> out before swapping
@@ -8867,49 +6664,6 @@ footer a:hover {
   opacity: 1;
   transition: opacity 0.28s var(--ease) 0.15s;
 }
-/* Darkens only where the caption sits, so the photograph itself stays
-   bright — a flat overall tint would dim the image to light the text.
-   Same two-stop gradient as .nav-dd-v2-media::after. */
-.nav-dd-panel-media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(var(--ink-rgb), 0) 40%,
-    rgba(var(--ink-rgb), 0.8) 100%
-  );
-}
-/* ::after is painted as the last child regardless of source order, so
-   without an explicit z-index the gradient would paint over the
-   caption and darken the text along with the photo. */
-.nav-dd-panel-caption {
-  position: absolute;
-  z-index: 1;
-  left: 18px;
-  right: 18px;
-  bottom: 16px;
-  margin: 0;
-  font-family: "Newsreader", Georgia, serif;
-  font-style: italic;
-  font-weight: 350;
-  font-size: 15px;
-  line-height: 1.375;
-  /* Matches .quote blockquote — the site's existing precedent for
-     italic text over a photo — rather than plain white. */
-  color: var(--limestone-2);
-  /* Layered: a tight dark shadow for edge definition against bright
-     patches, plus a softer one for separation from the image. */
-  text-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.9),
-    0 2px 10px rgba(0, 0, 0, 0.7);
-  opacity: 0;
-  transition: opacity 0.28s var(--ease);
-}
-.nav-dd-panel-caption[data-state="default"] {
-  opacity: 1;
-  transition: opacity 0.28s var(--ease) 0.15s;
-}
 @media (prefers-reduced-motion: reduce) {
   /* Scoped through .nav-dd-panel-card to reach (0,3,1) and (0,3,0),
      which beat the [data-state="default"] rules above at (0,2,1) and
@@ -8919,8 +6673,7 @@ footer a:hover {
      this block from the moment the default pair got its own rule; worth
      re-checking any reduced-motion override that sits next to a
      state-attribute rule. */
-  .nav-dd-panel-card .nav-dd-panel-media img[data-state],
-  .nav-dd-panel-card .nav-dd-panel-caption[data-state] {
+  .nav-dd-panel-card .nav-dd-panel-media img[data-state] {
     transition: none;
   }
   .nav-dd-hub-link:hover svg {
@@ -8940,9 +6693,7 @@ footer a:hover {
    to the client — none of the vaulted chambers either. */
 .nav-dd-panel-card:has(.nav-dd-item[data-target]:is(:hover, :focus))
   .nav-dd-panel-media
-  img[data-state="default"],
-.nav-dd-panel-card:has(.nav-dd-item[data-target]:is(:hover, :focus))
-  .nav-dd-panel-caption[data-state="default"] {
+  img[data-state="default"] {
   opacity: 0;
   /* The other half of the asymmetry above: no delay leaving, so landing
      on a row swaps the photo at once. Written as the full shorthand
@@ -8954,37 +6705,27 @@ footer a:hover {
 }
 .nav-dd-panel-card:has(.nav-dd-item[data-target="menus"]:is(:hover, :focus))
   .nav-dd-panel-media
-  img[data-state="menus"],
-.nav-dd-panel-card:has(.nav-dd-item[data-target="menus"]:is(:hover, :focus))
-  .nav-dd-panel-caption[data-state="menus"] {
+  img[data-state="menus"] {
   opacity: 1;
 }
 .nav-dd-panel-card:has(.nav-dd-item[data-target="weddings"]:is(:hover, :focus))
   .nav-dd-panel-media
-  img[data-state="weddings"],
-.nav-dd-panel-card:has(.nav-dd-item[data-target="weddings"]:is(:hover, :focus))
-  .nav-dd-panel-caption[data-state="weddings"] {
+  img[data-state="weddings"] {
   opacity: 1;
 }
 .nav-dd-panel-card:has(.nav-dd-item[data-target="corporate"]:is(:hover, :focus))
   .nav-dd-panel-media
-  img[data-state="corporate"],
-.nav-dd-panel-card:has(.nav-dd-item[data-target="corporate"]:is(:hover, :focus))
-  .nav-dd-panel-caption[data-state="corporate"] {
+  img[data-state="corporate"] {
   opacity: 1;
 }
 .nav-dd-panel-card:has(.nav-dd-item[data-target="celebrations"]:is(:hover, :focus))
   .nav-dd-panel-media
-  img[data-state="celebrations"],
-.nav-dd-panel-card:has(.nav-dd-item[data-target="celebrations"]:is(:hover, :focus))
-  .nav-dd-panel-caption[data-state="celebrations"] {
+  img[data-state="celebrations"] {
   opacity: 1;
 }
 .nav-dd-panel-card:has(.nav-dd-item[data-target="spaces"]:is(:hover, :focus))
   .nav-dd-panel-media
-  img[data-state="spaces"],
-.nav-dd-panel-card:has(.nav-dd-item[data-target="spaces"]:is(:hover, :focus))
-  .nav-dd-panel-caption[data-state="spaces"] {
+  img[data-state="spaces"] {
   opacity: 1;
 }
 
@@ -9097,35 +6838,9 @@ footer a:hover {
   .brand .sub {
     display: none;
   }
-  /* -48px. 16px to 10px each side; the links keep 20px of total
-     horizontal padding, which is still comfortably above their 11.5px
-     type. */
-  .nav-links > li > a {
-    --nav-link-padding-start: 10px;
-    --nav-link-padding-end: 10px;
-  }
-  /* -18px. The links' own padding already separates them; the gap was
-     additional breathing room, not structure. */
-  .nav-links {
-    gap: 0;
-  }
-  /* -12px. Keeps the 4px seam between label and chevron so the pair
-     still reads as one target. */
-  .nav-dd-split-chevron-button {
-    padding-right: 8px;
-  }
-  /* The underline follows these automatically (see the custom properties
-     on .nav-links > li > a). Same (0,2,2) as the base split rule, so this
-     wins on source order — it sits ~9,000 lines later inside the band. */
-  .nav-links > li.nav-dd-split > a {
-    --nav-link-padding-end: 4px;
-  }
   /* -20px and -8px. */
   .nav .wrap {
     gap: 14px;
-  }
-  .nav-cta {
-    gap: 10px;
   }
   /* -24px. Reuses the existing compact token's own relationship rather
      than inventing a size: 22px to 16px each side, still a pill. */
@@ -9143,44 +6858,6 @@ footer a:hover {
   .nav-cta .button svg {
     display: none;
   }
-
-  /* ---------- The PANEL is squashed in this band too ----------
-     Reported with a screenshot: descriptions wrapping to four and five
-     lines, and on "Preferred suppliers" the PROPOSED badge pushed down
-     to a third line before the description even started.
-     The cause is the photo column, not the grid. .nav-dd-panel-media is
-     a fixed "flex: 0 0 340px" while the panel itself is
-     min(1376px, 100vw - 32px) — so the photo is a constant while
-     everything else shrinks, and it takes a steadily larger share. At a
-     1024px viewport the panel is 992px, the card's padding takes 56 and
-     the photo and its gap take 372, leaving 564px for three columns:
-     about 172px each, and after the item's own padding, icon and gutter
-     roughly 118px of actual text. At 14px Newsreader that is around
-     seventeen characters a line, which is what produced the screenshot.
-     styles.css already hides this column below 981px for exactly this
-     reason ("a fixed 340px image column would crowd the three-column
-     item grid") — that reasoning simply did not stop being true at
-     981px, because the PANEL is wider than .wrap and keeps growing
-     after the breakpoint it was judged at.
-     Shrinking the photo rather than hiding it, on purpose: hiding it
-     would widen the columns more, but the per-row crossfade is the best
-     thing about this panel and losing it on every laptop to win a line
-     of text is the wrong trade. 240px is still a real photograph. */
-  .nav-dd-panel-media {
-    flex-basis: 240px;
-  }
-  /* The remaining width comes from the gutters rather than the type:
-     column gap 24 → 16, item padding 12 → 8 a side, icon gutter 12 →
-     10. Roughly 50px back across the three columns, on top of the 100px
-     the photo gives up. */
-  .nav-dd-items {
-    column-gap: 16px;
-  }
-  .nav-dd-item {
-    padding-left: 8px;
-    padding-right: 8px;
-    gap: 10px;
-  }
 }
 
 /* ---------- (c) Burger cutover at 980px, not 820px ----------
@@ -9197,64 +6874,9 @@ footer a:hover {
    later, and the range is a strict superset, so there is no window
    where the two disagree. */
 @media (max-width: 979.98px) {
-  .nav-links,
   .nav-cta .button {
     display: none;
   }
-  .burger {
-    display: block;
-  }
-}
-
-/* ---------- (d) Mobile drawer ----------
-   The accordion trigger is .mobile-nav-group-trigger, NOT
-   .mobile-nav-link — see the conflict documented at the top of this
-   file: main.js closes the drawer on every .mobile-nav-link click,
-   first in the listener order, so a trigger carrying that class can
-   never expand. These are the only properties it loses by opting
-   out: the type treatment, and the drawer's staggered entrance
-   (whose --m-delay this page's own script recomputes across the
-   drawer's rows in DOM order, overwriting main.js's indices so the
-   stagger still counts 1,2,3,4 down the list). */
-.menu .mobile-nav-group-trigger {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-family: "Fraunces", serif;
-  /* Declared on .menu near the top of this file — it has to match
-     .menu .mobile-nav-link exactly or the four rows stop reading as one
-     list. See that token's note. */
-  font-size: var(--mobile-nav-link-size);
-  letter-spacing: -0.02em;
-  color: var(--limestone);
-  background: none;
-  border: none;
-  padding: 5px 0;
-  text-align: left;
-  cursor: pointer;
-  opacity: 0;
-  transform: translateY(28px);
-  /* Delay lives on the opacity/transform entries only, via the same
-     --m-delay custom property styles.css uses — never the
-     transitionDelay shorthand, which would also delay the colour
-     transition and make the tap feel laggy (CLAUDE.md bug #12). */
-  transition:
-    opacity 0.6s var(--ease) var(--m-delay, 0s),
-    transform 0.7s var(--ease) var(--m-delay, 0s),
-    color 0.3s;
-}
-body.menu-open .menu .mobile-nav-group-trigger {
-  opacity: 1;
-  transform: translateY(0);
-}
-.menu .mobile-nav-group-trigger .mobile-nav-number {
-  color: var(--gold);
-  /* Matches .menu .mobile-nav-link span's 0.38em — see its note. */
-  font-size: 0.38em;
-  vertical-align: text-top;
-  letter-spacing: 0;
-  font-family: "Inter", sans-serif;
 }
 /* 18x12, matching the fix now in styles.css for the shared
    .mobile-nav-trigger version — the viewBox is "0 0 12 8" (ratio 1.5),
@@ -9271,37 +6893,6 @@ body.menu-open .menu .mobile-nav-group-trigger {
 }
 .mobile-nav-group.is-open .mobile-nav-group-trigger .nav-dd-chevron {
   transform: rotate(180deg);
-}
-/* The 520px cap for an open .mobile-nav-sub lives on the original
-   .mobile-nav-group.is-open rule earlier in this file, not here. While this
-   was page-local in the sandbox it had to out-specify that rule's 240px via a
-   .menu ancestor; merged in, the right move is to change the source value
-   rather than leave an override sitting under it. */
-/* The two CTAs as real buttons at the foot of the drawer rather than
-   two more numbered Fraunces rows — keeps the list at four items and
-   mirrors the role they have on desktop. Fixed delay, matching
-   .menu-social's own, since these sit below every numbered row. */
-/* Stacked and equal-width, not side by side (changed 2026-10-02). Measured
-   at 375px: the two pills came to ~315px against ~335px of available width,
-   so they fitted by twenty pixels — and at 320px they wrapped, producing two
-   LEFT-ALIGNED buttons of different widths, which reads as something that
-   went wrong rather than a decision. Stacking makes it deliberate at every
-   width, gives both a full-width tap target, and keeps the hierarchy legible
-   with the filled pill sitting above the outline one.
-   300px is the site's existing CTA cap, not a new number — the same value
-   already used in four places for buttons that would otherwise run the full
-   width of a narrow column. */
-.mobile-nav-cta-row {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  margin-top: 32px;
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 0.6s var(--ease) 0.42s,
-    transform 0.6s var(--ease) 0.42s;
 }
 /* .button is inline-flex and flex-shrink: 0, so it sizes to its label
    unless told otherwise — width + max-width is what gives the two equal
@@ -9321,10 +6912,6 @@ body.menu-open .menu .mobile-nav-group-trigger {
   height: var(--button-height);
   padding: 0 var(--button-padding-x);
   font-size: var(--button-font-size);
-}
-body.menu-open .mobile-nav-cta-row {
-  opacity: 1;
-  transform: none;
 }
 
 /* ============================================================
@@ -9417,19 +7004,14 @@ html .reveal-armed-horizontal:not(.reveal-in) {
 .nav > .wrap {
   animation: nav-enter 0.6s var(--ease) 0.05s backwards;
 }
-.nav::before {
-  animation: nav-backdrop-enter 0.6s var(--ease) 0.05s backwards;
-}
 /* Homepage: in step with the portcullis, whose bars start rising at 0.1s.
    Arriving at ~0.35s lands the bar just as the gate is visibly opening. */
-body:has(.portcullis) .nav > .wrap,
-body:has(.portcullis) .nav::before {
+body:has(.portcullis) .nav > .wrap {
   animation-delay: 0.35s;
   animation-duration: 0.7s;
 }
 @media (prefers-reduced-motion: reduce) {
-  .nav > .wrap,
-  .nav::before {
+  .nav > .wrap {
     animation: none;
   }
 }
