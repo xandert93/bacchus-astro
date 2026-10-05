@@ -45,11 +45,24 @@ high-tea,beverage}` (the agreed URL scheme). `menu.html` is deliberately not
   likewise contains its own copy of `package-tiers.js`'s tier controller.
   Merge each pair deliberately, not as a side effect of other work.
 
-**Phase 2** — `astro:assets` for images (resizing + `srcset`). **Started
-2026-10-05 with the six hero photos** (`src/assets/images/`, rendered by
-`HeroImage.astro`); every other image still comes from `public/images/`,
-including duplicates of the hero files used elsewhere. Move the rest the
-same way: import the file, render with `<Image>`, give it real `sizes`. **Phase 3** —
+**Phase 2** — `astro:assets` for images. **Started 2026-10-05 with the six
+hero photos** (`src/assets/images/heroes/`, rendered by `HeroImage.astro` as
+AVIF + WebP). Rules learned on the way:
+
+- **Always build from the untouched originals, never from `public/images/`.**
+  Those are already-compressed web copies, and resizing them compresses
+  twice (visibly softer; measured 40.7 vs 43.2 dB PSNR, at a larger file).
+  Originals live in the prototype's `images/originals/` — note they are
+  **JPEGs misnamed `.png`**; copy them in with a `.jpg` extension. Images
+  without an original there need one requested from Bacchus.
+- AVIF first (much smaller at equal quality) with a WebP fallback, each at
+  its own quality — hence `getImage()` twice rather than `<Picture>`.
+- `sizes` must describe the real drawn width, including object-fit cover
+  and any scale animation, or browsers pick a file that's too small.
+- Every other image still comes from `public/images/`. Move them the same
+  way, galleries first.
+
+**Phase 3** —
 Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 — Vercel deploy, forms, payments.
 
