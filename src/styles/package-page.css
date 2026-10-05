@@ -591,7 +591,8 @@
 /* .package-reveal used to be a per-item scroll-stagger reveal for these
    tiles and the menu groups. It was switched off on 2026-10-01 because
    content kept going missing (see the project notes), and the class now
-   has no styles at all: it is still on elements in the markup, inert.
+   has no styles at all, and the class itself was removed from the markup
+   in the 2026-10-05 clean-up.
    Entrances for this section come from lib/safe-reveal.js instead
    (data-reveal-group / data-reveal-safe), which keeps content visible by
    default. */
