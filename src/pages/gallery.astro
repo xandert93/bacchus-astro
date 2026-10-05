@@ -4,7 +4,7 @@
 // step as the visitor clicks between categories.
 import BaseLayout from "../layouts/BaseLayout.astro"
 import PageHero from "../components/PageHero.astro"
-import heroBanquetRoom from "../assets/images/heroes/hall-chandeliers-banquet.jpg"
+import Photo from "../components/Photo.astro"
 import Lightbox from "../components/Lightbox.astro"
 import EnquirySection from "../components/EnquirySection.astro"
 import WaitlistPopover from "../components/WaitlistPopover.astro"
@@ -13,12 +13,12 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "../data/gallery"
 
 <BaseLayout
   title="Gallery — Bacchus, Mdina"
-  menuBackgroundImage="/images/shared/hall-chandeliers-banquet.webp"
+  menuBackgroundImage="venue/hall-chandeliers-banquet"
 >
   <PageHero
     crumb="Gallery"
     image={{
-      src: heroBanquetRoom,
+      src: "venue/hall-chandeliers-banquet",
       alt: "The banquet room dressed with chair sashes and long tables",
     }}
   >
@@ -80,7 +80,17 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "../data/gallery"
             style={i === 0 ? undefined : `--d: ${photo.revealDelay}ms`}
           >
             {/* The first two load eagerly: they're in view on arrival. */}
-            <img src={photo.src} alt={photo.alt} loading={i < 2 ? undefined : "lazy"} />
+            <Photo
+              src={photo.src}
+              alt={photo.alt}
+              loading={i < 2 ? undefined : "lazy"}
+              sizes={
+                photo.wide
+                  ? "(max-width: 620px) 100vw, (max-width: 980px) 66vw, 50vw"
+                  : "(max-width: 620px) 50vw, (max-width: 980px) 33vw, 25vw"
+              }
+              maxWidth={photo.wide ? 1920 : 1280}
+            />
             <span class="gallery-tag">{photo.badge ?? photo.tag}</span>
           </div>
         ))}
@@ -94,7 +104,7 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "../data/gallery"
     eventType="Wedding"
     eyebrow="Liked what you saw?"
     railPhoto={{
-      src: "/images/shared/mdina-bastion-view.webp",
+      src: "venue/mdina-bastion-view",
       alt: "View over Mdina's bastion walls at dusk",
       caption: "Mdina's bastion walls, just beyond the estate.",
     }}

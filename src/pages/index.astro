@@ -4,10 +4,10 @@
 // is unique to the homepage.
 import BaseLayout from "../layouts/BaseLayout.astro"
 import HeroImage from "../components/HeroImage.astro"
-import heroBallroomNight from "../assets/images/heroes/ballroom-night.jpg"
 import EnquirySection from "../components/EnquirySection.astro"
 import Testimonials from "../components/Testimonials.astro"
 import WaitlistPopover from "../components/WaitlistPopover.astro"
+import Photo from "../components/Photo.astro"
 ---
 
 <BaseLayout title="Bacchus — Events in Mdina, Malta" showEnquireLink>
@@ -15,7 +15,7 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
     <div class="hero-media">
       <HeroImage
         id="heroImg"
-        src={heroBallroomNight}
+        src="venue/ballroom-night"
         alt="The Bacchus function room lit for an evening reception, with chandeliers and candlelight"
         heroHeightVh={100}
       />
@@ -139,8 +139,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
       </div>
       <div class="story-visual">
         <div class="arch" data-reveal="img">
-          <img
-            src="/images/shared/mdina-bastion-view.webp"
+          <Photo
+            src="venue/mdina-bastion-view"
+            sizes="(max-width: 980px) 100vw, 50vw"
             alt="A view along Mdina's bastion walls, looking out over the Maltese countryside"
           />
         </div>
@@ -215,8 +216,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
             </div>
           </div>
           <div class="arch arch-tab">
-            <img
-              src="/images/weddings/toast.webp"
+            <Photo
+              src="weddings/toast"
+              sizes="(max-width: 980px) 100vw, 50vw"
               alt="A bride and groom clinking champagne glasses"
             />
           </div>
@@ -252,8 +254,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
             </div>
           </div>
           <div class="arch arch-tab">
-            <img
-              src="/images/corporate/guests-chatting.webp"
+            <Photo
+              src="corporate/guests-chatting"
+              sizes="(max-width: 980px) 100vw, 50vw"
               alt="Colleagues chatting at a corporate event with laptops on the table"
             />
           </div>
@@ -292,8 +295,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
             </div>
           </div>
           <div class="arch arch-tab">
-            <img
-              src="/images/celebrations/tea-pour.webp"
+            <Photo
+              src="celebrations/tea-pour"
+              sizes="(max-width: 980px) 100vw, 50vw"
               alt="A guest pouring tea at an outdoor garden celebration"
             />
           </div>
@@ -335,8 +339,10 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
         <div class="carousel-track" id="carTrack" data-reveal-group>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/hall-chandeliers-banquet.webp"
+              <Photo
+                src="venue/hall-chandeliers-banquet"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="The banquet room dressed with chair sashes and long tables"
                 decoding="async"
               />
@@ -348,8 +354,10 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/ballroom-night.webp"
+              <Photo
+                src="venue/ballroom-night"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="The function room lit for an evening reception"
                 decoding="async"
               />
@@ -361,8 +369,10 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/weddings/toast.webp"
+              <Photo
+                src="weddings/toast"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A bride and groom clinking champagne glasses"
                 decoding="async"
               />
@@ -374,8 +384,10 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/weddings/oysters.webp"
+              <Photo
+                src="weddings/oysters"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A tray of oysters served to guests at a wedding"
                 decoding="async"
               />
@@ -387,8 +399,10 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/weddings/cake-chandelier.webp"
+              <Photo
+                src="weddings/cake-chandelier"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A tiered wedding cake beneath a crystal chandelier"
                 decoding="async"
               />
@@ -400,8 +414,10 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/celebrations/tea-pour.webp"
+              <Photo
+                src="celebrations/tea-pour"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A guest pouring tea at an outdoor garden celebration"
                 decoding="async"
               />
@@ -413,8 +429,10 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/celebrations/friends.webp"
+              <Photo
+                src="celebrations/friends"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="Friends embracing at a long outdoor table"
                 decoding="async"
               />
@@ -426,8 +444,10 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/corporate/guests-chatting.webp"
+              <Photo
+                src="corporate/guests-chatting"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="Colleagues chatting at a corporate event"
                 decoding="async"
               />
@@ -439,8 +459,10 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/corporate/champagne-service.webp"
+              <Photo
+                src="corporate/champagne-service"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A waiter serving champagne to a guest in business attire"
                 decoding="async"
               />
@@ -452,8 +474,10 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/canapes-tray.webp"
+              <Photo
+                src="food-and-drink/canapes-tray"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A tray of canapés"
                 decoding="async"
               />
@@ -515,8 +539,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
         <article class="dish" data-reveal style="--d: 0ms">
           <div class="arch arch-dish">
             <span class="course-number">I</span>
-            <img
-              src="/images/shared/seabass.jpg"
+            <Photo
+              src="food-and-drink/seabass"
+              sizes="(max-width: 980px) 100vw, 33vw"
               alt="Pan-seared fish with vegetables, plated"
             />
           </div>
@@ -526,8 +551,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
         <article class="dish" data-reveal style="--d: 130ms">
           <div class="arch arch-dish">
             <span class="course-number">II</span>
-            <img
-              src="/images/shared/lamb.jpg"
+            <Photo
+              src="food-and-drink/lamb"
+              sizes="(max-width: 980px) 100vw, 33vw"
               alt="Slow-cooked lamb with beetroot and citrus"
             />
           </div>
@@ -537,8 +563,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
         <article class="dish" data-reveal style="--d: 260ms">
           <div class="arch arch-dish">
             <span class="course-number">III</span>
-            <img
-              src="/images/shared/canapes-tray.webp"
+            <Photo
+              src="food-and-drink/canapes-tray"
+              sizes="(max-width: 980px) 100vw, 33vw"
               alt="A tray of canapés being served"
             />
           </div>
@@ -566,11 +593,11 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
       </div>
     </div>
   </section>
-  <Testimonials backgroundImage="/images/shared/ballroom-night.webp" />
+  <Testimonials backgroundImage="venue/ballroom-night" />
   <EnquirySection
     eventType="Wedding"
     railPhoto={{
-      src: "/images/shared/terrace-celebration-reception.webp",
+      src: "venue/terrace-celebration-reception",
       alt: "Guests gathered on the Terrace at Bacchus during a reception",
       caption: "The Terrace, set for an evening reception.",
     }}

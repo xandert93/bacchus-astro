@@ -1,13 +1,17 @@
 ---
 // The desktop bar: brand, the Restaurant / Events dropdowns, Gallery, and the
 // two CTAs. Previously pasted into every page by hand; now written once.
+import NavPanelPhoto from "./NavPanelPhoto.astro"
+import Photo from "./Photo.astro"
 ---
 
 <header class="nav" id="nav">
   <div class="wrap">
     <a href="/" class="brand" aria-label="Bacchus home">
-      <img
-        src="/images/shared/bacchus-logo.png"
+      <Photo
+        src="brand/bacchus-logo"
+        sizes="64px"
+        maxWidth={128}
         alt="Bacchus mark — the head of Bacchus wreathed in vine leaves"
       />
       <span class="brand-text">
@@ -199,13 +203,8 @@
                    against the page URL, which is why these carry no src
                    attribute at all. */}
               <div class="nav-dd-panel-media" aria-hidden="true">
-                <img src="/images/shared/lamb.jpg" alt="" data-state="default" />
-                <img
-                  data-src="/images/shared/seabass.jpg"
-                  alt=""
-                  data-state="menus"
-                  decoding="async"
-                />
+                <NavPanelPhoto src="food-and-drink/lamb" state="default" eager />
+                <NavPanelPhoto src="food-and-drink/seabass" state="menus" />
                 <p class="nav-dd-panel-caption" data-state="default">
                   Dinner beneath two stone vaults.
                 </p>
@@ -472,35 +471,11 @@
                 </div>
               </div>
               <div class="nav-dd-panel-media" aria-hidden="true">
-                <img
-                  src="/images/shared/ballroom-night.webp"
-                  alt=""
-                  data-state="default"
-                />
-                <img
-                  data-src="/images/weddings/couple-outside-2.webp"
-                  alt=""
-                  data-state="weddings"
-                  decoding="async"
-                />
-                <img
-                  data-src="/images/corporate/guests-chatting.webp"
-                  alt=""
-                  data-state="corporate"
-                  decoding="async"
-                />
-                <img
-                  data-src="/images/celebrations/guest-laughing.webp"
-                  alt=""
-                  data-state="celebrations"
-                  decoding="async"
-                />
-                <img
-                  data-src="/images/shared/secret-garden-night.webp"
-                  alt=""
-                  data-state="spaces"
-                  decoding="async"
-                />
+                <NavPanelPhoto src="venue/ballroom-night" state="default" eager />
+                <NavPanelPhoto src="weddings/couple-outside-2" state="weddings" />
+                <NavPanelPhoto src="corporate/guests-chatting" state="corporate" />
+                <NavPanelPhoto src="celebrations/guest-laughing" state="celebrations" />
+                <NavPanelPhoto src="venue/secret-garden-night" state="spaces" />
                 <p class="nav-dd-panel-caption" data-state="default">
                   Gather within centuries of Maltese history.
                 </p>

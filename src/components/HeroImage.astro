@@ -2,7 +2,7 @@
 // A hero photograph, served through Astro's image pipeline (astro:assets).
 //
 // SOURCE FILES: the untouched high-resolution originals from Bacchus
-// (src/assets/images/heroes/, JPEG, 2752–5056px wide), never the web copies
+// (src/assets/images/, JPEG, 2752–5056px wide), never the web copies
 // in public/images/. Those were already compressed once, and resizing them
 // meant compressing twice — visible as softness and blockiness. Measured on
 // the Weddings hero at 1600px: the old route scored 40.7 dB PSNR against the
@@ -24,17 +24,19 @@
 // that, or the browser would pick a file a size too small and the photo
 // would look soft mid-drift.
 import { getImage } from "astro:assets"
-import type { ImageMetadata } from "astro"
+import { image } from "../lib/images"
 
 interface Props {
-  src: ImageMetadata
+  // A key from src/lib/images.ts, e.g. "venue/ballroom-night".
+  src: string
   alt: string
   // The hero's height as a percentage of the viewport (100 on the homepage,
   // 62 for .hero-sm).
   heroHeightVh: number
   id?: string
 }
-const { src, alt, heroHeightVh, id } = Astro.props
+const { src: key, alt, heroHeightVh, id } = Astro.props
+const src = image(key)
 
 const IMG_HEIGHT_RATIO = 1.18 // .hero-media img { height: 118% }
 const MAX_DRIFT_SCALE = 1.24 // the kenburns keyframes' largest scale

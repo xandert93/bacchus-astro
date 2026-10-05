@@ -1,4 +1,5 @@
 ---
+import Photo from "./Photo.astro"
 // The four-step enquiry wizard (#enquire). Same component on every events
 // page; what differs per page comes in as props and slots. Behaviour lives
 // in enquiry.js (.wizard-* classes).
@@ -17,6 +18,7 @@ interface Props {
   // quick-pick modal (weddings, which already shows the full diary above).
   datePicker?: "inline" | "modal"
   eyebrow?: string
+  // src is a key from src/lib/images.ts.
   railPhoto: { src: string; alt: string; caption: string }
 }
 const {
@@ -118,7 +120,13 @@ const isWedding = eventType === "Wedding"
         </ul>
 
         <figure class="rail-photo" data-reveal="img" style="--d: 320ms">
-          <img src={railPhoto.src} alt={railPhoto.alt} loading="lazy" />
+          <Photo
+            src={railPhoto.src}
+            alt={railPhoto.alt}
+            loading="lazy"
+            sizes="(max-width: 980px) 100vw, 40vw"
+            maxWidth={1600}
+          />
           <figcaption>{railPhoto.caption}</figcaption>
         </figure>
       </div>

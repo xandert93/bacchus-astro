@@ -69,11 +69,12 @@ import ArrowIcon from "../../../components/ArrowIcon.astro"
 // After BaseLayout, so these load after global.css (see package-page.css).
 import "../../../styles/package-page.css"
 import "../../../styles/package-beverage.css"
+import Photo from "../../../components/Photo.astro"
 ---
 
 <BaseLayout
   title="Our Beverage Menus — Bacchus"
-  menuBackgroundImage="/images/weddings/cake-chandelier.webp"
+  menuBackgroundImage="weddings/cake-chandelier"
 >
   <PageHero crumb="Beverage Menus" parent={{ href: "/weddings", label: "Weddings" }}>
     Our Beverage <em>Menus</em>
@@ -777,8 +778,10 @@ import "../../../styles/package-beverage.css"
         <div class="carousel-track" id="carTrack" data-reveal-group>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/weddings/toast.webp"
+              <Photo
+                src="weddings/toast"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="Guests raising glasses in a toast at a Bacchus wedding"
                 decoding="async"
               />
@@ -790,8 +793,10 @@ import "../../../styles/package-beverage.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/terrace-celebration-reception.webp"
+              <Photo
+                src="venue/terrace-celebration-reception"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="Guests mingling at a Bacchus wedding reception on the Terrace"
                 decoding="async"
               />
@@ -803,8 +808,10 @@ import "../../../styles/package-beverage.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/champagne.webp"
+              <Photo
+                src="food-and-drink/champagne"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A guest raising a glass of sparkling wine at a dressed table"
                 decoding="async"
               />
@@ -816,8 +823,10 @@ import "../../../styles/package-beverage.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/terrace-marquee-tables.webp"
+              <Photo
+                src="venue/terrace-marquee-tables"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="Tables dressed under a marquee on the Terrace"
                 decoding="async"
               />
@@ -829,8 +838,10 @@ import "../../../styles/package-beverage.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/secret-garden-night.webp"
+              <Photo
+                src="venue/secret-garden-night"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A long candlelit table in the Secret Garden at night"
                 decoding="async"
               />
@@ -878,7 +889,7 @@ import "../../../styles/package-beverage.css"
   <EnquirySection
     eventType="Wedding"
     railPhoto={{
-      src: "/images/shared/champagne.webp",
+      src: "food-and-drink/champagne",
       alt: "A guest raising a glass of sparkling wine at a dressed table",
       caption: "A glass raised at a dressed table.",
     }}

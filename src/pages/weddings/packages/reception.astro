@@ -100,24 +100,24 @@
 // its siblings do.
 import BaseLayout from "../../../layouts/BaseLayout.astro"
 import PageHero from "../../../components/PageHero.astro"
-import heroCanapesTray from "../../../assets/images/heroes/canapes-tray.jpg"
 import EnquirySection from "../../../components/EnquirySection.astro"
 import WaitlistPopover from "../../../components/WaitlistPopover.astro"
 import ArrowIcon from "../../../components/ArrowIcon.astro"
 import Lightbox from "../../../components/Lightbox.astro"
 // After BaseLayout, so it loads after global.css, as the inline block did.
 import "../../../styles/reception-package.css"
+import Photo from "../../../components/Photo.astro"
 ---
 
 <BaseLayout
   title="Our Reception Menus — Package (concept) — Bacchus"
-  menuBackgroundImage="/images/weddings/cake-chandelier.webp"
+  menuBackgroundImage="weddings/cake-chandelier"
 >
   <PageHero
     crumb="Reception Menus"
     parent={{ href: "/weddings", label: "Weddings" }}
     image={{
-      src: heroCanapesTray,
+      src: "food-and-drink/canapes-tray",
       alt: "A tray of salmon canapés being served",
     }}
   >
@@ -313,8 +313,9 @@ import "../../../styles/reception-package.css"
                     data-title="Smoked Salmon &amp; Lobster Blinis"
                     data-tag="Cold Canapé"
                   >
-                    <img
-                      src="/images/weddings/reception-daisy-salmon-lobster-blinis.webp"
+                    <Photo
+                      src="reception-menu/dishes/daisy-salmon-lobster-blinis"
+                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
                       decoding="async"
                       alt="Smoked Salmon &amp; Lobster Blinis, a cold canapé from the Daisy tier"
                     />
@@ -331,8 +332,9 @@ import "../../../styles/reception-package.css"
                     data-title="Lamb Koftas &amp; Sumac Yogurt"
                     data-tag="Hot Canapé"
                   >
-                    <img
-                      src="/images/weddings/reception-daisy-lamb-koftas.webp"
+                    <Photo
+                      src="reception-menu/dishes/daisy-lamb-koftas"
+                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
                       decoding="async"
                       alt="Lamb Koftas &amp; Sumac Yogurt, a hot canapé from the Daisy tier"
                     />
@@ -349,8 +351,9 @@ import "../../../styles/reception-package.css"
                     data-title="Cassatelle"
                     data-tag="Dessert"
                   >
-                    <img
-                      src="/images/weddings/reception-daisy-cassatelle.webp"
+                    <Photo
+                      src="reception-menu/dishes/daisy-cassatelle"
+                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
                       decoding="async"
                       alt="Cassatelle, a Maltese ricotta pastry from the Daisy tier's dessert selection"
                     />
@@ -560,8 +563,9 @@ import "../../../styles/reception-package.css"
                     data-title="Potato Terrine, Fresh Octopus, Crispy Guanciale"
                     data-tag="Cold Canapé"
                   >
-                    <img
-                      src="/images/weddings/reception-lavender-octopus-terrine.webp"
+                    <Photo
+                      src="reception-menu/dishes/lavender-octopus-terrine"
+                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
                       decoding="async"
                       alt="Potato Terrine, Fresh Octopus, Crispy Guanciale, a cold canapé from the Lavender tier"
                     />
@@ -578,8 +582,9 @@ import "../../../styles/reception-package.css"
                     data-title="Prawn Tempura &amp; Dynamite Sauce"
                     data-tag="Hot Canapé"
                   >
-                    <img
-                      src="/images/weddings/reception-lavender-prawn-tempura.webp"
+                    <Photo
+                      src="reception-menu/dishes/lavender-prawn-tempura"
+                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
                       decoding="async"
                       alt="Prawn Tempura &amp; Dynamite Sauce, a hot canapé from the Lavender tier"
                     />
@@ -596,8 +601,9 @@ import "../../../styles/reception-package.css"
                     data-title="Sea Salt &amp; Dark Chocolate Tart"
                     data-tag="Dessert"
                   >
-                    <img
-                      src="/images/weddings/reception-lavender-chocolate-tart.webp"
+                    <Photo
+                      src="reception-menu/dishes/lavender-chocolate-tart"
+                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
                       decoding="async"
                       alt="Sea Salt &amp; Dark Chocolate Tart, a dessert from the Lavender tier"
                     />
@@ -809,8 +815,9 @@ import "../../../styles/reception-package.css"
                     data-title="Foie Gras &amp; Smoked Duck Croustade"
                     data-tag="Cold Canapé"
                   >
-                    <img
-                      src="/images/weddings/reception-rose-foie-gras-croustade.webp"
+                    <Photo
+                      src="reception-menu/dishes/rose-foie-gras-croustade"
+                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
                       decoding="async"
                       alt="Foie Gras &amp; Smoked Duck Croustade, a cold canapé from the Rose tier"
                     />
@@ -827,8 +834,9 @@ import "../../../styles/reception-package.css"
                     data-title="Oyster &amp; Alsace Bacon"
                     data-tag="Hot Canapé"
                   >
-                    <img
-                      src="/images/weddings/reception-rose-oyster-bacon.webp"
+                    <Photo
+                      src="reception-menu/dishes/rose-oyster-bacon"
+                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
                       decoding="async"
                       alt="Oyster &amp; Alsace Bacon, a hot canapé from the Rose tier"
                     />
@@ -845,8 +853,9 @@ import "../../../styles/reception-package.css"
                     data-title="Marinated Scallop &amp; Ikura Crostini"
                     data-tag="Cold Canapé"
                   >
-                    <img
-                      src="/images/weddings/reception-rose-scallop-crostini.webp"
+                    <Photo
+                      src="reception-menu/dishes/rose-scallop-crostini"
+                      sizes="(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw"
                       decoding="async"
                       alt="Marinated Scallop &amp; Ikura Crostini, a cold canapé from the Rose tier"
                     />
@@ -1167,8 +1176,10 @@ import "../../../styles/reception-package.css"
         <div class="carousel-track" id="carTrack" data-reveal-group>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/canapes-service.jpg"
+              <Photo
+                src="food-and-drink/canapes-service"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A waiter serving canapés at a wedding reception"
                 decoding="async"
               />
@@ -1180,8 +1191,10 @@ import "../../../styles/reception-package.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/terrace-celebration-reception.webp"
+              <Photo
+                src="venue/terrace-celebration-reception"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="Guests mingling at a Bacchus wedding reception on the Terrace"
                 decoding="async"
               />
@@ -1193,8 +1206,10 @@ import "../../../styles/reception-package.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/champagne.webp"
+              <Photo
+                src="food-and-drink/champagne"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A guest raising a glass of sparkling wine at a dressed table"
                 decoding="async"
               />
@@ -1206,8 +1221,10 @@ import "../../../styles/reception-package.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/terrace-marquee-tables.webp"
+              <Photo
+                src="venue/terrace-marquee-tables"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="Tables dressed under a marquee on the Terrace"
                 decoding="async"
               />
@@ -1219,8 +1236,10 @@ import "../../../styles/reception-package.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/secret-garden-night.webp"
+              <Photo
+                src="venue/secret-garden-night"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A long candlelit table in the Secret Garden at night"
                 decoding="async"
               />
@@ -1415,11 +1434,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€10.50 per person"
                     data-detail="Served with crackers, Grissini &amp; freshly baked bread. Parma ham · Bresaola · Salame Napoli · Mortadella · Chorizo"
                   >
-                    <img
-                      src="/images/weddings/station-charcuterie-table.webp"
+                    <Photo
+                      src="reception-menu/stations/charcuterie-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="A board of Parma ham, bresaola, salami and chorizo with grissini and crackers"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -1492,11 +1511,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€12.50 per person"
                     data-detail="Served with crackers, Grissini &amp; freshly baked bread. Parmigiano Reggiano · Red Leicester (V) · Blue Stilton · Cheddar (V) · Maasdam (V) · Camembert"
                   >
-                    <img
-                      src="/images/weddings/station-fromagerie-table.webp"
+                    <Photo
+                      src="reception-menu/stations/fromagerie-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Wedges of Parmigiano, blue stilton, red Leicester, Maasdam and camembert with crackers"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -1604,11 +1623,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€12.50 per person"
                     data-detail="Served with crackers, Grissini &amp; freshly baked bread. Parmigiano Reggiano · Camembert · Maasdam (V) · Parma ham · Bresaola · Salame Napoli"
                   >
-                    <img
-                      src="/images/weddings/station-salumerie-table.webp"
+                    <Photo
+                      src="reception-menu/stations/salumerie-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="A platter of cured meats and cheeses carried through the hall"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -1693,11 +1712,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€9.00 per person"
                     data-detail="Served with crackers, Grissini &amp; freshly baked bread. Bigilla (V) · Butter Beans (V) · Sundried Tomatoes (V) · Pickled Onions (V) · Ġbejna · Marinated Octopus · Maltese Sausage"
                   >
-                    <img
-                      src="/images/weddings/station-maltese-table.webp"
+                    <Photo
+                      src="reception-menu/stations/maltese-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Terracotta bowls of bigilla, butter beans, sundried tomatoes, Ġbejniet, olives, octopus and Maltese sausage"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -1819,11 +1838,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€9.00 per person"
                     data-detail="Fresh Gillardeau oysters, shucked to order, two per person, prepared three ways. Lemon &amp; Sea Salt · Beef &amp; Horseradish Jelly · Coconut &amp; Pomegranate Mignonette"
                   >
-                    <img
-                      src="/images/weddings/station-oyster-royale.webp"
+                    <Photo
+                      src="reception-menu/stations/oyster-royale"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Fresh oysters on crushed ice with three dressings"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -1895,11 +1914,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€20.00 per person"
                     data-detail="Grilled lobster in the shell, half per person, prepared three ways. Lemon &amp; Sea Salt · Classic Thermidor · Garlic Butter"
                   >
-                    <img
-                      src="/images/weddings/station-lobster-fantasy.webp"
+                    <Photo
+                      src="reception-menu/stations/lobster-fantasy"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Grilled lobster halves in the shell, glazed and served on a platter"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -1970,11 +1989,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€12.00 per person"
                     data-detail="An open-flame selection of grilled meat and fish. Tagliata, Rocket &amp; Parmesan · Chicken Thigh &amp; Marry Me Sauce · Tuna &amp; Chimichurri"
                   >
-                    <img
-                      src="/images/weddings/station-bbq-table.webp"
+                    <Photo
+                      src="reception-menu/stations/bbq-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Steak, tuna and chicken cooked over open flame on the grill"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -2043,11 +2062,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€8.50 per person"
                     data-detail="Carved tableside, in front of your guests. Focaccia (V) · Roasted Baby Potato (V) · Mixed Salad (V) · Roasted Pork Belly · Apple Sauce (V)"
                   >
-                    <img
-                      src="/images/weddings/station-porchetta-table.webp"
+                    <Photo
+                      src="reception-menu/stations/porchetta-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Roast pork belly carved into slices on a wooden board"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -2167,11 +2186,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€9.50 per person"
                     data-detail="Served with naan bread and basmati rice. Pork Vindaloo · Beef Madras · Lamb Rogan Josh · Chicken Tikka Masala · Curried Vegetables with Mango &amp; Coconut (V)"
                   >
-                    <img
-                      src="/images/weddings/station-indian-table.webp"
+                    <Photo
+                      src="reception-menu/stations/indian-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Copper pots of curry with naan bread and basmati rice"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -2254,11 +2273,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€9.50 per person"
                     data-detail="Served with prawn crackers, rice and noodles. Lemon Chicken · Sweet &amp; Sour Pork · Black Bean Beef · Stir-Fried Vegetables (V) · Dumplings"
                   >
-                    <img
-                      src="/images/weddings/station-chinese-table.webp"
+                    <Photo
+                      src="reception-menu/stations/chinese-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Steamed dumplings, fried rice and noodles served in bowls"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -2343,11 +2362,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€15.00 per person"
                     data-detail="Served with sushi rice, soy sauce, wakame &amp; pickled ginger. Sushi · Sashimi · Gyoza · Gyudon Beef · Teriyaki Pork · Karaage Chicken"
                   >
-                    <img
-                      src="/images/weddings/station-japanese-table.webp"
+                    <Photo
+                      src="reception-menu/stations/japanese-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Sushi, sashimi and gyoza arranged on a slate board with soy sauce"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -2421,11 +2440,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€8.00 per person"
                     data-detail="Choice of three, one finished live in a parmesan wheel. Carbonara · Garganelli, Two-Cheese Sauce &amp; Black Olives (V) · Lasagna Bianca, Pancetta &amp; Chicken · Slow-Cooked Beef &amp; Parsley · Paccheri, Prawn &amp; Cherry Tomatoes · Mushroom &amp; Truffle Risotto (V)"
                   >
-                    <img
-                      src="/images/weddings/station-pasta-table.webp"
+                    <Photo
+                      src="reception-menu/stations/pasta-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Spaghetti finished tableside inside a hollowed parmesan wheel"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -2521,11 +2540,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€6.00 per person"
                     data-detail="Choice of three. Margherita (V) · Marinara (V) · Diavola · Quattro Formaggi (V) · Capricciosa"
                   >
-                    <img
-                      src="/images/weddings/station-pizza-table.webp"
+                    <Photo
+                      src="reception-menu/stations/pizza-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Freshly baked pizzas on wooden boards"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -2628,11 +2647,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€2.50 per person"
                     data-detail="Built around any flavour — our classics, shown here. Chocolate (V) · Vanilla (V) · Strawberry (V) · Hazelnut (V) · Pistachio (V)"
                   >
-                    <img
-                      src="/images/weddings/station-macaron-tower.webp"
+                    <Photo
+                      src="reception-menu/stations/macaron-tower"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="A tiered tower of pastel macarons"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -2760,11 +2779,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€6.00 per person"
                     data-detail="Crêpe Suzette or plain, with a spread of condiments. Fresh Fruit (V) · Assorted Nuts (V) · Chocolate Crispies (V) · Mini Marshmallows · Clotted Cream (V) · Maple Syrup (V) · Nutella (V)"
                   >
-                    <img
-                      src="/images/weddings/station-crepe-table.webp"
+                    <Photo
+                      src="reception-menu/stations/crepe-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="A chef folding a crêpe beside bowls of berries, chocolate, nuts and syrup"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -2908,11 +2927,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€6.00 per person"
                     data-detail="Built around any flavour — our classics, shown here. Strawberry Jam (V) · Coconut (V) · Vanilla Frosted (V) · Cream (V) · White Chocolate (V) · Caramel (V)"
                   >
-                    <img
-                      src="/images/weddings/station-doughnut-wall.webp"
+                    <Photo
+                      src="reception-menu/stations/doughnut-wall"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="A wall of iced and sprinkled doughnuts on wooden pegs"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -3229,11 +3248,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€10.50 per person"
                     data-detail="Served with crackers, Grissini &amp; freshly baked bread. Parma ham · Bresaola · Salame Napoli · Mortadella · Chorizo"
                   >
-                    <img
-                      src="/images/weddings/station-charcuterie-table.webp"
+                    <Photo
+                      src="reception-menu/stations/charcuterie-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="A board of Parma ham, bresaola, salami and chorizo with grissini and crackers"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -3306,11 +3325,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€12.50 per person"
                     data-detail="Served with crackers, Grissini &amp; freshly baked bread. Parmigiano Reggiano · Red Leicester (V) · Blue Stilton · Cheddar (V) · Maasdam (V) · Camembert"
                   >
-                    <img
-                      src="/images/weddings/station-fromagerie-table.webp"
+                    <Photo
+                      src="reception-menu/stations/fromagerie-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Wedges of Parmigiano, blue stilton, red Leicester, Maasdam and camembert with crackers"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -3418,11 +3437,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€12.50 per person"
                     data-detail="Served with crackers, Grissini &amp; freshly baked bread. Parmigiano Reggiano · Camembert · Maasdam (V) · Parma ham · Bresaola · Salame Napoli"
                   >
-                    <img
-                      src="/images/weddings/station-salumerie-table.webp"
+                    <Photo
+                      src="reception-menu/stations/salumerie-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="A platter of cured meats and cheeses carried through the hall"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -3507,11 +3526,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€9.00 per person"
                     data-detail="Served with crackers, Grissini &amp; freshly baked bread. Bigilla (V) · Butter Beans (V) · Sundried Tomatoes (V) · Pickled Onions (V) · Ġbejna · Marinated Octopus · Maltese Sausage"
                   >
-                    <img
-                      src="/images/weddings/station-maltese-table.webp"
+                    <Photo
+                      src="reception-menu/stations/maltese-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Terracotta bowls of bigilla, butter beans, sundried tomatoes, Ġbejniet, olives, octopus and Maltese sausage"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -3633,11 +3652,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€9.00 per person"
                     data-detail="Fresh Gillardeau oysters, shucked to order, two per person, prepared three ways. Lemon &amp; Sea Salt · Beef &amp; Horseradish Jelly · Coconut &amp; Pomegranate Mignonette"
                   >
-                    <img
-                      src="/images/weddings/station-oyster-royale.webp"
+                    <Photo
+                      src="reception-menu/stations/oyster-royale"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Fresh oysters on crushed ice with three dressings"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -3709,11 +3728,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€20.00 per person"
                     data-detail="Grilled lobster in the shell, half per person, prepared three ways. Lemon &amp; Sea Salt · Classic Thermidor · Garlic Butter"
                   >
-                    <img
-                      src="/images/weddings/station-lobster-fantasy.webp"
+                    <Photo
+                      src="reception-menu/stations/lobster-fantasy"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Grilled lobster halves in the shell, glazed and served on a platter"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -3784,11 +3803,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€12.00 per person"
                     data-detail="An open-flame selection of grilled meat and fish. Tagliata, Rocket &amp; Parmesan · Chicken Thigh &amp; Marry Me Sauce · Tuna &amp; Chimichurri"
                   >
-                    <img
-                      src="/images/weddings/station-bbq-table.webp"
+                    <Photo
+                      src="reception-menu/stations/bbq-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Steak, tuna and chicken cooked over open flame on the grill"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -3857,11 +3876,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€8.50 per person"
                     data-detail="Carved tableside, in front of your guests. Focaccia (V) · Roasted Baby Potato (V) · Mixed Salad (V) · Roasted Pork Belly · Apple Sauce (V)"
                   >
-                    <img
-                      src="/images/weddings/station-porchetta-table.webp"
+                    <Photo
+                      src="reception-menu/stations/porchetta-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Roast pork belly carved into slices on a wooden board"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -3981,11 +4000,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€9.50 per person"
                     data-detail="Served with naan bread and basmati rice. Pork Vindaloo · Beef Madras · Lamb Rogan Josh · Chicken Tikka Masala · Curried Vegetables with Mango &amp; Coconut (V)"
                   >
-                    <img
-                      src="/images/weddings/station-indian-table.webp"
+                    <Photo
+                      src="reception-menu/stations/indian-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Copper pots of curry with naan bread and basmati rice"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -4068,11 +4087,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€9.50 per person"
                     data-detail="Served with prawn crackers, rice and noodles. Lemon Chicken · Sweet &amp; Sour Pork · Black Bean Beef · Stir-Fried Vegetables (V) · Dumplings"
                   >
-                    <img
-                      src="/images/weddings/station-chinese-table.webp"
+                    <Photo
+                      src="reception-menu/stations/chinese-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Steamed dumplings, fried rice and noodles served in bowls"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -4157,11 +4176,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€15.00 per person"
                     data-detail="Served with sushi rice, soy sauce, wakame &amp; pickled ginger. Sushi · Sashimi · Gyoza · Gyudon Beef · Teriyaki Pork · Karaage Chicken"
                   >
-                    <img
-                      src="/images/weddings/station-japanese-table.webp"
+                    <Photo
+                      src="reception-menu/stations/japanese-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Sushi, sashimi and gyoza arranged on a slate board with soy sauce"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -4235,11 +4254,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€8.00 per person"
                     data-detail="Choice of three, one finished live in a parmesan wheel. Carbonara · Garganelli, Two-Cheese &amp; Black Olives (V) · Lasagna Bianca, Pancetta &amp; Chicken · Slow-Cooked Beef · Paccheri, Prawn &amp; Cherry Tomatoes · Truffle Mushroom Risotto (V)"
                   >
-                    <img
-                      src="/images/weddings/station-pasta-table.webp"
+                    <Photo
+                      src="reception-menu/stations/pasta-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Spaghetti finished tableside inside a hollowed parmesan wheel"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -4335,11 +4354,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€6.00 per person"
                     data-detail="Choice of three. Margherita (V) · Marinara (V) · Diavola · Quattro Formaggi (V) · Capricciosa"
                   >
-                    <img
-                      src="/images/weddings/station-pizza-table.webp"
+                    <Photo
+                      src="reception-menu/stations/pizza-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="Freshly baked pizzas on wooden boards"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -4442,11 +4461,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€2.50 per person"
                     data-detail="Built around any flavour — our classics, shown here. Chocolate (V) · Vanilla (V) · Strawberry (V) · Hazelnut (V) · Pistachio (V)"
                   >
-                    <img
-                      src="/images/weddings/station-macaron-tower.webp"
+                    <Photo
+                      src="reception-menu/stations/macaron-tower"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="A tiered tower of pastel macarons"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -4574,11 +4593,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€6.00 per person"
                     data-detail="Crêpe Suzette or plain, with a spread of condiments. Fresh Fruit (V) · Assorted Nuts (V) · Chocolate Crispies (V) · Mini Marshmallows · Clotted Cream (V) · Maple Syrup (V) · Nutella (V)"
                   >
-                    <img
-                      src="/images/weddings/station-crepe-table.webp"
+                    <Photo
+                      src="reception-menu/stations/crepe-table"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="A chef folding a crêpe beside bowls of berries, chocolate, nuts and syrup"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -4722,11 +4741,11 @@ import "../../../styles/reception-package.css"
                     data-tag="€6.00 per person"
                     data-detail="Built around any flavour — our classics, shown here. Strawberry Jam (V) · Coconut (V) · Vanilla Frosted (V) · Cream (V) · White Chocolate (V) · Caramel (V)"
                   >
-                    <img
-                      src="/images/weddings/station-doughnut-wall.webp"
+                    <Photo
+                      src="reception-menu/stations/doughnut-wall"
+                      sizes="(max-width: 620px) 85vw, 420px"
+                      maxWidth={960}
                       alt="A wall of iced and sprinkled doughnuts on wooden pegs"
-                      width="880"
-                      height="1100"
                       loading="lazy"
                       decoding="async"
                     />
@@ -5026,7 +5045,7 @@ import "../../../styles/reception-package.css"
   <EnquirySection
     eventType="Wedding"
     railPhoto={{
-      src: "/images/shared/canapes-service.jpg",
+      src: "food-and-drink/canapes-service",
       alt: "Canapés being served to guests",
       caption: "Canapés passed by hand at a reception.",
     }}

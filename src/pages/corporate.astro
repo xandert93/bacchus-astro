@@ -2,7 +2,6 @@
 // /corporate.
 import BaseLayout from "../layouts/BaseLayout.astro"
 import PageHero from "../components/PageHero.astro"
-import heroGuestsChatting from "../assets/images/heroes/corporate-guests-chatting.jpg"
 import ArrowIcon from "../components/ArrowIcon.astro"
 import CheckList from "../components/CheckList.astro"
 import OccasionCards from "../components/OccasionCards.astro"
@@ -12,16 +11,17 @@ import ProcessSteps from "../components/ProcessSteps.astro"
 import FaqSection from "../components/FaqSection.astro"
 import EnquirySection from "../components/EnquirySection.astro"
 import WaitlistPopover from "../components/WaitlistPopover.astro"
+import Photo from "../components/Photo.astro"
 ---
 
 <BaseLayout
   title="Corporate Events — Bacchus, Mdina"
-  menuBackgroundImage="/images/corporate/champagne-service.webp"
+  menuBackgroundImage="corporate/champagne-service"
 >
   <PageHero
     crumb="Corporate"
     image={{
-      src: heroGuestsChatting,
+      src: "corporate/guests-chatting",
       alt: "Colleagues chatting at a corporate event with laptops on the table",
     }}
   >
@@ -69,8 +69,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
         />
       </div>
       <div class="ph-wrap" data-reveal="img">
-        <img
-          src="/images/corporate/champagne-service.webp"
+        <Photo
+          src="corporate/champagne-service"
+          sizes="(max-width: 980px) 100vw, 50vw"
           alt="A waiter serving champagne to a guest in business attire"
         />
       </div>
@@ -112,22 +113,22 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
     category="corporate"
     photos={[
       {
-        src: "/images/corporate/cocktail-tray.webp",
+        src: "corporate/cocktail-tray",
         alt: "A cocktail tray at a corporate reception",
         title: "The Cocktail Tray",
       },
       {
-        src: "/images/corporate/canape-roulade.webp",
+        src: "corporate/canape-roulade",
         alt: "Canapé roulades served at a corporate event",
         title: "Canapé Roulades",
       },
       {
-        src: "/images/corporate/champagne-service.webp",
+        src: "corporate/champagne-service",
         alt: "A waiter serving champagne",
         title: "Champagne on Arrival",
       },
       {
-        src: "/images/corporate/guests-chatting.webp",
+        src: "corporate/guests-chatting",
         alt: "Colleagues chatting at a corporate event",
         title: "Business, Unhurried",
       },
@@ -186,7 +187,7 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
   <EnquirySection
     eventType="Corporate"
     railPhoto={{
-      src: "/images/corporate/guests-chatting.webp",
+      src: "corporate/guests-chatting",
       alt: "Colleagues networking over drinks at a Bacchus corporate event",
       caption: "Networking drinks ahead of a corporate dinner.",
     }}

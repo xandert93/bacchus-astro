@@ -1,0 +1,34 @@
+---
+// A photo in a desktop dropdown panel's media column. The panel crossfades
+// between one photo per row, and only the default one loads with the page:
+// the rest carry their URL in data-src until site-nav.js's
+// primeDropdownMedia() promotes it on first open, so a dropdown most
+// visitors never open doesn't cost every page five extra downloads.
+//
+// One fixed-size WebP rather than a srcset: the column is a constant 340px
+// (2x for high-density screens is 680), and data-src swapping is a single
+// URL by design.
+import { getImage } from "astro:assets"
+import { image } from "../lib/images"
+
+interface Props {
+  src: string
+  state: string
+  // Load with the page (the panel's default photo) instead of on first open.
+  eager?: boolean
+}
+const { src: key, state, eager = false } = Astro.props
+const meta = image(key)
+const { src } = await getImage({
+  src: meta,
+  width: Math.min(680, meta.width),
+  format: "webp",
+  quality: 82,
+})
+---
+
+{eager ? (
+  <img src={src} alt="" data-state={state} />
+) : (
+  <img data-src={src} alt="" data-state={state} decoding="async" />
+)}
