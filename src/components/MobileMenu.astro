@@ -1,16 +1,28 @@
 ---
 // The <=980px fullscreen drawer opened by the burger in SiteHeader.
+import { getImage } from "astro:assets"
 import SocialLinks from "./SocialLinks.astro"
+import { image } from "../lib/images"
 
 interface Props {
-  // The photo behind the drawer. Each page in the prototype picked its own.
+  // The photo behind the drawer — a key from src/lib/images.ts. Each page
+  // in the prototype picked its own.
   backgroundImage?: string
 }
-const { backgroundImage = "/images/shared/ballroom-night.webp" } = Astro.props
+const { backgroundImage = "venue/ballroom-night" } = Astro.props
+// A CSS background can't take a srcset, so one size: wide enough for the
+// drawer at tablet width on a high-density screen (the drawer only exists
+// below 980px), and it sits under a dark wash at 0.16 opacity anyway.
+const background = await getImage({
+  src: image(backgroundImage),
+  width: 1280,
+  format: "webp",
+  quality: 75,
+})
 ---
 
 <div class="menu" id="mobmenu">
-  <div class="menu-bg" style={`background-image: url('${backgroundImage}')`}></div>
+  <div class="menu-bg" style={`background-image: url('${background.src}')`}></div>
   {/* The SCROLL happens here, not on .menu. .menu-bg has to sit in a box
        that never scrolls and never changes its containing block; see the
        note on .menu-scroll in styles.css. */}

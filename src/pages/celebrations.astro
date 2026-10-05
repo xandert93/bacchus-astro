@@ -3,7 +3,6 @@
 // none of the four real testimonials is celebration-specific.
 import BaseLayout from "../layouts/BaseLayout.astro"
 import PageHero from "../components/PageHero.astro"
-import heroFriends from "../assets/images/heroes/celebrations-friends.jpg"
 import ArrowIcon from "../components/ArrowIcon.astro"
 import CheckList from "../components/CheckList.astro"
 import OccasionCards from "../components/OccasionCards.astro"
@@ -12,16 +11,17 @@ import Lightbox from "../components/Lightbox.astro"
 import FaqSection from "../components/FaqSection.astro"
 import EnquirySection from "../components/EnquirySection.astro"
 import WaitlistPopover from "../components/WaitlistPopover.astro"
+import Photo from "../components/Photo.astro"
 ---
 
 <BaseLayout
   title="Celebrations — Bacchus, Mdina"
-  menuBackgroundImage="/images/celebrations/friends.webp"
+  menuBackgroundImage="celebrations/friends"
 >
   <PageHero
     crumb="Celebrations"
     image={{
-      src: heroFriends,
+      src: "celebrations/friends",
       alt: "Friends embracing at a long outdoor table during a celebration",
     }}
   >
@@ -69,8 +69,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
         />
       </div>
       <div class="ph-wrap" data-reveal="img">
-        <img
-          src="/images/shared/terrace-marquee-tables.webp"
+        <Photo
+          src="venue/terrace-marquee-tables"
+          sizes="(max-width: 980px) 100vw, 50vw"
           alt="Round tables dressed in white under a marquee on the Terrace, set for an outdoor celebration"
         />
       </div>
@@ -114,22 +115,22 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
     category="celebrations"
     photos={[
       {
-        src: "/images/celebrations/guest-laughing.webp",
+        src: "celebrations/guest-laughing",
         alt: "A guest laughing at a celebration",
         title: "Shared Laughter",
       },
       {
-        src: "/images/celebrations/canape-tray.webp",
+        src: "celebrations/canape-tray",
         alt: "A canapé tray at a garden celebration",
         title: "The Canapé Tray",
       },
       {
-        src: "/images/celebrations/friends.webp",
+        src: "celebrations/friends",
         alt: "Friends embracing at a long outdoor table",
         title: "Old Friends, Long Table",
       },
       {
-        src: "/images/celebrations/tea-pour.webp",
+        src: "celebrations/tea-pour",
         alt: "A guest pouring tea in the garden",
         title: "An Afternoon in the Garden",
       },
@@ -165,7 +166,7 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
   <EnquirySection
     eventType="Celebration"
     railPhoto={{
-      src: "/images/celebrations/guest-laughing.webp",
+      src: "celebrations/guest-laughing",
       alt: "A guest laughing during a celebration at Bacchus",
       caption: "A celebration among friends, into the evening.",
     }}

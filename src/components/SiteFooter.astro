@@ -12,6 +12,7 @@ const { showEnquireLink = false } = Astro.props
 // Rendered at build time, so the year is baked into the HTML rather than
 // filled in after load (site.js still sets #yr; harmless).
 const year = new Date().getFullYear()
+import Photo from "./Photo.astro"
 ---
 
 <footer>
@@ -19,7 +20,12 @@ const year = new Date().getFullYear()
     <div class="footer-top footer-top-two-col">
       <div class="footer-brand">
         <div class="footer-brand-mark">
-          <img src="/images/shared/bacchus-logo.png" alt="Bacchus mark" />
+          <Photo
+            src="brand/bacchus-logo"
+            sizes="64px"
+            maxWidth={128}
+            alt="Bacchus mark"
+          />
           <span class="footer-brand-text">
             <span class="footer-brand-name">Bacchus</span>
             <span class="footer-brand-sub">Mdina · Est. 1660</span>

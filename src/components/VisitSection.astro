@@ -1,12 +1,14 @@
 ---
 // "Come and see it for yourself" - identical on every page in the prototype.
+import Photo from "./Photo.astro"
 ---
 
 <section class="section-padding on-dark visit">
   <div class="wrap split">
     <div class="arch" data-reveal="img">
-      <img
-        src="/images/shared/champagne.webp"
+      <Photo
+        src="food-and-drink/champagne"
+        sizes="(max-width: 980px) 100vw, 50vw"
         alt="A guest raising a glass of sparkling wine at a dressed table"
       />
     </div>

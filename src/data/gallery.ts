@@ -31,7 +31,7 @@ export interface GalleryPhoto {
 
 export const GALLERY_PHOTOS: GalleryPhoto[] = [
   {
-    src: "/images/shared/ballroom-night.webp",
+    src: "venue/ballroom-night",
     alt: "The function room lit for an evening reception",
     title: "Reception, After Dark",
     category: "venue",
@@ -40,7 +40,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 0,
   },
   {
-    src: "/images/weddings/toast.webp",
+    src: "weddings/toast",
     alt: "A bride and groom clinking champagne glasses",
     title: "The First Toast",
     category: "weddings",
@@ -48,7 +48,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 60,
   },
   {
-    src: "/images/weddings/cake-chandelier.webp",
+    src: "weddings/cake-chandelier",
     alt: "A tiered wedding cake beneath a crystal chandelier",
     title: "The Cake, Under Crystal",
     category: "weddings",
@@ -56,7 +56,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 120,
   },
   {
-    src: "/images/weddings/cake-detail.webp",
+    src: "weddings/cake-detail",
     alt: "A wedding cake with gold leaf detailing and a whimsical bride-and-groom topper",
     title: "Cake Detail",
     category: "weddings",
@@ -64,7 +64,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 180,
   },
   {
-    src: "/images/weddings/oysters.webp",
+    src: "weddings/oysters",
     alt: "A tray of oysters served to guests at a wedding",
     title: "Oysters, On Ice",
     category: "weddings",
@@ -72,7 +72,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 240,
   },
   {
-    src: "/images/weddings/guest-portrait.webp",
+    src: "weddings/guest-portrait",
     alt: "A guest portrait at a wedding",
     title: "A Guest, In the Garden",
     category: "weddings",
@@ -80,7 +80,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 300,
   },
   {
-    src: "/images/weddings/couple-outside-2.webp",
+    src: "weddings/couple-outside-2",
     alt: "The bride and groom walking hand in hand through Mdina's streets past the Bacchus sign",
     title: "Through the Old City",
     category: "weddings",
@@ -88,7 +88,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 360,
   },
   {
-    src: "/images/weddings/terrace-seated.webp",
+    src: "venue/terrace-seated",
     alt: "The Terrace set for an evening wedding reception beneath string lights and a crescent moon",
     title: "The Terrace, Dressed for Evening",
     category: "weddings",
@@ -97,7 +97,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 420,
   },
   {
-    src: "/images/shared/hall-chandeliers-banquet.webp",
+    src: "venue/hall-chandeliers-banquet",
     alt: "The banquet room dressed with chair sashes and long tables",
     title: "The Banquet Room",
     category: "venue",
@@ -106,7 +106,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 0,
   },
   {
-    src: "/images/corporate/champagne-service.webp",
+    src: "corporate/champagne-service",
     alt: "A waiter serving champagne to a guest in business attire",
     title: "Champagne on Arrival",
     category: "corporate",
@@ -114,7 +114,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 60,
   },
   {
-    src: "/images/corporate/guests-chatting.webp",
+    src: "corporate/guests-chatting",
     alt: "Colleagues chatting at a corporate event",
     title: "Business, Unhurried",
     category: "corporate",
@@ -122,7 +122,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 120,
   },
   {
-    src: "/images/corporate/cocktail-tray.webp",
+    src: "corporate/cocktail-tray",
     alt: "A cocktail tray at a corporate reception",
     title: "The Cocktail Tray",
     category: "corporate",
@@ -130,7 +130,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 180,
   },
   {
-    src: "/images/corporate/canape-roulade.webp",
+    src: "corporate/canape-roulade",
     alt: "Canapé roulades served at a corporate event",
     title: "Canapé Roulades",
     category: "corporate",
@@ -138,7 +138,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 240,
   },
   {
-    src: "/images/celebrations/friends.webp",
+    src: "celebrations/friends",
     alt: "Friends embracing at a long outdoor table",
     title: "Old Friends, Long Table",
     category: "celebrations",
@@ -146,7 +146,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 0,
   },
   {
-    src: "/images/celebrations/tea-pour.webp",
+    src: "celebrations/tea-pour",
     alt: "A guest pouring tea at an outdoor garden celebration",
     title: "An Afternoon in the Garden",
     category: "celebrations",
@@ -154,7 +154,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 60,
   },
   {
-    src: "/images/celebrations/guest-laughing.webp",
+    src: "celebrations/guest-laughing",
     alt: "A guest laughing at a celebration",
     title: "Shared Laughter",
     category: "celebrations",
@@ -162,7 +162,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 120,
   },
   {
-    src: "/images/celebrations/canape-tray.webp",
+    src: "celebrations/canape-tray",
     alt: "A canapé tray at a garden celebration",
     title: "The Canapé Tray",
     category: "celebrations",
@@ -170,7 +170,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 180,
   },
   {
-    src: "/images/shared/terrace-celebration-reception.webp",
+    src: "venue/terrace-celebration-reception",
     alt: "Guests gathered on the Terrace for an evening reception at dusk",
     title: "An Evening Reception",
     category: "venue",
@@ -178,7 +178,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 0,
   },
   {
-    src: "/images/shared/champagne.webp",
+    src: "food-and-drink/champagne",
     alt: "A guest raising a glass of sparkling wine at a dressed table",
     title: "A Glass, Raised",
     category: "venue",
@@ -186,7 +186,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 60,
   },
   {
-    src: "/images/shared/canapes-tray.webp",
+    src: "food-and-drink/canapes-tray",
     alt: "A tray of canapés",
     title: "The Reception Tray",
     category: "venue",
@@ -194,7 +194,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 60,
   },
   {
-    src: "/images/shared/canapes-service.jpg",
+    src: "food-and-drink/canapes-service",
     alt: "Canapés being served to guests",
     title: "Canapés, Passed",
     category: "venue",
@@ -202,7 +202,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 120,
   },
   {
-    src: "/images/shared/lamb.jpg",
+    src: "food-and-drink/lamb",
     alt: "Slow-cooked lamb with beetroot and citrus",
     title: "Slow-Cooked Lamb",
     category: "venue",
@@ -211,7 +211,7 @@ export const GALLERY_PHOTOS: GalleryPhoto[] = [
     revealDelay: 180,
   },
   {
-    src: "/images/shared/seabass.jpg",
+    src: "food-and-drink/seabass",
     alt: "Pan-seared fish with vegetables, plated",
     title: "Seared Catch of the Day",
     category: "venue",

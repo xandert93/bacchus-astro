@@ -12,13 +12,13 @@ interface Props {
   // Omit for the black "photography to follow" placeholder the package
   // pages use while real imagery is sourced. Its styles live in
   // package-page.css, so only pages importing that should omit it.
-  image?: { src: ImageMetadata; alt: string }
+  // src is a key from src/lib/images.ts.
+  image?: { src: string; alt: string }
   // The page one level up. Home for top-level pages, Weddings for packages.
   parent?: { href: string; label: string }
   // The last crumb, i.e. this page's own name.
   crumb: string
 }
-import type { ImageMetadata } from "astro"
 import HeroImage from "./HeroImage.astro"
 
 const { image, parent = { href: "/", label: "Home" }, crumb } = Astro.props

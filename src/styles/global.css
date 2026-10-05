@@ -2441,10 +2441,12 @@ body.menu-open .menu-social {
     animation: none;
   }
 }
-/* HeroImage wraps the photo in a <picture> (AVIF + WebP). display: contents
-   takes the wrapper out of layout, so the <img> sizes against .hero-media
-   exactly as it did when it sat there on its own. */
-.hero-media picture {
+/* Photo and HeroImage wrap photos in a <picture> (AVIF + WebP). display:
+   contents takes the wrapper out of layout everywhere, so each <img> sizes
+   against its real container exactly as it did when it sat there on its
+   own. Child-combinator selectors (`> img`) still need a `> picture > img`
+   twin — see [data-reveal="img"]. */
+picture {
   display: contents;
 }
 .hero-media img {
@@ -2731,7 +2733,8 @@ body.menu-open .menu-social {
   transition: none;
 }
 .arch[data-reveal="img"] > img,
-[data-reveal="img"] > img {
+[data-reveal="img"] > img,
+[data-reveal="img"] > picture > img {
   opacity: 0;
   transform: scale(1.04) translateY(10px);
   transition:
@@ -2740,7 +2743,8 @@ body.menu-open .menu-social {
   transition-delay: var(--d, 0ms);
 }
 .arch[data-reveal="img"].is-revealed > img,
-[data-reveal="img"].is-revealed > img {
+[data-reveal="img"].is-revealed > img,
+[data-reveal="img"].is-revealed > picture > img {
   opacity: 1;
   transform: scale(1) translateY(0);
 }

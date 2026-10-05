@@ -66,11 +66,12 @@ import ArrowIcon from "../../../components/ArrowIcon.astro"
 // After BaseLayout, so these load after global.css (see package-page.css).
 import "../../../styles/package-page.css"
 import "../../../styles/package-dish-placeholders.css"
+import Photo from "../../../components/Photo.astro"
 ---
 
 <BaseLayout
   title="Our High Tea Menus — Bacchus"
-  menuBackgroundImage="/images/weddings/cake-chandelier.webp"
+  menuBackgroundImage="weddings/cake-chandelier"
 >
   <PageHero crumb="High Tea Menus" parent={{ href: "/weddings", label: "Weddings" }}>
     Our High Tea <em>Menus</em>
@@ -638,8 +639,10 @@ import "../../../styles/package-dish-placeholders.css"
         <div class="carousel-track" id="carTrack" data-reveal-group>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/canapes-service.jpg"
+              <Photo
+                src="food-and-drink/canapes-service"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A waiter serving canapés at a wedding reception"
                 decoding="async"
               />
@@ -651,8 +654,10 @@ import "../../../styles/package-dish-placeholders.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/terrace-celebration-reception.webp"
+              <Photo
+                src="venue/terrace-celebration-reception"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="Guests mingling at a Bacchus wedding reception on the Terrace"
                 decoding="async"
               />
@@ -664,8 +669,10 @@ import "../../../styles/package-dish-placeholders.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/champagne.webp"
+              <Photo
+                src="food-and-drink/champagne"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A guest raising a glass of sparkling wine at a dressed table"
                 decoding="async"
               />
@@ -677,8 +684,10 @@ import "../../../styles/package-dish-placeholders.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/terrace-marquee-tables.webp"
+              <Photo
+                src="venue/terrace-marquee-tables"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="Tables dressed under a marquee on the Terrace"
                 decoding="async"
               />
@@ -690,8 +699,10 @@ import "../../../styles/package-dish-placeholders.css"
           </figure>
           <figure class="slide">
             <div class="ph">
-              <img
-                src="/images/shared/secret-garden-night.webp"
+              <Photo
+                src="venue/secret-garden-night"
+                sizes="(max-width: 780px) 250px, (max-width: 1312px) 32vw, 420px"
+                maxWidth={960}
                 alt="A long candlelit table in the Secret Garden at night"
                 decoding="async"
               />
@@ -739,7 +750,7 @@ import "../../../styles/package-dish-placeholders.css"
   <EnquirySection
     eventType="Wedding"
     railPhoto={{
-      src: "/images/celebrations/tea-pour.webp",
+      src: "celebrations/tea-pour",
       alt: "A guest pouring tea at an outdoor garden celebration",
       caption: "Tea poured in the garden.",
     }}

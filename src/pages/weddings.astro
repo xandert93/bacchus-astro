@@ -11,20 +11,20 @@ import FaqSection from "../components/FaqSection.astro"
 import GalleryPreview from "../components/GalleryPreview.astro"
 import Lightbox from "../components/Lightbox.astro"
 import PageHero from "../components/PageHero.astro"
-import heroToast from "../assets/images/heroes/weddings-toast.jpg"
 import ProcessSteps from "../components/ProcessSteps.astro"
 import Testimonials from "../components/Testimonials.astro"
 import WaitlistPopover from "../components/WaitlistPopover.astro"
+import Photo from "../components/Photo.astro"
 ---
 
 <BaseLayout
   title="Weddings — Bacchus, Mdina"
-  menuBackgroundImage="/images/weddings/cake-chandelier.webp"
+  menuBackgroundImage="weddings/cake-chandelier"
 >
   <PageHero
     crumb="Weddings"
     image={{
-      src: heroToast,
+      src: "weddings/toast",
       alt: "A bride and groom clinking champagne glasses",
     }}
   >
@@ -87,8 +87,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
         </div>
       </div>
       <div class="ph-wrap" data-reveal="img">
-        <img
-          src="/images/shared/secret-garden-night.webp"
+        <Photo
+          src="venue/secret-garden-night"
+          sizes="(max-width: 980px) 100vw, 50vw"
           alt="The Secret Garden at Bacchus, candlelit tables strung with fairy lights at night"
         />
       </div>
@@ -135,8 +136,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
               aria-label="View Reception menu"
             ></a>
             <div class="package-dining-card-figure">
-              <img
-                src="/images/weddings/reception-daisy-salmon-lobster-blinis.webp"
+              <Photo
+                src="reception-menu/dishes/daisy-salmon-lobster-blinis"
+                sizes="(max-width: 699.98px) 100vw, (max-width: 979.98px) 50vw, 33vw"
                 alt="A salmon and lobster blini canapé from the Reception menu"
                 loading="lazy"
               />
@@ -184,8 +186,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
               aria-label="View Banquet menu"
             ></a>
             <div class="package-dining-card-figure">
-              <img
-                src="/images/weddings/banquet.jpg"
+              <Photo
+                src="weddings/banquet"
+                sizes="(max-width: 699.98px) 100vw, (max-width: 979.98px) 50vw, 33vw"
                 alt="The seated wedding banquet, table set for the breakfast"
                 loading="lazy"
               />
@@ -233,8 +236,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
               aria-label="View High Tea menu"
             ></a>
             <div class="package-dining-card-figure">
-              <img
-                src="/images/weddings/high-tea.jpg"
+              <Photo
+                src="weddings/high-tea"
+                sizes="(max-width: 699.98px) 100vw, (max-width: 979.98px) 50vw, 33vw"
                 alt="The High Tea spread, laid out for guests"
                 loading="lazy"
               />
@@ -295,8 +299,9 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
           aria-label="View Beverage menu"
         ></a>
         <div class="package-beverage-card-figure">
-          <img
-            src="/images/shared/champagne.webp"
+          <Photo
+            src="food-and-drink/champagne"
+            sizes="(max-width: 980px) 100vw, 50vw"
             alt="Champagne poured for a wedding toast"
             loading="lazy"
           />
@@ -332,22 +337,22 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
     category="weddings"
     photos={[
       {
-        src: "/images/weddings/cake-detail.webp",
+        src: "weddings/cake-detail",
         alt: "Detail of a wedding cake",
         title: "Cake Detail",
       },
       {
-        src: "/images/weddings/oysters.webp",
+        src: "weddings/oysters",
         alt: "A tray of oysters served to guests",
         title: "Oysters, On Ice",
       },
       {
-        src: "/images/weddings/guest-portrait.webp",
+        src: "weddings/guest-portrait",
         alt: "A guest portrait at a wedding",
         title: "A Guest, In the Garden",
       },
       {
-        src: "/images/shared/hall-chandeliers-banquet.webp",
+        src: "venue/hall-chandeliers-banquet",
         alt: "The banquet room dressed for a wedding",
         title: "The Banquet Room",
       },
@@ -412,7 +417,7 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
     </Fragment>
   </FaqSection>
 
-  <Testimonials backgroundImage="/images/weddings/cake-chandelier.webp" />
+  <Testimonials backgroundImage="weddings/cake-chandelier" />
 
   <section class="section-padding" id="availability">
     <div class="wrap">
@@ -788,7 +793,7 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
     eventType="Wedding"
     datePicker="modal"
     railPhoto={{
-      src: "/images/shared/hall-chandeliers-banquet.webp",
+      src: "venue/hall-chandeliers-banquet",
       alt: "The Prince De Redin Hall, dressed for a wedding breakfast with chandeliers overhead",
       caption: "The Prince De Redin Hall, dressed for a wedding breakfast.",
     }}

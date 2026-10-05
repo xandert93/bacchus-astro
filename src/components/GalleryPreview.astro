@@ -2,6 +2,7 @@
 // Four-photo strip linking through to the filtered full gallery. Tiles open
 // the page's <Lightbox /> (lightbox.js), so a page using this needs one.
 import ArrowIcon from "./ArrowIcon.astro"
+import Photo from "./Photo.astro"
 
 interface Props {
   // Kept from the prototype because global.css targets these ids
@@ -50,7 +51,12 @@ const tag = category[0].toUpperCase() + category.slice(1)
           data-reveal="img"
           style={i > 0 ? `--d: ${i * 80}ms` : undefined}
         >
-          <img src={photo.src} alt={photo.alt} />
+          <Photo
+            src={photo.src}
+            alt={photo.alt}
+            sizes="(max-width: 620px) 50vw, (max-width: 980px) 50vw, 25vw"
+            maxWidth={1280}
+          />
           <span class="gallery-tag">{tag}</span>
         </div>
       ))}
