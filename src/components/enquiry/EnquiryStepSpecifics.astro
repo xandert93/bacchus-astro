@@ -1,0 +1,253 @@
+---
+// Wizard step 2, "The specifics": guest count, then either the tone of the
+// day (weddings) or which spaces interest them (everything else), then a
+// free message with a character counter. Starting visibility matches
+// what enquiry.js sets for `eventType`.
+import { EVENT_STYLE_OPTIONS, SPACE_OPTIONS, type EventType } from "@data/enquiry"
+import FormField from "@components/forms/FormField.astro"
+import TextInput from "@components/forms/TextInput.astro"
+import OptionCardGroup from "@components/forms/OptionCardGroup.astro"
+
+interface Props {
+  eventType: EventType
+}
+
+const { eventType } = Astro.props
+const isWedding = eventType === "Wedding"
+---
+
+<FormField
+  label="Guest count"
+  for="guests"
+  full
+  error="Enter an expected guest count."
+  errorId="guestsErr"
+>
+  <div class="guest-count-row">
+    <button
+      type="button"
+      class="guest-count-button"
+      data-step-by="-10"
+      aria-label="Fewer guests"
+    >
+      −
+    </button>
+    <TextInput id="guests" type="number" min="1" max="500" placeholder="80" />
+    <button
+      type="button"
+      class="guest-count-button"
+      data-step-by="10"
+      aria-label="More guests"
+    >
+      +
+    </button>
+  </div>
+  <p class="guest-count-hint" id="guestHint" slot="after-error">
+    {isWedding
+      ? "A flexible estimate is perfect — final numbers come much later."
+      : "Most events here sit between 40 and 180 guests."}
+  </p>
+</FormField>
+
+<FormField label="Which spaces interest you?" full id="spacesField" hidden={isWedding}>
+  <OptionCardGroup id="spaces" options={SPACE_OPTIONS} />
+  <Fragment slot="note">
+    Capacity depends on layout and season — the figures shown here are placeholders, which
+    we'll confirm with Bacchus before we go into production.
+  </Fragment>
+</FormField>
+
+<FormField
+  label="Which tone suits your day?"
+  full
+  id="eventStyleField"
+  hidden={!isWedding}
+>
+  <OptionCardGroup id="eventStyle" options={EVENT_STYLE_OPTIONS} />
+  <input type="hidden" id="eventStyleVal" />
+  <Fragment slot="note">
+    Choose the closest feeling — this is a starting point, not a package.
+  </Fragment>
+</FormField>
+
+<FormField label="Anything else we should know" for="msg" full>
+  <Fragment slot="note-top">
+    A note for the Events Team — happy to also arrange a menu tasting if you'd like one
+    first.
+  </Fragment>
+  <TextInput
+    id="msg"
+    multiline
+    maxlength="500"
+    placeholder="We're imagining an outdoor ceremony followed by dinner…"
+    class="message-field-input"
+  >
+    <div class="character-count">
+      <span class="character-count-label">Characters</span>
+      <div class="character-ring" id="msgCharRing" aria-hidden="true">
+        <svg viewBox="0 0 34 34">
+          <circle class="character-ring-track" cx="17" cy="17" r="14" />
+          <circle class="character-ring-fill" cx="17" cy="17" r="14" />
+        </svg>
+        <span class="character-ring-number" id="msgCharNum">
+          500
+        </span>
+      </div>
+    </div>
+  </TextInput>
+  <Fragment slot="note">
+    Share only what feels useful — timings, traditions, food or anything that matters to
+    you.
+  </Fragment>
+</FormField>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* ---------- Guest-count stepper ---------- */
+  .guest-count-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 5px;
+  }
+  .guest-count-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.18);
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    display: grid;
+    place-items: center;
+    transition: all 0.3s var(--ease);
+  }
+  @media (hover: hover) {
+    .guest-count-button:hover {
+      background: var(--ink);
+      color: var(--limestone);
+      border-color: var(--ink);
+    }
+  }
+  @media (hover: none) {
+    .guest-count-button:active {
+      background: var(--ink);
+      color: var(--limestone);
+      border-color: var(--ink);
+    }
+  }
+  .guest-count-row :global(input)::-webkit-outer-spin-button,
+  .guest-count-row :global(input)::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .guest-count-hint {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 12px;
+    color: var(--muted-ink);
+    margin-top: 8px;
+    min-height: 20px;
+    transition: color 0.3s var(--ease);
+  }
+  /* Ring sits below the textarea, right-aligned, in normal flow — not
+       overlaid on the textarea's own corner, so .field-input's box never
+       carries reserved-but-invisible space. */
+  :global(.message-field-input) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  /* ---------- "Anything else" character count ---------- */
+  .character-count {
+    display: flex;
+    align-items: center;
+    margin-top: 6px;
+  }
+  .character-count-label {
+    font-family: "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-ink);
+  }
+  .character-count-label::after {
+    content: "·";
+    margin: 0 6px;
+    color: rgba(var(--muted-ink-rgb), 0.4);
+  }
+  .character-ring {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+  }
+  .character-ring-track {
+    fill: none;
+    stroke: rgba(var(--muted-ink-rgb), 0.14);
+    stroke-width: 2;
+  }
+  .character-ring-fill {
+    fill: none;
+    stroke: #2fae5c;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 87.96;
+    stroke-dashoffset: 87.96;
+    transition:
+      stroke-dashoffset 0.2s var(--ease),
+      stroke 0.2s var(--ease);
+  }
+  .character-ring-number {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Inter", sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--muted-ink);
+  }
+  /* Green (plenty of room) -> amber (200 chars left) -> red (50 chars left).
+       Deliberately true/vivid semantic colors rather than the calendar's own
+       muted green/amber/oxblood, which read too dark and close together to
+       tell apart at this small a size. */
+  .character-ring.amber .character-ring-fill {
+    stroke: #f2a30f;
+  }
+  .character-ring.amber .character-ring-number {
+    color: #b97800;
+  }
+  .character-ring.near-limit .character-ring-fill {
+    stroke: #e0413a;
+  }
+  .character-ring.near-limit .character-ring-number {
+    color: #d1372f;
+  }
+  .guest-count-row :global(.field-input) {
+    flex: 1;
+  }
+  .guest-count-hint :global(b) {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  :global(#msg) {
+    font-size: 14px;
+    min-height: 122px;
+  }
+  .character-ring :global(svg) {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  /* The guest count's large centred numeral. Kept after the .field input
+       base rules, which it overrides at equal specificity. */
+  .guest-count-row :global(input) {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 22px;
+    text-align: center;
+    -moz-appearance: textfield;
+  }
+</style>

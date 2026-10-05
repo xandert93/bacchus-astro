@@ -2,6 +2,8 @@
 // The "notify me" popover a Booked calendar date opens. One instance per
 // page, position: fixed, shared by every calendar on that page; availability.js
 // wires it to whichever .availability instances exist.
+import FormField from "@components/forms/FormField.astro"
+import TextInput from "@components/forms/TextInput.astro"
 ---
 
 <div class="wl-popover" id="wlPopover" role="dialog" aria-label="Join the waitlist">
@@ -26,18 +28,18 @@
       This date is booked. Leave your email and we'll let you know if it opens up.
     </p>
     <form class="wl-form" id="wlPopoverForm">
-      <div class="field">
-        <label for="wlPopName">Name</label>
-        <div class="field-input">
-          <input type="text" id="wlPopName" placeholder="Your name" />
-        </div>
-      </div>
-      <div class="field">
-        <label for="wlPopEmail">Email</label>
-        <div class="field-input">
-          <input type="email" id="wlPopEmail" required placeholder="you@email.com" />
-        </div>
-      </div>
+      <FormField label="Name" for="wlPopName">
+        <TextInput id="wlPopName" placeholder="Your name" underline={false} />
+      </FormField>
+      <FormField label="Email" for="wlPopEmail">
+        <TextInput
+          id="wlPopEmail"
+          type="email"
+          required
+          placeholder="you@email.com"
+          underline={false}
+        />
+      </FormField>
       <div class="wl-form-actions">
         <button type="submit" class="button button-gradient button-small">
           <span>Join the waitlist</span>
@@ -226,116 +228,12 @@
     bottom: -6px;
     box-shadow: 2px 2px 4px -2px rgba(var(--muted-ink-rgb), 0.15);
   }
-  .field input,
-  .field :global(textarea) {
-    font-family: "Newsreader", Georgia, serif;
-  }
-  form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px 12px;
-    background: #fff;
-    border-radius: var(--radius-card);
-    border: 1px solid rgba(var(--muted-ink-rgb), 0.09);
-    box-shadow: 0 46px 100px -64px rgba(var(--muted-ink-rgb), 0.55);
-    position: relative;
-    padding: clamp(22px, 4vw, 44px);
-    max-width: 500px;
-  }
-  /* Reverts to the original 480px at true mobile. */
-  @media (max-width: 620.98px) {
-    form {
-      max-width: 480px;
-    }
-  }
-  .field {
-    display: flex;
-    flex-direction: column;
-    /* Half the row (minus half the 12px column gap) by default, so a pair of
-       adjacent .field elements without .full (currently just first + last
-       name) sit side by side — the only place this form actually needs two
-       columns. Everything else opts into a full-width row via .full below. */
-    flex: 1 1 calc(50% - 6px);
-    /* Flex items default to min-width:auto, refusing to shrink below their
-       content's intrinsic width — same reasoning as .split > * {min-width:0}
-       elsewhere, guards against a field ever overflowing its 50% share. */
-    min-width: 0;
-  }
-  .field.full {
-    flex: 1 1 100%;
-  }
-  .field label {
-    font-size: 10.5px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--bronze);
-    margin-bottom: 9px;
-  }
-  .field-input {
-    position: relative;
-  }
-  .field input,
-  .field :global(select),
-  .field :global(textarea) {
-    background: var(--paper);
-    border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
-    border-radius: var(--radius-card);
-    padding: 14px 16px;
-    font-size: 15px;
-    outline: 0;
-    width: 100%;
-    transition:
-      border-color 0.3s var(--ease),
-      background-color 0.3s var(--ease),
-      box-shadow 0.3s var(--ease);
-  }
-  /* Three deliberately escalating states: resting is plain; hover moves
-     background to the full --limestone-2 with a moderate gold border; focus
-     keeps that background but pushes the border to full gold and adds a
-     crisp inset ring (matches .option-card.is-selected's own selected-state ring), not a soft
-     outer glow. Hover listed before :focus-within so focus still wins if
-     both apply at once (hovering a field you're already in). */
-  .field-input:hover input,
-  .field-input:hover :global(select),
-  .field-input:hover :global(textarea) {
-    border-color: rgba(var(--gold-rgb), 0.5);
-    background: var(--limestone-2);
-  }
-  .field-input:focus-within input,
-  .field-input:focus-within :global(select),
-  .field-input:focus-within :global(textarea) {
-    border-color: rgba(var(--gold-rgb), 0.75);
-    background: var(--limestone-2);
-    box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.35);
-  }
-  .field :global(textarea) {
-    resize: vertical;
-    min-height: 82px;
-  }
-  .field input::placeholder,
-  .field :global(textarea)::placeholder {
-    color: rgba(var(--muted-ink-rgb), 0.48);
-    opacity: 1;
-  }
-  .field.bad {
-    animation: shake 0.4s;
-  }
-  @media (max-width: 620.98px) {
-    form {
-      padding: 22px;
-    }
-  }
   /* Overrides the desktop 50% basis so email/phone stack too, matching the
        old grid's single-column collapse at this breakpoint. */
-  @media (max-width: 620.98px) {
-    .field {
-      flex-basis: 100%;
-    }
-  }
   /* Overrides .field's own row-layout flex-basis (meant for two fields side by
      side in the site's wide enquiry form) — every .wl-form is single-column, in
      spaces too narrow for that to make sense. */
-  .wl-form .field {
+  .wl-form :global(.field) {
     flex: none;
   }
   .wl-form-actions :global(.button) {

@@ -1,0 +1,483 @@
+---
+// The four-step enquiry wizard: progress tabs, the step title, the four
+// steps, Back / Continue / Submit, then the sent panel that replaces it.
+// enquiry.js drives everything — moving between steps, validating each one,
+// building the review, submitting — and finds it all by id.
+//
+// The steps' content arrives from child components, so the step-change
+// animation below reaches it with :global() (`.wizard-step.active >
+// :global(*)`): those children carry their own scoping attributes, not
+// this file's.
+import type { EventType } from "@data/enquiry"
+import EnquiryStepOccasion from "./EnquiryStepOccasion.astro"
+import EnquiryStepSpecifics from "./EnquiryStepSpecifics.astro"
+import EnquiryStepDetails from "./EnquiryStepDetails.astro"
+import EnquiryStepReview from "./EnquiryStepReview.astro"
+import EnquirySentPanel from "./EnquirySentPanel.astro"
+
+interface Props {
+  eventType: EventType
+  datePicker: "inline" | "modal"
+}
+
+const { eventType, datePicker } = Astro.props
+const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
+const arrowPath = (direction: "back" | "forward") =>
+  direction === "back" ? "M13 5H2m3.5-3.5L2 5l3.5 3.5" : "M1 5h11M8.5 1.5 12 5 8.5 8.5"
+---
+
+<div class="enquiry-form" data-reveal style="--d: 180ms">
+  <form id="form" novalidate>
+    <div class="wizard-progress" style={`--wiz-tab-count: ${STEPS.length}`}>
+      <div class="wizard-progress-line">
+        {STEPS.slice(1).map(() => (
+          <i class="wizard-progress-segment" />
+        ))}
+      </div>
+      <div class="wizard-steps">
+        {STEPS.map((label, i) => (
+          <button
+            type="button"
+            class:list={["wizard-step-tab", { active: i === 0 }]}
+            data-goto={i + 1}
+            disabled={i > 0}
+          >
+            <span class="wizard-step-number">{i + 1}</span>
+            <span class="wizard-step-label">{label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div class="wizard-count">
+      <div class="wizard-count-title" id="stepTitle">
+        The <em>occasion</em>
+      </div>
+    </div>
+
+    <div class="wizard-step active" data-step="1">
+      <EnquiryStepOccasion eventType={eventType} datePicker={datePicker} />
+    </div>
+    <div class="wizard-step" data-step="2">
+      <EnquiryStepSpecifics eventType={eventType} />
+    </div>
+    <div class="wizard-step" data-step="3">
+      <EnquiryStepDetails />
+    </div>
+    <div class="wizard-step" data-step="4">
+      <EnquiryStepReview />
+    </div>
+
+    <div class="wizard-nav">
+      <button
+        type="button"
+        class="wizard-back-circle wizard-back-link wizard-back-hidden"
+        aria-label="Back"
+      >
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path
+            d={arrowPath("back")}
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <span class="wizard-spacer"></span>
+      <button type="button" class="button button-gradient wizard-next-button">
+        <span>Continue</span>
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path
+            d={arrowPath("forward")}
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <button
+        type="submit"
+        class="button button-gradient wizard-submit-button"
+        style="display: none"
+      >
+        <span>Submit</span>
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path
+            d={arrowPath("forward")}
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+  </form>
+
+  <EnquirySentPanel />
+
+  <div class="trust-sticky">
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <rect x="4" y="10" width="16" height="10" rx="2" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+    </svg>
+    <span id="stickyText">
+      Private &amp; without obligation · nothing is sent until you review it
+    </span>
+  </div>
+</div>
+
+<script>
+  import "@scripts/enquiry.js"
+</script>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  @media (max-width: 920.98px) {
+    .enquiry-form {
+      margin-top: clamp(32px, 5vw, 72px);
+    }
+  }
+  /* ---------- Enquiry form wizard ---------- */
+  .wizard-step {
+    display: none;
+  }
+  .wizard-step.active {
+    display: contents;
+  }
+  .wizard-progress {
+    flex: 1 1 100%;
+    margin-bottom: 0;
+    position: relative;
+    /* 8px is the default (matches the section's own 1-column collapse below
+         920px); 4px above that, once the rail sits beside the form as a
+         genuine 2-column layout — see the min-width:921px override below. */
+    padding-top: 8px;
+  }
+  .wizard-count {
+    flex: 1 1 100%;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: -6px;
+  }
+  .wizard-count .wizard-count-title {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(21px, 2.4vw, 27px);
+    line-height: 1.15;
+  }
+  .wizard-steps {
+    display: flex;
+    gap: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .wizard-step-tab {
+    flex: 1;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.4;
+    transition: opacity 0.3s var(--ease);
+  }
+  .wizard-step-tab:disabled {
+    cursor: auto;
+  }
+  .wizard-step-tab.active,
+  .wizard-step-tab.done {
+    opacity: 1;
+  }
+  .wizard-step-tab .wizard-step-number {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.25);
+    display: grid;
+    place-items: center;
+    font-family: "Fraunces", serif;
+    font-size: 12px;
+    flex: none;
+    color: var(--ink);
+    background: #fff;
+    transition:
+      background-color 0.3s var(--ease),
+      border-color 0.3s var(--ease),
+      color 0.3s var(--ease);
+  }
+  .wizard-step-tab.active .wizard-step-number {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--limestone-2);
+  }
+  .wizard-step-tab.done .wizard-step-number {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+  .wizard-step-tab .wizard-step-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--muted-ink);
+  }
+  /* --wiz-tab-count (set inline on .wizard-progress, default 3 for pages not yet
+       migrated to the 4-step wizard) keeps this insets formula correct
+       regardless of how many .wizard-step-tabs actually exist: each tab's center
+       sits at 50%/N in from its edge, plus 11px to reach the tab circle's own
+       center (half its 22px width). .wizard-progress-line is absolutely positioned, so its
+       top is measured from .wizard-progress's own padding edge — a fixed origin
+       that doesn't shift just because padding-top grows, unlike the step
+       circles (real, in-flow content), which do — so top needs the same
+       padding-top added on top of its own 11px to stay centered on them, at
+       each of .wizard-progress's own two padding-top breakpoints below. */
+  .wizard-progress-line {
+    position: absolute;
+    top: 19px;
+    left: calc(50% / var(--wiz-tab-count, 3) + 11px);
+    right: calc(50% / var(--wiz-tab-count, 3) + 11px);
+    display: flex;
+    gap: 22px;
+    z-index: 0;
+  }
+  @media (min-width: 921px) {
+    .wizard-progress {
+      padding-top: 4px;
+    }
+  }
+  @media (min-width: 921px) {
+    .wizard-progress-line {
+      top: 15px;
+    }
+  }
+  .wizard-progress-line .wizard-progress-segment {
+    flex: 1;
+    border-top: 2px dotted rgba(var(--muted-ink-rgb), 0.2);
+    transition:
+      border-color 0.3s var(--ease),
+      border-top-style 0.3s var(--ease);
+  }
+  .wizard-progress-line .wizard-progress-segment.done {
+    border-top-style: solid;
+    border-top-color: var(--gold);
+  }
+  @media (max-width: 560px) {
+    .wizard-step-tab .wizard-step-label {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .wizard-progress-line {
+      left: calc(50% / var(--wiz-tab-count, 3) + 9px);
+      right: calc(50% / var(--wiz-tab-count, 3) + 9px);
+    }
+  }
+  .wizard-nav {
+    flex: 1 1 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    /* No margin-top of its own — the form's own flex gap (22px, see form{})
+         already spaces every row consistently, this one included; a bespoke
+         extra nudge here just meant the gap above the buttons didn't match
+         every other inter-field gap. */
+  }
+  .wizard-nav .wizard-spacer {
+    flex: 1;
+  }
+  /* .wizard-back-hidden (toggled by main.js instead of inline style.visibility —
+       see showStep()) keeps Back's layout space via visibility:hidden on step 1,
+       so Continue doesn't shift position once Back becomes visible on later
+       steps. Used to need a sub-480px override dropping this to display:none,
+       because Back's old ~125px text+icon pill plus Continue's own width
+       didn't fit even the narrowest phones — moot now that Back is a 50px
+       icon-only circle (see .wizard-back-circle below); that reserved space is
+       small enough to keep at every width, so the override was removed rather
+       than kept as dead weight. */
+  /* De-emphasized relative to Continue/Submit on purpose — a back action
+       shouldn't visually compete with the form's forward momentum, but
+       shouldn't be hard to find either. Reuses .availability.diary's own prev/next
+       circle-button treatment (styles.css), just sized up to 50px to match
+       .button's own height, so it reads as an
+       existing pattern on this site, not a one-off. */
+  .wizard-back-circle {
+    /* Matches .button's own height exactly (--button-height), so Back and
+         Continue/Submit sit at the same height in the row — still a circle
+         (equal width), just a bigger one than the original 40px. */
+    width: var(--button-height);
+    height: var(--button-height);
+    border-radius: 50%;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
+    background: transparent;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex: none;
+    transition:
+      background 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+  @media (hover: hover) {
+    .wizard-back-circle:hover {
+      background: var(--paper);
+      border-color: rgba(var(--muted-ink-rgb), 0.3);
+    }
+  }
+  @media (hover: none) {
+    .wizard-back-circle:active {
+      background: var(--paper);
+      border-color: rgba(var(--muted-ink-rgb), 0.3);
+    }
+  }
+  :global(.review-edit-button) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.18);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    padding: 6px 13px;
+    font-family: "Inter", sans-serif;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    transition:
+      border-color 0.3s var(--ease),
+      background-color 0.3s var(--ease),
+      transform 0.3s var(--ease);
+  }
+  @media (hover: hover) {
+    :global(.review-edit-button:hover) {
+      border-color: rgba(var(--gold-rgb), 0.4);
+      background: rgba(var(--gold-rgb), 0.06);
+      transform: translateY(-1px);
+    }
+  }
+  /* ---------- Sticky mobile reassurance ---------- */
+  /* Disabled as soon as the section collapses to one column (920px) — the
+       trust-rail (moved below the form at that same breakpoint) already says
+       the same thing, and a bar pinned to the bottom of the viewport eats
+       permanently into already-limited screen space. */
+  .trust-sticky {
+    display: none;
+  }
+  @media (max-width: 980.98px) {
+    .enquiry-form {
+      grid-column: 1;
+      grid-row: auto;
+    }
+  }
+  @media (max-width: 980.98px) {
+    .enquiry-form {
+      order: 2;
+    }
+  }
+  @media (hover: hover) {
+    .wizard-back-link:hover :global(svg) {
+      transform: translateX(-4px);
+    }
+  }
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px 12px;
+    background: #fff;
+    border-radius: var(--radius-card);
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.09);
+    box-shadow: 0 46px 100px -64px rgba(var(--muted-ink-rgb), 0.55);
+    position: relative;
+    padding: clamp(22px, 4vw, 44px);
+    max-width: 500px;
+  }
+  /* Once the section collapses to one column, a max-width-capped card left
+     without this just sits flush-left in the now much wider column, reading
+     as off-center. Not needed above 920px — there the card still shares its
+     column with the rail, so it stays where the grid puts it. */
+  @media (max-width: 920.98px) {
+    .enquiry-form form {
+      margin-inline: auto;
+    }
+  }
+  /* Reverts to the original 480px at true mobile. */
+  @media (max-width: 620.98px) {
+    form {
+      max-width: 480px;
+    }
+  }
+  .wizard-step.active > :global(*) {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.28s var(--ease),
+      transform 0.32s var(--ease);
+  }
+  .wizard-step.leaving > :global(*) {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.18s var(--ease),
+      transform 0.18s var(--ease);
+  }
+  .wizard-step.entering > :global(*) {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: none;
+  }
+  .wizard-count .wizard-count-title :global(em) {
+    font-family: "Newsreader", Georgia, serif;
+    font-style: italic;
+    color: var(--bronze);
+  }
+  .wizard-back-hidden {
+    visibility: hidden;
+  }
+  /* Cancels .wizard-back-link:hover svg's inherited translateX(-4px) (this button
+         keeps the .wizard-back-link class for the JS that selects it) — that nudge was
+         built for a wide text+icon pill with room for the arrow to travel; the
+         circle-button pattern being reused here never animates its icon on
+         hover (the calendar's month arrows behave the same), so this stays consistent with it. */
+
+  @media (hover: hover) {
+    .wizard-back-circle:hover :global(svg) {
+      transform: none;
+    }
+  }
+  /* Cancels .wizard-back-link:hover svg's inherited translateX(-4px) (this button
+         keeps the .wizard-back-link class for the JS that selects it) — that nudge was
+         built for a wide text+icon pill with room for the arrow to travel; the
+         circle-button pattern being reused here never animates its icon on
+         hover (the calendar's month arrows don't either), so this stays consistent with them. */
+  :global(.review-edit-button) :global(svg) {
+    flex: none;
+  }
+  @media (max-width: 620.98px) {
+    form {
+      padding: 22px;
+    }
+  }
+</style>

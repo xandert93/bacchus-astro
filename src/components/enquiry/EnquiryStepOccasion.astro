@@ -1,0 +1,189 @@
+---
+// Wizard step 1, "The occasion": event type, date, and (weddings) a backup
+// date. The date question is the one that varies most: a wedding books the
+// whole venue for the day, so it picks from the availability calendar —
+// inline here, or (weddings page) through the page's quick-pick modal —
+// while every other event type gets a plain date input. Starting
+// visibility matches what enquiry.js would set for `eventType`, so nothing
+// flashes on load.
+import { CHIP_NOTES, EVENT_TYPES, type EventType } from "@data/enquiry"
+import FormField from "@components/forms/FormField.astro"
+import TextInput from "@components/forms/TextInput.astro"
+import ChipGroup from "@components/forms/ChipGroup.astro"
+import AvailabilityCalendar from "./AvailabilityCalendar.astro"
+
+interface Props {
+  eventType: EventType
+  datePicker: "inline" | "modal"
+}
+
+const { eventType, datePicker } = Astro.props
+const isWedding = eventType === "Wedding"
+---
+
+<FormField label="Which kind of event?" full noteId="chipNote">
+  <ChipGroup
+    id="chips"
+    options={EVENT_TYPES.map((value) => ({ value }))}
+    selected={eventType}
+  />
+  <input type="hidden" id="eventtype" value={eventType} />
+  <Fragment slot="note">{CHIP_NOTES[eventType]}</Fragment>
+</FormField>
+
+<FormField
+  label="Choose your date"
+  full
+  error={
+    datePicker === "inline"
+      ? "Pick a date from the calendar above."
+      : "Pick a date to continue."
+  }
+>
+  <TextInput id="dateNative" type="date" wrapperId="dateNativeWrap" hidden={isWedding} />
+  {datePicker === "inline" ? (
+    <div
+      id="dateCalWrap"
+      class:list={{ "is-revealed": isWedding }}
+      style={isWedding ? undefined : "display: none"}
+    >
+      <AvailabilityCalendar variant="compact" />
+    </div>
+  ) : (
+    <div id="dateCalWrap" class="availability-form-row">
+      <div class="availability-foot-label" id="availFormPicked">
+        <span class="availability-foot-label-date">No date selected</span>
+        <span class="availability-picked-status" />
+      </div>
+      <button type="button" class="review-edit-button" id="availChangeBtn">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M8 3v4M16 3v4M3 10h18" />
+        </svg>
+        <span>Pick a date</span>
+      </button>
+    </div>
+  )}
+  <input type="hidden" id="date" />
+</FormField>
+
+<FormField
+  label="Alternative date"
+  for="backupDate"
+  full
+  id="backupDateField"
+  hidden={!isWedding}
+  error="Enter a valid date."
+  errorId="backupDateErr"
+>
+  <TextInput id="backupDate" type="date" />
+  <Fragment slot="note">
+    In case your first choice is already taken — for our reference only.
+    <br />
+    This does not hold or reserve a date.
+  </Fragment>
+</FormField>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* weddings.html only: wizard step 1 has no grid of its own, just this
+       picked-date summary + a button back to the real calendar — laid out as one
+       row (summary at the start, button pinned to the far end via space-between).
+       #availFormPicked is always in layout (same as the AC showcase's own
+       .availability-foot-label instances — no .availability-picked-style show/hide here), so
+       space-between always has just two items: the summary text, and the button. */
+  .availability-form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .availability-picked-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .availability-picked-status:not(:empty)::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex: none;
+  }
+  .availability-foot-label-date {
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-ink);
+  }
+  .availability-foot-label.status-open .availability-picked-status {
+    color: var(--avail-green-fg);
+  }
+  .availability-foot-label.status-interest .availability-picked-status {
+    color: var(--avail-amber-fg);
+  }
+  /* A smaller status dot on phones, for this summary row only. */
+  @media (max-width: 480px) {
+    .availability-foot-label .availability-picked-status:not(:empty)::before {
+      width: 4px;
+      height: 4px;
+    }
+  }
+  @media (max-width: 480px) {
+    .availability-foot-label {
+      align-items: center;
+    }
+  }
+  /* Fades + lifts in when switching to Wedding from another event type
+       (opacity+lift, not clip-path — see CLAUDE.md's known-bugs list). .is-revealed is
+       added on a double-rAF in main.js's syncDateMode(), one real painted
+       frame after display switches from none, since toggling display and
+       opacity/transform in the same tick can get coalesced into a single
+       paint with no in-between frame to animate from. Switching away hides
+       instantly — only the reveal needed a transition. */
+  #dateCalWrap {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.4s var(--ease),
+      transform 0.4s var(--ease);
+  }
+  #dateCalWrap.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+  /* Event-type helper line under the chips: crossfades its copy per chip
+       (see main.js CHIP_NOTES). Fade only, same fixed-clock swap pattern as
+       .availability-picked.swapping — not a display toggle, so no reveal race. */
+  :global(#chipNote) {
+    transition: opacity 0.2s var(--ease);
+  }
+  :global(#chipNote.swapping) {
+    opacity: 0.35;
+  }
+  #availChangeBtn {
+    flex: none;
+  }
+  /* The calendar icon here is a label, not a "proceed" chevron, so it shouldn't
+       inherit .button:hover svg's forward-nudge translateX — that motion only reads
+       correctly on the trailing arrows it was designed for. */
+  #availChangeBtn :global(svg) {
+    transition: none;
+  }
+</style>

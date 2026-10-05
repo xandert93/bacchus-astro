@@ -763,22 +763,6 @@ if (form) {
       return
     }
 
-    // Old inline-message pages (not yet migrated to the review/sent flow).
-    var okMsg = document.getElementById("ok")
-    if (okMsg) {
-      // display defaults to none (see styles.css) so the invisible thank-you
-      // text doesn't sit in the wiz-nav flex row inflating every step's height
-      // before a real submit ever happens. Switching display and opacity in
-      // the same tick would skip the fade (no frame boundary to animate
-      // across — see bug #1 in CLAUDE.md), so the display change is given a
-      // frame to paint before .show (opacity/transform) is added.
-      okMsg.style.display = "block"
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          okMsg.classList.add("show")
-        })
-      })
-    }
     form.reset()
     // form.reset() does not clear type="hidden" inputs in practice (verified —
     // it resets visible text/number/etc. controls but leaves hidden ones alone),

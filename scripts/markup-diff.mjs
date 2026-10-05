@@ -34,24 +34,27 @@ const dump = async (dist, route) => {
     const walk = (el, depth) => {
       if (["SCRIPT", "STYLE", "LINK", "META", "NOSCRIPT"].includes(el.tagName)) return
       const attrs = [...el.attributes]
+        // Scoping classes (astro-xxxx) and image URLs change with file paths
+        // and content hashes, so they're left out of the comparison.
         .filter(
           (x) =>
-            (!x.name.startsWith("data-astro-cid") &&
-              !["src", "srcset", "href"].includes(x.name)) ||
-            (x.name === "href" && !/\/_astro\//.test(x.value)),
+            !x.name.startsWith("data-astro-cid") &&
+            x.name !== "src" &&
+            x.name !== "srcset",
         )
-        .filter((x) => !(x.name === "src" || x.name === "srcset"))
-        .map((x) => {
-          const v =
-            x.name === "class"
-              ? x.value
-                  .split(/\s+/)
-                  .filter((c) => !c.startsWith("astro-"))
-                  .sort()
-                  .join(" ")
-              : x.value
-          return `${x.name}="${v}"`
-        })
+        .filter((x) => !(x.name === "href" && /\/_astro\//.test(x.value)))
+        .map((x) => [
+          x.name,
+          x.name === "class"
+            ? x.value
+                .split(/\s+/)
+                .filter((c) => c && !c.startsWith("astro-"))
+                .sort()
+                .join(" ")
+            : x.value,
+        ])
+        .filter(([name, value]) => !(name === "class" && value === ""))
+        .map(([name, value]) => `${name}="${value}"`)
         .sort()
         .join(" ")
       const text = [...el.childNodes]
