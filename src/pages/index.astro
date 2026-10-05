@@ -3,6 +3,8 @@
 // section, footer, script) comes from BaseLayout; this file holds only what
 // is unique to the homepage.
 import BaseLayout from "../layouts/BaseLayout.astro"
+import HeroImage from "../components/HeroImage.astro"
+import heroBallroomNight from "../assets/images/shared/ballroom-night.webp"
 import EnquirySection from "../components/EnquirySection.astro"
 import Testimonials from "../components/Testimonials.astro"
 import WaitlistPopover from "../components/WaitlistPopover.astro"
@@ -11,11 +13,11 @@ import WaitlistPopover from "../components/WaitlistPopover.astro"
 <BaseLayout title="Bacchus — Events in Mdina, Malta" showEnquireLink>
   <section class="hero" id="top">
     <div class="hero-media">
-      <img
+      <HeroImage
         id="heroImg"
-        src="/images/shared/ballroom-night.webp"
-        fetchpriority="high"
+        src={heroBallroomNight}
         alt="The Bacchus function room lit for an evening reception, with chandeliers and candlelight"
+        heroHeightVh={100}
       />
     </div>
     <div class="hero-scrim"></div>

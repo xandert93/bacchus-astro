@@ -4,6 +4,7 @@
 // step as the visitor clicks between categories.
 import BaseLayout from "../layouts/BaseLayout.astro"
 import PageHero from "../components/PageHero.astro"
+import heroBanquetRoom from "../assets/images/shared/hall-chandeliers-banquet.webp"
 import Lightbox from "../components/Lightbox.astro"
 import EnquirySection from "../components/EnquirySection.astro"
 import WaitlistPopover from "../components/WaitlistPopover.astro"
@@ -17,7 +18,7 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "../data/gallery"
   <PageHero
     crumb="Gallery"
     image={{
-      src: "/images/shared/hall-chandeliers-banquet.webp",
+      src: heroBanquetRoom,
       alt: "The banquet room dressed with chair sashes and long tables",
     }}
   >

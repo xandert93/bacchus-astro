@@ -12,12 +12,15 @@ interface Props {
   // Omit for the black "photography to follow" placeholder the package
   // pages use while real imagery is sourced. Its styles live in
   // package-page.css, so only pages importing that should omit it.
-  image?: { src: string; alt: string }
+  image?: { src: ImageMetadata; alt: string }
   // The page one level up. Home for top-level pages, Weddings for packages.
   parent?: { href: string; label: string }
   // The last crumb, i.e. this page's own name.
   crumb: string
 }
+import type { ImageMetadata } from "astro"
+import HeroImage from "./HeroImage.astro"
+
 const { image, parent = { href: "/", label: "Home" }, crumb } = Astro.props
 const hasSecondarySub = Astro.slots.has("sub-secondary")
 const hasCtas = Astro.slots.has("ctas")
@@ -26,10 +29,7 @@ const hasCtas = Astro.slots.has("ctas")
 <section class="hero hero-sm">
   {image ? (
     <div class="hero-media">
-      {/* The hero photo is the page's biggest paint, so it's fetched ahead
-          of everything else rather than queued behind fonts and scripts —
-          a slow download is what paints it top-down, half black. */}
-      <img src={image.src} alt={image.alt} fetchpriority="high" />
+      <HeroImage src={image.src} alt={image.alt} heroHeightVh={62} />
     </div>
   ) : (
     <div class="hero-media package-hero-placeholder" />
