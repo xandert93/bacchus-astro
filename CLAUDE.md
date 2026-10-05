@@ -52,8 +52,8 @@ AVIF + WebP). Rules learned on the way:
 - **Always build from the untouched originals, never from `public/images/`.**
   Those are already-compressed web copies, and resizing them compresses
   twice (visibly softer; measured 40.7 vs 43.2 dB PSNR, at a larger file).
-  Originals live in the prototype's `images/originals/` — note they are
-  **JPEGs misnamed `.png`**; copy them in with a `.jpg` extension. Images
+  Originals live in the prototype's `images/originals/` — 25 JPEGs (renamed
+  from a misleading `.png` by the user on 2026-10-05). Images
   without an original there need one requested from Bacchus.
 - AVIF first (much smaller at equal quality) with a WebP fallback, each at
   its own quality — hence `getImage()` twice rather than `<Picture>`.
