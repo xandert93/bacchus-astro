@@ -1,0 +1,25 @@
+/* The warm parchment band behind an enquiry call to action, with the thin
+   bronze rule along its top edge. Shared by EnquirySection and the menu
+   page's closing call to action, so it is its own file rather than one
+   component's styles; each imports it. */
+
+.enquire {
+  position: relative;
+  background:
+    radial-gradient(120% 80% at 85% 0%, rgba(var(--gold-rgb), 0.1), transparent 60%),
+    linear-gradient(180deg, #f3eddf, var(--paper) 55%, var(--paper));
+  overflow: hidden;
+}
+
+.enquire::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--bronze-rgb), 0.45),
+    transparent
+  );
+}

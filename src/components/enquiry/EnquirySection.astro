@@ -7,6 +7,8 @@ import Photo from "@components/ui/Photo.astro"
 import EnquiryTrustRail from "./EnquiryTrustRail.astro"
 import EnquiryForm from "./EnquiryForm.astro"
 import { below } from "@lib/media-queries.js"
+// The band behind the section, shared with the menu page's call to action.
+import "@styles/enquire-background.css"
 
 interface Props {
   // Preselects the event type, and with it every field the wizard shows or
@@ -65,27 +67,6 @@ const {
   /* Scoped to this component (moved from global.css by
        scripts/scope-styles.mjs). See FaqAccordion.astro for how scoping works.
   */
-  .enquire {
-    position: relative;
-    background:
-      radial-gradient(120% 80% at 85% 0%, rgba(var(--gold-rgb), 0.1), transparent 60%),
-      linear-gradient(180deg, #f3eddf, var(--paper) 55%, var(--paper));
-    overflow: hidden;
-  }
-
-  .enquire::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(var(--bronze-rgb), 0.45),
-      transparent
-    );
-  }
-
   /* Same trick the wizard steps use (.wizard-step.active{display:contents})
          — removes .enquiry-intro's own box so its children (eyebrow, h2, lead,
          trust-rail) become direct items of .grid's own grid, sitting alongside
