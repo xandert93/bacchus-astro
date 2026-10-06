@@ -1,9 +1,11 @@
 ---
-// The desktop bar: brand, the Restaurant / Events dropdowns, Gallery, and the
-// two CTAs. Previously pasted into every page by hand; now written once.
-import { NAV_MENUS } from "@data/navigation"
+// The desktop bar: brand, the Restaurant / Events dropdowns, Gallery and
+// About, and the two CTAs. Previously pasted into every page by hand; now
+// written once.
+import { NAV_MENUS, NAV_PAGES, hrefOf, unbuiltAttr } from "@data/navigation"
 import NavDropdown from "@components/nav/NavDropdown.astro"
 import Photo from "@components/ui/Photo.astro"
+import ProposedBadge from "@components/ui/ProposedBadge.astro"
 import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
 ---
 
@@ -26,10 +28,14 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
         {NAV_MENUS.map((menu) => (
           <NavDropdown menu={menu} />
         ))}
-
-        <li>
-          <a href="/gallery">Gallery</a>
-        </li>
+        {NAV_PAGES.map((link) => (
+          <li>
+            <a href={hrefOf(link)} {...unbuiltAttr(link)}>
+              {link.label}
+              {link.unbuilt && <ProposedBadge small />}
+            </a>
+          </li>
+        ))}
       </ul>
     </nav>
     <div class="nav-cta">
@@ -218,6 +224,22 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
   .nav-links > :global(li:hover) > :global(a)::after {
     transform: scaleX(1);
     transform-origin: left;
+  }
+  /* An unbuilt link's Proposed badge sits ABOVE its label, not beside it:
+     the bar's width budget (see the compact band below) has no room for
+     ~70px more, and out of flow it costs none. Centred over the text by the
+     same two insets the underline uses, so it stays centred in the compact
+     band too. bottom: 100% less the link's 10px top padding, plus a 4px gap
+     to the cap height. line-height 1.2 keeps the pill short enough to clear
+     the top of the 74px bar. */
+  .nav-links > :global(li) > :global(a) > :global(.proposed-badge) {
+    position: absolute;
+    bottom: calc(100% - 6px);
+    left: var(--nav-link-padding-start);
+    right: calc(var(--nav-link-padding-end) + 0.16em);
+    width: fit-content;
+    margin-inline: auto;
+    line-height: 1.2;
   }
   /* Scrim: dims the page below the nav while the dropdown is open, same trick
      as the BNY reference — puts the panel's own content in relief instead of
