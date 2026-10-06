@@ -58,12 +58,10 @@ export default defineType({
   ],
   preview: {
     select: { name: "name", media: "image", placeholder: "isPlaceholderImage" },
-    prepare({ name, media, placeholder }) {
-      return {
-        title: name,
-        subtitle: placeholder ? "placeholder image" : undefined,
-        media,
-      }
-    },
+    prepare: ({ name, media, placeholder }) => ({
+      title: name,
+      subtitle: placeholder ? "placeholder image" : undefined,
+      media,
+    }),
   },
 })

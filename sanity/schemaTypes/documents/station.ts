@@ -151,18 +151,16 @@ export default defineType({
       placeholder: "image.isPlaceholder",
       chefsPick: "isChefsPick",
     },
-    prepare({ name, amount, media, placeholder, chefsPick }) {
-      return {
-        title: name,
-        subtitle: [
-          amount ? `€${Number(amount).toFixed(2)} pp` : null,
-          chefsPick ? "chef's pick" : null,
-          placeholder ? "placeholder image" : null,
-        ]
-          .filter(Boolean)
-          .join(" · "),
-        media,
-      }
-    },
+    prepare: ({ name, amount, media, placeholder, chefsPick }) => ({
+      title: name,
+      subtitle: [
+        amount ? `€${Number(amount).toFixed(2)} pp` : null,
+        chefsPick ? "chef's pick" : null,
+        placeholder ? "placeholder image" : null,
+      ]
+        .filter(Boolean)
+        .join(" · "),
+      media,
+    }),
   },
 })

@@ -147,12 +147,10 @@ export default defineType({
       media: "image",
       year: "year",
     },
-    prepare({ title, alt, category, media, year }) {
-      return {
-        title: title || alt || "Untitled",
-        subtitle: [category, year].filter(Boolean).join(" · "),
-        media,
-      }
-    },
+    prepare: ({ title, alt, category, media, year }) => ({
+      title: title || alt || "Untitled",
+      subtitle: [category, year].filter(Boolean).join(" · "),
+      media,
+    }),
   },
 })

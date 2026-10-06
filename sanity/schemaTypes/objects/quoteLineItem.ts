@@ -93,11 +93,9 @@ export default defineType({
   ],
   preview: {
     select: { label: "label", amount: "amount", category: "category" },
-    prepare({ label, amount, category }) {
-      return {
-        title: label,
-        subtitle: `${category} — €${Number(amount ?? 0).toFixed(2)}`,
-      }
-    },
+    prepare: ({ label, amount, category }) => ({
+      title: label,
+      subtitle: `${category} — €${Number(amount ?? 0).toFixed(2)}`,
+    }),
   },
 })

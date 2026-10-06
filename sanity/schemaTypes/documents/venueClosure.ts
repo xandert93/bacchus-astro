@@ -117,7 +117,7 @@ export default defineType({
   ],
   preview: {
     select: { title: "title", start: "startDate", end: "endDate", reason: "reason" },
-    prepare({ title, start, end, reason }) {
+    prepare: ({ title, start, end, reason }) => {
       const fmt = (d?: string) => (d ? new Date(d).toLocaleDateString("en-GB") : "?")
       return {
         title,

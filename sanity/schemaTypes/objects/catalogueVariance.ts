@@ -79,11 +79,9 @@ export default defineType({
   ],
   preview: {
     select: { asPrinted: "asPrinted", kind: "kind", approved: "clientApproved" },
-    prepare({ asPrinted, kind, approved }) {
-      return {
-        title: `was: ${asPrinted}`,
-        subtitle: `${kind}${approved ? "" : " — not yet approved"}`,
-      }
-    },
+    prepare: ({ asPrinted, kind, approved }) => ({
+      title: `was: ${asPrinted}`,
+      subtitle: `${kind}${approved ? "" : " — not yet approved"}`,
+    }),
   },
 })

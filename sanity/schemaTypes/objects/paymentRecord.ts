@@ -153,13 +153,11 @@ export default defineType({
       gross: "grossAmount",
       at: "receivedAt",
     },
-    prepare({ kind, method, status, gross, at }) {
-      return {
-        title: `${kind} — €${Number(gross ?? 0).toFixed(2)} (${status})`,
-        subtitle: [method, at ? new Date(at).toLocaleDateString("en-GB") : null]
-          .filter(Boolean)
-          .join(" — "),
-      }
-    },
+    prepare: ({ kind, method, status, gross, at }) => ({
+      title: `${kind} — €${Number(gross ?? 0).toFixed(2)} (${status})`,
+      subtitle: [method, at ? new Date(at).toLocaleDateString("en-GB") : null]
+        .filter(Boolean)
+        .join(" — "),
+    }),
   },
 })

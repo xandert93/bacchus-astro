@@ -108,13 +108,11 @@ export default defineType({
       unit: "price.unit",
       free: "isIncludedAtNoCharge",
     },
-    prepare({ name, category, amount, unit, free }) {
-      return {
-        title: name,
-        subtitle: free
-          ? `${category} · included at no charge`
-          : `${category} · €${Number(amount ?? 0).toFixed(2)} ${unit ?? ""}`,
-      }
-    },
+    prepare: ({ name, category, amount, unit, free }) => ({
+      title: name,
+      subtitle: free
+        ? `${category} · included at no charge`
+        : `${category} · €${Number(amount ?? 0).toFixed(2)} ${unit ?? ""}`,
+    }),
   },
 })

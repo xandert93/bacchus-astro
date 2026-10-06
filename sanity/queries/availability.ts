@@ -107,10 +107,10 @@ export const availabilityPolicyQuery = /* groq */ `
  * map: a date with one confirmed booking and three pending enquiries is
  * Booked, regardless of row order.
  */
-export function deriveStatuses(
+export const deriveStatuses = (
   rows: AvailabilityInput[],
   // closures: {startDate: string; endDate: string}[] = [],
-): Record<string, AvailabilityStatus> {
+): Record<string, AvailabilityStatus> => {
   const byDate: Record<string, AvailabilityStatus> = {}
 
   for (const row of rows) {
@@ -138,7 +138,7 @@ export function deriveStatuses(
 }
 
 /** Inclusive date range as ISO strings. */
-export function eachDate(startIso: string, endIso: string): string[] {
+export const eachDate = (startIso: string, endIso: string): string[] => {
   const out: string[] = []
   const cursor = new Date(`${startIso}T00:00:00Z`)
   const end = new Date(`${endIso}T00:00:00Z`)

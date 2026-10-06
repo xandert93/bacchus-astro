@@ -5,18 +5,18 @@ var counted = false
 var facts = document.getElementById("facts")
 if (facts) {
   var factObs = new IntersectionObserver(
-    function (es) {
-      es.forEach(function (e) {
+    (es) => {
+      es.forEach((e) => {
         if (!e.isIntersecting || counted) return
         counted = true
-        facts.querySelectorAll(".fact-number").forEach(function (el) {
+        facts.querySelectorAll(".fact-number").forEach((el) => {
           var target = parseInt(el.dataset.count, 10)
           var suffix = el.dataset.suffix || ""
           var plain = el.dataset.plain === "1"
           var from = plain ? Math.max(0, target - 140) : 0
           var start = null,
             dur = 1500
-          function step(ts) {
+          const step = (ts) => {
             if (!start) start = ts
             var p = Math.min((ts - start) / dur, 1)
             var eased = 1 - Math.pow(1 - p, 3)

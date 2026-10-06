@@ -125,7 +125,7 @@ export default defineType({
       status: "status",
       verified: "verifiedAt",
     },
-    prepare({ date, email, name, status, verified }) {
+    prepare: ({ date, email, name, status, verified }) => {
       const when = date ? new Date(date).toLocaleDateString("en-GB") : "no date"
       return {
         title: `${when} — ${name || email}`,

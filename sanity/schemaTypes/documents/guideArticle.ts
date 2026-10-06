@@ -233,11 +233,9 @@ export default defineType({
   ],
   preview: {
     select: { title: "title", status: "status", category: "category", order: "order" },
-    prepare({ title, status, category, order }) {
-      return {
-        title: order ? `${order}. ${title}` : title,
-        subtitle: [status, category].filter(Boolean).join(" · "),
-      }
-    },
+    prepare: ({ title, status, category, order }) => ({
+      title: order ? `${order}. ${title}` : title,
+      subtitle: [status, category].filter(Boolean).join(" · "),
+    }),
   },
 })

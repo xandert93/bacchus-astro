@@ -83,11 +83,9 @@ export default defineType({
   ],
   preview: {
     select: { tone: "tone", body: "body", placement: "placement" },
-    prepare({ tone, body, placement }) {
-      return {
-        title: `${tone === "warning" ? "[warning] " : ""}${String(body ?? "").slice(0, 60)}`,
-        subtitle: placement,
-      }
-    },
+    prepare: ({ tone, body, placement }) => ({
+      title: `${tone === "warning" ? "[warning] " : ""}${String(body ?? "").slice(0, 60)}`,
+      subtitle: placement,
+    }),
   },
 })

@@ -78,7 +78,7 @@ export default defineType({
       indicative: "isIndicative",
       status: "provenance.status",
     },
-    prepare({ amount, unit, indicative, status }) {
+    prepare: ({ amount, unit, indicative, status }) => {
       const unitLabel = PRICE_UNITS.find((u) => u.value === unit)?.title ?? unit
       return {
         title:

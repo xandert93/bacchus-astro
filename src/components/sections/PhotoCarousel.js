@@ -17,7 +17,7 @@ if (track && view) {
     drag = null,
     autoTimer = null
 
-  function cstep() {
+  const cstep = () => {
     var r = slides[0].getBoundingClientRect()
     return r.width + parseFloat(getComputedStyle(track).gap || 0)
   }
@@ -28,9 +28,7 @@ if (track && view) {
   // slides, which is wrong at any width where a fractional number
   // actually show (~1.4 cards peeking in, say), and the error ran in
   // whichever direction the rounding happened to go.
-  function maxOffset() {
-    return Math.max(0, track.scrollWidth - view.clientWidth)
-  }
+  const maxOffset = () => Math.max(0, track.scrollWidth - view.clientWidth)
   // CEIL, not floor. Travel is almost never a whole number of steps —
   // with five slides and a part-slide of overhang, maxOffset/cstep comes
   // out at something like 2.3. Flooring that to 2 stops the track one
@@ -41,7 +39,7 @@ if (track && view) {
   // OFFSET to maxOffset so it lands flush against the end instead of
   // overshooting into blank space. The final step is therefore a short
   // one — deliberately, since the alternative is an unreachable slide.
-  function maxIndex() {
+  const maxIndex = () => {
     var step = cstep()
     return step > 0 ? Math.ceil(maxOffset() / step) : 0
   }
@@ -70,13 +68,13 @@ if (track && view) {
   // FULLY visible, not merely intersecting: at these widths a third slide
   // is usually peeking in by a sliver, and counting that would claim more
   // than the visitor can really see.
-  function visibleSlideRange() {
+  const visibleSlideRange = () => {
     var windowStart = offsetFor(index)
     var windowEnd = windowStart + view.clientWidth
     var base = slides[0].offsetLeft
     var first = -1,
       last = -1
-    slides.forEach(function (slide, i) {
+    slides.forEach((slide, i) => {
       var left = slide.offsetLeft - base
       // 1px of tolerance: these are fractional at most viewport widths.
       if (left >= windowStart - 1 && left + slide.offsetWidth <= windowEnd + 1) {
@@ -95,10 +93,8 @@ if (track && view) {
   // render() would mean a drag starting on the final (short) step
   // computed its base from the unclamped index * cstep() and jumped
   // forward the moment it was grabbed.
-  function offsetFor(i) {
-    return Math.min(i * cstep(), maxOffset())
-  }
-  function render(animate) {
+  const offsetFor = (i) => Math.min(i * cstep(), maxOffset())
+  const render = (animate) => {
     track.style.transition = animate === false ? "none" : ""
     track.style.transform = "translate3d(" + -offsetFor(index) + "px,0,0)"
     if (prev) prev.disabled = index <= 0
@@ -119,40 +115,40 @@ if (track && view) {
     // "… / total".
     if (bar) bar.style.transform = "scaleX(" + (range.last + 1) / slides.length + ")"
   }
-  function go(i) {
+  const go = (i) => {
     index = Math.max(0, Math.min(maxIndex(), i))
     render()
   }
   if (prev)
-    prev.addEventListener("click", function () {
+    prev.addEventListener("click", () => {
       go(index - 1)
       pauseAuto()
     })
   if (next)
-    next.addEventListener("click", function () {
+    next.addEventListener("click", () => {
       go(index + 1)
       pauseAuto()
     })
-  window.addEventListener("resize", function () {
+  window.addEventListener("resize", () => {
     go(index)
   })
-  window.addEventListener("load", function () {
+  window.addEventListener("load", () => {
     render(false)
   })
 
-  function down(x) {
+  const down = (x) => {
     drag = { x: x, start: index, moved: 0 }
     view.classList.add("drag")
     track.style.transition = "none"
     pauseAuto()
   }
-  function move(x) {
+  const move = (x) => {
     if (!drag) return
     drag.moved = x - drag.x
     track.style.transform =
       "translate3d(" + (-offsetFor(drag.start) + drag.moved) + "px,0,0)"
   }
-  function up() {
+  const up = () => {
     if (!drag) return
     track.style.transition = ""
     var shift = Math.round(-drag.moved / cstep())
@@ -169,12 +165,12 @@ if (track && view) {
     drag = null
     view.classList.remove("drag")
   }
-  view.addEventListener("pointerdown", function (e) {
+  view.addEventListener("pointerdown", (e) => {
     down(e.clientX)
   })
   window.addEventListener(
     "pointermove",
-    function (e) {
+    (e) => {
       if (drag) {
         e.preventDefault()
         move(e.clientX)
@@ -183,10 +179,10 @@ if (track && view) {
     { passive: false },
   )
   window.addEventListener("pointerup", up)
-  view.addEventListener("dragstart", function (e) {
+  view.addEventListener("dragstart", (e) => {
     e.preventDefault()
   })
-  view.addEventListener("keydown", function (e) {
+  view.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") go(index + 1)
     if (e.key === "ArrowLeft") go(index - 1)
   })
@@ -211,7 +207,7 @@ if (track && view) {
   var WHEEL_LOCK_MS = 350 // ignore further wheel input until this settles
   view.addEventListener(
     "wheel",
-    function (e) {
+    (e) => {
       // A mouse's plain vertical wheel, or a trackpad swipe that's
       // mostly vertical, is an ordinary page-scroll — leave it alone
       // entirely (no preventDefault) so the page scrolls as expected.
@@ -229,26 +225,26 @@ if (track && view) {
       pauseAuto()
       wheelDeltaX = 0
       wheelLocked = true
-      setTimeout(function () {
+      setTimeout(() => {
         wheelLocked = false
       }, WHEEL_LOCK_MS)
     },
     { passive: false },
   )
 
-  function pauseAuto() {
+  const pauseAuto = () => {
     clearInterval(autoTimer)
     autoTimer = null
   }
-  function startAuto() {
+  const startAuto = () => {
     if (reduce || autoTimer) return
-    autoTimer = setInterval(function () {
+    autoTimer = setInterval(() => {
       go(index >= maxIndex() ? 0 : index + 1)
     }, 5200)
   }
   var carObs = new IntersectionObserver(
-    function (es) {
-      es.forEach(function (e) {
+    (es) => {
+      es.forEach((e) => {
         e.isIntersecting ? startAuto() : pauseAuto()
       })
     },

@@ -54,11 +54,9 @@ export default defineType({
   ],
   preview: {
     select: { name: "name", veg: "isVegetarian", variance: "catalogueVariance.kind" },
-    prepare({ name, veg, variance }) {
-      return {
-        title: `${name}${veg ? " (V)" : ""}`,
-        subtitle: variance ? `${variance} vs catalogue` : undefined,
-      }
-    },
+    prepare: ({ name, veg, variance }) => ({
+      title: `${name}${veg ? " (V)" : ""}`,
+      subtitle: variance ? `${variance} vs catalogue` : undefined,
+    }),
   },
 })

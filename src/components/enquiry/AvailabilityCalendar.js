@@ -10,7 +10,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
 // embedded in the enquiry form). Browsing months is independent per instance, but picking
 // a date is shared: every instance re-syncs to show the same selected date, and all of
 // them write to the same #date field.
-;(function () {
+;(() => {
   // Every .availability is a calendar (AvailabilityCalendar.astro). The
   // enquiry form's sent panel used to borrow the class for its card styling
   // and had to be excluded here — it threw on render() and took the modal
@@ -56,22 +56,20 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
   // button label) until the client actually clicks "Use this date".
   var modalPending
 
-  function seededStatus(y, m, d) {
+  const seededStatus = (y, m, d) => {
     var seed = (y * 421 + (m + 1) * 37 + d * 13) % 10
     if (seed <= 5) return "open"
     if (seed <= 7) return "interest"
     return "taken"
   }
-  function isoOf(y, m, d) {
-    return y + "-" + String(m + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0")
-  }
-  function sameMonth(a, b) {
-    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()
-  }
+  const isoOf = (y, m, d) =>
+    y + "-" + String(m + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0")
+  const sameMonth = (a, b) =>
+    a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth()
 
   var FADE_MS = 200
 
-  function applyPickedContent(el) {
+  const applyPickedContent = (el) => {
     el.classList.remove("status-open", "status-interest")
     el.classList.add("show", "status-" + selected.status)
     var dateEl = el.querySelector(".availability-picked-date"),
@@ -83,7 +81,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
         selected.status === "open" ? "Available" : "Enquiries received"
   }
 
-  function writeFieldFromSelected() {
+  const writeFieldFromSelected = () => {
     var dateField = document.getElementById("date")
     if (!dateField || !selected) return
     dateField.value = selected.dd + " " + names[selected.mm] + " " + selected.yy
@@ -92,7 +90,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     if (f) f.classList.remove("bad")
   }
 
-  function updatePickedPanels() {
+  const updatePickedPanels = () => {
     // weddings.html's wizard step 1 has a "go to calendar" button whose label
     // reflects whether a date is already picked — kept in sync here alongside
     // the panels themselves, since both are driven by the same `selected` state.
@@ -107,7 +105,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     // Class, not id — weddings.html's #availability card and the quick-pick
     // modal both have their own live footer label, driven off the same class
     // rather than fighting over one id between two elements.
-    document.querySelectorAll(".availability-foot-label").forEach(function (el) {
+    document.querySelectorAll(".availability-foot-label").forEach((el) => {
       el.classList.remove("status-open", "status-interest")
       var dateEl = el.querySelector(".availability-foot-label-date"),
         statusEl = el.querySelector(".availability-picked-status")
@@ -139,7 +137,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     // Not scoped to instances[] (grid widgets) — a page can also have a plain
     // .availability-picked summary panel with no calendar grid attached (weddings.html's
     // wizard step 1), so every .availability-picked on the page is kept in sync here.
-    document.querySelectorAll(".availability-picked").forEach(function (el) {
+    document.querySelectorAll(".availability-picked").forEach((el) => {
       if (!selected) {
         el.classList.remove("show", "status-open", "status-interest", "swapping")
         var dateEl = el.querySelector(".availability-picked-date"),
@@ -158,17 +156,17 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
       // steps into the same paint and skip the fade entirely).
       var target = selected
       el.classList.add("swapping")
-      window.setTimeout(function () {
+      window.setTimeout(() => {
         if (selected !== target) return // a newer pick has already taken over
         applyPickedContent(el)
-        window.setTimeout(function () {
+        window.setTimeout(() => {
           el.classList.remove("swapping")
         }, 20)
       }, FADE_MS)
     })
   }
 
-  function pick(iso, status, dd, yy, mm, cellEl) {
+  const pick = (iso, status, dd, yy, mm, cellEl) => {
     // Full re-render is only actually needed when some instance has to jump to a
     // different month to show the newly picked date. If every instance is already
     // showing the right month (the common case — there's only ever one instance per
@@ -178,9 +176,9 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     // freshly-recreated cell has no prior frame on the same element to animate from.
     var dateField = document.getElementById("date")
     var targetMonth = new Date(yy, mm, 1)
-    var needsMonthChange = instances.some(function (inst) {
-      return !sameMonth(inst.state.view, targetMonth)
-    })
+    var needsMonthChange = instances.some(
+      (inst) => !sameMonth(inst.state.view, targetMonth),
+    )
 
     if (selected && selected.iso === iso) {
       selected = null
@@ -190,7 +188,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
       }
       updatePickedPanels()
       if (needsMonthChange) {
-        instances.forEach(function (inst) {
+        instances.forEach((inst) => {
           inst.render()
         })
       } else {
@@ -198,7 +196,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
         // grid instance now (weddings.html's showcase + its quick-pick modal),
         // and only clearing the first match left the other instance's cell
         // stuck showing "picked" after a deselect.
-        document.querySelectorAll(".availability-cell.picked").forEach(function (c) {
+        document.querySelectorAll(".availability-cell.picked").forEach((c) => {
           c.classList.remove("picked")
         })
       }
@@ -207,12 +205,12 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     selected = { iso: iso, status: status, dd: dd, yy: yy, mm: mm }
     updatePickedPanels()
     if (needsMonthChange) {
-      instances.forEach(function (inst) {
+      instances.forEach((inst) => {
         inst.state.view = new Date(yy, mm, 1)
         inst.render()
       })
     } else {
-      document.querySelectorAll(".availability-cell.picked").forEach(function (c) {
+      document.querySelectorAll(".availability-cell.picked").forEach((c) => {
         c.classList.remove("picked")
       })
       // Only the cell actually clicked is known here — every other instance
@@ -220,13 +218,13 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
       // render() (the needsMonthChange branch above), or already shows it
       // correctly if it was already on this month from a previous sync.
       if (cellEl) cellEl.classList.add("picked")
-      document.querySelectorAll(".availability-grid").forEach(function (grid) {
+      document.querySelectorAll(".availability-grid").forEach((grid) => {
         if (grid.contains(cellEl)) return
         var match = [].slice
           .call(grid.querySelectorAll(".availability-cell"))
-          .find(function (c) {
-            return c.textContent.trim() === String(dd) && !c.classList.contains("blank")
-          })
+          .find(
+            (c) => c.textContent.trim() === String(dd) && !c.classList.contains("blank"),
+          )
         if (match) match.classList.add("picked")
       })
     }
@@ -238,7 +236,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
   // above for why. Every other instance (the showcase grid, and the modal
   // grid when the modal isn't actually open) commits immediately via
   // pick() as before.
-  function handleCellClick(iso, status, dd, yy, mm, cellEl) {
+  const handleCellClick = (iso, status, dd, yy, mm, cellEl) => {
     if (
       availModal &&
       availModal.classList.contains("show") &&
@@ -249,7 +247,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
       pick(iso, status, dd, yy, mm, cellEl)
     }
   }
-  function stageModalPick(iso, status, dd, yy, mm, cellEl) {
+  const stageModalPick = (iso, status, dd, yy, mm, cellEl) => {
     var current = modalPending !== undefined ? modalPending : selected
     var next =
       current && current.iso === iso
@@ -257,11 +255,9 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
         : { iso: iso, status: status, dd: dd, yy: yy, mm: mm }
     modalPending = next
     if (modalInstance) {
-      modalInstance.el
-        .querySelectorAll(".availability-cell.picked")
-        .forEach(function (c) {
-          c.classList.remove("picked")
-        })
+      modalInstance.el.querySelectorAll(".availability-cell.picked").forEach((c) => {
+        c.classList.remove("picked")
+      })
     }
     if (next && cellEl) cellEl.classList.add("picked")
     var footEl = availModal.querySelector(".availability-foot-label")
@@ -292,7 +288,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
   // doesn't matter, and it guarantees the showcase grid and the modal grid
   // agree rather than relying on the partial DOM patching pick() does for
   // the common single-instance case.
-  function commitModalPending() {
+  const commitModalPending = () => {
     if (modalPending === undefined) return
     var dateField = document.getElementById("date")
     selected = modalPending
@@ -302,15 +298,15 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     }
     modalPending = undefined
     updatePickedPanels()
-    instances.forEach(function (inst) {
+    instances.forEach((inst) => {
       inst.render()
     })
     if (selected) writeFieldFromSelected()
   }
-  availabilityHooks.reset = function () {
+  availabilityHooks.reset = () => {
     selected = null
     updatePickedPanels()
-    instances.forEach(function (inst) {
+    instances.forEach((inst) => {
       inst.render()
     })
   }
@@ -333,7 +329,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
   // `if (wlPop)` guard on any page without that markup, same as every other
   // optional widget in this file (bug #4).
   var wlPop = document.getElementById("wlPopover")
-  var wireWaitlistGrid = function () {} // no-op unless wlPop exists, replaced below
+  var wireWaitlistGrid = () => {} // no-op unless wlPop exists, replaced below
   if (wlPop) {
     var wlDateEl = document.getElementById("wlPopoverDate")
     var wlBodyEl = wlPop.querySelector(".wl-popover-body")
@@ -353,11 +349,11 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     // via @media(hover) in styles.css, so it never disagrees with this.
     var wlHoverCapable = window.matchMedia("(hover: hover)").matches
 
-    var wlFormatIso = function (iso) {
+    var wlFormatIso = (iso) => {
       var parts = iso.split("-")
       return +parts[2] + " " + names[+parts[1] - 1] + " " + parts[0]
     }
-    var wlPosition = function () {
+    var wlPosition = () => {
       if (!wlActiveCell) return
       var pad = 12,
         gap = 10
@@ -384,12 +380,12 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
       arrowLeft = Math.max(18, Math.min(arrowLeft, width - 18))
       wlPop.style.setProperty("--wl-arrow-left", arrowLeft + "px")
     }
-    var wlClose = function () {
+    var wlClose = () => {
       wlPop.classList.remove("show")
       if (wlActiveCell) wlActiveCell.classList.remove("wl-active")
       wlActiveCell = null
     }
-    var wlOpenFor = function (cellEl) {
+    var wlOpenFor = (cellEl) => {
       var isSame = wlActiveCell === cellEl
       if (wlActiveCell) wlActiveCell.classList.remove("wl-active")
       if (isSame) {
@@ -409,7 +405,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
       // this keeps the measurement after any layout-affecting class change.
       wlPosition()
     }
-    var wlClearCloseTimer = function () {
+    var wlClearCloseTimer = () => {
       clearTimeout(wlCloseTimer)
       wlCloseTimer = null
     }
@@ -417,9 +413,9 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     // (see wlPosition above), and an instant close would fire while the
     // pointer is still crossing that gap on its way in. Same hover-intent
     // delay already used for the nav dropdown proposal (sandboxes/navbar.html).
-    var wlScheduleClose = function () {
+    var wlScheduleClose = () => {
       wlClearCloseTimer()
-      wlCloseTimer = setTimeout(function () {
+      wlCloseTimer = setTimeout(() => {
         // Don't close out from under someone who's actually typing — the
         // pointer leaving after they've clicked into a field shouldn't
         // discard what's already been entered. Only hover-triggered opens
@@ -436,9 +432,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
         wlClose()
       }, 250)
     }
-    var wlTakenCellFrom = function (e) {
-      return e.target.closest(".availability-cell.taken")
-    }
+    var wlTakenCellFrom = (e) => e.target.closest(".availability-cell.taken")
 
     // Called once per .diary/.compact grid found below — a .taken cell only
     // ever gets a real click listener from this file when open/interest (see
@@ -446,16 +440,16 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     // delegation on the grid itself, which also survives the grid being
     // rebuilt wholesale on every prev/next (a listener on an individual
     // cell wouldn't).
-    wireWaitlistGrid = function (grid) {
+    wireWaitlistGrid = (grid) => {
       if (wlHoverCapable) {
-        grid.addEventListener("mouseover", function (e) {
+        grid.addEventListener("mouseover", (e) => {
           var cellEl = wlTakenCellFrom(e)
           if (!cellEl) return
           wlClearCloseTimer()
           if (cellEl === wlActiveCell) return
           wlOpenFor(cellEl)
         })
-        grid.addEventListener("mouseout", function (e) {
+        grid.addEventListener("mouseout", (e) => {
           var cellEl = wlTakenCellFrom(e)
           if (!cellEl) return
           // relatedTarget is where the pointer is actually headed — if
@@ -466,7 +460,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
           wlScheduleClose()
         })
       } else {
-        grid.addEventListener("click", function (e) {
+        grid.addEventListener("click", (e) => {
           var cellEl = wlTakenCellFrom(e)
           if (cellEl) {
             wlOpenFor(cellEl)
@@ -488,7 +482,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     // "submit", not a click on the button — a real <form> (see the markup)
     // means Enter in either field fires this too, not just clicking the button.
     if (wlForm) {
-      wlForm.addEventListener("submit", function (e) {
+      wlForm.addEventListener("submit", (e) => {
         // Native constraint validation (required + type="email" on the field
         // itself) already ran before this event could even fire — nothing
         // left to check here, just stop the actual (non-existent) form
@@ -499,7 +493,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
         wlSuccessEl.hidden = false
       })
     }
-    document.addEventListener("click", function (e) {
+    document.addEventListener("click", (e) => {
       if (
         wlPop.classList.contains("show") &&
         !wlPop.contains(e.target) &&
@@ -507,7 +501,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
       )
         wlClose()
     })
-    document.addEventListener("keydown", function (e) {
+    document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && wlPop.classList.contains("show")) wlClose()
     })
     // Capture phase, not bubble — a "scroll" event never bubbles, so a plain
@@ -520,17 +514,17 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     // the event travels down to whatever actually scrolled, bubbling or not.
     window.addEventListener(
       "scroll",
-      function () {
+      () => {
         if (wlPop.classList.contains("show")) wlPosition()
       },
       true,
     )
-    window.addEventListener("resize", function () {
+    window.addEventListener("resize", () => {
       if (wlPop.classList.contains("show")) wlPosition()
     })
   }
 
-  availEls.forEach(function (el) {
+  availEls.forEach((el) => {
     var monthEl = el.querySelector(".availability-month"),
       gridEl = el.querySelector(".availability-grid")
     if (el.classList.contains("diary") || el.classList.contains("compact"))
@@ -547,7 +541,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
       view: new Date(minBookableDate.getFullYear(), minBookableDate.getMonth(), 1),
     }
 
-    function render() {
+    const render = () => {
       var view = state.view
       monthEl.textContent = names[view.getMonth()] + " " + view.getFullYear()
       gridEl.innerHTML = ""
@@ -586,10 +580,8 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
         if (!isBeforeMinNotice && status !== "taken") {
           cell.addEventListener(
             "click",
-            (function (ymIso, st, dd, yy, mm, el) {
-              return function () {
-                handleCellClick(ymIso, st, dd, yy, mm, el)
-              }
+            ((ymIso, st, dd, yy, mm, el) => () => {
+              handleCellClick(ymIso, st, dd, yy, mm, el)
             })(iso, status, d, view.getFullYear(), view.getMonth(), cell),
           )
         }
@@ -613,13 +605,13 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     }
 
     if (prevBtn)
-      prevBtn.addEventListener("click", function () {
+      prevBtn.addEventListener("click", () => {
         if (prevBtn.disabled) return
         state.view.setMonth(state.view.getMonth() - 1)
         render()
       })
     if (nextBtn)
-      nextBtn.addEventListener("click", function () {
+      nextBtn.addEventListener("click", () => {
         if (nextBtn.disabled) return
         state.view.setMonth(state.view.getMonth() + 1)
         render()
@@ -628,13 +620,13 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     instances.push({ el: el, state: state, render: render })
   })
 
-  instances.forEach(function (inst) {
+  instances.forEach((inst) => {
     inst.render()
   })
 
   var goToFormBtn = document.getElementById("goToFormBtn")
   if (goToFormBtn) {
-    goToFormBtn.addEventListener("click", function () {
+    goToFormBtn.addEventListener("click", () => {
       var f = document.getElementById("form")
       if (f) f.scrollIntoView({ behavior: "smooth", block: "start" })
     })
@@ -657,10 +649,8 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
   var availChangeBtn = document.getElementById("availChangeBtn")
   var availModalDone = document.getElementById("availModalDone")
   if (availModal && availChangeBtn) {
-    var modalInstance = instances.filter(function (inst) {
-      return availModal.contains(inst.el)
-    })[0]
-    function openAvailModal() {
+    var modalInstance = instances.filter((inst) => availModal.contains(inst.el))[0]
+    const openAvailModal = () => {
       // Always discard any leftover staged pick from a previous visit that
       // was closed without confirming, and re-render so the grid reflects
       // the real committed `selected` rather than a stale staged highlight.
@@ -677,26 +667,26 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
       availModal.classList.add("show")
       lockScroll("availability-modal")
     }
-    function closeAvailModal() {
+    const closeAvailModal = () => {
       modalPending = undefined
       availModal.classList.remove("show")
       unlockScroll("availability-modal")
     }
     availChangeBtn.addEventListener("click", openAvailModal)
-    availModal.querySelectorAll("[data-avail-modal-close]").forEach(function (el) {
+    availModal.querySelectorAll("[data-avail-modal-close]").forEach((el) => {
       el.addEventListener("click", closeAvailModal)
     })
     if (availModalDone) {
-      availModalDone.addEventListener("click", function () {
+      availModalDone.addEventListener("click", () => {
         if (availModalDone.disabled) return
         commitModalPending()
         closeAvailModal()
       })
     }
-    availModal.addEventListener("click", function (e) {
+    availModal.addEventListener("click", (e) => {
       if (e.target === availModal) closeAvailModal()
     })
-    document.addEventListener("keydown", function (e) {
+    document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && availModal.classList.contains("show")) closeAvailModal()
     })
   }

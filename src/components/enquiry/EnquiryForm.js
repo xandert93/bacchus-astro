@@ -21,15 +21,12 @@ var backupDateField = document.getElementById("backupDateField")
 var backupDate = document.getElementById("backupDate")
 var enqToday = new Date()
 enqToday.setHours(0, 0, 0, 0)
-function isoOfDate(d) {
-  return (
-    d.getFullYear() +
-    "-" +
-    String(d.getMonth() + 1).padStart(2, "0") +
-    "-" +
-    String(d.getDate()).padStart(2, "0")
-  )
-}
+const isoOfDate = (d) =>
+  d.getFullYear() +
+  "-" +
+  String(d.getMonth() + 1).padStart(2, "0") +
+  "-" +
+  String(d.getDate()).padStart(2, "0")
 // Minimum-notice floors on the native date fields, mirroring the wedding
 // calendar's own 3-month minimum below (WEDDING_MIN_NOTICE_MONTHS) —
 // placeholders, not confirmed Bacchus policy, same "illustrative only"
@@ -60,9 +57,9 @@ if (backupDate) {
 // Native <input type="date"> has no ::placeholder — its empty "dd/mm/yyyy"
 // and its filled value share one `color`, so .has-value stands in for the
 // placeholder/filled split every other field gets for free (see styles.css).
-document.querySelectorAll('input[type="date"]').forEach(function (el) {
+document.querySelectorAll('input[type="date"]').forEach((el) => {
   el.classList.toggle("has-value", !!el.value)
-  el.addEventListener("input", function () {
+  el.addEventListener("input", () => {
     el.classList.toggle("has-value", !!el.value)
   })
 })
@@ -77,7 +74,7 @@ var guests = document.getElementById("guests")
 var guestHint = document.getElementById("guestHint")
 var spacesField = document.getElementById("spacesField")
 var eventStyleField = document.getElementById("eventStyleField")
-function hintFor(v) {
+const hintFor = (v) => {
   if (!guestHint) return
   var et = document.getElementById("eventtype")
   var isWedding = !et || et.value === "Wedding"
@@ -105,7 +102,7 @@ function hintFor(v) {
     guestHint.innerHTML =
       "Above 180 we'd plan a larger-format reception across the estate — do mention it below and we'll talk through the options."
 }
-function syncSpacesField() {
+const syncSpacesField = () => {
   if (!spacesField || !eventStyleField) return
   var et = document.getElementById("eventtype")
   var isWedding = !et || et.value === "Wedding"
@@ -115,7 +112,7 @@ function syncSpacesField() {
 }
 
 var lastDateMode = null
-function syncDateMode() {
+const syncDateMode = () => {
   if (!dateNativeWrap || !dateCalWrap) return
   var et = document.getElementById("eventtype")
   var isWedding = !et || et.value === "Wedding"
@@ -154,8 +151,8 @@ function syncDateMode() {
       // in-between frame to animate from (see bug #1 in CLAUDE.md).
       dateCalWrap.style.display = ""
       dateCalWrap.classList.remove("is-revealed")
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
           dateCalWrap.classList.add("is-revealed")
         })
       })
@@ -172,7 +169,7 @@ function syncDateMode() {
 }
 syncDateMode()
 if (dateNative) {
-  dateNative.addEventListener("change", function () {
+  dateNative.addEventListener("change", () => {
     var dateField = document.getElementById("date")
     if (dateField) {
       dateField.value = dateNative.value
@@ -195,7 +192,7 @@ var chipNote = document.getElementById("chipNote")
 // EnquirySection.astro, which renders the initial one on the server — one
 // list, so the server-rendered note and the swapped-in ones can't drift.
 var CHIP_NOTE_FADE_MS = 200
-function syncChipNote(isInitial) {
+const syncChipNote = (isInitial) => {
   if (!chipNote) return
   var et = document.getElementById("eventtype")
   var text = CHIP_NOTES[(et && et.value) || "Wedding"] || ""
@@ -208,9 +205,9 @@ function syncChipNote(isInitial) {
   // swap in one tick can get coalesced into a single paint with nothing to
   // transition from.
   chipNote.classList.add("swapping")
-  window.setTimeout(function () {
+  window.setTimeout(() => {
     chipNote.textContent = text
-    window.setTimeout(function () {
+    window.setTimeout(() => {
       chipNote.classList.remove("swapping")
     }, 20)
   }, CHIP_NOTE_FADE_MS)
@@ -219,10 +216,10 @@ syncChipNote(true)
 
 var chipsEl = document.getElementById("chips")
 if (chipsEl) {
-  chipsEl.addEventListener("click", function (e) {
+  chipsEl.addEventListener("click", (e) => {
     var c = e.target.closest(".chip")
     if (!c) return
-    chipsEl.querySelectorAll(".chip").forEach(function (x) {
+    chipsEl.querySelectorAll(".chip").forEach((x) => {
       x.classList.remove("is-selected")
     })
     c.classList.add("is-selected")
@@ -234,10 +231,10 @@ if (chipsEl) {
 }
 var preferEl = document.getElementById("prefer")
 if (preferEl) {
-  preferEl.addEventListener("click", function (e) {
+  preferEl.addEventListener("click", (e) => {
     var c = e.target.closest(".chip")
     if (!c) return
-    preferEl.querySelectorAll(".chip").forEach(function (x) {
+    preferEl.querySelectorAll(".chip").forEach((x) => {
       x.classList.remove("is-selected")
     })
     c.classList.add("is-selected")
@@ -248,8 +245,8 @@ if (preferEl) {
 
 // ---------- Guest stepper ----------
 if (guests) {
-  document.querySelectorAll("[data-step-by]").forEach(function (b) {
-    b.addEventListener("click", function () {
+  document.querySelectorAll("[data-step-by]").forEach((b) => {
+    b.addEventListener("click", () => {
       var v = parseInt(guests.value || "70", 10)
       v = Math.min(500, Math.max(1, v + parseInt(b.dataset.stepBy, 10)))
       guests.value = v
@@ -259,7 +256,7 @@ if (guests) {
       guests.focus()
     })
   })
-  guests.addEventListener("input", function () {
+  guests.addEventListener("input", () => {
     hintFor(parseInt(guests.value, 10))
   })
 }
@@ -267,12 +264,12 @@ if (guests) {
 // ---------- Multi-select spaces (non-Wedding only) ----------
 var spacesWrap = document.getElementById("spaces")
 if (spacesWrap) {
-  spacesWrap.addEventListener("click", function (e) {
+  spacesWrap.addEventListener("click", (e) => {
     var opt = e.target.closest(".option-card")
     if (!opt) return
     if (opt.dataset.v === "Not sure yet") {
       var was = opt.classList.contains("is-selected")
-      spacesWrap.querySelectorAll(".option-card").forEach(function (o) {
+      spacesWrap.querySelectorAll(".option-card").forEach((o) => {
         o.classList.remove("is-selected")
       })
       if (!was) opt.classList.add("is-selected")
@@ -283,23 +280,21 @@ if (spacesWrap) {
     }
   })
 }
-function chosenSpaces() {
+const chosenSpaces = () => {
   if (!spacesWrap) return []
   return [].slice
     .call(spacesWrap.querySelectorAll(".option-card.is-selected"))
-    .map(function (o) {
-      return o.dataset.v
-    })
+    .map((o) => o.dataset.v)
 }
 
 // ---------- Event style (Wedding only, single-select) ----------
 var eventStyleWrap = document.getElementById("eventStyle")
 if (eventStyleWrap) {
-  eventStyleWrap.addEventListener("click", function (e) {
+  eventStyleWrap.addEventListener("click", (e) => {
     var opt = e.target.closest(".option-card")
     if (!opt) return
     var was = opt.classList.contains("is-selected")
-    eventStyleWrap.querySelectorAll(".option-card").forEach(function (o) {
+    eventStyleWrap.querySelectorAll(".option-card").forEach((o) => {
       o.classList.remove("is-selected")
     })
     // Re-clicking the already-selected card deselects it, same convention
@@ -311,14 +306,14 @@ if (eventStyleWrap) {
 }
 
 // ---------- "Anything else" character count ----------
-;(function () {
+;(() => {
   var msg = document.getElementById("msg")
   var ring = document.getElementById("msgCharRing")
   var num = document.getElementById("msgCharNum")
   if (!msg || !ring || !num) return
   var LIMIT = 500
   var CIRCUMFERENCE = 87.96 // 2 * PI * r(14), matches the ring's SVG circle radius
-  function update() {
+  const update = () => {
     var used = msg.value.length
     var remaining = LIMIT - used
     num.textContent = remaining
@@ -334,7 +329,7 @@ if (eventStyleWrap) {
 
 var form = document.getElementById("form")
 if (form) {
-  function bad(el, cond) {
+  const bad = (el, cond) => {
     el.closest(".field").classList.toggle("bad", !cond)
     return cond
   }
@@ -363,23 +358,20 @@ if (form) {
     "Friday",
     "Saturday",
   ]
-  function fmtDate(d) {
-    return (
-      DAYS_FORM[d.getDay()] +
-      " " +
-      d.getDate() +
-      " " +
-      MONTHS_FORM[d.getMonth()] +
-      " " +
-      d.getFullYear()
-    )
-  }
+  const fmtDate = (d) =>
+    DAYS_FORM[d.getDay()] +
+    " " +
+    d.getDate() +
+    " " +
+    MONTHS_FORM[d.getMonth()] +
+    " " +
+    d.getFullYear()
   // #date's value is human-formatted when it came from the Wedding
   // calendar (see writeFieldFromSelected() below) but raw ISO when it
   // came from the plain native field (see dateNative's change handler
   // above) — dataset.iso is reliably ISO either way, so reformat from
   // that rather than guessing which shape #date.value is in.
-  function niceDate() {
+  const niceDate = () => {
     var dt = document.getElementById("date")
     if (!dt) return null
     var iso = dt.dataset.iso
@@ -387,13 +379,13 @@ if (form) {
     var d = new Date(iso + "T00:00:00")
     return isNaN(d) ? dt.value : fmtDate(d)
   }
-  function val(id) {
+  const val = (id) => {
     var el = document.getElementById(id)
     if (!el) return null
     var v = el.value
     return v && v.trim() ? v.trim() : null
   }
-  function fullName() {
+  const fullName = () => {
     var firstNameEl = document.getElementById("firstName"),
       lastNameEl = document.getElementById("lastName")
     if (firstNameEl || lastNameEl)
@@ -425,7 +417,7 @@ if (form) {
     "Review &amp; <em>send</em>",
   ]
 
-  function stepChecks(stepNum) {
+  const stepChecks = (stepNum) => {
     var checks = []
     if (stepNum === 1) {
       var dt = document.getElementById("date")
@@ -473,10 +465,10 @@ if (form) {
     return checks
   }
 
-  function validateStep(stepNum) {
+  const validateStep = (stepNum) => {
     var ok = true,
       firstBad = null
-    stepChecks(stepNum).forEach(function (pair) {
+    stepChecks(stepNum).forEach((pair) => {
       var passed = bad(pair[0], pair[1])
       if (!passed && !firstBad) firstBad = pair[0]
       ok = ok && passed
@@ -486,14 +478,14 @@ if (form) {
   }
 
   // ---------- Review (only on pages with a review/#review step) ----------
-  function esc(s) {
-    return String(s).replace(/[&<>"]/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]
-    })
-  }
-  function rows(list) {
-    return list
-      .map(function (r) {
+  const esc = (s) =>
+    String(s).replace(
+      /[&<>"]/g,
+      (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+    )
+  const rows = (list) =>
+    list
+      .map((r) => {
         // Free text (Notes) gets the full card width instead of sharing the
         // fixed label column with short single-line answers.
         var full = r[0] === "Notes" ? " review-row-full" : ""
@@ -510,8 +502,7 @@ if (form) {
         )
       })
       .join("")
-  }
-  function buildReview() {
+  const buildReview = () => {
     var backup = val("backupDate")
     if (backup) {
       var bd = new Date(backup + "T00:00:00")
@@ -548,21 +539,20 @@ if (form) {
       ],
     ]
     reviewEl.innerHTML = groups
-      .map(function (g) {
-        return (
+      .map(
+        (g) =>
           "<div class='review-group'><div class='review-head'><h4>" +
           g[0] +
           "</h4><button type='button' class='review-edit-button' data-edit='" +
           g[1] +
           "'><svg width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z'/></svg><span>Edit</span></button></div><dl class='review-rows'>" +
           rows(g[2]) +
-          "</dl></div>"
-        )
-      })
+          "</dl></div>",
+      )
       .join("")
   }
   if (reviewEl) {
-    reviewEl.addEventListener("click", function (e) {
+    reviewEl.addEventListener("click", (e) => {
       var b = e.target.closest("[data-edit]")
       if (b) showStep(parseInt(b.dataset.edit, 10))
     })
@@ -571,17 +561,17 @@ if (form) {
   var STEP_FADE_MS = 180
   var stepFadeTimer = null
 
-  function showStep(n) {
+  const showStep = (n) => {
     currentStep = n
     if (n > maxStepReached) maxStepReached = n
     if (n === totalSteps && reviewEl) buildReview()
-    stepTabs.forEach(function (t) {
+    stepTabs.forEach((t) => {
       var tn = Number(t.dataset.goto)
       t.classList.toggle("active", tn === n)
       t.classList.toggle("done", tn < n)
       t.disabled = tn > maxStepReached
     })
-    lineSegs.forEach(function (seg, i) {
+    lineSegs.forEach((seg, i) => {
       seg.classList.toggle("done", n > i + 1)
     })
     // A class, not inline style.visibility directly — lets CSS handle it
@@ -600,7 +590,7 @@ if (form) {
         : "Private & without obligation · nothing is sent until you review it"
     }
 
-    function afterSwap() {
+    const afterSwap = () => {
       var card = form.getBoundingClientRect()
       if (card.top < 0)
         window.scrollTo({
@@ -609,34 +599,30 @@ if (form) {
         })
     }
 
-    var current = steps.filter(function (s) {
-      return s.classList.contains("active")
-    })[0]
-    var target = steps.filter(function (s) {
-      return Number(s.dataset.step) === n
-    })[0]
+    var current = steps.filter((s) => s.classList.contains("active"))[0]
+    var target = steps.filter((s) => Number(s.dataset.step) === n)[0]
     if (!target || target === current) return
 
     clearTimeout(stepFadeTimer)
     if (!current || reduce) {
-      steps.forEach(function (s) {
+      steps.forEach((s) => {
         s.classList.toggle("active", s === target)
       })
       afterSwap()
       return
     }
     current.classList.add("leaving")
-    stepFadeTimer = setTimeout(function () {
+    stepFadeTimer = setTimeout(() => {
       current.classList.remove("active", "leaving")
       target.classList.add("active", "entering")
-      stepFadeTimer = setTimeout(function () {
+      stepFadeTimer = setTimeout(() => {
         target.classList.remove("entering")
       }, 30)
       afterSwap()
     }, STEP_FADE_MS)
   }
 
-  function goToNextStep() {
+  const goToNextStep = () => {
     if (!validateStep(currentStep)) return
     showStep(Math.min(totalSteps, currentStep + 1))
   }
@@ -644,11 +630,11 @@ if (form) {
   if (totalSteps) {
     if (nextBtn) nextBtn.addEventListener("click", goToNextStep)
     if (backBtn)
-      backBtn.addEventListener("click", function () {
+      backBtn.addEventListener("click", () => {
         showStep(Math.max(1, currentStep - 1))
       })
-    stepTabs.forEach(function (t) {
-      t.addEventListener("click", function () {
+    stepTabs.forEach((t) => {
+      t.addEventListener("click", () => {
         var tn = Number(t.dataset.goto)
         if (tn <= maxStepReached) showStep(tn)
       })
@@ -672,7 +658,7 @@ if (form) {
     // text fields, not the step-1 event-type chips or the Continue/Back
     // buttons themselves (all real <button> elements, which already have
     // their own correct native Enter-activates-the-button behavior).
-    form.addEventListener("keydown", function (e) {
+    form.addEventListener("keydown", (e) => {
       if (e.key !== "Enter" || currentStep >= totalSteps) return
       if (!e.target || e.target.tagName !== "INPUT") return
       e.preventDefault()
@@ -681,7 +667,7 @@ if (form) {
     showStep(1)
   }
 
-  form.addEventListener("submit", function (e) {
+  form.addEventListener("submit", (e) => {
     e.preventDefault()
     // Review/consent step — pages without it (not yet migrated) have no
     // #consent element, so this gate is a no-op for them.
@@ -733,7 +719,7 @@ if (form) {
         var submitLabel = submitBtn.querySelector("span")
         if (submitLabel) submitLabel.textContent = "Sending…"
       }
-      setTimeout(function () {
+      setTimeout(() => {
         var sentLine = document.getElementById("sentLine")
         if (sentLine) {
           sentLine.textContent =
@@ -776,14 +762,14 @@ if (form) {
     }
     if (availabilityHooks.reset) availabilityHooks.reset()
     if (et) et.value = defaultEventType
-    document.querySelectorAll("#chips .chip").forEach(function (c) {
+    document.querySelectorAll("#chips .chip").forEach((c) => {
       c.classList.toggle("is-selected", c.dataset.v === defaultEventType)
     })
     syncChipNote(true)
     if (totalSteps) showStep(1)
   })
-  form.querySelectorAll("input").forEach(function (i) {
-    i.addEventListener("input", function () {
+  form.querySelectorAll("input").forEach((i) => {
+    i.addEventListener("input", () => {
       i.closest(".field").classList.remove("bad")
     })
   })

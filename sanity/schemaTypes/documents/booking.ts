@@ -312,7 +312,7 @@ export default defineType({
       type: "eventType",
       guests: "guestCount",
     },
-    prepare({ first, last, date, flexible, status, type, guests }) {
+    prepare: ({ first, last, date, flexible, status, type, guests }) => {
       const when = date
         ? new Date(date).toLocaleDateString("en-GB", {
             day: "numeric",

@@ -209,17 +209,15 @@ export default defineType({
       rating: "rating",
       date: "eventDate",
     },
-    prepare({ name, status, rating, date }) {
-      return {
-        title: name ?? "Unnamed",
-        subtitle: [
-          "★".repeat(Number(rating ?? 0)),
-          status,
-          date ? new Date(date).toLocaleDateString("en-GB") : null,
-        ]
-          .filter(Boolean)
-          .join(" · "),
-      }
-    },
+    prepare: ({ name, status, rating, date }) => ({
+      title: name ?? "Unnamed",
+      subtitle: [
+        "★".repeat(Number(rating ?? 0)),
+        status,
+        date ? new Date(date).toLocaleDateString("en-GB") : null,
+      ]
+        .filter(Boolean)
+        .join(" · "),
+    }),
   },
 })

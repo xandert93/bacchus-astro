@@ -321,8 +321,6 @@ export default defineType({
     }),
   ],
   preview: {
-    prepare() {
-      return { title: "Wedding policy & venue facts" }
-    },
+    prepare: () => ({ title: "Wedding policy & venue facts" }),
   },
 })

@@ -1,8 +1,8 @@
 import { expect, test, type Locator, type Page } from "@playwright/test"
 
 // Reads the gold underline's left/right inset and the link's own padding.
-async function underlineAndPadding(link: Locator) {
-  return link.evaluate((element) => {
+const underlineAndPadding = async (link: Locator) =>
+  link.evaluate((element) => {
     const box = getComputedStyle(element)
     const underline = getComputedStyle(element, "::after")
     return {
@@ -10,7 +10,6 @@ async function underlineAndPadding(link: Locator) {
       underlineLeft: underline.left,
     }
   })
-}
 
 // Regression for the 2026-10-04 fix: in the compact band (980–1179.98px)
 // the split triggers' underline started 6px before the first letter because
@@ -45,9 +44,8 @@ test("Events is marked active on an events page", async ({ page }) => {
 // document.body.style.overflow, which tied the test to how the lock was
 // implemented rather than to whether the page is locked — and broke the
 // moment the lock moved to a class on <html>.
-function bodyOverflow(page: Page) {
-  return page.evaluate(() => getComputedStyle(document.body).overflowY)
-}
+const bodyOverflow = (page: Page) =>
+  page.evaluate(() => getComputedStyle(document.body).overflowY)
 
 // Prototype bug #33: widening past the burger cutover with the drawer open
 // left the overlay painted and, worse, the page scroll-locked.

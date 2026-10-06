@@ -211,8 +211,6 @@ export default defineType({
     }),
   ],
   preview: {
-    prepare() {
-      return { title: "Site settings" }
-    },
+    prepare: () => ({ title: "Site settings" }),
   },
 })

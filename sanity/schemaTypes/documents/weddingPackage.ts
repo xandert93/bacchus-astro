@@ -203,17 +203,15 @@ export default defineType({
   ],
   preview: {
     select: { name: "name", role: "role", style: "tierStyle", marking: "dietaryMarking" },
-    prepare({ name, role, style, marking }) {
-      return {
-        title: name,
-        subtitle: [
-          role === "meal-format" ? "meal format" : "additive",
-          style === "ranked-tiers" ? "ranked tiers" : "combinable categories",
-          marking === "not-marked-in-source" ? "no (V) in source" : null,
-        ]
-          .filter(Boolean)
-          .join(" · "),
-      }
-    },
+    prepare: ({ name, role, style, marking }) => ({
+      title: name,
+      subtitle: [
+        role === "meal-format" ? "meal format" : "additive",
+        style === "ranked-tiers" ? "ranked tiers" : "combinable categories",
+        marking === "not-marked-in-source" ? "no (V) in source" : null,
+      ]
+        .filter(Boolean)
+        .join(" · "),
+    }),
   },
 })

@@ -59,12 +59,10 @@ export default defineType({
   ],
   preview: {
     select: { name: "name", amount: "price.amount", media: "image" },
-    prepare({ name, amount, media }) {
-      return {
-        title: name,
-        subtitle: amount ? `€${Number(amount).toFixed(2)}` : undefined,
-        media,
-      }
-    },
+    prepare: ({ name, amount, media }) => ({
+      title: name,
+      subtitle: amount ? `€${Number(amount).toFixed(2)}` : undefined,
+      media,
+    }),
   },
 })

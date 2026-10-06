@@ -78,13 +78,11 @@ export default defineType({
   ],
   preview: {
     select: { given: "given", at: "givenAt", page: "sourcePage" },
-    prepare({ given, at, page }) {
-      return {
-        title: given ? "Consent given" : "No consent recorded",
-        subtitle: [at ? new Date(at).toLocaleDateString("en-GB") : null, page]
-          .filter(Boolean)
-          .join(" — "),
-      }
-    },
+    prepare: ({ given, at, page }) => ({
+      title: given ? "Consent given" : "No consent recorded",
+      subtitle: [at ? new Date(at).toLocaleDateString("en-GB") : null, page]
+        .filter(Boolean)
+        .join(" — "),
+    }),
   },
 })

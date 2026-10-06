@@ -43,21 +43,19 @@ if (lb) {
   let current = -1
   let token = 0
 
-  function groupKey(item) {
-    return item.dataset.lbGroup || GRID_GROUP
-  }
+  const groupKey = (item) => item.dataset.lbGroup || GRID_GROUP
 
   // The grid group follows the gallery's CSS :has() filter, so hidden tiles
   // drop out of prev/next. Explicit groups keep every member: reception's
   // stations stage opens the lightbox by clicking a card that may itself be
   // hidden, and that card still has to be found in its group.
-  function membersOf(key) {
+  const membersOf = (key) => {
     const members = items.filter((item) => groupKey(item) === key)
     if (key !== GRID_GROUP) return members
     return members.filter((item) => getComputedStyle(item).display !== "none")
   }
 
-  function renderTag(tag) {
+  const renderTag = (tag) => {
     lbCapI.textContent = ""
     const price = /^(€\S+)(?:\s+(\S[\s\S]*))?$/.exec(tag)
     if (!price) {
@@ -81,7 +79,7 @@ if (lb) {
   // where " (V)" marks vegetarian items. The veg badge is wrapped with the
   // item's last word so it never wraps onto a line of its own — the same
   // markup the station cards use.
-  function renderDetail(detail) {
+  const renderDetail = (detail) => {
     if (!lbCapNote || !lbCapItems) return
     const noteEnd = detail.indexOf(". ")
     const note = noteEnd === -1 ? detail : detail.slice(0, noteEnd + 1)
@@ -115,7 +113,7 @@ if (lb) {
     lbCapItems.hidden = !list.length
   }
 
-  function applyImage() {
+  const applyImage = () => {
     if (!group.length) return
     if (current < 0) current = group.length - 1
     if (current >= group.length) current = 0
@@ -131,7 +129,7 @@ if (lb) {
 
   // Fresh open: the image is held invisible (.lightbox-loading) until the new
   // photo has decoded, then plays its normal open transition.
-  function show() {
+  const show = () => {
     const mine = ++token
     lbImg.classList.remove("lightbox-fade")
     lbImg.classList.add("lightbox-loading")
@@ -144,7 +142,7 @@ if (lb) {
     lbImg.decode ? lbImg.decode().then(reveal, reveal) : reveal()
   }
 
-  function openAt(item) {
+  const openAt = (item) => {
     group = membersOf(groupKey(item))
     current = group.indexOf(item)
     show()
@@ -153,7 +151,7 @@ if (lb) {
   // Prev/next: fade out on a fixed clock, swap, fade back in once decoded.
   // The 20ms floor keeps a frame boundary when decode is instant (CLAUDE.md
   // bug #7); no wraparound at the ends.
-  function navigate(step) {
+  const navigate = (step) => {
     const next = current + step
     if (next < 0 || next >= group.length) return
     current = next
@@ -170,7 +168,7 @@ if (lb) {
     }, LB_FADE_MS)
   }
 
-  function close() {
+  const close = () => {
     lb.classList.remove("show")
     unlockScroll("lightbox")
   }

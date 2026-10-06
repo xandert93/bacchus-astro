@@ -180,17 +180,15 @@ export default defineType({
       max: "capacity.max",
       basis: "capacity.basis",
     },
-    prepare({ name, setting, included, max, basis }) {
-      return {
-        title: name,
-        subtitle: [
-          setting,
-          max ? `up to ${max} ${basis ?? ""}`.trim() : null,
-          included ? "in standard package" : "exclusivity fee applies",
-        ]
-          .filter(Boolean)
-          .join(" · "),
-      }
-    },
+    prepare: ({ name, setting, included, max, basis }) => ({
+      title: name,
+      subtitle: [
+        setting,
+        max ? `up to ${max} ${basis ?? ""}`.trim() : null,
+        included ? "in standard package" : "exclusivity fee applies",
+      ]
+        .filter(Boolean)
+        .join(" · "),
+    }),
   },
 })

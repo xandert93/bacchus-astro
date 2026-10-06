@@ -283,17 +283,15 @@ export default defineType({
       status: "status",
       date: "eventDate",
     },
-    prepare({ reference, name, total, status, date }) {
-      return {
-        title: `${reference} — ${name ?? ""}`.trim(),
-        subtitle: [
-          status,
-          date ? new Date(date).toLocaleDateString("en-GB") : null,
-          total ? `€${Number(total).toFixed(2)}` : null,
-        ]
-          .filter(Boolean)
-          .join(" · "),
-      }
-    },
+    prepare: ({ reference, name, total, status, date }) => ({
+      title: `${reference} — ${name ?? ""}`.trim(),
+      subtitle: [
+        status,
+        date ? new Date(date).toLocaleDateString("en-GB") : null,
+        total ? `€${Number(total).toFixed(2)}` : null,
+      ]
+        .filter(Boolean)
+        .join(" · "),
+    }),
   },
 })

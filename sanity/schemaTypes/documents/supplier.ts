@@ -145,18 +145,16 @@ export default defineType({
       published: "isPublished",
       media: "logo",
     },
-    prepare({ name, category, preferred, published, media }) {
-      return {
-        title: name,
-        subtitle: [
-          category,
-          preferred ? "preferred" : null,
-          published ? null : "unpublished",
-        ]
-          .filter(Boolean)
-          .join(" · "),
-        media,
-      }
-    },
+    prepare: ({ name, category, preferred, published, media }) => ({
+      title: name,
+      subtitle: [
+        category,
+        preferred ? "preferred" : null,
+        published ? null : "unpublished",
+      ]
+        .filter(Boolean)
+        .join(" · "),
+      media,
+    }),
   },
 })

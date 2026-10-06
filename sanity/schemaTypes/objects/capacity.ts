@@ -68,7 +68,7 @@ export default defineType({
   ],
   preview: {
     select: { min: "min", max: "max", basis: "basis", status: "provenance.status" },
-    prepare({ min, max, basis, status }) {
+    prepare: ({ min, max, basis, status }) => {
       const range = min ? `${min}–${max}` : `up to ${max}`
       return {
         title: `${range} ${basis === "either" ? "guests" : basis}`,

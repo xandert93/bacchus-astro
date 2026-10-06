@@ -132,7 +132,7 @@ export default defineType({
       status: "price.provenance.status",
       blocked: "price.provenance.blocksPublication",
     },
-    prepare({ name, amount, unit, status, blocked }) {
+    prepare: ({ name, amount, unit, status, blocked }) => {
       const price = amount
         ? `€${Number(amount).toFixed(2)} ${unit === "per-person" ? "pp" : (unit ?? "")}`.trim()
         : "no price"

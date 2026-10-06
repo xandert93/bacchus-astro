@@ -66,8 +66,9 @@ export default defineType({
   ],
   preview: {
     select: { label: "label", short: "shortLabel", order: "order" },
-    prepare({ label, short, order }) {
-      return { title: label, subtitle: `tab: ${short} · #${order}` }
-    },
+    prepare: ({ label, short, order }) => ({
+      title: label,
+      subtitle: `tab: ${short} · #${order}`,
+    }),
   },
 })

@@ -29,18 +29,18 @@ import { REVEAL_ROOT_MARGIN } from "@scripts/lib/motion.js"
 // consistent with the rest of the page. revObs's own per-card observer
 // keeps running regardless — a harmless no-op once a card already carries
 // .is-revealed.
-;(function () {
+;(() => {
   var list = document.querySelector(".package-dining-card-list")
   if (!list) return
   var cards = list.querySelectorAll(".package-dining-card")
   if (!cards.length) return
   var triptych = window.matchMedia("(min-width: 980px)")
   var obs = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (entry) {
+    (entries) => {
+      entries.forEach((entry) => {
         if (!entry.isIntersecting) return
         if (triptych.matches) {
-          cards.forEach(function (card) {
+          cards.forEach((card) => {
             card.classList.add("is-revealed")
           })
         }

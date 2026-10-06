@@ -75,21 +75,18 @@ const files = walk(SRC)
 
 // Markup only: frontmatter and comments removed, so a word in a comment
 // ("one <img> per state") can't pass for markup.
-function markupOf(text) {
-  return text
+const markupOf = (text) =>
+  text
     .replace(/^---[\s\S]*?\n---/, "")
     .replace(/<style[\s\S]*?<\/style>/g, "")
     .replace(/<script[\s\S]*?<\/script>/g, "")
     .replace(/\{\/\*[\s\S]*?\*\/\}/g, "")
     .replace(/<!--[\s\S]*?-->/g, "")
-}
 // Classes and ids written on this file's own elements. A class passed to a
 // CHILD component (<SocialLinks class="menu-social">) lands on the child's
 // element, which carries the child's scoping attribute, so it doesn't count.
-function ownMarkup(text) {
-  return markupOf(text).replace(/<[A-Z][\w.]*\b[^>]*>/g, "")
-}
-function tokensIn(markup, attr) {
+const ownMarkup = (text) => markupOf(text).replace(/<[A-Z][\w.]*\b[^>]*>/g, "")
+const tokensIn = (markup, attr) => {
   const found = new Set()
   const re = new RegExp(`${attr}(?::list)?=(?:"([^"]*)"|\\{([^}]*)\\})`, "g")
   for (const m of markup.matchAll(re))
@@ -116,7 +113,7 @@ for (const f of files.filter((f) => f.endsWith(".js"))) {
 }
 
 // Tags rendered by the child components a file uses, recursively.
-function childTags(file, seen = new Set()) {
+const childTags = (file, seen = new Set()) => {
   const out = new Set()
   const text = fs.readFileSync(file, "utf8")
   for (const m of text.matchAll(/import (\w+) from "([^"]+\.astro)"/g)) {
@@ -168,7 +165,7 @@ const compoundsOf = (sel) => {
 const classesOf = (c) => c.filter((n) => n.type === "class").map((n) => n.value)
 const idsOf = (c) => c.filter((n) => n.type === "id").map((n) => n.value)
 
-function isLocal(compound) {
+const isLocal = (compound) => {
   if (compound.some((n) => n.type === "pseudo" && n.value === ":global")) return true
   const cls = classesOf(compound)
   if (cls.some((c) => localClasses.has(c) && !created.has(c))) return true
@@ -178,7 +175,7 @@ function isLocal(compound) {
   return !!tag && localTags.has(tag)
 }
 
-function selected(selector) {
+const selected = (selector) => {
   if (select) return select.test(selector)
   let ok = false
   selectorParser((root) => {
@@ -190,7 +187,7 @@ function selected(selector) {
   return ok
 }
 
-function convert(selector) {
+const convert = (selector) => {
   if (cssTarget) return selector
   return selectorParser((root) => {
     root.each((sel) => {

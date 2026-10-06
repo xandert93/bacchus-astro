@@ -143,7 +143,7 @@ export default defineType({
   ],
   preview: {
     select: { status: "status", source: "source", note: "internalNote" },
-    prepare({ status, source, note }) {
+    prepare: ({ status, source, note }) => {
       const marks: Record<string, string> = {
         confirmed: "Confirmed",
         unconfirmed: "Unconfirmed",

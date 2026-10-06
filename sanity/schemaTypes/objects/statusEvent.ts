@@ -81,13 +81,11 @@ export default defineType({
   ],
   preview: {
     select: { to: "to", from: "from", at: "at", actor: "actor" },
-    prepare({ to, from, at, actor }) {
-      return {
-        title: from ? `${from} → ${to}` : `created as ${to}`,
-        subtitle: [at ? new Date(at).toLocaleString("en-GB") : null, actor]
-          .filter(Boolean)
-          .join(" — "),
-      }
-    },
+    prepare: ({ to, from, at, actor }) => ({
+      title: from ? `${from} → ${to}` : `created as ${to}`,
+      subtitle: [at ? new Date(at).toLocaleString("en-GB") : null, actor]
+        .filter(Boolean)
+        .join(" — "),
+    }),
   },
 })

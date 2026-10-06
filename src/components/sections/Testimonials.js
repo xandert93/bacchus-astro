@@ -4,7 +4,7 @@ import { reduce } from "@scripts/lib/motion.js"
 import { TESTIMONIALS } from "@data/testimonials"
 
 // ---------- Testimonials rotator ----------
-;(function () {
+;(() => {
   var section = document.getElementById("testimonials")
   var quoteBox = document.getElementById("tQuoteBox")
   var quoteEl = document.getElementById("tQuote")
@@ -50,8 +50,8 @@ import { TESTIMONIALS } from "@data/testimonials"
 
   // Cards and dots are rendered by Testimonials.astro, one per item, in order.
   var cards = [].slice.call(cardsWrap.children)
-  cards.forEach(function (card, i) {
-    card.addEventListener("click", function () {
+  cards.forEach((card, i) => {
+    card.addEventListener("click", () => {
       tShow(i)
     })
   })
@@ -62,7 +62,7 @@ import { TESTIMONIALS } from "@data/testimonials"
   // Turns <em>...</em> markers in a quote string into real <em> elements
   // (plain text elsewhere) — safe here since `text` only ever comes from
   // our own hardcoded items array above, never remote/user content.
-  function tBuildQuoteNodes(text) {
+  const tBuildQuoteNodes = (text) => {
     var frag = document.createDocumentFragment()
     var re = /<em>(.*?)<\/em>/g
     var lastIndex = 0,
@@ -84,7 +84,7 @@ import { TESTIMONIALS } from "@data/testimonials"
   // span) rather than one textContent string, so the “ “ characters can be
   // styled (.testimonial-quote-mark) independently of the quote body. Truncated text
   // gets an ellipsis instead of the closing mark, so `closed` is omitted.
-  function tSetQuoteContent(text, closed) {
+  const tSetQuoteContent = (text, closed) => {
     quoteEl.textContent = ""
     var open = document.createElement("span")
     open.className = "testimonial-quote-mark"
@@ -99,7 +99,7 @@ import { TESTIMONIALS } from "@data/testimonials"
     }
   }
 
-  function tRender(i) {
+  const tRender = (i) => {
     var item = items[i]
     tSetQuoteContent(item.quote, true)
     var lineHeight = parseFloat(getComputedStyle(quoteEl).lineHeight)
@@ -128,19 +128,19 @@ import { TESTIMONIALS } from "@data/testimonials"
     subEl.className = "testimonial-meta-sub"
     subEl.textContent = sub.join(" · ")
     metaEl.appendChild(subEl)
-    stars.forEach(function (s, si) {
+    stars.forEach((s, si) => {
       s.classList.toggle("is-empty", si >= item.rating)
     })
-    cards.forEach(function (c, ci) {
+    cards.forEach((c, ci) => {
       c.classList.toggle("is-active", ci === i)
       c.setAttribute("aria-selected", ci === i ? "true" : "false")
     })
-    dots.forEach(function (d, di) {
+    dots.forEach((d, di) => {
       d.classList.toggle("is-active", di === i)
     })
   }
 
-  function tResetTimer() {
+  const tResetTimer = () => {
     tProgress = 0
     tCycleStart = null
     ringFill.style.strokeDashoffset = String(T_RING_CIRC)
@@ -151,10 +151,10 @@ import { TESTIMONIALS } from "@data/testimonials"
   // (cards, controls, footer) — reserve height for the tallest combination
   // up front instead. Re-measured on load/resize since the box's width and
   // the Fraunces web font (loaded with font-display: swap) both affect wrap.
-  function tMeasureMinHeight() {
+  const tMeasureMinHeight = () => {
     quoteBox.style.minHeight = "0px"
     var max = 0
-    items.forEach(function (item, i) {
+    items.forEach((item, i) => {
       tRender(i)
       max = Math.max(max, quoteBox.offsetHeight)
     })
@@ -162,7 +162,7 @@ import { TESTIMONIALS } from "@data/testimonials"
     quoteBox.style.minHeight = max + "px"
   }
 
-  function tFade(el, out) {
+  const tFade = (el, out) => {
     // Inline styles, not a .testimonial-fade-out class: #tQuote/#tMeta carry data-reveal
     // for the page's scroll-in animation, and once scrolled into view they get
     // .is-revealed added, and [data-reveal].is-revealed (attribute+class, specificity 0,2,0) beats
@@ -182,7 +182,7 @@ import { TESTIMONIALS } from "@data/testimonials"
     el.style.transform = out ? "translateY(6px)" : ""
   }
 
-  function tShow(i) {
+  const tShow = (i) => {
     tActive = (i + items.length) % items.length
     tResetTimer()
     tSync()
@@ -194,7 +194,7 @@ import { TESTIMONIALS } from "@data/testimonials"
     tFade(quoteEl, true)
     tFade(metaEl, true)
     starsWrap.classList.remove("is-in-view")
-    tFadeTimer = setTimeout(function () {
+    tFadeTimer = setTimeout(() => {
       tRender(tActive)
       // A second, short timeout — not nested requestAnimationFrame — gives the
       // browser a paint boundary between the content swap and the style
@@ -204,7 +204,7 @@ import { TESTIMONIALS } from "@data/testimonials"
       // reasoning applies to re-adding is-in here rather than alongside the
       // tRender() call above — it needs its own frame boundary to replay the
       // stars' staggered entrance instead of snapping straight to visible.
-      tFadeTimer = setTimeout(function () {
+      tFadeTimer = setTimeout(() => {
         tFade(quoteEl, false)
         tFade(metaEl, false)
         starsWrap.classList.add("is-in-view")
@@ -214,10 +214,10 @@ import { TESTIMONIALS } from "@data/testimonials"
 
   // No explicit tPause() here — tShow() calls tSync() itself, which is the
   // single source of truth for whether the loop should be running.
-  function tPrev() {
+  const tPrev = () => {
     tShow(tActive - 1)
   }
-  function tNext() {
+  const tNext = () => {
     tShow(tActive + 1)
   }
   prevBtn.addEventListener("click", tPrev)
@@ -227,10 +227,10 @@ import { TESTIMONIALS } from "@data/testimonials"
   // the arrows — the lightbox's gesture, touch and pen only: with a mouse,
   // dragging across the quote is how a visitor selects its text.
   var tSwipe = null
-  quoteBox.addEventListener("pointerdown", function (e) {
+  quoteBox.addEventListener("pointerdown", (e) => {
     tSwipe = e.pointerType === "mouse" ? null : { x: e.clientX, y: e.clientY }
   })
-  quoteBox.addEventListener("pointerup", function (e) {
+  quoteBox.addEventListener("pointerup", (e) => {
     if (!tSwipe) return
     var dx = e.clientX - tSwipe.x
     var dy = e.clientY - tSwipe.y
@@ -239,7 +239,7 @@ import { TESTIMONIALS } from "@data/testimonials"
     if (dx < 0) tNext()
     else tPrev()
   })
-  quoteBox.addEventListener("pointercancel", function () {
+  quoteBox.addEventListener("pointercancel", () => {
     tSwipe = null
   })
 
@@ -249,7 +249,7 @@ import { TESTIMONIALS } from "@data/testimonials"
   // steps. tCycleStart is derived from the current tProgress on (re)start,
   // so pausing/resuming (hover, scrolling out of view, manual nav) picks up
   // from wherever the ring was rather than resetting or skipping ahead.
-  function tTickFrame(now) {
+  const tTickFrame = (now) => {
     if (tCycleStart === null) tCycleStart = now - (tProgress / 100) * T_CYCLE_MS
     tProgress = Math.min(100, ((now - tCycleStart) / T_CYCLE_MS) * 100)
     ringFill.style.strokeDashoffset = String(T_RING_CIRC * (1 - tProgress / 100))
@@ -266,12 +266,12 @@ import { TESTIMONIALS } from "@data/testimonials"
     }
     tRafId = requestAnimationFrame(tTickFrame)
   }
-  function tPause() {
+  const tPause = () => {
     if (tRafId) cancelAnimationFrame(tRafId)
     tRafId = null
     tCycleStart = null
   }
-  function tStart() {
+  const tStart = () => {
     if (reduce || tRafId) return
     tRafId = requestAnimationFrame(tTickFrame)
   }
@@ -281,13 +281,13 @@ import { TESTIMONIALS } from "@data/testimonials"
   // only covered their own trigger and left the others with no way back in.
   var tHovering = false,
     tInView = false
-  function tSync() {
+  const tSync = () => {
     if (!reduce && tInView && !tHovering) tStart()
     else tPause()
   }
   var tObs = new IntersectionObserver(
-    function (es) {
-      es.forEach(function (e) {
+    (es) => {
+      es.forEach((e) => {
         tInView = e.isIntersecting
         tSync()
       })
@@ -300,12 +300,12 @@ import { TESTIMONIALS } from "@data/testimonials"
   // tapping the next arrow used to pause autoplay — the ring visibly
   // stopped — until the next tap elsewhere. pointerType filters that out;
   // a tap has no hover to pause for.
-  nextBtn.addEventListener("pointerenter", function (e) {
+  nextBtn.addEventListener("pointerenter", (e) => {
     if (e.pointerType !== "mouse") return
     tHovering = true
     tSync()
   })
-  nextBtn.addEventListener("pointerleave", function (e) {
+  nextBtn.addEventListener("pointerleave", (e) => {
     if (e.pointerType !== "mouse") return
     tHovering = false
     tSync()

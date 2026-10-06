@@ -14,7 +14,7 @@ var nav = document.getElementById("nav"),
 var links = [].slice.call(document.querySelectorAll("#navlinks a"))
 var heroImg = document.getElementById("heroImg")
 var ticking = false
-function onScroll() {
+const onScroll = () => {
   var y = window.scrollY || 0
   if (nav) nav.classList.toggle("stuck", y > 60)
   var max = document.documentElement.scrollHeight - window.innerHeight
@@ -45,16 +45,16 @@ function onScroll() {
 // where it applies for identical reasons — the tier section is simply
 // where it was noticed, being tall, image-heavy and full of reveals.
 var scrollingOffTimer = null
-function markScrolling() {
+const markScrolling = () => {
   document.body.classList.add("is-scrolling")
   clearTimeout(scrollingOffTimer)
-  scrollingOffTimer = setTimeout(function () {
+  scrollingOffTimer = setTimeout(() => {
     document.body.classList.remove("is-scrolling")
   }, 140)
 }
 window.addEventListener(
   "scroll",
-  function () {
+  () => {
     // Pinning the page for an overlay (lib/scroll-lock.js) moves window.scrollY
     // to 0 and back without the visitor scrolling. Ignore both, or the bar
     // would un-stick, the progress bar empty and the homepage hero jump
@@ -72,17 +72,17 @@ onScroll()
 
 if (links.length) {
   var secObs = new IntersectionObserver(
-    function (es) {
-      es.forEach(function (e) {
+    (es) => {
+      es.forEach((e) => {
         if (e.isIntersecting)
-          links.forEach(function (l) {
+          links.forEach((l) => {
             l.classList.toggle("active", l.dataset.sec === e.target.id)
           })
       })
     },
     { rootMargin: "-45% 0px -50% 0px" },
   )
-  links.forEach(function (l) {
+  links.forEach((l) => {
     if (!l.dataset.sec) return
     var el = document.getElementById(l.dataset.sec)
     if (el) secObs.observe(el)
@@ -92,20 +92,20 @@ if (links.length) {
 // ---------- Mobile menu ----------
 var burger = document.getElementById("burger")
 var mlinks = [].slice.call(document.querySelectorAll(".mobile-nav-link"))
-mlinks.forEach(function (a, i) {
+mlinks.forEach((a, i) => {
   a.style.setProperty("--m-delay", 0.16 + i * 0.075 + "s")
 })
-function pageKey(p) {
+const pageKey = (p) => {
   var seg = p.split("#")[0].split("?")[0].split("/").filter(Boolean).pop() || "index.html"
   return seg.replace(/\.html$/, "")
 }
 var curPage = pageKey(location.pathname)
-mlinks.forEach(function (a) {
+mlinks.forEach((a) => {
   var href = a.getAttribute("href")
   if (!href || href.charAt(0) === "#") return
   if (pageKey(href) === curPage) a.setAttribute("aria-current", "page")
 })
-function closeMenu() {
+const closeMenu = () => {
   document.body.classList.remove("menu-open")
   if (burger) burger.setAttribute("aria-expanded", "false")
   unlockScroll("drawer")
@@ -143,7 +143,7 @@ function closeMenu() {
 // animation. Generic because BOTH closes need it: the drawer's 0.5s fade and
 // the desktop panel's 0.3s fade are the same bug, and the first desktop fix
 // only removed the classes — which starts the fade rather than skipping it.
-function withoutNavTransitions(fn) {
+const withoutNavTransitions = (fn) => {
   var root = document.documentElement
   root.classList.add("nav-no-anim")
   void root.offsetHeight
@@ -151,20 +151,20 @@ function withoutNavTransitions(fn) {
   void root.offsetHeight
   root.classList.remove("nav-no-anim")
 }
-function closeMenuInstantly() {
+const closeMenuInstantly = () => {
   withoutNavTransitions(closeMenu)
 }
 // Only for links that actually leave the page. An in-page anchor or an
 // unbuilt "#" row keeps the animated close: the visitor is staying here, so
 // snapping the overlay shut would just look abrupt, and for a row that goes
 // nowhere it would be worse than abrupt.
-function closeMenuForLink(a) {
+const closeMenuForLink = (a) => {
   var href = a.getAttribute("href")
   var leaves = href && href.charAt(0) !== "#" && !a.hasAttribute("data-unbuilt")
   return leaves ? closeMenuInstantly : closeMenu
 }
 if (burger) {
-  burger.addEventListener("click", function () {
+  burger.addEventListener("click", () => {
     var open = document.body.classList.toggle("menu-open")
     burger.setAttribute("aria-expanded", open ? "true" : "false")
     if (open) lockScroll("drawer")
@@ -195,7 +195,7 @@ if (burger) {
 // regardless of the button being display: none, and nothing in those
 // handlers inspects event.isTrusted.
 var navCutover = window.matchMedia("(min-width: 980px)")
-function onNavCutoverChange(e) {
+const onNavCutoverChange = (e) => {
   if (!e.matches || !burger) return
   if (!document.body.classList.contains("menu-open")) return
   burger.click()
@@ -233,28 +233,28 @@ if (navCutover.addEventListener) {
 // the transition start after all — the same frame-boundary problem as
 // CLAUDE.md bugs #1 and #7, used here in reverse to guarantee a boundary
 // rather than to cross one.
-function forceDrawerClosedWithoutAnimating() {
+const forceDrawerClosedWithoutAnimating = () => {
   document.documentElement.classList.add("nav-no-anim")
   closeMenu()
 }
 window.addEventListener("pagehide", forceDrawerClosedWithoutAnimating)
-window.addEventListener("pageshow", function (e) {
+window.addEventListener("pageshow", (e) => {
   // A genuine fresh load needs none of this: CSS already has .menu at
   // opacity 0 / visibility hidden, so there is nothing to hide.
   var locked = document.body.classList.contains("menu-open") || isScrollLocked()
   if (!e.persisted && !locked) return
   forceDrawerClosedWithoutAnimating()
-  requestAnimationFrame(function () {
-    requestAnimationFrame(function () {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
       document.documentElement.classList.remove("nav-no-anim")
     })
   })
 })
 
-mlinks.forEach(function (a) {
+mlinks.forEach((a) => {
   a.addEventListener("click", closeMenuForLink(a))
 })
-document.addEventListener("keydown", function (e) {
+document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeMenu()
 })
 
@@ -271,13 +271,13 @@ document.addEventListener("keydown", function (e) {
 // what the loop above binds closeMenu() to — a trigger carrying it would
 // close the whole drawer on the tap meant to expand it, and since that
 // listener is registered first, nothing later can intercept it.
-;(function () {
+;(() => {
   // Links to pages this nav proposes but which do not exist yet. Left as
   // real <a href="#"> so they look, focus and read exactly like the links
   // they will be, then neutralised here — otherwise "#" jumps to the top of
   // the page and reads as broken rather than unbuilt.
-  ;[].slice.call(document.querySelectorAll("[data-unbuilt]")).forEach(function (a) {
-    a.addEventListener("click", function (e) {
+  ;[].slice.call(document.querySelectorAll("[data-unbuilt]")).forEach((a) => {
+    a.addEventListener("click", (e) => {
       e.preventDefault()
     })
   })
@@ -292,10 +292,10 @@ document.addEventListener("keydown", function (e) {
   // element rather than by checking whether any data-src is left, so all
   // three things that can open a panel call it freely and only the first
   // does work.
-  function primeDropdownMedia(dd) {
+  const primeDropdownMedia = (dd) => {
     if (dd.dataset.mediaPrimed === "true") return
     dd.dataset.mediaPrimed = "true"
-    ;[].slice.call(dd.querySelectorAll("img[data-src]")).forEach(function (img) {
+    ;[].slice.call(dd.querySelectorAll("img[data-src]")).forEach((img) => {
       img.src = img.getAttribute("data-src")
       img.removeAttribute("data-src")
     })
@@ -309,13 +309,13 @@ document.addEventListener("keydown", function (e) {
   // comment above .nav-dd.is-hovering in styles.css.
   var ddHoverCapable = window.matchMedia("(hover: hover)").matches
   var ddInstances = []
-  dds.forEach(function (dd) {
+  dds.forEach((dd) => {
     var ddChevronButton = dd.querySelector(".nav-dd-split-chevron-button")
     if (!ddChevronButton) return
     var ddLink = dd.querySelector(":scope > a")
     var ddCloseTimer = null
 
-    function closeDd() {
+    const closeDd = () => {
       clearTimeout(ddCloseTimer)
       dd.classList.remove("is-open", "is-hovering")
       ddChevronButton.setAttribute("aria-expanded", "false")
@@ -328,13 +328,13 @@ document.addEventListener("keydown", function (e) {
       if (document.activeElement === ddChevronButton) ddChevronButton.blur()
     }
     ddInstances.push({ dd: dd, closeDd: closeDd })
-    function closeOtherDds() {
-      ddInstances.forEach(function (other) {
+    const closeOtherDds = () => {
+      ddInstances.forEach((other) => {
         if (other.dd !== dd) other.closeDd()
       })
     }
 
-    ddChevronButton.addEventListener("click", function () {
+    ddChevronButton.addEventListener("click", () => {
       primeDropdownMedia(dd)
       var open = dd.classList.toggle("is-open")
       ddChevronButton.setAttribute("aria-expanded", open ? "true" : "false")
@@ -353,7 +353,7 @@ document.addEventListener("keydown", function (e) {
     // or any row once the panel is open — not on the <li> itself. Opening by
     // keyboard relies on CSS :focus-within, so without this a keyboard user
     // would be the one person who never triggers the load.
-    dd.addEventListener("focusin", function () {
+    dd.addEventListener("focusin", () => {
       primeDropdownMedia(dd)
     })
 
@@ -362,17 +362,15 @@ document.addEventListener("keydown", function (e) {
     // one level down. The label's own href is checked too, since the hub is
     // a real page in this structure.
     var ddHasActive = false
-    ;[].slice
-      .call(dd.querySelectorAll(".nav-dd-item, .nav-dd-hub-link"))
-      .forEach(function (a) {
-        var href = a.getAttribute("href")
-        if (href && href !== "#" && pageKey(href) === curPage) {
-          a.classList.add("active")
-          // The dot is visual only; this is what tells a screen reader.
-          a.setAttribute("aria-current", "page")
-          ddHasActive = true
-        }
-      })
+    ;[].slice.call(dd.querySelectorAll(".nav-dd-item, .nav-dd-hub-link")).forEach((a) => {
+      var href = a.getAttribute("href")
+      if (href && href !== "#" && pageKey(href) === curPage) {
+        a.classList.add("active")
+        // The dot is visual only; this is what tells a screen reader.
+        a.setAttribute("aria-current", "page")
+        ddHasActive = true
+      }
+    })
     if (ddLink) {
       var ownHref = ddLink.getAttribute("href")
       if (ownHref && ownHref !== "#" && pageKey(ownHref) === curPage) {
@@ -382,15 +380,15 @@ document.addEventListener("keydown", function (e) {
     }
 
     if (ddHoverCapable) {
-      dd.addEventListener("mouseenter", function () {
+      dd.addEventListener("mouseenter", () => {
         primeDropdownMedia(dd)
         clearTimeout(ddCloseTimer)
         dd.classList.add("is-hovering")
         closeOtherDds()
       })
-      dd.addEventListener("mouseleave", function () {
+      dd.addEventListener("mouseleave", () => {
         clearTimeout(ddCloseTimer)
-        ddCloseTimer = setTimeout(function () {
+        ddCloseTimer = setTimeout(() => {
           dd.classList.remove("is-hovering")
         }, 250)
       })
@@ -403,21 +401,21 @@ document.addEventListener("keydown", function (e) {
   // each dropdown added. Both are skipped entirely when the page has no
   // dropdowns at all.
   if (ddInstances.length) {
-    document.addEventListener("click", function (e) {
-      ddInstances.forEach(function (instance) {
+    document.addEventListener("click", (e) => {
+      ddInstances.forEach((instance) => {
         if (!instance.dd.contains(e.target)) instance.closeDd()
       })
     })
-    document.addEventListener("keydown", function (e) {
+    document.addEventListener("keydown", (e) => {
       if (e.key !== "Escape") return
-      ddInstances.forEach(function (instance) {
+      ddInstances.forEach((instance) => {
         instance.closeDd()
       })
     })
   }
 
   // Plain top-level links (Gallery, and anything else not in a dropdown).
-  ;[].slice.call(document.querySelectorAll(".nav-links > li > a")).forEach(function (a) {
+  ;[].slice.call(document.querySelectorAll(".nav-links > li > a")).forEach((a) => {
     if (a.closest(".nav-dd")) return
     var href = a.getAttribute("href")
     if (href && href !== "#" && pageKey(href) === curPage) {
@@ -449,7 +447,7 @@ document.addEventListener("keydown", function (e) {
   if (overlayEl && nav) {
     overlayEl.addEventListener(
       "scroll",
-      function () {
+      () => {
         if (!document.body.classList.contains("menu-open")) return
         // Any scroll at all, not the page's 60px. The first row sits 22px
         // below the bar, so there is no distance over which it is safe to
@@ -460,7 +458,7 @@ document.addEventListener("keydown", function (e) {
     )
   }
   if (burger && overlayEl && nav) {
-    burger.addEventListener("click", function () {
+    burger.addEventListener("click", () => {
       // main.js's own burger handler runs first and has already flipped the
       // class, so this reads the state the click produced, not the one
       // before it.
@@ -483,7 +481,7 @@ document.addEventListener("keydown", function (e) {
   var DRAWER_GROUPS_PINNED_OPEN = false
 
   var groups = [].slice.call(document.querySelectorAll(".mobile-nav-group"))
-  groups.forEach(function (g, gi) {
+  groups.forEach((g, gi) => {
     var trigger = g.querySelector(".mobile-nav-group-trigger")
     var sub = g.querySelector(".mobile-nav-sub")
     // aria-controls, generated here rather than authored per page: the
@@ -496,7 +494,7 @@ document.addEventListener("keydown", function (e) {
       trigger.setAttribute("aria-controls", sub.id)
     }
     var hasActive = false
-    ;[].slice.call(g.querySelectorAll(".mobile-nav-sub-link")).forEach(function (a) {
+    ;[].slice.call(g.querySelectorAll(".mobile-nav-sub-link")).forEach((a) => {
       var href = a.getAttribute("href")
       if (href && href !== "#" && pageKey(href) === curPage) {
         a.setAttribute("aria-current", "page")
@@ -516,7 +514,7 @@ document.addEventListener("keydown", function (e) {
       return
     }
     if (trigger) {
-      trigger.addEventListener("click", function () {
+      trigger.addEventListener("click", () => {
         var open = g.classList.toggle("is-open")
         trigger.setAttribute("aria-expanded", open ? "true" : "false")
         // One group open at a time. The drawer is a height-constrained
@@ -526,7 +524,7 @@ document.addEventListener("keydown", function (e) {
         // the fold. Collapsing the other group halves the worst case and is
         // also the ordinary accordion convention where space is tight.
         if (!open) return
-        groups.forEach(function (other) {
+        groups.forEach((other) => {
           if (other === g) return
           other.classList.remove("is-open")
           var t = other.querySelector(".mobile-nav-group-trigger")
@@ -545,14 +543,14 @@ document.addEventListener("keydown", function (e) {
   // showing where you already are; otherwise the FIRST one. First rather
   // than a named group deliberately — it follows the running order instead
   // of hard-coding "Restaurant", so reordering the nav moves this with it.
-  function applyDefaultGroupState() {
+  const applyDefaultGroupState = () => {
     if (!groups.length) return
     var target = null
-    groups.forEach(function (g) {
+    groups.forEach((g) => {
       if (g.dataset.hasActive === "true") target = g
     })
     if (!target) target = groups[0]
-    groups.forEach(function (g) {
+    groups.forEach((g) => {
       var open = g === target
       g.classList.toggle("is-open", open)
       var t = g.querySelector(".mobile-nav-group-trigger")
@@ -568,12 +566,12 @@ document.addEventListener("keydown", function (e) {
   // About a second late.
   // Runs from applyDefaultGroupState() rather than once at init, so it is
   // recomputed whenever which group is open changes.
-  function restaggerDrawerRows() {
+  const restaggerDrawerRows = () => {
     if (!overlayRoot) return
     var rows = []
     ;[].slice
       .call(overlayRoot.querySelectorAll(".mobile-nav-group, .mobile-nav-link"))
-      .forEach(function (el) {
+      .forEach((el) => {
         if (el.classList.contains("mobile-nav-link")) {
           rows.push(el)
           return
@@ -581,18 +579,16 @@ document.addEventListener("keydown", function (e) {
         var t = el.querySelector(".mobile-nav-group-trigger")
         if (t) rows.push(t)
         if (!el.classList.contains("is-open")) return
-        ;[].slice.call(el.querySelectorAll(".mobile-nav-sub-link")).forEach(function (a) {
+        ;[].slice.call(el.querySelectorAll(".mobile-nav-sub-link")).forEach((a) => {
           rows.push(a)
         })
       })
     // Clear first: a row that was in the sequence last time and is not now
     // would otherwise keep a stale delay and arrive out of order.
-    ;[].slice
-      .call(overlayRoot.querySelectorAll(".mobile-nav-sub-link"))
-      .forEach(function (a) {
-        a.style.removeProperty("--m-delay")
-      })
-    rows.forEach(function (row, i) {
+    ;[].slice.call(overlayRoot.querySelectorAll(".mobile-nav-sub-link")).forEach((a) => {
+      a.style.removeProperty("--m-delay")
+    })
+    rows.forEach((row, i) => {
       row.style.setProperty("--m-delay", 0.16 + i * 0.055 + "s")
     })
   }
@@ -611,7 +607,7 @@ document.addEventListener("keydown", function (e) {
   // which no longer corresponds to anything, and the accordion can come back
   // on whichever group was last expanded. Both are reset here, immediately
   // rather than deferred, since the overlay is closed and invisible by now.
-  window.addEventListener("pageshow", function (e) {
+  window.addEventListener("pageshow", (e) => {
     if (!e.persisted) return
     onScroll()
     if (groups.length && !DRAWER_GROUPS_PINNED_OPEN) applyDefaultGroupState()
@@ -628,7 +624,7 @@ document.addEventListener("keydown", function (e) {
     // blurring the row would fight the browser's own focus handling on a
     // real navigation. On a restore there is no navigation in progress, so
     // the row is blurred here instead.
-    ddInstances.forEach(function (i) {
+    ddInstances.forEach((i) => {
       if (i.dd.contains(document.activeElement)) document.activeElement.blur()
       i.closeDd()
     })
@@ -639,11 +635,11 @@ document.addEventListener("keydown", function (e) {
   // drawer's instant close: fix the departure, not just the arrival.
   // Only rows that actually leave the page — an in-page anchor should leave
   // the panel alone, since the visitor is staying on it.
-  ddInstances.forEach(function (i) {
-    ;[].slice.call(i.dd.querySelectorAll("a[href]")).forEach(function (a) {
+  ddInstances.forEach((i) => {
+    ;[].slice.call(i.dd.querySelectorAll("a[href]")).forEach((a) => {
       var href = a.getAttribute("href")
       if (!href || href.charAt(0) === "#") return
-      a.addEventListener("click", function () {
+      a.addEventListener("click", () => {
         // Everything that holds this panel open has to let go INSIDE one
         // suppressed block, and that includes FOCUS. There are three
         // holders — is-open, is-hovering and :focus-within — and releasing
@@ -661,7 +657,7 @@ document.addEventListener("keydown", function (e) {
         // transitions are off, and the panel is simply shut from then on.
         // Safe: the click has already queued the navigation, and blur()
         // neither cancels it nor preventDefaults anything.
-        withoutNavTransitions(function () {
+        withoutNavTransitions(() => {
           a.blur()
           var active = document.activeElement
           if (active && i.dd.contains(active)) active.blur()
@@ -688,17 +684,17 @@ document.addEventListener("keydown", function (e) {
   // the click handler above spells out: an unwrapped blur here drops
   // :focus-within with transitions LIVE and starts a 0.3s fade one frame
   // before the freeze, which is the worst possible moment to start one.
-  window.addEventListener("pagehide", function () {
+  window.addEventListener("pagehide", () => {
     var active = document.activeElement
     if (!active || active === document.body) return
     var inPanel = false
-    ddInstances.forEach(function (i) {
+    ddInstances.forEach((i) => {
       if (i.dd.contains(active)) inPanel = true
     })
     if (!inPanel) return
-    withoutNavTransitions(function () {
+    withoutNavTransitions(() => {
       active.blur()
-      ddInstances.forEach(function (i) {
+      ddInstances.forEach((i) => {
         i.closeDd()
       })
     })
@@ -713,9 +709,9 @@ document.addEventListener("keydown", function (e) {
   // because the panel is also held open by :hover and :focus-within, and it
   // clears all three. No-ops on the nine pages with no .nav-dd markup, since
   // ddInstances is empty there.
-  function onNavCutoverShrink(e) {
+  const onNavCutoverShrink = (e) => {
     if (e.matches) return
-    ddInstances.forEach(function (i) {
+    ddInstances.forEach((i) => {
       i.closeDd()
     })
   }
@@ -752,14 +748,14 @@ document.addEventListener("keydown", function (e) {
   // that moment anyway.
   if (burger && groups.length && !DRAWER_GROUPS_PINNED_OPEN) {
     var resetTimer = null
-    burger.addEventListener("click", function () {
+    burger.addEventListener("click", () => {
       clearTimeout(resetTimer)
       resetTimer = null
       if (document.body.classList.contains("menu-open")) {
         applyDefaultGroupState()
         return
       }
-      resetTimer = setTimeout(function () {
+      resetTimer = setTimeout(() => {
         resetTimer = null
         if (document.body.classList.contains("menu-open")) return
         applyDefaultGroupState()
@@ -777,7 +773,7 @@ document.addEventListener("keydown", function (e) {
         "#mobmenu .mobile-nav-sub-link:not([data-unbuilt]), #mobmenu .mobile-nav-cta-row .button:not([data-unbuilt])",
       ),
     )
-    .forEach(function (a) {
+    .forEach((a) => {
       // Instant close for the ones that navigate — see closeMenuForLink.
       a.addEventListener("click", closeMenuForLink(a))
     })

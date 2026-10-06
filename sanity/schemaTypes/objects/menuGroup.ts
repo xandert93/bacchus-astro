@@ -51,7 +51,7 @@ export default defineType({
   ],
   preview: {
     select: { title: "title", items: "items" },
-    prepare({ title, items }) {
+    prepare: ({ title, items }) => {
       const count = Array.isArray(items) ? items.length : 0
       return { title, subtitle: `${count} item${count === 1 ? "" : "s"}` }
     },

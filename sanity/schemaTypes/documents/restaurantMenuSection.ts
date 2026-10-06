@@ -73,7 +73,7 @@ export default defineType({
   ],
   preview: {
     select: { title: "title", dishes: "dishes", published: "isPublished" },
-    prepare({ title, dishes, published }) {
+    prepare: ({ title, dishes, published }) => {
       const count = Array.isArray(dishes) ? dishes.length : 0
       return {
         title,

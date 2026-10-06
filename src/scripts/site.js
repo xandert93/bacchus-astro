@@ -10,7 +10,7 @@ import {
 } from "./lib/motion.js"
 import "./lib/safe-reveal.js"
 
-requestAnimationFrame(function () {
+requestAnimationFrame(() => {
   document.body.classList.add("loaded")
 })
 var yrEl = document.getElementById("yr")
@@ -21,7 +21,7 @@ if (!reduce) {
   ;[
     ["particles", 20],
     ["particles2", 10],
-  ].forEach(function (cfg) {
+  ].forEach((cfg) => {
     var pf = document.getElementById(cfg[0])
     if (!pf) return
     for (var pi = 0; pi < cfg[1]; pi++) {
@@ -68,10 +68,10 @@ if (!reduce) {
 // once scrolling settles, and unhooks itself when nothing is left.
 var revealPending = []
 var revealSweepTimer = null
-function revealSweep() {
+const revealSweep = () => {
   if (!revealPending.length) return
   var limit = window.innerHeight * (isScrolledToBottom() ? 1 : REVEAL_SWEEP_LINE)
-  revealPending.slice().forEach(function (entry) {
+  revealPending.slice().forEach((entry) => {
     var r = entry.el.getBoundingClientRect()
     // Horizontal check as well as vertical: an element parked off-screen
     // inside a horizontal scroller still has an ordinary vertical rect,
@@ -80,7 +80,7 @@ function revealSweep() {
     if (r.right > 0 && r.left < window.innerWidth && r.top < limit) entry.show()
   })
 }
-function queueRevealSweep() {
+const queueRevealSweep = () => {
   if (!revealPending.length) {
     window.removeEventListener("scroll", queueRevealSweep)
     return
@@ -88,10 +88,10 @@ function queueRevealSweep() {
   clearTimeout(revealSweepTimer)
   revealSweepTimer = setTimeout(revealSweep, 120)
 }
-function trackReveal(el, show) {
+const trackReveal = (el, show) => {
   var entry = {
     el: el,
-    show: function () {
+    show: () => {
       var at = revealPending.indexOf(entry)
       if (at !== -1) revealPending.splice(at, 1)
       show()
@@ -104,8 +104,8 @@ window.addEventListener("scroll", queueRevealSweep, { passive: true })
 window.addEventListener("load", revealSweep)
 
 var revObs = new IntersectionObserver(
-  function (es) {
-    es.forEach(function (e) {
+  (es) => {
+    es.forEach((e) => {
       if (e.isIntersecting || e.boundingClientRect.top < 0) {
         var entry = e.target.__revealEntry
         if (entry) entry.show()
@@ -115,32 +115,30 @@ var revObs = new IntersectionObserver(
   },
   { threshold: 0, rootMargin: REVEAL_ROOT_MARGIN },
 )
-document
-  .querySelectorAll('[data-reveal]:not([data-reveal="img"])')
-  .forEach(function (el) {
-    el.__revealEntry = trackReveal(el, function () {
-      el.classList.add("is-revealed")
-      revObs.unobserve(el)
-    })
-    revObs.observe(el)
+document.querySelectorAll('[data-reveal]:not([data-reveal="img"])').forEach((el) => {
+  el.__revealEntry = trackReveal(el, () => {
+    el.classList.add("is-revealed")
+    revObs.unobserve(el)
   })
+  revObs.observe(el)
+})
 
-document.querySelectorAll('[data-reveal="img"]').forEach(function (wrap) {
+document.querySelectorAll('[data-reveal="img"]').forEach((wrap) => {
   var img = wrap.querySelector("img")
   var seen = false,
     loaded = !img || img.complete
-  function reveal() {
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
+  const reveal = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         wrap.classList.add("is-revealed")
       })
     })
   }
-  function tryReveal() {
+  const tryReveal = () => {
     if (seen && loaded) reveal()
   }
   if (img && !loaded)
-    img.addEventListener("load", function () {
+    img.addEventListener("load", () => {
       loaded = true
       tryReveal()
     })
@@ -148,13 +146,13 @@ document.querySelectorAll('[data-reveal="img"]').forEach(function (wrap) {
   // image-load gate and the double requestAnimationFrame (CLAUDE.md bug
   // #1 — without both, the transition can be skipped entirely) still
   // decide when it actually appears.
-  var entry = trackReveal(wrap, function () {
+  var entry = trackReveal(wrap, () => {
     seen = true
     tryReveal()
   })
   var imgObs = new IntersectionObserver(
-    function (es) {
-      es.forEach(function (e) {
+    (es) => {
+      es.forEach((e) => {
         if (e.isIntersecting || e.boundingClientRect.top < 0) {
           entry.show()
           imgObs.unobserve(wrap)

@@ -5,16 +5,16 @@
 // 0fr/1fr, see styles.css) — no .scrollHeight read/write here anymore.
 // What's left is real logic CSS can't express on its own: cross-item
 // exclusivity (closing every other open item in the same .faq group).
-document.querySelectorAll(".faq-item").forEach(function (item) {
+document.querySelectorAll(".faq-item").forEach((item) => {
   var q = item.querySelector(".faq-q"),
     a = item.querySelector(".faq-a")
   if (!q || !a) return
-  q.addEventListener("click", function () {
+  q.addEventListener("click", () => {
     var open = item.classList.contains("open")
     item
       .closest(".faq")
       .querySelectorAll(".faq-item.open")
-      .forEach(function (o) {
+      .forEach((o) => {
         if (o !== item) o.classList.remove("open")
       })
     item.classList.toggle("open", !open)

@@ -149,17 +149,15 @@ export default defineType({
       status: "provenance.status",
       assistant: "availableToAssistant",
     },
-    prepare({ question, topic, status, assistant }) {
-      return {
-        title: question,
-        subtitle: [
-          topic,
-          status,
-          status === "confirmed" && assistant ? "assistant: yes" : "assistant: no",
-        ]
-          .filter(Boolean)
-          .join(" · "),
-      }
-    },
+    prepare: ({ question, topic, status, assistant }) => ({
+      title: question,
+      subtitle: [
+        topic,
+        status,
+        status === "confirmed" && assistant ? "assistant: yes" : "assistant: no",
+      ]
+        .filter(Boolean)
+        .join(" · "),
+    }),
   },
 })

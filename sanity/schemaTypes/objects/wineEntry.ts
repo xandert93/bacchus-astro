@@ -78,11 +78,9 @@ export default defineType({
   ],
   preview: {
     select: { name: "name", grapes: "grapes", producer: "producer" },
-    prepare({ name, grapes, producer }) {
-      return {
-        title: name,
-        subtitle: [grapes, producer].filter(Boolean).join(" · "),
-      }
-    },
+    prepare: ({ name, grapes, producer }) => ({
+      title: name,
+      subtitle: [grapes, producer].filter(Boolean).join(" · "),
+    }),
   },
 })
