@@ -1,0 +1,200 @@
+---
+// "From the kitchen": three dishes in arch frames, numbered like courses,
+// then a call to request the menus. Restaurant-side content is kept to this
+// teaser while the events side is the focus.
+import Photo from "@components/ui/Photo.astro"
+
+const DISHES = [
+  {
+    course: "I",
+    name: "Seared catch of the day",
+    description: "Spring vegetables, light pea purée, salsa verde.",
+    photo: {
+      src: "food-and-drink/seabass",
+      alt: "Pan-seared fish with vegetables, plated",
+    },
+  },
+  {
+    course: "II",
+    name: "Slow-cooked lamb",
+    description: "Pistachio crust, beetroot and orange.",
+    photo: {
+      src: "food-and-drink/lamb",
+      alt: "Slow-cooked lamb with beetroot and citrus",
+    },
+  },
+  {
+    course: "III",
+    name: "Canapés, passed and shared",
+    description: "Built for standing receptions and drinks.",
+    photo: { src: "food-and-drink/canapes-tray", alt: "A tray of canapés being served" },
+  },
+]
+---
+
+<section class="section-padding on-dark" id="menu">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" data-reveal>
+        From the kitchen
+      </div>
+      <h2 data-reveal style="--d: 80ms">
+        A taste of <em>the table</em>
+      </h2>
+      <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px">
+        Mediterranean cooking built around what's landed and what's in season, plated the
+        way it's always been at Bacchus.
+      </p>
+    </div>
+    <div class="dishes">
+      {DISHES.map((dish, i) => (
+        <article class="dish" data-reveal style={`--d: ${i * 130}ms`}>
+          <div class="arch arch-dish">
+            <span class="course-number">{dish.course}</span>
+            <Photo
+              src={dish.photo.src}
+              sizes="(max-width: 980px) 100vw, 33vw"
+              alt={dish.photo.alt}
+            />
+          </div>
+          <h4>{dish.name}</h4>
+          <p>{dish.description}</p>
+        </article>
+      ))}
+    </div>
+    <div
+      class="cta-row"
+      data-reveal
+      style="--d: 340ms; margin-top: clamp(38px, 5vw, 58px)"
+    >
+      <a href="#enquire" class="button button-light">
+        <span>Request the full menus</span>
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path
+            d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .button-light {
+    /* Filled (not outline) at rest, at reduced opacity — hover intensifies to
+         full solid rather than dropping to transparent. --bd matches --bg so
+         the border reads as part of the fill, not a separate outline. Used for
+         non-hero secondary CTAs on dark backgrounds (the hero's own secondary
+         CTA uses the real .button-ghost below instead). */
+    --bg: rgba(var(--limestone-rgb), 0.88);
+    --fg: var(--ink);
+    --bd: rgba(var(--limestone-rgb), 0.88);
+    --bg-h: var(--limestone);
+    --fg-h: var(--ink);
+  }
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .dishes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(18px, 2.6vw, 34px);
+  }
+  .dish {
+    position: relative;
+  }
+  .arch-dish {
+    overflow: hidden;
+    border-radius: 200px 200px 4px 4px;
+    aspect-ratio: 3/4;
+    background: #211d17;
+  }
+  .dish p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 6px;
+  }
+  .dish .course-number {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    color: var(--gold-2);
+    background: rgba(var(--muted-ink-rgb), 0.6);
+    backdrop-filter: blur(6px);
+    padding: 7px 12px;
+    border-radius: 2px;
+  }
+  .dish:nth-child(2) {
+    transform: translateY(clamp(16px, 3vw, 44px));
+  }
+  .dishes.four-column-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .dishes.four-column-grid .dish:nth-child(2) {
+    transform: none;
+  }
+  @media (max-width: 980.98px) {
+    .dishes.four-column-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 980.98px) {
+    .dishes {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 980.98px) {
+    .dish:nth-child(2) {
+      transform: none;
+    }
+  }
+  @media (max-width: 620.98px) {
+    .cta-row {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  @media (max-width: 620.98px) {
+    .dishes {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+  }
+  @media (max-width: 620.98px) {
+    .arch-dish {
+      aspect-ratio: 4/5;
+    }
+  }
+  .dish :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.3s var(--ease);
+  }
+  .dish:hover :global(img) {
+    transform: scale(var(--image-hover-zoom-feature));
+  }
+  .dish :global(h4) {
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 22px;
+  }
+  @media (max-width: 620.98px) {
+    .cta-row :global(.button) {
+      width: 100%;
+      max-width: 300px;
+      justify-content: center;
+    }
+  }
+</style>

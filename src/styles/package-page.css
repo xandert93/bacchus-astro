@@ -1,11 +1,12 @@
 @import "./tabs.css";
 
-/* Shared by all four package pages: the tier switcher, tier cards,
-   sticky switcher, signature-dish tiles, menu groups and the photo
-   carousel. Imported after global.css (so it wins ties on source order,
-   as the prototype's inline blocks did) and before any page's own file:
-   package-dish-placeholders.css, package-beverage.css or
-   package-stations.css.
+/* The tier section all four package pages share (PackageTierSection and
+   the package components inside it): tab bar, tier cards, sticky
+   switcher, signature-dish tiles and menu groups. Imported by
+   PackageTierSection, so only package pages load it. A plain stylesheet
+   rather than scoped styles because it spans several components and
+   reception-package.js builds parts of it; moving it into the components
+   is possible but not yet done.
 
    Merged 2026-10-05 from two copies that had drifted: this one (from the
    prototype's banquet/high tea/beverage pages) and reception's (its

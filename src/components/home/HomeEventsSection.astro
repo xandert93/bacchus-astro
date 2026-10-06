@@ -1,0 +1,283 @@
+---
+// "One venue, three ways to gather": a tab per event type, each with a
+// short pitch, what's included, a link to its page and an arch-framed
+// photo. tabs.js drives the tab bar (styles in tabs.css). The capacity
+// lines are placeholders until Bacchus confirms them, and the footnote says
+// so.
+import Photo from "@components/ui/Photo.astro"
+import "@styles/tabs.css"
+
+const OCCASIONS = [
+  {
+    id: "weddings",
+    tab: "Weddings",
+    capacity: "Up to 120 seated* · Secret Garden included",
+    heading: "Married in the Prince De Redin Hall",
+    body: "The banquet hall hosts your wedding breakfast, with the Secret Garden held for the ceremony, drinks and photographs — part of the same 17th-century estate as the restaurant next door.",
+    included: [
+      "Private hire of the Hall, Terrace and Secret Garden",
+      "Set or bespoke menus, tasted in advance",
+      "In-house wine list, sourced from Maltese producers",
+      "One wedding a day — a dedicated Events Manager from your first visit",
+    ],
+    cta: { label: "Explore weddings", href: "/weddings" },
+    photo: {
+      src: "weddings/toast",
+      alt: "A bride and groom clinking champagne glasses",
+    },
+  },
+  {
+    id: "corporate",
+    tab: "Corporate",
+    capacity: "Capacity on request*",
+    heading: "A boardroom with better acoustics",
+    body: "For product launches, dinners and year-end gatherings, our function room adapts to theatre-style or a seated dinner layout.",
+    included: [
+      "AV, staging and lighting included",
+      "Private bar and a dedicated event manager",
+      "Daytime and evening hire available",
+      "Set within a 4500m² estate inside Mdina's walls",
+    ],
+    cta: { label: "Explore corporate", href: "/corporate" },
+    photo: {
+      src: "corporate/guests-chatting",
+      alt: "Colleagues chatting at a corporate event with laptops on the table",
+    },
+  },
+  {
+    id: "celebrations",
+    tab: "Celebrations",
+    capacity: "Small and large groups* · Terrace & Secret Garden",
+    heading: "Birthdays, anniversaries, and everything worth marking",
+    body: "Smaller private parties are hosted across the Terrace and Secret Garden, with a shared canapé and wine service or a full sit-down menu, depending on the night.",
+    included: [
+      "Flexible group sizes",
+      "Canapé and sharing menus available",
+      "Flexible timing, including late sittings",
+      "Secret Garden open for warmer months",
+    ],
+    cta: { label: "Explore celebrations", href: "/celebrations" },
+    photo: {
+      src: "celebrations/tea-pour",
+      alt: "A guest pouring tea at an outdoor garden celebration",
+    },
+  },
+]
+---
+
+<section class="section-padding on-dark" id="events">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" data-reveal>
+        Weddings · Corporate · Celebrations
+      </div>
+      <h2 data-reveal style="--d: 80ms">
+        One venue, three ways to <em>gather</em>
+      </h2>
+      <p class="lead" data-reveal style="--d: 170ms; margin-top: 22px">
+        Each occasion gets its own room and its own plan — not a shared form. Choose below
+        to see how we'd shape your event, or open the full page for each.
+      </p>
+    </div>
+
+    <div class="tab-bar tabs-bar" role="tablist" data-reveal style="--d: 220ms">
+      <span class="pill" id="pill"></span>
+      {OCCASIONS.map((occasion, i) => (
+        <button
+          class:list={{ active: i === 0 }}
+          data-tab={occasion.id}
+          role="tab"
+          aria-selected={i === 0 ? "true" : "false"}
+        >
+          {occasion.tab}
+        </button>
+      ))}
+    </div>
+
+    <div class="panels" data-reveal style="--d: 300ms">
+      {OCCASIONS.map((occasion, i) => (
+        <div class:list={["tab-panel", { active: i === 0 }]} data-panel={occasion.id}>
+          <div>
+            <div class="capacity">{occasion.capacity}</div>
+            <h3>{occasion.heading}</h3>
+            <p>{occasion.body}</p>
+            <ul>
+              {occasion.included.map((line) => (
+                <li>{line}</li>
+              ))}
+            </ul>
+            <div class="actions">
+              <a href={occasion.cta.href} class="button button-gradient">
+                <span>{occasion.cta.label}</span>
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                  <path
+                    d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+                    stroke="currentColor"
+                    stroke-width="1.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="arch arch-tab">
+            <Photo
+              src={occasion.photo.src}
+              sizes="(max-width: 980px) 100vw, 50vw"
+              alt={occasion.photo.alt}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+    <p style="font-size: 11px; color: rgba(239, 231, 212, 0.4); margin-top: 20px">
+      *Capacity figures are placeholders — they will be confirmed with Bacchus before we
+      go live.
+    </p>
+  </div>
+</section>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* Previously overhung past the image's own edge (right:-6px;
+         bottom:-20px) — fine while .story-visual was capped at 440px, well
+         clear of the wrap's own edge, but now that the image is full-width
+         here, that same overhang tracks the image's edge straight out to the
+         wrap padding, landing within a few px of the actual screen edge on a
+         narrow phone. Inset instead, so it sits inside the image regardless of
+         how much wrap padding there is. */
+  /* Fully-rounds a .tab-bar (bar, buttons, active pill) instead of the
+       plain 3px-radius default — actually brings it in line with the design
+       system's own pill-shaped-buttons rule better than that default did.
+       Originally built for the Reception Menus sandbox
+       (sandboxes/reception-package.html, née reception-menus.html before it was
+       split into reception-package.html/reception-stations.html) alongside
+       repositioning it inline with
+       its heading — that inline placement didn't generalize here (this
+       section's heading is long enough to wrap 2–3 lines on its own, and
+       bottom-aligning a tab-bar to a line count that shifts with viewport
+       width never looked stable), so on this page it's kept stacked below the
+       full eyebrow/h2/lead block like before — just with this shape/color
+       treatment layered on. */
+  .tabs-bar {
+    border-radius: var(--radius-pill);
+    /* Matches #events .section-head's own margin-bottom (32px) rather than
+         the shared .tab-bar clamp(18-24px) above — .tabs-bar is only ever used
+         here, so this is effectively an #events-specific value already. */
+    margin-bottom: 32px;
+  }
+  @media (max-width: 760.98px) {
+    #events .tabs-bar {
+      display: flex;
+      width: 100%;
+    }
+  }
+  @media (max-width: 760.98px) {
+    #events .arch-tab {
+      order: -1;
+      margin-top: clamp(18px, 5vw, 32px);
+    }
+  }
+  .tab-panel .capacity {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 9px;
+    margin-bottom: 20px;
+    color: var(--gold-2);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  /* .arch-tab/.arch-dish are modifiers, not ancestor-scoped rules — menu.html
+       nests .dish inside its own (unrelated) .tab-panel tab system, so a
+       .tab-panel .arch / .dish .arch pair would both match the same element
+       there, silently resolving by CSS source order alone (see CLAUDE.md bug
+       #2). Applying the modifier directly to the element sidesteps that. */
+  .arch-tab {
+    position: relative;
+    aspect-ratio: 4/5;
+    border-radius: 260px 260px 6px 6px;
+    overflow: hidden;
+    /* .tab-panel no longer sets align-items: center (removed so the text
+         column isn't force-stretched/centered against a taller image row) —
+         but that leaves .arch-tab's own height subject to stretch too, which
+         wins over aspect-ratio in a grid row taller than the image (e.g. a
+         longer bullet list), distorting it. align-self keeps it centered at
+         its own true aspect-ratio height regardless of the row's height. */
+    align-self: center;
+  }
+  .arch-tab::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(10, 9, 6, 0.55));
+    pointer-events: none;
+  }
+  .tab-panel .actions {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+  }
+  @media (max-width: 620.98px) {
+    .tab-panel .actions {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  /* Same over-sized-gap issue as .section-padding-small above, but on the
+       homepage's #events section: the shared clamp(44-72px) was tuned for heavy
+       content below (a 4-card grid) and reads as oversized in front of the
+       compact .tabs-bar pill switcher here instead. */
+  #events .section-head {
+    margin-bottom: 32px;
+  }
+  @media (max-width: 900px) {
+    #events .lead {
+      max-width: none;
+    }
+  }
+  .tabs-bar .pill {
+    border-radius: var(--radius-pill);
+  }
+  .tabs-bar :global(button) {
+    padding: 10px 18px;
+    border-radius: var(--radius-pill);
+    text-align: center;
+  }
+  @media (max-width: 620.98px) {
+    .tabs-bar :global(button) {
+      padding: 13px 6px;
+    }
+  }
+  @media (min-width: 761px) {
+    #events .tabs-bar :global(button) {
+      width: 160px;
+    }
+  }
+  @media (max-width: 760.98px) {
+    #events .tabs-bar :global(button) {
+      flex: 1;
+    }
+  }
+  @media (max-width: 980.98px) {
+    #events .tab-panel.active {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 760.98px) {
+    #events .tab-panel.active {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 620.98px) {
+    .tab-panel .actions :global(.button) {
+      width: 100%;
+      max-width: 300px;
+      justify-content: center;
+    }
+  }
+</style>
