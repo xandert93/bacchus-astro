@@ -9,6 +9,11 @@ const PAGES = [
   { path: "/weddings", title: /Weddings/ },
   { path: "/corporate", title: /Corporate/ },
   { path: "/celebrations", title: /Celebrations/ },
+  { path: "/gallery", title: /Gallery/ },
+  { path: "/weddings/packages/reception", title: /Reception/ },
+  { path: "/weddings/packages/banquet", title: /Banquet/ },
+  { path: "/weddings/packages/high-tea", title: /High Tea/ },
+  { path: "/weddings/packages/beverage", title: /Beverage/ },
 ]
 
 for (const { path, title } of PAGES) {
