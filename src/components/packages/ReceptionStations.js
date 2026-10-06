@@ -187,6 +187,21 @@ import "@scripts/tabs.js"
 
   // ---- build: desktop index ----
   const rows = []
+
+  // Up/Down/Home/End move through all sixteen in visual order and
+  // select as they go, so the stage follows focus like a tab list.
+  const rowKeys = (e) => {
+    const i = rows.indexOf(e.currentTarget)
+    let n
+    if (e.key === "ArrowDown") n = (i + 1) % rows.length
+    else if (e.key === "ArrowUp") n = (i - 1 + rows.length) % rows.length
+    else if (e.key === "Home") n = 0
+    else if (e.key === "End") n = rows.length - 1
+    else return
+    e.preventDefault()
+    select(rows[n].dataset.station)
+    rows[n].focus()
+  }
   if (indexEl) {
     groups.forEach((g) => {
       const wrap = el("div", "package-stations-index-group")
@@ -220,21 +235,6 @@ import "@scripts/tabs.js"
       wrap.appendChild(ul)
       indexEl.appendChild(wrap)
     })
-  }
-
-  // Up/Down/Home/End move through all sixteen in visual order and
-  // select as they go, so the stage follows focus like a tab list.
-  const rowKeys = (e) => {
-    const i = rows.indexOf(e.currentTarget)
-    let n
-    if (e.key === "ArrowDown") n = (i + 1) % rows.length
-    else if (e.key === "ArrowUp") n = (i - 1 + rows.length) % rows.length
-    else if (e.key === "Home") n = 0
-    else if (e.key === "End") n = rows.length - 1
-    else return
-    e.preventDefault()
-    select(rows[n].dataset.station)
-    rows[n].focus()
   }
 
   // ---- build: stage ----
@@ -1059,6 +1059,21 @@ import "@scripts/tabs.js"
     // index's Up/Down keys would start jumping around the track;
     // keep the two in step.
     const rows = []
+
+    // Up/Down/Home/End move through all sixteen in visual order,
+    // scrolling the track as they go so the carousel follows focus.
+    const rowKeys = (e) => {
+      const i = rows.indexOf(e.currentTarget)
+      let n
+      if (e.key === "ArrowDown") n = (i + 1) % rows.length
+      else if (e.key === "ArrowUp") n = (i - 1 + rows.length) % rows.length
+      else if (e.key === "Home") n = 0
+      else if (e.key === "End") n = rows.length - 1
+      else return
+      e.preventDefault()
+      goTo(n)
+      rows[n].focus()
+    }
     if (indexEl) {
       groups.forEach((g) => {
         const wrap = el("div", "package-stations-index-group")
@@ -1093,21 +1108,6 @@ import "@scripts/tabs.js"
         wrap.appendChild(ul)
         indexEl.appendChild(wrap)
       })
-    }
-
-    // Up/Down/Home/End move through all sixteen in visual order,
-    // scrolling the track as they go so the carousel follows focus.
-    const rowKeys = (e) => {
-      const i = rows.indexOf(e.currentTarget)
-      let n
-      if (e.key === "ArrowDown") n = (i + 1) % rows.length
-      else if (e.key === "ArrowUp") n = (i - 1 + rows.length) % rows.length
-      else if (e.key === "Home") n = 0
-      else if (e.key === "End") n = rows.length - 1
-      else return
-      e.preventDefault()
-      goTo(n)
-      rows[n].focus()
     }
 
     // ---- the track ----
