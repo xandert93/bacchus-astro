@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * One entry in a booking's status history.
@@ -27,66 +27,66 @@ import {defineField, defineType} from 'sanity'
  * in the serverless layer, which should be the only writer.
  */
 export default defineType({
-  name: 'statusEvent',
-  title: 'Status change',
-  type: 'object',
+  name: "statusEvent",
+  title: "Status change",
+  type: "object",
   fields: [
     defineField({
-      name: 'to',
-      title: 'Changed to',
-      type: 'string',
+      name: "to",
+      title: "Changed to",
+      type: "string",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'from',
-      title: 'Changed from',
-      type: 'string',
-      description: 'Empty on the first entry, where the booking was created.',
+      name: "from",
+      title: "Changed from",
+      type: "string",
+      description: "Empty on the first entry, where the booking was created.",
     }),
     defineField({
-      name: 'at',
-      title: 'When',
-      type: 'datetime',
+      name: "at",
+      title: "When",
+      type: "datetime",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'actor',
-      title: 'Changed by',
-      type: 'string',
+      name: "actor",
+      title: "Changed by",
+      type: "string",
       options: {
         list: [
-          {title: 'Staff, in Sanity Studio', value: 'staff'},
-          {title: 'Stripe payment webhook', value: 'payment-webhook'},
-          {title: 'Scheduled job', value: 'cron'},
-          {title: 'Visitor, via the site', value: 'visitor'},
-          {title: 'Migration or manual data fix', value: 'migration'},
+          { title: "Staff, in Sanity Studio", value: "staff" },
+          { title: "Stripe payment webhook", value: "payment-webhook" },
+          { title: "Scheduled job", value: "cron" },
+          { title: "Visitor, via the site", value: "visitor" },
+          { title: "Migration or manual data fix", value: "migration" },
         ],
       },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'actorDetail',
-      title: 'Which person or job',
-      type: 'string',
-      description: 'A staff name, or the job that ran.',
+      name: "actorDetail",
+      title: "Which person or job",
+      type: "string",
+      description: "A staff name, or the job that ran.",
     }),
     defineField({
-      name: 'reason',
-      title: 'Reason',
-      type: 'text',
+      name: "reason",
+      title: "Reason",
+      type: "text",
       rows: 2,
       description:
-        'Required in practice for a decline or a cancellation — this is what a later conversation with the couple is reconstructed from.',
+        "Required in practice for a decline or a cancellation — this is what a later conversation with the couple is reconstructed from.",
     }),
   ],
   preview: {
-    select: {to: 'to', from: 'from', at: 'at', actor: 'actor'},
-    prepare({to, from, at, actor}) {
+    select: { to: "to", from: "from", at: "at", actor: "actor" },
+    prepare({ to, from, at, actor }) {
       return {
         title: from ? `${from} → ${to}` : `created as ${to}`,
-        subtitle: [at ? new Date(at).toLocaleString('en-GB') : null, actor]
+        subtitle: [at ? new Date(at).toLocaleString("en-GB") : null, actor]
           .filter(Boolean)
-          .join(' — '),
+          .join(" — "),
       }
     },
   },

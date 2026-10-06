@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * What a person agreed to, when, and in what words.
@@ -37,53 +37,53 @@ import {defineField, defineType} from 'sanity'
  * version harder to build than the non-compliant one.
  */
 export default defineType({
-  name: 'consentRecord',
-  title: 'Consent',
-  type: 'object',
+  name: "consentRecord",
+  title: "Consent",
+  type: "object",
   fields: [
     defineField({
-      name: 'given',
-      title: 'Consent given',
-      type: 'boolean',
+      name: "given",
+      title: "Consent given",
+      type: "boolean",
       initialValue: false,
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'givenAt',
-      title: 'Given at',
-      type: 'datetime',
-      description: 'Set by the submission handler, not by hand.',
+      name: "givenAt",
+      title: "Given at",
+      type: "datetime",
+      description: "Set by the submission handler, not by hand.",
     }),
     defineField({
-      name: 'wording',
-      title: 'Wording shown at the time',
-      type: 'text',
+      name: "wording",
+      title: "Wording shown at the time",
+      type: "text",
       rows: 3,
       description:
-        'Captured verbatim from the form at submission. Edit the form copy freely afterwards — this stays as it was.',
+        "Captured verbatim from the form at submission. Edit the form copy freely afterwards — this stays as it was.",
     }),
     defineField({
-      name: 'sourcePage',
-      title: 'Submitted from',
-      type: 'string',
-      description: 'The page path the form was on. Five pages carry the wizard.',
+      name: "sourcePage",
+      title: "Submitted from",
+      type: "string",
+      description: "The page path the form was on. Five pages carry the wizard.",
     }),
     defineField({
-      name: 'retentionReviewAt',
-      title: 'Retention review date',
-      type: 'date',
+      name: "retentionReviewAt",
+      title: "Retention review date",
+      type: "date",
       description:
-        'When this record should be reviewed for deletion. Set from the policy default on creation; the scheduled purge reads this field.',
+        "When this record should be reviewed for deletion. Set from the policy default on creation; the scheduled purge reads this field.",
     }),
   ],
   preview: {
-    select: {given: 'given', at: 'givenAt', page: 'sourcePage'},
-    prepare({given, at, page}) {
+    select: { given: "given", at: "givenAt", page: "sourcePage" },
+    prepare({ given, at, page }) {
       return {
-        title: given ? 'Consent given' : 'No consent recorded',
-        subtitle: [at ? new Date(at).toLocaleDateString('en-GB') : null, page]
+        title: given ? "Consent given" : "No consent recorded",
+        subtitle: [at ? new Date(at).toLocaleDateString("en-GB") : null, page]
           .filter(Boolean)
-          .join(' — '),
+          .join(" — "),
       }
     },
   },

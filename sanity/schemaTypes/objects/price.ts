@@ -1,5 +1,5 @@
-import {defineField, defineType} from 'sanity'
-import {PRICE_UNITS} from '../../lib/constants'
+import { defineField, defineType } from "sanity"
+import { PRICE_UNITS } from "../../lib/constants"
 
 /**
  * A money figure, its unit, and whether we are allowed to show it.
@@ -30,58 +30,61 @@ import {PRICE_UNITS} from '../../lib/constants'
  * pretends to be would be the one that gets quoted back at them.
  */
 export default defineType({
-  name: 'price',
-  title: 'Price',
-  type: 'object',
+  name: "price",
+  title: "Price",
+  type: "object",
   fields: [
     defineField({
-      name: 'amount',
-      title: 'Amount (EUR)',
-      type: 'number',
+      name: "amount",
+      title: "Amount (EUR)",
+      type: "number",
       validation: (Rule) => Rule.required().min(0).precision(2),
     }),
     defineField({
-      name: 'unit',
-      title: 'Unit',
-      type: 'string',
-      options: {list: [...PRICE_UNITS]},
-      description: 'Required. See the note on this type for why there is no blank option.',
+      name: "unit",
+      title: "Unit",
+      type: "string",
+      options: { list: [...PRICE_UNITS] },
+      description:
+        "Required. See the note on this type for why there is no blank option.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'isIndicative',
+      name: "isIndicative",
       title: 'Indicative — "from" rather than fixed',
-      type: 'boolean',
+      type: "boolean",
       initialValue: true,
       description:
-        'Leave on unless Bacchus has confirmed a figure holds year round. Their pricing is generated internally and varies by season.',
+        "Leave on unless Bacchus has confirmed a figure holds year round. Their pricing is generated internally and varies by season.",
     }),
     defineField({
-      name: 'vatIncluded',
-      title: 'VAT included',
-      type: 'boolean',
+      name: "vatIncluded",
+      title: "VAT included",
+      type: "boolean",
       initialValue: true,
-      description: 'Confirmed by client correspondence: quoted prices include VAT.',
+      description: "Confirmed by client correspondence: quoted prices include VAT.",
     }),
     defineField({
-      name: 'provenance',
-      title: 'Source & confirmation',
-      type: 'provenance',
+      name: "provenance",
+      title: "Source & confirmation",
+      type: "provenance",
       validation: (Rule) => Rule.required(),
     }),
   ],
   preview: {
     select: {
-      amount: 'amount',
-      unit: 'unit',
-      indicative: 'isIndicative',
-      status: 'provenance.status',
+      amount: "amount",
+      unit: "unit",
+      indicative: "isIndicative",
+      status: "provenance.status",
     },
-    prepare({amount, unit, indicative, status}) {
+    prepare({ amount, unit, indicative, status }) {
       const unitLabel = PRICE_UNITS.find((u) => u.value === unit)?.title ?? unit
       return {
-        title: `${indicative ? 'from ' : ''}€${Number(amount ?? 0).toFixed(2)} ${unitLabel ?? ''}`.trim(),
-        subtitle: status === 'confirmed' ? undefined : `${status} — shows a warning on the page`,
+        title:
+          `${indicative ? "from " : ""}€${Number(amount ?? 0).toFixed(2)} ${unitLabel ?? ""}`.trim(),
+        subtitle:
+          status === "confirmed" ? undefined : `${status} — shows a warning on the page`,
       }
     },
   },

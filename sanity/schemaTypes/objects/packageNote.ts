@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * A callout on a package page.
@@ -32,60 +32,60 @@ import {defineField, defineType} from 'sanity'
  * confirmed, the warning has nothing left to say.
  */
 export default defineType({
-  name: 'packageNote',
-  title: 'Note / callout',
-  type: 'object',
+  name: "packageNote",
+  title: "Note / callout",
+  type: "object",
   fields: [
     defineField({
-      name: 'tone',
-      title: 'Tone',
-      type: 'string',
+      name: "tone",
+      title: "Tone",
+      type: "string",
       options: {
         list: [
-          {title: 'Note — bronze, confirmed', value: 'note'},
-          {title: 'Warning — oxblood, unconfirmed or contested', value: 'warning'},
+          { title: "Note — bronze, confirmed", value: "note" },
+          { title: "Warning — oxblood, unconfirmed or contested", value: "warning" },
         ],
-        layout: 'radio',
+        layout: "radio",
       },
-      initialValue: 'note',
+      initialValue: "note",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'body',
-      title: 'Body',
-      type: 'text',
+      name: "body",
+      title: "Body",
+      type: "text",
       rows: 4,
       description:
-        'Written in the site\'s own voice, as if the studio wrote it for the client to hand on — not as internal commentary.',
+        "Written in the site's own voice, as if the studio wrote it for the client to hand on — not as internal commentary.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'placement',
-      title: 'Placement',
-      type: 'string',
+      name: "placement",
+      title: "Placement",
+      type: "string",
       options: {
         list: [
-          {title: 'Below the tier cards', value: 'below-tier-cards'},
-          {title: 'Above the menus', value: 'above-menus'},
-          {title: 'Foot of page', value: 'page-foot'},
+          { title: "Below the tier cards", value: "below-tier-cards" },
+          { title: "Above the menus", value: "above-menus" },
+          { title: "Foot of page", value: "page-foot" },
         ],
       },
-      initialValue: 'below-tier-cards',
+      initialValue: "below-tier-cards",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'resolvesWith',
-      title: 'Describes this unresolved fact',
-      type: 'provenance',
+      name: "resolvesWith",
+      title: "Describes this unresolved fact",
+      type: "provenance",
       description:
-        'Optional, but setting it means the warning can retire itself once the fact is confirmed instead of being remembered about.',
+        "Optional, but setting it means the warning can retire itself once the fact is confirmed instead of being remembered about.",
     }),
   ],
   preview: {
-    select: {tone: 'tone', body: 'body', placement: 'placement'},
-    prepare({tone, body, placement}) {
+    select: { tone: "tone", body: "body", placement: "placement" },
+    prepare({ tone, body, placement }) {
       return {
-        title: `${tone === 'warning' ? '[warning] ' : ''}${String(body ?? '').slice(0, 60)}`,
+        title: `${tone === "warning" ? "[warning] " : ""}${String(body ?? "").slice(0, 60)}`,
         subtitle: placement,
       }
     },

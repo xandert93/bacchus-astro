@@ -1,44 +1,44 @@
-import type {SchemaTypeDefinition} from 'sanity'
+import type { SchemaTypeDefinition } from "sanity"
 
 // --- Reusable objects -------------------------------------------------------
-import provenance from './objects/provenance'
-import price from './objects/price'
-import seo from './objects/seo'
-import capacity from './objects/capacity'
-import catalogueVariance from './objects/catalogueVariance'
-import consentRecord from './objects/consentRecord'
-import statusEvent from './objects/statusEvent'
-import menuItem from './objects/menuItem'
-import wineEntry from './objects/wineEntry'
-import menuGroup from './objects/menuGroup'
-import packageNote from './objects/packageNote'
-import signatureDish from './objects/signatureDish'
-import emphasisedQuote from './objects/emphasisedQuote'
-import quoteLineItem from './objects/quoteLineItem'
-import paymentRecord from './objects/paymentRecord'
-import restaurantDish from './objects/restaurantDish'
+import provenance from "./objects/provenance"
+import price from "./objects/price"
+import seo from "./objects/seo"
+import capacity from "./objects/capacity"
+import catalogueVariance from "./objects/catalogueVariance"
+import consentRecord from "./objects/consentRecord"
+import statusEvent from "./objects/statusEvent"
+import menuItem from "./objects/menuItem"
+import wineEntry from "./objects/wineEntry"
+import menuGroup from "./objects/menuGroup"
+import packageNote from "./objects/packageNote"
+import signatureDish from "./objects/signatureDish"
+import emphasisedQuote from "./objects/emphasisedQuote"
+import quoteLineItem from "./objects/quoteLineItem"
+import paymentRecord from "./objects/paymentRecord"
+import restaurantDish from "./objects/restaurantDish"
 
 // --- Documents --------------------------------------------------------------
-import booking from './documents/booking'
-import waitlistEntry from './documents/waitlistEntry'
-import venueClosure from './documents/venueClosure'
-import quote from './documents/quote'
-import weddingPackage from './documents/weddingPackage'
-import packageTier from './documents/packageTier'
-import stationCategory from './documents/stationCategory'
-import station from './documents/station'
-import venueSpace from './documents/venueSpace'
-import addOn from './documents/addOn'
-import galleryImage from './documents/galleryImage'
-import testimonial from './documents/testimonial'
-import supplier from './documents/supplier'
-import guideArticle from './documents/guideArticle'
-import faq from './documents/faq'
-import restaurantMenuSection from './documents/restaurantMenuSection'
+import booking from "./documents/booking"
+import waitlistEntry from "./documents/waitlistEntry"
+import venueClosure from "./documents/venueClosure"
+import quote from "./documents/quote"
+import weddingPackage from "./documents/weddingPackage"
+import packageTier from "./documents/packageTier"
+import stationCategory from "./documents/stationCategory"
+import station from "./documents/station"
+import venueSpace from "./documents/venueSpace"
+import addOn from "./documents/addOn"
+import galleryImage from "./documents/galleryImage"
+import testimonial from "./documents/testimonial"
+import supplier from "./documents/supplier"
+import guideArticle from "./documents/guideArticle"
+import faq from "./documents/faq"
+import restaurantMenuSection from "./documents/restaurantMenuSection"
 
 // --- Singletons -------------------------------------------------------------
-import siteSettings from './singletons/siteSettings'
-import weddingPolicy from './singletons/weddingPolicy'
+import siteSettings from "./singletons/siteSettings"
+import weddingPolicy from "./singletons/weddingPolicy"
 
 /**
  * Schema registry.
@@ -114,4 +114,4 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 ]
 
 /** Types that must exist exactly once. Enforced in `structure.ts`. */
-export const singletonTypes = new Set(['siteSettings', 'weddingPolicy'])
+export const singletonTypes = new Set(["siteSettings", "weddingPolicy"])

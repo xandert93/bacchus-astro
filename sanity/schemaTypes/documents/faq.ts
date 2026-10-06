@@ -1,4 +1,4 @@
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import { defineArrayMember, defineField, defineType } from "sanity"
 
 /**
  * One confirmed fact about the venue, in question-and-answer form.
@@ -38,34 +38,34 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
  * nearby arrangement nobody has yet identified.
  */
 export default defineType({
-  name: 'faq',
-  title: 'FAQ / venue fact',
-  type: 'document',
+  name: "faq",
+  title: "FAQ / venue fact",
+  type: "document",
   fields: [
     defineField({
-      name: 'question',
-      title: 'Question',
-      type: 'string',
-      description: 'As a visitor would ask it, not as staff would file it.',
+      name: "question",
+      title: "Question",
+      type: "string",
+      description: "As a visitor would ask it, not as staff would file it.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'answer',
-      title: 'Answer',
-      type: 'array',
+      name: "answer",
+      title: "Answer",
+      type: "array",
       of: [
         defineArrayMember({
-          type: 'block',
-          styles: [{title: 'Paragraph', value: 'normal'}],
-          lists: [{title: 'Bullet', value: 'bullet'}],
+          type: "block",
+          styles: [{ title: "Paragraph", value: "normal" }],
+          lists: [{ title: "Bullet", value: "bullet" }],
           marks: {
-            decorators: [{title: 'Strong', value: 'strong'}],
+            decorators: [{ title: "Strong", value: "strong" }],
             annotations: [
               {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [defineField({name: 'href', title: 'URL', type: 'url'})],
+                name: "link",
+                type: "object",
+                title: "Link",
+                fields: [defineField({ name: "href", title: "URL", type: "url" })],
               },
             ],
           },
@@ -74,91 +74,91 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'topic',
-      title: 'Topic',
-      type: 'string',
+      name: "topic",
+      title: "Topic",
+      type: "string",
       options: {
         list: [
-          {title: 'Spaces & capacity', value: 'spaces'},
-          {title: 'Food & drink', value: 'food'},
-          {title: 'Timings & music', value: 'timings'},
-          {title: 'Pricing & payment', value: 'pricing'},
-          {title: 'Planning & suppliers', value: 'planning'},
-          {title: 'Access & practicalities', value: 'practical'},
-          {title: 'Restaurant', value: 'restaurant'},
+          { title: "Spaces & capacity", value: "spaces" },
+          { title: "Food & drink", value: "food" },
+          { title: "Timings & music", value: "timings" },
+          { title: "Pricing & payment", value: "pricing" },
+          { title: "Planning & suppliers", value: "planning" },
+          { title: "Access & practicalities", value: "practical" },
+          { title: "Restaurant", value: "restaurant" },
         ],
       },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'provenance',
-      title: 'Source & confirmation',
-      type: 'provenance',
+      name: "provenance",
+      title: "Source & confirmation",
+      type: "provenance",
       description:
-        'The assistant only sees confirmed facts. An unconfirmed one can still render on a page with its warning treatment.',
+        "The assistant only sees confirmed facts. An unconfirmed one can still render on a page with its warning treatment.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'availableToAssistant',
-      title: 'The chat assistant may answer with this',
-      type: 'boolean',
+      name: "availableToAssistant",
+      title: "The chat assistant may answer with this",
+      type: "boolean",
       initialValue: true,
       description:
         'Turn off for anything where the right answer is "speak to the events team", even if the fact itself is confirmed.',
     }),
     defineField({
-      name: 'showOnPages',
-      title: 'Show on',
-      type: 'array',
-      of: [defineArrayMember({type: 'string'})],
+      name: "showOnPages",
+      title: "Show on",
+      type: "array",
+      of: [defineArrayMember({ type: "string" })],
       options: {
         list: [
-          {title: 'Weddings', value: 'weddings'},
-          {title: 'Corporate', value: 'corporate'},
-          {title: 'Celebrations', value: 'celebrations'},
-          {title: 'Package pages', value: 'packages'},
-          {title: 'Deposit page', value: 'deposit'},
-          {title: 'Restaurant', value: 'restaurant'},
+          { title: "Weddings", value: "weddings" },
+          { title: "Corporate", value: "corporate" },
+          { title: "Celebrations", value: "celebrations" },
+          { title: "Package pages", value: "packages" },
+          { title: "Deposit page", value: "deposit" },
+          { title: "Restaurant", value: "restaurant" },
         ],
-        layout: 'tags',
+        layout: "tags",
       },
       description:
-        'Empty means it is held for the assistant and the guide articles but not shown on any page.',
+        "Empty means it is held for the assistant and the guide articles but not shown on any page.",
     }),
     defineField({
-      name: 'order',
-      title: 'Order',
-      type: 'number',
+      name: "order",
+      title: "Order",
+      type: "number",
       validation: (Rule) => Rule.integer(),
     }),
   ],
   orderings: [
     {
-      title: 'Topic, then order',
-      name: 'topicOrder',
+      title: "Topic, then order",
+      name: "topicOrder",
       by: [
-        {field: 'topic', direction: 'asc'},
-        {field: 'order', direction: 'asc'},
+        { field: "topic", direction: "asc" },
+        { field: "order", direction: "asc" },
       ],
     },
   ],
   preview: {
     select: {
-      question: 'question',
-      topic: 'topic',
-      status: 'provenance.status',
-      assistant: 'availableToAssistant',
+      question: "question",
+      topic: "topic",
+      status: "provenance.status",
+      assistant: "availableToAssistant",
     },
-    prepare({question, topic, status, assistant}) {
+    prepare({ question, topic, status, assistant }) {
       return {
         title: question,
         subtitle: [
           topic,
           status,
-          status === 'confirmed' && assistant ? 'assistant: yes' : 'assistant: no',
+          status === "confirmed" && assistant ? "assistant: yes" : "assistant: no",
         ]
           .filter(Boolean)
-          .join(' · '),
+          .join(" · "),
       }
     },
   },

@@ -1,4 +1,4 @@
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import { defineArrayMember, defineField, defineType } from "sanity"
 
 /**
  * A titled block of menu lines — "Cold Canapés", "Flying Buffet", "Desserts",
@@ -15,45 +15,45 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
  * tier-specific. A fixed list would be wrong by the second tier.
  */
 export default defineType({
-  name: 'menuGroup',
-  title: 'Menu group',
-  type: 'object',
+  name: "menuGroup",
+  title: "Menu group",
+  type: "object",
   fields: [
     defineField({
-      name: 'title',
-      title: 'Group title',
-      type: 'string',
+      name: "title",
+      title: "Group title",
+      type: "string",
       description: 'As it heads the column — e.g. "Cold Canapés", "Coffee Station".',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'items',
-      title: 'Items',
-      type: 'array',
+      name: "items",
+      title: "Items",
+      type: "array",
       of: [
-        defineArrayMember({type: 'menuItem'}),
-        defineArrayMember({type: 'wineEntry'}),
+        defineArrayMember({ type: "menuItem" }),
+        defineArrayMember({ type: "wineEntry" }),
       ],
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
-      name: 'note',
-      title: 'Group note',
-      type: 'string',
+      name: "note",
+      title: "Group note",
+      type: "string",
       description:
         'Applies to the whole group — e.g. "Served with crackers, Grissini & freshly baked bread."',
     }),
     defineField({
-      name: 'catalogueVariance',
-      title: 'Group title differs from the catalogue',
-      type: 'catalogueVariance',
+      name: "catalogueVariance",
+      title: "Group title differs from the catalogue",
+      type: "catalogueVariance",
     }),
   ],
   preview: {
-    select: {title: 'title', items: 'items'},
-    prepare({title, items}) {
+    select: { title: "title", items: "items" },
+    prepare({ title, items }) {
       const count = Array.isArray(items) ? items.length : 0
-      return {title, subtitle: `${count} item${count === 1 ? '' : 's'}`}
+      return { title, subtitle: `${count} item${count === 1 ? "" : "s"}` }
     },
   },
 })

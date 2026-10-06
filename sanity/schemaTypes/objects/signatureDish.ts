@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * One photographed dish tile above a tier's menu columns.
@@ -21,47 +21,47 @@ import {defineField, defineType} from 'sanity'
  * are the two places on the site where an image IS the content.
  */
 export default defineType({
-  name: 'signatureDish',
-  title: 'Signature dish',
-  type: 'object',
+  name: "signatureDish",
+  title: "Signature dish",
+  type: "object",
   fields: [
     defineField({
-      name: 'name',
-      title: 'Dish name',
-      type: 'string',
-      description: 'Renders as the tile caption.',
+      name: "name",
+      title: "Dish name",
+      type: "string",
+      description: "Renders as the tile caption.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'image',
-      title: 'Photograph',
-      type: 'image',
-      options: {hotspot: true},
+      name: "image",
+      title: "Photograph",
+      type: "image",
+      options: { hotspot: true },
       fields: [
         defineField({
-          name: 'alt',
-          title: 'Alt text',
-          type: 'string',
-          description: 'What is in the photograph, for someone who cannot see it.',
+          name: "alt",
+          title: "Alt text",
+          type: "string",
+          description: "What is in the photograph, for someone who cannot see it.",
           validation: (Rule) => Rule.required(),
         }),
       ],
     }),
     defineField({
-      name: 'isPlaceholderImage',
-      title: 'Placeholder image (not real Bacchus photography)',
-      type: 'boolean',
+      name: "isPlaceholderImage",
+      title: "Placeholder image (not real Bacchus photography)",
+      type: "boolean",
       initialValue: false,
       description:
         'On means the page shows its oxblood placeholder disclaimer and the image appears in the "needs a real export" list. See the note on this type.',
     }),
   ],
   preview: {
-    select: {name: 'name', media: 'image', placeholder: 'isPlaceholderImage'},
-    prepare({name, media, placeholder}) {
+    select: { name: "name", media: "image", placeholder: "isPlaceholderImage" },
+    prepare({ name, media, placeholder }) {
       return {
         title: name,
-        subtitle: placeholder ? 'placeholder image' : undefined,
+        subtitle: placeholder ? "placeholder image" : undefined,
         media,
       }
     },

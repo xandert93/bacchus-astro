@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * One payment attempt or receipt against a booking.
@@ -32,129 +32,133 @@ import {defineField, defineType} from 'sanity'
  * (first payment wins the date) auditable afterwards.
  */
 export default defineType({
-  name: 'paymentRecord',
-  title: 'Payment',
-  type: 'object',
+  name: "paymentRecord",
+  title: "Payment",
+  type: "object",
   fields: [
     defineField({
-      name: 'method',
-      title: 'Method',
-      type: 'string',
+      name: "method",
+      title: "Method",
+      type: "string",
       options: {
         list: [
-          {title: 'Card (Stripe)', value: 'card'},
-          {title: 'Bank transfer (manual reconciliation)', value: 'bank-transfer'},
-          {title: 'Pay by Bank (open banking) — not yet verified for Malta', value: 'pay-by-bank'},
-          {title: 'Other / recorded retrospectively', value: 'other'},
+          { title: "Card (Stripe)", value: "card" },
+          { title: "Bank transfer (manual reconciliation)", value: "bank-transfer" },
+          {
+            title: "Pay by Bank (open banking) — not yet verified for Malta",
+            value: "pay-by-bank",
+          },
+          { title: "Other / recorded retrospectively", value: "other" },
         ],
       },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'kind',
-      title: 'What this covers',
-      type: 'string',
+      name: "kind",
+      title: "What this covers",
+      type: "string",
       options: {
         list: [
-          {title: 'Deposit', value: 'deposit'},
-          {title: 'Balance', value: 'balance'},
-          {title: 'Menu tasting fee', value: 'tasting'},
-          {title: 'Refund', value: 'refund'},
+          { title: "Deposit", value: "deposit" },
+          { title: "Balance", value: "balance" },
+          { title: "Menu tasting fee", value: "tasting" },
+          { title: "Refund", value: "refund" },
         ],
       },
-      initialValue: 'deposit',
+      initialValue: "deposit",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'status',
-      title: 'Status',
-      type: 'string',
+      name: "status",
+      title: "Status",
+      type: "string",
       options: {
         list: [
-          {title: 'Awaiting payment', value: 'awaiting'},
-          {title: 'Received', value: 'received'},
-          {title: 'Failed', value: 'failed'},
-          {title: 'Expired — hold lapsed', value: 'expired'},
-          {title: 'Refunded', value: 'refunded'},
+          { title: "Awaiting payment", value: "awaiting" },
+          { title: "Received", value: "received" },
+          { title: "Failed", value: "failed" },
+          { title: "Expired — hold lapsed", value: "expired" },
+          { title: "Refunded", value: "refunded" },
         ],
       },
-      initialValue: 'awaiting',
+      initialValue: "awaiting",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'grossAmount',
-      title: 'Gross amount (EUR)',
-      type: 'number',
+      name: "grossAmount",
+      title: "Gross amount (EUR)",
+      type: "number",
       validation: (Rule) => Rule.required().precision(2),
     }),
     defineField({
-      name: 'feeAmount',
-      title: 'Processing fee (EUR)',
-      type: 'number',
+      name: "feeAmount",
+      title: "Processing fee (EUR)",
+      type: "number",
       description:
-        'As charged, not as estimated. Percentage plus a fixed amount, and higher on non-EU cards.',
+        "As charged, not as estimated. Percentage plus a fixed amount, and higher on non-EU cards.",
       validation: (Rule) => Rule.precision(2),
     }),
     defineField({
-      name: 'netAmount',
-      title: 'Net received (EUR)',
-      type: 'number',
-      description: 'What actually landed. This is the figure that reconciles against the bank.',
+      name: "netAmount",
+      title: "Net received (EUR)",
+      type: "number",
+      description:
+        "What actually landed. This is the figure that reconciles against the bank.",
       validation: (Rule) => Rule.precision(2),
     }),
     defineField({
-      name: 'reference',
-      title: 'Reference',
-      type: 'string',
+      name: "reference",
+      title: "Reference",
+      type: "string",
       description:
-        'The transfer reference shown to the payer, or the Stripe PaymentIntent id.',
+        "The transfer reference shown to the payer, or the Stripe PaymentIntent id.",
     }),
     defineField({
-      name: 'stripeSessionId',
-      title: 'Stripe Checkout session id',
-      type: 'string',
-      hidden: ({parent}) => parent?.method !== 'card',
+      name: "stripeSessionId",
+      title: "Stripe Checkout session id",
+      type: "string",
+      hidden: ({ parent }) => parent?.method !== "card",
       readOnly: true,
     }),
     defineField({
-      name: 'receivedAt',
-      title: 'Received at',
-      type: 'datetime',
+      name: "receivedAt",
+      title: "Received at",
+      type: "datetime",
     }),
     defineField({
-      name: 'reconciledBy',
-      title: 'Matched by',
-      type: 'string',
-      description: 'Which staff member matched this against the bank statement.',
-      hidden: ({parent}) => parent?.method === 'card',
+      name: "reconciledBy",
+      title: "Matched by",
+      type: "string",
+      description: "Which staff member matched this against the bank statement.",
+      hidden: ({ parent }) => parent?.method === "card",
     }),
     defineField({
-      name: 'reconciledAt',
-      title: 'Matched at',
-      type: 'datetime',
-      hidden: ({parent}) => parent?.method === 'card',
+      name: "reconciledAt",
+      title: "Matched at",
+      type: "datetime",
+      hidden: ({ parent }) => parent?.method === "card",
     }),
     defineField({
-      name: 'note',
-      title: 'Note',
-      type: 'text',
+      name: "note",
+      title: "Note",
+      type: "text",
       rows: 2,
     }),
   ],
   preview: {
     select: {
-      kind: 'kind',
-      method: 'method',
-      status: 'status',
-      gross: 'grossAmount',
-      at: 'receivedAt',
+      kind: "kind",
+      method: "method",
+      status: "status",
+      gross: "grossAmount",
+      at: "receivedAt",
     },
-    prepare({kind, method, status, gross, at}) {
+    prepare({ kind, method, status, gross, at }) {
       return {
         title: `${kind} — €${Number(gross ?? 0).toFixed(2)} (${status})`,
-        subtitle: [method, at ? new Date(at).toLocaleDateString('en-GB') : null]
+        subtitle: [method, at ? new Date(at).toLocaleDateString("en-GB") : null]
           .filter(Boolean)
-          .join(' — '),
+          .join(" — "),
       }
     },
   },

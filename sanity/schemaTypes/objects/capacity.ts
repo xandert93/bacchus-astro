@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * A capacity figure, with its seating basis stated.
@@ -18,61 +18,61 @@ import {defineField, defineType} from 'sanity'
  * a whole has a range (the layout is adjusted per guest count).
  */
 export default defineType({
-  name: 'capacity',
-  title: 'Capacity',
-  type: 'object',
-  options: {columns: 2},
+  name: "capacity",
+  title: "Capacity",
+  type: "object",
+  options: { columns: 2 },
   fields: [
     defineField({
-      name: 'min',
-      title: 'Minimum guests',
-      type: 'number',
+      name: "min",
+      title: "Minimum guests",
+      type: "number",
       description:
-        'Only where a real floor exists. Bacchus confirmed no minimum guest count and no minimum spend, so this is usually empty.',
+        "Only where a real floor exists. Bacchus confirmed no minimum guest count and no minimum spend, so this is usually empty.",
       validation: (Rule) => Rule.min(0).integer(),
     }),
     defineField({
-      name: 'max',
-      title: 'Maximum guests',
-      type: 'number',
+      name: "max",
+      title: "Maximum guests",
+      type: "number",
       validation: (Rule) => Rule.required().min(1).integer(),
     }),
     defineField({
-      name: 'basis',
-      title: 'Seating basis',
-      type: 'string',
+      name: "basis",
+      title: "Seating basis",
+      type: "string",
       options: {
         list: [
-          {title: 'Seated', value: 'seated'},
-          {title: 'Standing', value: 'standing'},
-          {title: 'Seated or standing', value: 'either'},
+          { title: "Seated", value: "seated" },
+          { title: "Standing", value: "standing" },
+          { title: "Seated or standing", value: "either" },
         ],
-        layout: 'radio',
+        layout: "radio",
       },
-      description: 'Required. A figure without this is not publishable.',
+      description: "Required. A figure without this is not publishable.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'layoutNote',
-      title: 'Layout note',
-      type: 'string',
+      name: "layoutNote",
+      title: "Layout note",
+      type: "string",
       description:
         'How the figure moves with the layout — e.g. "adjusted per guest count to stay comfortable at any size".',
     }),
     defineField({
-      name: 'provenance',
-      title: 'Source & confirmation',
-      type: 'provenance',
+      name: "provenance",
+      title: "Source & confirmation",
+      type: "provenance",
       validation: (Rule) => Rule.required(),
     }),
   ],
   preview: {
-    select: {min: 'min', max: 'max', basis: 'basis', status: 'provenance.status'},
-    prepare({min, max, basis, status}) {
+    select: { min: "min", max: "max", basis: "basis", status: "provenance.status" },
+    prepare({ min, max, basis, status }) {
       const range = min ? `${min}–${max}` : `up to ${max}`
       return {
-        title: `${range} ${basis === 'either' ? 'guests' : basis}`,
-        subtitle: status === 'confirmed' ? undefined : `${status} — keeps the disclaimer`,
+        title: `${range} ${basis === "either" ? "guests" : basis}`,
+        subtitle: status === "confirmed" ? undefined : `${status} — keeps the disclaimer`,
       }
     },
   },

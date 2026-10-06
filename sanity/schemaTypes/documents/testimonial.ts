@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * A real client review.
@@ -32,92 +32,93 @@ import {defineField, defineType} from 'sanity'
  * actually distinguishes one testimonial from another.
  */
 export default defineType({
-  name: 'testimonial',
-  title: 'Testimonial',
-  type: 'document',
+  name: "testimonial",
+  title: "Testimonial",
+  type: "document",
   groups: [
-    {name: 'content', title: 'Content', default: true},
-    {name: 'consent', title: 'Consent & publication'},
+    { name: "content", title: "Content", default: true },
+    { name: "consent", title: "Consent & publication" },
   ],
   fields: [
     defineField({
-      name: 'quote',
-      title: 'Quote',
-      type: 'emphasisedQuote',
-      group: 'content',
+      name: "quote",
+      title: "Quote",
+      type: "emphasisedQuote",
+      group: "content",
       description:
-        'The reviewer\'s own words. Mark one phrase with Gold emphasis — that is our editorial pick, not theirs, and it renders in gold in the rotator.',
+        "The reviewer's own words. Mark one phrase with Gold emphasis — that is our editorial pick, not theirs, and it renders in gold in the rotator.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'authorFullName',
-      title: 'Full name (internal)',
-      type: 'string',
-      group: 'content',
-      description: 'Held on the record. Not what gets published — see below.',
+      name: "authorFullName",
+      title: "Full name (internal)",
+      type: "string",
+      group: "content",
+      description: "Held on the record. Not what gets published — see below.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'displayName',
-      title: 'Name as published',
-      type: 'string',
-      group: 'content',
+      name: "displayName",
+      title: "Name as published",
+      type: "string",
+      group: "content",
       description:
         'What appears on the site — "Mandy & Gabriel Camenzuli", or "Marvin W" where only an initial was given.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'rating',
-      title: 'Rating',
-      type: 'number',
-      group: 'content',
-      options: {list: [1, 2, 3, 4, 5]},
+      name: "rating",
+      title: "Rating",
+      type: "number",
+      group: "content",
+      options: { list: [1, 2, 3, 4, 5] },
       initialValue: 5,
-      description: 'Renders as the five staggered stars.',
+      description: "Renders as the five staggered stars.",
       validation: (Rule) => Rule.required().min(1).max(5).integer(),
     }),
     defineField({
-      name: 'location',
-      title: 'Location',
-      type: 'string',
-      group: 'content',
-      description: 'Optional. Currently "Malta" on all four, so it differentiates nothing.',
+      name: "location",
+      title: "Location",
+      type: "string",
+      group: "content",
+      description:
+        'Optional. Currently "Malta" on all four, so it differentiates nothing.',
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'string',
-      group: 'content',
+      name: "category",
+      title: "Category",
+      type: "string",
+      group: "content",
       options: {
         list: [
-          {title: 'Wedding', value: 'wedding'},
-          {title: 'Corporate', value: 'corporate'},
-          {title: 'Celebration', value: 'celebration'},
-          {title: 'Restaurant', value: 'restaurant'},
+          { title: "Wedding", value: "wedding" },
+          { title: "Corporate", value: "corporate" },
+          { title: "Celebration", value: "celebration" },
+          { title: "Restaurant", value: "restaurant" },
         ],
       },
       description:
-        'Optional, same reason as location. Note the celebrations page had its placeholder quote removed rather than filled, because none of the four is celebration-specific.',
+        "Optional, same reason as location. Note the celebrations page had its placeholder quote removed rather than filled, because none of the four is celebration-specific.",
     }),
     defineField({
-      name: 'eventDate',
-      title: 'Event date',
-      type: 'date',
-      group: 'content',
-      description: 'As the reviewer gave it where they did — one cites 26 April 2014.',
+      name: "eventDate",
+      title: "Event date",
+      type: "date",
+      group: "content",
+      description: "As the reviewer gave it where they did — one cites 26 April 2014.",
     }),
     defineField({
-      name: 'photo',
-      title: 'Photograph',
-      type: 'image',
-      group: 'content',
-      options: {hotspot: true},
-      hidden: ({document}) => !document?.consentPhoto,
+      name: "photo",
+      title: "Photograph",
+      type: "image",
+      group: "content",
+      options: { hotspot: true },
+      hidden: ({ document }) => !document?.consentPhoto,
       fields: [
         defineField({
-          name: 'alt',
-          title: 'Alt text',
-          type: 'string',
+          name: "alt",
+          title: "Alt text",
+          type: "string",
           validation: (Rule) => Rule.required(),
         }),
       ],
@@ -125,85 +126,99 @@ export default defineType({
 
     // --- Consent & publication ---------------------------------------------
     defineField({
-      name: 'status',
-      title: 'Status',
-      type: 'string',
-      group: 'consent',
+      name: "status",
+      title: "Status",
+      type: "string",
+      group: "consent",
       options: {
         list: [
-          {title: 'Submitted — awaiting review', value: 'submitted'},
-          {title: 'Approved — cleared, not yet live', value: 'approved'},
-          {title: 'Published', value: 'published'},
-          {title: 'Withheld', value: 'withheld'},
+          { title: "Submitted — awaiting review", value: "submitted" },
+          { title: "Approved — cleared, not yet live", value: "approved" },
+          { title: "Published", value: "published" },
+          { title: "Withheld", value: "withheld" },
         ],
-        layout: 'radio',
+        layout: "radio",
       },
-      initialValue: 'submitted',
+      initialValue: "submitted",
       description: 'Only "Published" renders. Never auto-advance this from a submission.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'consentName',
-      title: 'Consented to name being used',
-      type: 'boolean',
-      group: 'consent',
+      name: "consentName",
+      title: "Consented to name being used",
+      type: "boolean",
+      group: "consent",
       initialValue: false,
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          const doc = context.document as {status?: string} | undefined
-          if (doc?.status === 'published' && !value) {
-            return 'Cannot publish a named testimonial without consent for the name.'
+          const doc = context.document as { status?: string } | undefined
+          if (doc?.status === "published" && !value) {
+            return "Cannot publish a named testimonial without consent for the name."
           }
           return true
         }),
     }),
     defineField({
-      name: 'consentPhoto',
-      title: 'Consented to photograph being used',
-      type: 'boolean',
-      group: 'consent',
+      name: "consentPhoto",
+      title: "Consented to photograph being used",
+      type: "boolean",
+      group: "consent",
       initialValue: false,
-      description: 'Separate from the name. A reviewer may agree to one and not the other.',
-    }),
-    defineField({
-      name: 'consent',
-      title: 'Consent record',
-      type: 'consentRecord',
-      group: 'consent',
-    }),
-    defineField({
-      name: 'sourceBooking',
-      title: 'From this booking',
-      type: 'reference',
-      group: 'consent',
-      to: [{type: 'booking'}],
       description:
-        'Empty for the four front-loaded by hand — they predate the pipeline and have no booking record.',
+        "Separate from the name. A reviewer may agree to one and not the other.",
     }),
     defineField({
-      name: 'order',
-      title: 'Order',
-      type: 'number',
-      group: 'consent',
+      name: "consent",
+      title: "Consent record",
+      type: "consentRecord",
+      group: "consent",
+    }),
+    defineField({
+      name: "sourceBooking",
+      title: "From this booking",
+      type: "reference",
+      group: "consent",
+      to: [{ type: "booking" }],
+      description:
+        "Empty for the four front-loaded by hand — they predate the pipeline and have no booking record.",
+    }),
+    defineField({
+      name: "order",
+      title: "Order",
+      type: "number",
+      group: "consent",
       validation: (Rule) => Rule.integer(),
     }),
   ],
   orderings: [
-    {title: 'Manual order', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]},
-    {title: 'Event date, newest', name: 'eventDesc', by: [{field: 'eventDate', direction: 'desc'}]},
+    {
+      title: "Manual order",
+      name: "orderAsc",
+      by: [{ field: "order", direction: "asc" }],
+    },
+    {
+      title: "Event date, newest",
+      name: "eventDesc",
+      by: [{ field: "eventDate", direction: "desc" }],
+    },
   ],
   preview: {
-    select: {name: 'displayName', status: 'status', rating: 'rating', date: 'eventDate'},
-    prepare({name, status, rating, date}) {
+    select: {
+      name: "displayName",
+      status: "status",
+      rating: "rating",
+      date: "eventDate",
+    },
+    prepare({ name, status, rating, date }) {
       return {
-        title: name ?? 'Unnamed',
+        title: name ?? "Unnamed",
         subtitle: [
-          '★'.repeat(Number(rating ?? 0)),
+          "★".repeat(Number(rating ?? 0)),
           status,
-          date ? new Date(date).toLocaleDateString('en-GB') : null,
+          date ? new Date(date).toLocaleDateString("en-GB") : null,
         ]
           .filter(Boolean)
-          .join(' · '),
+          .join(" · "),
       }
     },
   },

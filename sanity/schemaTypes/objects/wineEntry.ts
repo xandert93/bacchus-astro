@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * One wine on the beverage list.
@@ -22,63 +22,66 @@ import {defineField, defineType} from 'sanity'
  * extraction.
  */
 export default defineType({
-  name: 'wineEntry',
-  title: 'Wine',
-  type: 'object',
+  name: "wineEntry",
+  title: "Wine",
+  type: "object",
   fields: [
     defineField({
-      name: 'name',
-      title: 'Name',
-      type: 'string',
-      description: 'Including any appellation as printed — e.g. "Gavi Di Gavi ‘La Giustiniana’ D.O.C.G".',
+      name: "name",
+      title: "Name",
+      type: "string",
+      description:
+        'Including any appellation as printed — e.g. "Gavi Di Gavi ‘La Giustiniana’ D.O.C.G".',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'grapes',
-      title: 'Grape varieties',
-      type: 'string',
-      description: 'Comma-separated, as the catalogue lists them — e.g. "Chardonnay, Girgentina".',
+      name: "grapes",
+      title: "Grape varieties",
+      type: "string",
+      description:
+        'Comma-separated, as the catalogue lists them — e.g. "Chardonnay, Girgentina".',
     }),
     defineField({
-      name: 'producer',
-      title: 'Producer & origin',
-      type: 'string',
+      name: "producer",
+      title: "Producer & origin",
+      type: "string",
       description: 'e.g. "Marsovin, Malta".',
     }),
     defineField({
-      name: 'tastingNote',
-      title: 'Tasting note',
-      type: 'text',
+      name: "tastingNote",
+      title: "Tasting note",
+      type: "text",
       rows: 3,
       description: "The catalogue's own note. British English; accents restored.",
     }),
     defineField({
-      name: 'style',
-      title: 'Style',
-      type: 'string',
+      name: "style",
+      title: "Style",
+      type: "string",
       options: {
         list: [
-          {title: 'White', value: 'white'},
-          {title: 'Red', value: 'red'},
-          {title: 'Rosé', value: 'rose'},
-          {title: 'Sparkling', value: 'sparkling'},
-          {title: 'Dessert / fortified', value: 'dessert'},
+          { title: "White", value: "white" },
+          { title: "Red", value: "red" },
+          { title: "Rosé", value: "rose" },
+          { title: "Sparkling", value: "sparkling" },
+          { title: "Dessert / fortified", value: "dessert" },
         ],
       },
-      description: 'Not rendered today. Here so the list can be grouped or filtered later without a re-key.',
+      description:
+        "Not rendered today. Here so the list can be grouped or filtered later without a re-key.",
     }),
     defineField({
-      name: 'catalogueVariance',
-      title: 'Differs from the catalogue',
-      type: 'catalogueVariance',
+      name: "catalogueVariance",
+      title: "Differs from the catalogue",
+      type: "catalogueVariance",
     }),
   ],
   preview: {
-    select: {name: 'name', grapes: 'grapes', producer: 'producer'},
-    prepare({name, grapes, producer}) {
+    select: { name: "name", grapes: "grapes", producer: "producer" },
+    prepare({ name, grapes, producer }) {
       return {
         title: name,
-        subtitle: [grapes, producer].filter(Boolean).join(' · '),
+        subtitle: [grapes, producer].filter(Boolean).join(" · "),
       }
     },
   },
