@@ -1,4 +1,4 @@
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import { defineArrayMember, defineField, defineType } from "sanity"
 
 /**
  * One reception food station — Charcuterie Table, Oyster Royale, BBQ Table,
@@ -33,102 +33,102 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
  * exception needs to stay visible and queryable rather than becoming a habit.
  */
 export default defineType({
-  name: 'station',
-  title: 'Reception station',
-  type: 'document',
+  name: "station",
+  title: "Reception station",
+  type: "document",
   fields: [
     defineField({
-      name: 'name',
-      title: 'Name',
-      type: 'string',
+      name: "name",
+      title: "Name",
+      type: "string",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      options: {source: 'name', maxLength: 64},
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      options: { source: "name", maxLength: 64 },
       description:
-        'The deep-link target — reception-package.html#<slug> today, /weddings/packages/reception#<slug> once on Astro. Note mobile deep-linking to a station is a known open bug.',
+        "The deep-link target — reception-package.html#<slug> today, /weddings/packages/reception#<slug> once on Astro. Note mobile deep-linking to a station is a known open bug.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'reference',
-      to: [{type: 'stationCategory'}],
+      name: "category",
+      title: "Category",
+      type: "reference",
+      to: [{ type: "stationCategory" }],
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'order',
-      title: 'Order within category',
-      type: 'number',
+      name: "order",
+      title: "Order within category",
+      type: "number",
       validation: (Rule) => Rule.required().integer(),
     }),
     defineField({
-      name: 'price',
-      title: 'Price',
-      type: 'price',
-      description: 'Per person, as the card shows it — e.g. €10.50.',
+      name: "price",
+      title: "Price",
+      type: "price",
+      description: "Per person, as the card shows it — e.g. €10.50.",
     }),
     defineField({
-      name: 'items',
-      title: 'Items',
-      type: 'array',
-      of: [defineArrayMember({type: 'menuItem'})],
+      name: "items",
+      title: "Items",
+      type: "array",
+      of: [defineArrayMember({ type: "menuItem" })],
       description:
-        'Also composed into the lightbox caption at render time. Do not maintain a second copy of this list anywhere.',
+        "Also composed into the lightbox caption at render time. Do not maintain a second copy of this list anywhere.",
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
-      name: 'servingNote',
-      title: 'Serving note',
-      type: 'string',
+      name: "servingNote",
+      title: "Serving note",
+      type: "string",
       description:
         'How it is served — e.g. "Served with crackers, Grissini & freshly baked bread." Leads the lightbox caption.',
     }),
     defineField({
-      name: 'allItemsVegetarian',
-      title: 'Every item is vegetarian',
-      type: 'boolean',
+      name: "allItemsVegetarian",
+      title: "Every item is vegetarian",
+      type: "boolean",
       initialValue: false,
       description:
         'Lets the card show one "All vegetarian" badge instead of repeating (V) on every line — true today for Macaron Tower and Doughnut Wall. A backlog idea, not yet built; the flag is here so the data does not need revisiting when it is.',
     }),
     defineField({
-      name: 'isChefsPick',
+      name: "isChefsPick",
       title: "Chef's pick",
-      type: 'boolean',
+      type: "boolean",
       initialValue: false,
       description:
         'A backlog idea for helping couples decide. Deliberately "Chef\'s pick" and not "popular" — there is nothing to back popularity as a factual claim.',
     }),
     defineField({
-      name: 'image',
-      title: 'Photograph',
-      type: 'image',
-      options: {hotspot: true},
+      name: "image",
+      title: "Photograph",
+      type: "image",
+      options: { hotspot: true },
       fields: [
         defineField({
-          name: 'alt',
-          title: 'Alt text',
-          type: 'string',
+          name: "alt",
+          title: "Alt text",
+          type: "string",
           validation: (Rule) => Rule.required(),
         }),
         defineField({
-          name: 'isPlaceholder',
-          title: 'Placeholder image (AI-generated stand-in)',
-          type: 'boolean',
+          name: "isPlaceholder",
+          title: "Placeholder image (AI-generated stand-in)",
+          type: "boolean",
           initialValue: true,
           description:
-            'True for all sixteen today. Drives the on-page disclaimer. See the note on this type.',
+            "True for all sixteen today. Drives the on-page disclaimer. See the note on this type.",
         }),
       ],
     }),
     defineField({
-      name: 'catalogueVariance',
-      title: 'Name differs from the catalogue',
-      type: 'catalogueVariance',
+      name: "catalogueVariance",
+      title: "Name differs from the catalogue",
+      type: "catalogueVariance",
       description:
         '"BBQ Table" is the live case — the catalogue prints "Barbeque Table", which was first corrected to "Barbecue Table" on the British-English rule and then renamed again on request. A naming choice, so flag it to the client as a change rather than a correction.',
     }),
@@ -136,27 +136,31 @@ export default defineType({
   // Own fields only — a list cannot be sorted by a field behind a reference.
   // Category grouping happens in the query (queries/content.ts), which fetches
   // categories and nests their stations underneath.
-  orderings: [{title: 'Order within category', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]}],
+  orderings: [
+    {
+      title: "Order within category",
+      name: "orderAsc",
+      by: [{ field: "order", direction: "asc" }],
+    },
+  ],
   preview: {
     select: {
-      name: 'name',
-      amount: 'price.amount',
-      media: 'image',
-      placeholder: 'image.isPlaceholder',
-      chefsPick: 'isChefsPick',
+      name: "name",
+      amount: "price.amount",
+      media: "image",
+      placeholder: "image.isPlaceholder",
+      chefsPick: "isChefsPick",
     },
-    prepare({name, amount, media, placeholder, chefsPick}) {
-      return {
-        title: name,
-        subtitle: [
-          amount ? `€${Number(amount).toFixed(2)} pp` : null,
-          chefsPick ? "chef's pick" : null,
-          placeholder ? 'placeholder image' : null,
-        ]
-          .filter(Boolean)
-          .join(' · '),
-        media,
-      }
-    },
+    prepare: ({ name, amount, media, placeholder, chefsPick }) => ({
+      title: name,
+      subtitle: [
+        amount ? `€${Number(amount).toFixed(2)} pp` : null,
+        chefsPick ? "chef's pick" : null,
+        placeholder ? "placeholder image" : null,
+      ]
+        .filter(Boolean)
+        .join(" · "),
+      media,
+    }),
   },
 })

@@ -29,3 +29,6 @@ playwright-report/
 
 # personal Claude Code instructions
 CLAUDE.local.md
+
+# ESLint cache
+.eslintcache

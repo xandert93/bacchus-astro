@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * Someone waiting on a date that is currently taken.
@@ -39,97 +39,97 @@ import {defineField, defineType} from 'sanity'
  * offering both on one cell would be two competing calls to action.
  */
 export default defineType({
-  name: 'waitlistEntry',
-  title: 'Waitlist entry',
-  type: 'document',
+  name: "waitlistEntry",
+  title: "Waitlist entry",
+  type: "document",
   fields: [
     defineField({
-      name: 'eventDate',
-      title: 'Date wanted',
-      type: 'date',
+      name: "eventDate",
+      title: "Date wanted",
+      type: "date",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'email',
-      title: 'Email',
-      type: 'string',
+      name: "email",
+      title: "Email",
+      type: "string",
       validation: (Rule) => Rule.required().email(),
     }),
     defineField({
-      name: 'name',
-      title: 'Name',
-      type: 'string',
-      description: 'Not required. See the note on this type.',
+      name: "name",
+      title: "Name",
+      type: "string",
+      description: "Not required. See the note on this type.",
     }),
     defineField({
-      name: 'status',
-      title: 'Status',
-      type: 'string',
+      name: "status",
+      title: "Status",
+      type: "string",
       options: {
         list: [
-          {title: 'Active — waiting', value: 'active'},
-          {title: 'Notified — date freed up, email sent', value: 'notified'},
-          {title: 'Converted — became an enquiry', value: 'converted'},
-          {title: 'Lapsed — date has passed', value: 'lapsed'},
-          {title: 'Unsubscribed', value: 'unsubscribed'},
+          { title: "Active — waiting", value: "active" },
+          { title: "Notified — date freed up, email sent", value: "notified" },
+          { title: "Converted — became an enquiry", value: "converted" },
+          { title: "Lapsed — date has passed", value: "lapsed" },
+          { title: "Unsubscribed", value: "unsubscribed" },
         ],
-        layout: 'radio',
+        layout: "radio",
       },
-      initialValue: 'active',
+      initialValue: "active",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'verifiedAt',
-      title: 'Email verified at',
-      type: 'datetime',
+      name: "verifiedAt",
+      title: "Email verified at",
+      type: "datetime",
       description:
-        'Empty means unverified. The notification query MUST filter on this — an unverified address is one anybody could have typed in.',
+        "Empty means unverified. The notification query MUST filter on this — an unverified address is one anybody could have typed in.",
     }),
     defineField({
-      name: 'notifiedAt',
-      title: 'Notified at',
-      type: 'datetime',
+      name: "notifiedAt",
+      title: "Notified at",
+      type: "datetime",
       readOnly: true,
     }),
     defineField({
-      name: 'convertedBooking',
-      title: 'Became this enquiry',
-      type: 'reference',
-      to: [{type: 'booking'}],
-      description: 'Set if they came back and enquired after being notified.',
+      name: "convertedBooking",
+      title: "Became this enquiry",
+      type: "reference",
+      to: [{ type: "booking" }],
+      description: "Set if they came back and enquired after being notified.",
     }),
     defineField({
-      name: 'consent',
-      title: 'Consent',
-      type: 'consentRecord',
+      name: "consent",
+      title: "Consent",
+      type: "consentRecord",
     }),
     defineField({
-      name: 'sourcePage',
-      title: 'Joined from',
-      type: 'string',
+      name: "sourcePage",
+      title: "Joined from",
+      type: "string",
       readOnly: true,
     }),
   ],
   orderings: [
     {
-      title: 'Date wanted, soonest first',
-      name: 'eventDateAsc',
-      by: [{field: 'eventDate', direction: 'asc'}],
+      title: "Date wanted, soonest first",
+      name: "eventDateAsc",
+      by: [{ field: "eventDate", direction: "asc" }],
     },
   ],
   preview: {
     select: {
-      date: 'eventDate',
-      email: 'email',
-      name: 'name',
-      status: 'status',
-      verified: 'verifiedAt',
+      date: "eventDate",
+      email: "email",
+      name: "name",
+      status: "status",
+      verified: "verifiedAt",
     },
-    prepare({date, email, name, status, verified}) {
-      const when = date ? new Date(date).toLocaleDateString('en-GB') : 'no date'
+    prepare: ({ date, email, name, status, verified }) => {
+      const when = date ? new Date(date).toLocaleDateString("en-GB") : "no date"
       return {
         title: `${when} — ${name || email}`,
-        subtitle: [status, verified ? null : 'unverified'].filter(Boolean).join(' · '),
+        subtitle: [status, verified ? null : "unverified"].filter(Boolean).join(" · "),
       }
     },
   },

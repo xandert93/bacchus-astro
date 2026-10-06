@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * A grouping of reception stations — the six tabs on the stations section.
@@ -19,53 +19,56 @@ import {defineField, defineType} from 'sanity'
  * carry their own provenance.
  */
 export default defineType({
-  name: 'stationCategory',
-  title: 'Station category',
-  type: 'document',
+  name: "stationCategory",
+  title: "Station category",
+  type: "document",
   fields: [
     defineField({
-      name: 'label',
-      title: 'Full label',
-      type: 'string',
-      description: 'Heads each card and names the tab for screen readers.',
+      name: "label",
+      title: "Full label",
+      type: "string",
+      description: "Heads each card and names the tab for screen readers.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'shortLabel',
-      title: 'Tab label',
-      type: 'string',
+      name: "shortLabel",
+      title: "Tab label",
+      type: "string",
       description:
-        'What the tab displays. Keep it to one short word — six of these share a mobile width.',
+        "What the tab displays. Keep it to one short word — six of these share a mobile width.",
       validation: (Rule) => Rule.required().max(12),
     }),
     defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      options: {source: 'shortLabel', maxLength: 24},
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      options: { source: "shortLabel", maxLength: 24 },
       description:
         'Matches the existing `data-group` values — boards, sea, fire, afield, italian, sweet. Note "afield" currently labels "Across Asia", which is a leftover rather than a rename; keep the slug stable regardless, the deep links use it.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'order',
-      title: 'Order',
-      type: 'number',
+      name: "order",
+      title: "Order",
+      type: "number",
       validation: (Rule) => Rule.required().integer(),
     }),
     defineField({
-      name: 'labelProvenance',
-      title: 'Label — source & confirmation',
-      type: 'provenance',
+      name: "labelProvenance",
+      title: "Label — source & confirmation",
+      type: "provenance",
       description:
-        'The six category labels are our editorial grouping, not the catalogue\'s, and are still awaiting the client\'s sign-off.',
+        "The six category labels are our editorial grouping, not the catalogue's, and are still awaiting the client's sign-off.",
     }),
   ],
-  orderings: [{title: 'Tab order', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]}],
+  orderings: [
+    { title: "Tab order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
+  ],
   preview: {
-    select: {label: 'label', short: 'shortLabel', order: 'order'},
-    prepare({label, short, order}) {
-      return {title: label, subtitle: `tab: ${short} · #${order}`}
-    },
+    select: { label: "label", short: "shortLabel", order: "order" },
+    prepare: ({ label, short, order }) => ({
+      title: label,
+      subtitle: `tab: ${short} · #${order}`,
+    }),
   },
 })

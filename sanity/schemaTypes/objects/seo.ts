@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * Per-page search and social metadata.
@@ -23,53 +23,56 @@ import {defineField, defineType} from 'sanity'
  *     how a page ends up claiming a capacity the page body contradicts.
  */
 export default defineType({
-  name: 'seo',
-  title: 'Search & social',
-  type: 'object',
-  options: {collapsible: true, collapsed: true},
+  name: "seo",
+  title: "Search & social",
+  type: "object",
+  options: { collapsible: true, collapsed: true },
   fields: [
     defineField({
-      name: 'metaTitle',
-      title: 'Search-result title override',
-      type: 'string',
+      name: "metaTitle",
+      title: "Search-result title override",
+      type: "string",
       description:
-        'Only if it should differ from the page title. Aim under 60 characters — longer gets truncated in results.',
-      validation: (Rule) => Rule.max(70).warning('Likely to be truncated in search results.'),
+        "Only if it should differ from the page title. Aim under 60 characters — longer gets truncated in results.",
+      validation: (Rule) =>
+        Rule.max(70).warning("Likely to be truncated in search results."),
     }),
     defineField({
-      name: 'metaDescription',
-      title: 'Meta description',
-      type: 'text',
+      name: "metaDescription",
+      title: "Meta description",
+      type: "text",
       rows: 3,
       description:
-        'One or two sentences, written for someone deciding whether to click. 150–160 characters is the usable range.',
+        "One or two sentences, written for someone deciding whether to click. 150–160 characters is the usable range.",
       validation: (Rule) => [
-        Rule.max(165).warning('Likely to be truncated in search results.'),
-        Rule.min(70).warning('Short enough that engines may ignore it and write their own.'),
+        Rule.max(165).warning("Likely to be truncated in search results."),
+        Rule.min(70).warning(
+          "Short enough that engines may ignore it and write their own.",
+        ),
       ],
     }),
     defineField({
-      name: 'socialImage',
-      title: 'Social share image',
-      type: 'image',
-      options: {hotspot: true},
+      name: "socialImage",
+      title: "Social share image",
+      type: "image",
+      options: { hotspot: true },
       description:
-        'Falls back to the page hero, then to the site default. Wide crop — 1200x630 is the safe shape.',
+        "Falls back to the page hero, then to the site default. Wide crop — 1200x630 is the safe shape.",
     }),
     defineField({
-      name: 'canonicalUrl',
-      title: 'Canonical URL override',
-      type: 'url',
+      name: "canonicalUrl",
+      title: "Canonical URL override",
+      type: "url",
       description:
-        'Leave empty — the route generates its own. Only set this when two routes legitimately serve the same content.',
+        "Leave empty — the route generates its own. Only set this when two routes legitimately serve the same content.",
     }),
     defineField({
-      name: 'noIndex',
-      title: 'Hide from search engines',
-      type: 'boolean',
+      name: "noIndex",
+      title: "Hide from search engines",
+      type: "boolean",
       initialValue: false,
       description:
-        'For a page that must be reachable by link but not findable — the deposit page is the live example, since it is only ever reached through a unique emailed link.',
+        "For a page that must be reachable by link but not findable — the deposit page is the live example, since it is only ever reached through a unique emailed link.",
     }),
   ],
 })

@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * One line on a menu — a canapé, a buffet dish, a dessert.
@@ -19,46 +19,44 @@ import {defineField, defineType} from 'sanity'
  * the CMS.
  */
 export default defineType({
-  name: 'menuItem',
-  title: 'Menu item',
-  type: 'object',
+  name: "menuItem",
+  title: "Menu item",
+  type: "object",
   fields: [
     defineField({
-      name: 'name',
-      title: 'Item',
-      type: 'string',
+      name: "name",
+      title: "Item",
+      type: "string",
       description:
-        'House style: British English, accents restored on foreign-language terms. Record any departure from the catalogue below.',
+        "House style: British English, accents restored on foreign-language terms. Record any departure from the catalogue below.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'isVegetarian',
-      title: 'Vegetarian (V)',
-      type: 'boolean',
+      name: "isVegetarian",
+      title: "Vegetarian (V)",
+      type: "boolean",
       initialValue: false,
       description:
-        'Only where the source marks it. Never inferred from the dish name. Ignored entirely on packages whose source carries no markings.',
+        "Only where the source marks it. Never inferred from the dish name. Ignored entirely on packages whose source carries no markings.",
     }),
     defineField({
-      name: 'note',
-      title: 'Note',
-      type: 'string',
+      name: "note",
+      title: "Note",
+      type: "string",
       description:
         'Qualifying detail that is part of the item rather than a separate line — e.g. "one tier per one hundred contracted guests".',
     }),
     defineField({
-      name: 'catalogueVariance',
-      title: 'Differs from the catalogue',
-      type: 'catalogueVariance',
+      name: "catalogueVariance",
+      title: "Differs from the catalogue",
+      type: "catalogueVariance",
     }),
   ],
   preview: {
-    select: {name: 'name', veg: 'isVegetarian', variance: 'catalogueVariance.kind'},
-    prepare({name, veg, variance}) {
-      return {
-        title: `${name}${veg ? ' (V)' : ''}`,
-        subtitle: variance ? `${variance} vs catalogue` : undefined,
-      }
-    },
+    select: { name: "name", veg: "isVegetarian", variance: "catalogueVariance.kind" },
+    prepare: ({ name, veg, variance }) => ({
+      title: `${name}${veg ? " (V)" : ""}`,
+      subtitle: variance ? `${variance} vs catalogue` : undefined,
+    }),
   },
 })

@@ -22,36 +22,36 @@ import { reduce } from "./lib/motion.js"
 // call is now fully self-contained, finding its own buttons and its own
 // .pill by class *within* the container passed in, so any number of
 // groups can coexist on one page without fighting over shared state.
-export function initTabGroup(container, opts) {
+export const initTabGroup = (container, opts) => {
   opts = opts || {}
   if (!container) return null
-  var groupTabs = [].slice.call(container.querySelectorAll("button"))
-  var groupPill = container.querySelector(".pill")
+  const groupTabs = [].slice.call(container.querySelectorAll("button"))
+  const groupPill = container.querySelector(".pill")
   if (!groupTabs.length) return null
-  function movePill(btn) {
+  const movePill = (btn) => {
     if (!groupPill) return
     groupPill.style.width = btn.offsetWidth + "px"
     groupPill.style.transform = "translateX(" + btn.offsetLeft + "px)"
   }
   // This group's own container, bound — see ensureTabVisibleIn below.
-  function ensureTabVisible(btn) {
+  const ensureTabVisible = (btn) => {
     ensureTabVisibleIn(container, btn)
   }
   // opts.panelSelector is optional — a group that only ever proxies its
   // clicks elsewhere (again, the sticky switcher) has no panels of its
   // own to show/hide, just its own active state + pill to animate.
-  function selectTab(btn) {
-    groupTabs.forEach(function (b) {
+  const selectTab = (btn) => {
+    groupTabs.forEach((b) => {
       b.classList.remove("active")
       b.setAttribute("aria-selected", "false")
     })
     btn.classList.add("active")
     btn.setAttribute("aria-selected", "true")
     if (opts.panelSelector) {
-      document.querySelectorAll(opts.panelSelector).forEach(function (p) {
+      document.querySelectorAll(opts.panelSelector).forEach((p) => {
         p.classList.remove("active")
       })
-      var panel = document.querySelector(
+      const panel = document.querySelector(
         opts.panelSelector + '[data-panel="' + btn.dataset.tab + '"]',
       )
       if (panel) panel.classList.add("active")
@@ -61,13 +61,13 @@ export function initTabGroup(container, opts) {
     ensureTabVisible(btn)
     movePill(btn)
   }
-  groupTabs.forEach(function (b) {
-    b.addEventListener("click", function () {
+  groupTabs.forEach((b) => {
+    b.addEventListener("click", () => {
       selectTab(b)
     })
   })
-  function syncPill() {
-    var a = container.querySelector("button.active")
+  const syncPill = () => {
+    const a = container.querySelector("button.active")
     if (!a) return
     // Also on load/resize, not just on click: a row that fit a moment
     // ago may not after a resize, and a page deep-linked to a later tab
@@ -131,16 +131,16 @@ export function initTabGroup(container, opts) {
 // Manual scrollBy rather than scrollIntoView: that can scroll the PAGE
 // as well as this container, yanking the whole section around under
 // someone who was only switching tabs.
-export function ensureTabVisibleIn(container, btn) {
+export const ensureTabVisibleIn = (container, btn) => {
   if (!container || !btn) return
-  var style = window.getComputedStyle(container)
-  var padLeft = parseFloat(style.paddingLeft) || 0
-  var padRight = parseFloat(style.paddingRight) || 0
-  var barRect = container.getBoundingClientRect()
-  var innerLeft = barRect.left + padLeft
-  var innerRight = barRect.right - padRight
-  var btnRect = btn.getBoundingClientRect()
-  var behavior = reduce ? "auto" : "smooth"
+  const style = window.getComputedStyle(container)
+  const padLeft = parseFloat(style.paddingLeft) || 0
+  const padRight = parseFloat(style.paddingRight) || 0
+  const barRect = container.getBoundingClientRect()
+  const innerLeft = barRect.left + padLeft
+  const innerRight = barRect.right - padRight
+  const btnRect = btn.getBoundingClientRect()
+  const behavior = reduce ? "auto" : "smooth"
   if (btnRect.left < innerLeft) {
     container.scrollBy({ left: btnRect.left - innerLeft, behavior: behavior })
   } else if (btnRect.right > innerRight) {
@@ -151,6 +151,6 @@ window.BacchusTabs = {
   initTabGroup: initTabGroup,
   ensureTabVisible: ensureTabVisibleIn,
 }
-;[].slice.call(document.querySelectorAll(".tab-bar")).forEach(function (bar) {
+;[].slice.call(document.querySelectorAll(".tab-bar")).forEach((bar) => {
   initTabGroup(bar, { panelSelector: ".tab-panel" })
 })

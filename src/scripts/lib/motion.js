@@ -16,7 +16,7 @@ export const REVEAL_SWEEP_LINE = 0.8
 // True once the page can't scroll any further. With the trigger line 20%
 // up, an element near the very end of a page might never reach it, so the
 // backstops reveal everything still on screen once the bottom is reached.
-export function isScrolledToBottom() {
+export const isScrolledToBottom = () => {
   const doc = document.documentElement
   return window.scrollY + window.innerHeight >= doc.scrollHeight - 2
 }

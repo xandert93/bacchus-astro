@@ -22,7 +22,7 @@ for (const [path, mod] of Object.entries(files)) {
   byKey.set(key, mod.default)
 }
 
-export function image(key: string): ImageMetadata {
+export const image = (key: string): ImageMetadata => {
   const found = byKey.get(key)
   if (!found) throw new Error(`No image "${key}" in src/assets/images/`)
   return found
@@ -52,6 +52,5 @@ export const WEB_COPY_ONLY = new Set([
   "brand/bacchus-logo",
 ])
 
-export function isWebCopyOnly(key: string): boolean {
-  return WEB_COPY_ONLY.has(key) || key.startsWith("reception-menu/stations/")
-}
+export const isWebCopyOnly = (key: string): boolean =>
+  WEB_COPY_ONLY.has(key) || key.startsWith("reception-menu/stations/")

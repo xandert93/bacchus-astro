@@ -1,4 +1,4 @@
-import {defineArrayMember, defineType} from 'sanity'
+import { defineArrayMember, defineType } from "sanity"
 
 /**
  * A testimonial quote, with the gold-emphasised phrase marked inside it.
@@ -27,19 +27,19 @@ import {defineArrayMember, defineType} from 'sanity'
  * render it.
  */
 export default defineType({
-  name: 'emphasisedQuote',
-  title: 'Quote',
-  type: 'array',
+  name: "emphasisedQuote",
+  title: "Quote",
+  type: "array",
   of: [
     defineArrayMember({
-      type: 'block',
-      styles: [{title: 'Quote', value: 'normal'}],
+      type: "block",
+      styles: [{ title: "Quote", value: "normal" }],
       lists: [],
       marks: {
         decorators: [
           {
-            title: 'Gold emphasis',
-            value: 'emphasis',
+            title: "Gold emphasis",
+            value: "emphasis",
           },
         ],
         annotations: [],

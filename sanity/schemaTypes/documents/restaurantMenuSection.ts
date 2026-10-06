@@ -1,4 +1,4 @@
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import { defineArrayMember, defineField, defineType } from "sanity"
 
 /**
  * A section of the à la carte restaurant menu.
@@ -23,58 +23,61 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
  * discipline as everything else. Restaurant pricing is not confirmed either.
  */
 export default defineType({
-  name: 'restaurantMenuSection',
-  title: 'Restaurant menu section',
-  type: 'document',
+  name: "restaurantMenuSection",
+  title: "Restaurant menu section",
+  type: "document",
   fields: [
     defineField({
-      name: 'title',
-      title: 'Section title',
-      type: 'string',
-      description: 'Starters, Pasta, Mains, Desserts.',
+      name: "title",
+      title: "Section title",
+      type: "string",
+      description: "Starters, Pasta, Mains, Desserts.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      options: {source: 'title', maxLength: 48},
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      options: { source: "title", maxLength: 48 },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'intro',
-      title: 'Intro',
-      type: 'text',
+      name: "intro",
+      title: "Intro",
+      type: "text",
       rows: 3,
     }),
     defineField({
-      name: 'dishes',
-      title: 'Dishes',
-      type: 'array',
-      of: [defineArrayMember({type: 'restaurantDish'})],
+      name: "dishes",
+      title: "Dishes",
+      type: "array",
+      of: [defineArrayMember({ type: "restaurantDish" })],
     }),
     defineField({
-      name: 'order',
-      title: 'Order',
-      type: 'number',
+      name: "order",
+      title: "Order",
+      type: "number",
       validation: (Rule) => Rule.required().integer(),
     }),
     defineField({
-      name: 'isPublished',
-      title: 'Published',
-      type: 'boolean',
+      name: "isPublished",
+      title: "Published",
+      type: "boolean",
       initialValue: false,
-      description: 'Off until the restaurant side is actually linked back into the navigation.',
+      description:
+        "Off until the restaurant side is actually linked back into the navigation.",
     }),
   ],
-  orderings: [{title: 'Menu order', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]}],
+  orderings: [
+    { title: "Menu order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
+  ],
   preview: {
-    select: {title: 'title', dishes: 'dishes', published: 'isPublished'},
-    prepare({title, dishes, published}) {
+    select: { title: "title", dishes: "dishes", published: "isPublished" },
+    prepare: ({ title, dishes, published }) => {
       const count = Array.isArray(dishes) ? dishes.length : 0
       return {
         title,
-        subtitle: `${count} dish${count === 1 ? '' : 'es'}${published ? '' : ' · unpublished'}`,
+        subtitle: `${count} dish${count === 1 ? "" : "es"}${published ? "" : " · unpublished"}`,
       }
     },
   },

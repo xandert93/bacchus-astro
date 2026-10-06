@@ -44,12 +44,12 @@
  */
 
 /** The three states the calendar renders, named as the existing CSS expects. */
-export type AvailabilityStatus = 'open' | 'interest' | 'taken'
+export type AvailabilityStatus = "open" | "interest" | "taken"
 
 export interface AvailabilityInput {
   /** ISO date, YYYY-MM-DD. */
   date: string
-  status: 'pending' | 'confirmed' | 'declined' | 'cancelled' | 'completed'
+  status: "pending" | "confirmed" | "declined" | "cancelled" | "completed"
 }
 
 /**
@@ -107,19 +107,19 @@ export const availabilityPolicyQuery = /* groq */ `
  * map: a date with one confirmed booking and three pending enquiries is
  * Booked, regardless of row order.
  */
-export function deriveStatuses(
+export const deriveStatuses = (
   rows: AvailabilityInput[],
   // closures: {startDate: string; endDate: string}[] = [],
-): Record<string, AvailabilityStatus> {
+): Record<string, AvailabilityStatus> => {
   const byDate: Record<string, AvailabilityStatus> = {}
 
   for (const row of rows) {
     if (!row?.date) continue
-    const blocking = row.status === 'confirmed' || row.status === 'completed'
+    const blocking = row.status === "confirmed" || row.status === "completed"
     if (blocking) {
-      byDate[row.date] = 'taken'
-    } else if (row.status === 'pending' && byDate[row.date] !== 'taken') {
-      byDate[row.date] = 'interest'
+      byDate[row.date] = "taken"
+    } else if (row.status === "pending" && byDate[row.date] !== "taken") {
+      byDate[row.date] = "interest"
     }
   }
 
@@ -138,7 +138,7 @@ export function deriveStatuses(
 }
 
 /** Inclusive date range as ISO strings. */
-export function eachDate(startIso: string, endIso: string): string[] {
+export const eachDate = (startIso: string, endIso: string): string[] => {
   const out: string[] = []
   const cursor = new Date(`${startIso}T00:00:00Z`)
   const end = new Date(`${endIso}T00:00:00Z`)

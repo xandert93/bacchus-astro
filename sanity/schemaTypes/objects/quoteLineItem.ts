@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * One priced line on a quote.
@@ -29,70 +29,73 @@ import {defineField, defineType} from 'sanity'
  * one already in the couple's inbox.
  */
 export default defineType({
-  name: 'quoteLineItem',
-  title: 'Line item',
-  type: 'object',
+  name: "quoteLineItem",
+  title: "Line item",
+  type: "object",
   fields: [
     defineField({
-      name: 'label',
-      title: 'Label',
-      type: 'string',
+      name: "label",
+      title: "Label",
+      type: "string",
       description:
         'As it should read on the quote and the deposit page — e.g. "Food — Banquet, Dahlia tier".',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'string',
+      name: "category",
+      title: "Category",
+      type: "string",
       options: {
         list: [
-          {title: 'Exclusive use', value: 'exclusivity'},
-          {title: 'Food', value: 'food'},
-          {title: 'Beverage', value: 'beverage'},
-          {title: 'Set-up', value: 'setup'},
-          {title: 'Other', value: 'other'},
+          { title: "Exclusive use", value: "exclusivity" },
+          { title: "Food", value: "food" },
+          { title: "Beverage", value: "beverage" },
+          { title: "Set-up", value: "setup" },
+          { title: "Other", value: "other" },
         ],
       },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'quantity',
-      title: 'Quantity',
-      type: 'number',
-      description: 'Guest count for a per-person line; item count for set-up.',
+      name: "quantity",
+      title: "Quantity",
+      type: "number",
+      description: "Guest count for a per-person line; item count for set-up.",
       validation: (Rule) => Rule.min(0),
     }),
     defineField({
-      name: 'unitAmount',
-      title: 'Unit amount (EUR)',
-      type: 'number',
+      name: "unitAmount",
+      title: "Unit amount (EUR)",
+      type: "number",
       validation: (Rule) => Rule.min(0).precision(2),
     }),
     defineField({
-      name: 'amount',
-      title: 'Line total (EUR)',
-      type: 'number',
+      name: "amount",
+      title: "Line total (EUR)",
+      type: "number",
       description:
-        'Stored as sent, not recomputed from quantity x unit. See the note on this type.',
+        "Stored as sent, not recomputed from quantity x unit. See the note on this type.",
       validation: (Rule) => Rule.required().precision(2),
     }),
     defineField({
-      name: 'sourceRef',
-      title: 'Priced from',
-      type: 'reference',
-      to: [{type: 'packageTier'}, {type: 'addOn'}, {type: 'venueSpace'}, {type: 'station'}],
+      name: "sourceRef",
+      title: "Priced from",
+      type: "reference",
+      to: [
+        { type: "packageTier" },
+        { type: "addOn" },
+        { type: "venueSpace" },
+        { type: "station" },
+      ],
       description:
-        'Soft pointer for reporting only. Nothing renders a price through this — the amount above is authoritative.',
+        "Soft pointer for reporting only. Nothing renders a price through this — the amount above is authoritative.",
     }),
   ],
   preview: {
-    select: {label: 'label', amount: 'amount', category: 'category'},
-    prepare({label, amount, category}) {
-      return {
-        title: label,
-        subtitle: `${category} — €${Number(amount ?? 0).toFixed(2)}`,
-      }
-    },
+    select: { label: "label", amount: "amount", category: "category" },
+    prepare: ({ label, amount, category }) => ({
+      title: label,
+      subtitle: `${category} — €${Number(amount ?? 0).toFixed(2)}`,
+    }),
   },
 })

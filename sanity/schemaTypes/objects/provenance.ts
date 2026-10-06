@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from "sanity"
 
 /**
  * Where a fact came from, and whether Bacchus has confirmed it.
@@ -37,122 +37,122 @@ import {defineField, defineType} from 'sanity'
  * rather than a note stapled to whichever figure got chosen.
  */
 export default defineType({
-  name: 'provenance',
-  title: 'Source & confirmation',
-  type: 'object',
-  options: {columns: 2},
+  name: "provenance",
+  title: "Source & confirmation",
+  type: "object",
+  options: { columns: 2 },
   fields: [
     defineField({
-      name: 'status',
-      title: 'Confirmation status',
-      type: 'string',
+      name: "status",
+      title: "Confirmation status",
+      type: "string",
       options: {
         list: [
-          {title: 'Confirmed by Bacchus', value: 'confirmed'},
-          {title: 'Unconfirmed — gathered, not verified', value: 'unconfirmed'},
-          {title: 'Contested — two sources disagree', value: 'contested'},
-          {title: 'Placeholder — invented for the pitch', value: 'placeholder'},
+          { title: "Confirmed by Bacchus", value: "confirmed" },
+          { title: "Unconfirmed — gathered, not verified", value: "unconfirmed" },
+          { title: "Contested — two sources disagree", value: "contested" },
+          { title: "Placeholder — invented for the pitch", value: "placeholder" },
         ],
-        layout: 'radio',
+        layout: "radio",
       },
-      initialValue: 'unconfirmed',
+      initialValue: "unconfirmed",
       description:
         'Anything other than "Confirmed" renders the oxblood warning treatment on the page and is excluded from the FAQ assistant.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'source',
-      title: 'Primary source',
-      type: 'string',
+      name: "source",
+      title: "Primary source",
+      type: "string",
       options: {
         list: [
-          {title: 'Wedding catalogue PDF', value: 'catalogue'},
-          {title: 'Client correspondence (email)', value: 'correspondence'},
-          {title: 'Client quote (shared PDF)', value: 'quote'},
-          {title: 'Live bacchus.com.mt', value: 'live-site'},
-          {title: 'Web search / third party', value: 'web'},
-          {title: 'Our own assumption', value: 'assumption'},
-          {title: 'Invented for the pitch', value: 'invented'},
+          { title: "Wedding catalogue PDF", value: "catalogue" },
+          { title: "Client correspondence (email)", value: "correspondence" },
+          { title: "Client quote (shared PDF)", value: "quote" },
+          { title: "Live bacchus.com.mt", value: "live-site" },
+          { title: "Web search / third party", value: "web" },
+          { title: "Our own assumption", value: "assumption" },
+          { title: "Invented for the pitch", value: "invented" },
         ],
       },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'sourceDetail',
-      title: 'Source detail',
-      type: 'string',
+      name: "sourceDetail",
+      title: "Source detail",
+      type: "string",
       description:
-        'Enough to find it again — a catalogue page, an email date, a quote reference.',
+        "Enough to find it again — a catalogue page, an email date, a quote reference.",
     }),
     defineField({
-      name: 'confirmedOn',
-      title: 'Confirmed on',
-      type: 'date',
-      description: 'The date Bacchus signed this specific fact off.',
-      hidden: ({parent}) => parent?.status !== 'confirmed',
+      name: "confirmedOn",
+      title: "Confirmed on",
+      type: "date",
+      description: "The date Bacchus signed this specific fact off.",
+      hidden: ({ parent }) => parent?.status !== "confirmed",
     }),
 
     // --- Contested only -----------------------------------------------------
     defineField({
-      name: 'conflictingValue',
-      title: 'The conflicting value',
-      type: 'string',
+      name: "conflictingValue",
+      title: "The conflicting value",
+      type: "string",
       description:
         'What the other source says, as it says it — e.g. "around €135 per person".',
-      hidden: ({parent}) => parent?.status !== 'contested',
+      hidden: ({ parent }) => parent?.status !== "contested",
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          const parent = context.parent as {status?: string} | undefined
-          if (parent?.status === 'contested' && !value) {
-            return 'A contested fact has to record what the other source says, or the page cannot explain the conflict to the reader.'
+          const parent = context.parent as { status?: string } | undefined
+          if (parent?.status === "contested" && !value) {
+            return "A contested fact has to record what the other source says, or the page cannot explain the conflict to the reader."
           }
           return true
         }),
     }),
     defineField({
-      name: 'conflictingSource',
-      title: 'Where the conflicting value comes from',
-      type: 'string',
-      hidden: ({parent}) => parent?.status !== 'contested',
+      name: "conflictingSource",
+      title: "Where the conflicting value comes from",
+      type: "string",
+      hidden: ({ parent }) => parent?.status !== "contested",
     }),
 
     // --- Rendered copy ------------------------------------------------------
     defineField({
-      name: 'publicNote',
-      title: 'Public note',
-      type: 'text',
+      name: "publicNote",
+      title: "Public note",
+      type: "text",
       rows: 3,
       description:
-        'Shown on the page. Bronze when confirmed, oxblood otherwise. Write it in the site\'s own voice — this is read by visitors, not staff. Leave empty for a confirmed fact that needs no explaining.',
+        "Shown on the page. Bronze when confirmed, oxblood otherwise. Write it in the site's own voice — this is read by visitors, not staff. Leave empty for a confirmed fact that needs no explaining.",
     }),
     defineField({
-      name: 'internalNote',
-      title: 'Internal note',
-      type: 'text',
+      name: "internalNote",
+      title: "Internal note",
+      type: "text",
       rows: 3,
-      description: 'Never rendered. What to ask the client, and why it matters.',
+      description: "Never rendered. What to ask the client, and why it matters.",
     }),
     defineField({
-      name: 'blocksPublication',
-      title: 'Block this from being published at all',
-      type: 'boolean',
+      name: "blocksPublication",
+      title: "Block this from being published at all",
+      type: "boolean",
       initialValue: false,
       description:
-        'For a fact that must not reach the page even with a warning. The catalogue\'s corkage figure is the live case: it gives an amount without saying whether it is per bottle or per person, so it is held here rather than published with a guessed unit.',
+        "For a fact that must not reach the page even with a warning. The catalogue's corkage figure is the live case: it gives an amount without saying whether it is per bottle or per person, so it is held here rather than published with a guessed unit.",
     }),
   ],
   preview: {
-    select: {status: 'status', source: 'source', note: 'internalNote'},
-    prepare({status, source, note}) {
+    select: { status: "status", source: "source", note: "internalNote" },
+    prepare: ({ status, source, note }) => {
       const marks: Record<string, string> = {
-        confirmed: 'Confirmed',
-        unconfirmed: 'Unconfirmed',
-        contested: 'Contested',
-        placeholder: 'Placeholder',
+        confirmed: "Confirmed",
+        unconfirmed: "Unconfirmed",
+        contested: "Contested",
+        placeholder: "Placeholder",
       }
       return {
-        title: marks[status as string] ?? 'Unknown status',
-        subtitle: [source, note].filter(Boolean).join(' — '),
+        title: marks[status as string] ?? "Unknown status",
+        subtitle: [source, note].filter(Boolean).join(" — "),
       }
     },
   },

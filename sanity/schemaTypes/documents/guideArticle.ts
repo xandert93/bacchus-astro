@@ -1,4 +1,4 @@
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import { defineArrayMember, defineField, defineType } from "sanity"
 
 /**
  * A guide article — the five agreed pieces, and whatever follows them.
@@ -39,202 +39,203 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
  * read — which is what `restaurant` and `mdina` are here for.
  */
 export default defineType({
-  name: 'guideArticle',
-  title: 'Guide article',
-  type: 'document',
+  name: "guideArticle",
+  title: "Guide article",
+  type: "document",
   groups: [
-    {name: 'content', title: 'Content', default: true},
-    {name: 'publication', title: 'Publication'},
-    {name: 'seo', title: 'Search & social'},
+    { name: "content", title: "Content", default: true },
+    { name: "publication", title: "Publication" },
+    { name: "seo", title: "Search & social" },
   ],
   fields: [
     defineField({
-      name: 'title',
-      title: 'Title',
-      type: 'string',
-      group: 'content',
+      name: "title",
+      title: "Title",
+      type: "string",
+      group: "content",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      group: 'content',
-      options: {source: 'title', maxLength: 96},
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      group: "content",
+      options: { source: "title", maxLength: 96 },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'excerpt',
-      title: 'Excerpt',
-      type: 'text',
-      group: 'content',
+      name: "excerpt",
+      title: "Excerpt",
+      type: "text",
+      group: "content",
       rows: 3,
-      description: 'Shown on cards and in the Guides row. Two sentences at most.',
+      description: "Shown on cards and in the Guides row. Two sentences at most.",
       validation: (Rule) => Rule.max(300),
     }),
     defineField({
-      name: 'heroImage',
-      title: 'Hero image',
-      type: 'image',
-      group: 'content',
-      options: {hotspot: true},
+      name: "heroImage",
+      title: "Hero image",
+      type: "image",
+      group: "content",
+      options: { hotspot: true },
       fields: [
         defineField({
-          name: 'alt',
-          title: 'Alt text',
-          type: 'string',
+          name: "alt",
+          title: "Alt text",
+          type: "string",
           validation: (Rule) => Rule.required(),
         }),
       ],
     }),
     defineField({
-      name: 'body',
-      title: 'Body',
-      type: 'array',
-      group: 'content',
+      name: "body",
+      title: "Body",
+      type: "array",
+      group: "content",
       of: [
         defineArrayMember({
-          type: 'block',
+          type: "block",
           styles: [
-            {title: 'Paragraph', value: 'normal'},
-            {title: 'Heading', value: 'h2'},
-            {title: 'Subheading', value: 'h3'},
-            {title: 'Pull quote', value: 'blockquote'},
+            { title: "Paragraph", value: "normal" },
+            { title: "Heading", value: "h2" },
+            { title: "Subheading", value: "h3" },
+            { title: "Pull quote", value: "blockquote" },
           ],
           marks: {
             decorators: [
-              {title: 'Emphasis', value: 'em'},
-              {title: 'Strong', value: 'strong'},
+              { title: "Emphasis", value: "em" },
+              { title: "Strong", value: "strong" },
             ],
             annotations: [
               {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  defineField({name: 'href', title: 'URL', type: 'url'}),
-                ],
+                name: "link",
+                type: "object",
+                title: "Link",
+                fields: [defineField({ name: "href", title: "URL", type: "url" })],
               },
             ],
           },
         }),
         defineArrayMember({
-          type: 'image',
-          options: {hotspot: true},
+          type: "image",
+          options: { hotspot: true },
           fields: [
             defineField({
-              name: 'alt',
-              title: 'Alt text',
-              type: 'string',
+              name: "alt",
+              title: "Alt text",
+              type: "string",
               validation: (Rule) => Rule.required(),
             }),
-            defineField({name: 'caption', title: 'Caption', type: 'string'}),
+            defineField({ name: "caption", title: "Caption", type: "string" }),
           ],
         }),
       ],
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'string',
-      group: 'content',
+      name: "category",
+      title: "Category",
+      type: "string",
+      group: "content",
       options: {
         list: [
-          {title: 'Weddings', value: 'weddings'},
-          {title: 'Mdina & the estate', value: 'mdina'},
-          {title: 'Restaurant', value: 'restaurant'},
+          { title: "Weddings", value: "weddings" },
+          { title: "Mdina & the estate", value: "mdina" },
+          { title: "Restaurant", value: "restaurant" },
         ],
       },
-      description: 'See the note on this type for how this decides placement in the navigation.',
+      description:
+        "See the note on this type for how this decides placement in the navigation.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'relatedSpaces',
-      title: 'Related spaces',
-      type: 'array',
-      group: 'content',
-      of: [defineArrayMember({type: 'reference', to: [{type: 'venueSpace'}]})],
+      name: "relatedSpaces",
+      title: "Related spaces",
+      type: "array",
+      group: "content",
+      of: [defineArrayMember({ type: "reference", to: [{ type: "venueSpace" }] })],
     }),
     defineField({
-      name: 'relatedPackages',
-      title: 'Related packages',
-      type: 'array',
-      group: 'content',
-      of: [defineArrayMember({type: 'reference', to: [{type: 'weddingPackage'}]})],
+      name: "relatedPackages",
+      title: "Related packages",
+      type: "array",
+      group: "content",
+      of: [defineArrayMember({ type: "reference", to: [{ type: "weddingPackage" }] })],
     }),
 
     // --- Publication --------------------------------------------------------
     defineField({
-      name: 'status',
-      title: 'Status',
-      type: 'string',
-      group: 'publication',
+      name: "status",
+      title: "Status",
+      type: "string",
+      group: "publication",
       options: {
         list: [
-          {title: 'Idea — agreed, not written', value: 'idea'},
-          {title: 'Draft', value: 'draft'},
-          {title: 'Blocked — cannot be written yet', value: 'blocked'},
-          {title: 'Published', value: 'published'},
+          { title: "Idea — agreed, not written", value: "idea" },
+          { title: "Draft", value: "draft" },
+          { title: "Blocked — cannot be written yet", value: "blocked" },
+          { title: "Published", value: "published" },
         ],
-        layout: 'radio',
+        layout: "radio",
       },
-      initialValue: 'idea',
+      initialValue: "idea",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'blockedReason',
-      title: 'Why it is blocked',
-      type: 'text',
-      group: 'publication',
+      name: "blockedReason",
+      title: "Why it is blocked",
+      type: "text",
+      group: "publication",
       rows: 4,
-      hidden: ({document}) => document?.status !== 'blocked',
+      hidden: ({ document }) => document?.status !== "blocked",
       description:
-        'What has to be settled first. For the cost guide: the Banquet pricing conflict, seasonal pricing, and the placeholder capacity figures.',
+        "What has to be settled first. For the cost guide: the Banquet pricing conflict, seasonal pricing, and the placeholder capacity figures.",
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          const doc = context.document as {status?: string} | undefined
-          if (doc?.status === 'blocked' && !value) {
-            return 'A blocked article has to say what is blocking it, or nobody will know when it is unblocked.'
+          const doc = context.document as { status?: string } | undefined
+          if (doc?.status === "blocked" && !value) {
+            return "A blocked article has to say what is blocking it, or nobody will know when it is unblocked."
           }
           return true
         }),
     }),
     defineField({
-      name: 'publishedAt',
-      title: 'Published at',
-      type: 'datetime',
-      group: 'publication',
+      name: "publishedAt",
+      title: "Published at",
+      type: "datetime",
+      group: "publication",
     }),
     defineField({
-      name: 'order',
-      title: 'Priority order',
-      type: 'number',
-      group: 'publication',
-      description: 'The agreed best-first order. 1 is the ultimate guide.',
+      name: "order",
+      title: "Priority order",
+      type: "number",
+      group: "publication",
+      description: "The agreed best-first order. 1 is the ultimate guide.",
       validation: (Rule) => Rule.integer(),
     }),
     defineField({
-      name: 'seo',
-      title: 'Search & social',
-      type: 'seo',
-      group: 'seo',
+      name: "seo",
+      title: "Search & social",
+      type: "seo",
+      group: "seo",
     }),
   ],
   orderings: [
-    {title: 'Priority order', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]},
     {
-      title: 'Published, newest first',
-      name: 'publishedDesc',
-      by: [{field: 'publishedAt', direction: 'desc'}],
+      title: "Priority order",
+      name: "orderAsc",
+      by: [{ field: "order", direction: "asc" }],
+    },
+    {
+      title: "Published, newest first",
+      name: "publishedDesc",
+      by: [{ field: "publishedAt", direction: "desc" }],
     },
   ],
   preview: {
-    select: {title: 'title', status: 'status', category: 'category', order: 'order'},
-    prepare({title, status, category, order}) {
-      return {
-        title: order ? `${order}. ${title}` : title,
-        subtitle: [status, category].filter(Boolean).join(' · '),
-      }
-    },
+    select: { title: "title", status: "status", category: "category", order: "order" },
+    prepare: ({ title, status, category, order }) => ({
+      title: order ? `${order}. ${title}` : title,
+      subtitle: [status, category].filter(Boolean).join(" · "),
+    }),
   },
 })

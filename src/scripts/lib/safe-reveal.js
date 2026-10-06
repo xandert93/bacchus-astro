@@ -31,21 +31,19 @@ const REVEAL_MS = 800 // matches the CSS transition on .reveal-armed
 
 const pending = []
 
-function isBelowFold(el) {
-  return el.getBoundingClientRect().top > window.innerHeight
-}
+const isBelowFold = (el) => el.getBoundingClientRect().top > window.innerHeight
 
-function isInInactiveTab(el) {
+const isInInactiveTab = (el) => {
   const panel = el.closest(".tab-panel")
   return !!panel && !panel.classList.contains("active")
 }
 
-function arm(trigger, items) {
+const arm = (trigger, items) => {
   items.forEach((item) => item.classList.add("reveal-armed"))
   pending.push({ trigger, items })
 }
 
-function reveal(entry) {
+const reveal = (entry) => {
   const at = pending.indexOf(entry)
   if (at === -1) return
   pending.splice(at, 1)
@@ -103,7 +101,7 @@ pending.forEach((entry) => observer.observe(entry.trigger))
 // Backstop: once scrolling settles, reveal anything whose trigger is now on
 // screen or above it, in case an observer entry was missed.
 let sweepTimer = null
-function sweep() {
+const sweep = () => {
   pending.slice().forEach((entry) => {
     const line = isScrolledToBottom() ? 1 : REVEAL_SWEEP_LINE
     if (entry.trigger.getBoundingClientRect().top < window.innerHeight * line) {
@@ -112,7 +110,7 @@ function sweep() {
   })
   if (!pending.length) window.removeEventListener("scroll", onScroll)
 }
-function onScroll() {
+const onScroll = () => {
   clearTimeout(sweepTimer)
   sweepTimer = setTimeout(sweep, 120)
 }

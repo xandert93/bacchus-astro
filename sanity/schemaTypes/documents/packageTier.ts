@@ -1,4 +1,4 @@
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import { defineArrayMember, defineField, defineType } from "sanity"
 
 /**
  * One tier or category within a package — Daisy, Lavender, Rose; Orchid,
@@ -26,94 +26,94 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
  * it was per bottle or per person.
  */
 export default defineType({
-  name: 'packageTier',
-  title: 'Tier / category',
-  type: 'document',
+  name: "packageTier",
+  title: "Tier / category",
+  type: "document",
   groups: [
-    {name: 'content', title: 'Content', default: true},
-    {name: 'menu', title: 'Menu'},
+    { name: "content", title: "Content", default: true },
+    { name: "menu", title: "Menu" },
   ],
   fields: [
     defineField({
-      name: 'package',
-      title: 'Package',
-      type: 'reference',
-      group: 'content',
-      to: [{type: 'weddingPackage'}],
+      name: "package",
+      title: "Package",
+      type: "reference",
+      group: "content",
+      to: [{ type: "weddingPackage" }],
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'name',
-      title: 'Name',
-      type: 'string',
-      group: 'content',
-      description: 'Daisy, Lavender, Rose, Orchid, Local Wine, Themed Bars…',
+      name: "name",
+      title: "Name",
+      type: "string",
+      group: "content",
+      description: "Daisy, Lavender, Rose, Orchid, Local Wine, Themed Bars…",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      group: 'content',
-      options: {source: 'name', maxLength: 48},
-      description: 'Used as the in-page anchor — #rose, #dahlia.',
+      name: "slug",
+      title: "Slug",
+      type: "slug",
+      group: "content",
+      options: { source: "name", maxLength: 48 },
+      description: "Used as the in-page anchor — #rose, #dahlia.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'order',
-      title: 'Order',
-      type: 'number',
-      group: 'content',
+      name: "order",
+      title: "Order",
+      type: "number",
+      group: "content",
       description:
-        'Ascending. For ranked tiers this is the ranking; for Beverage\'s categories it is only display order.',
+        "Ascending. For ranked tiers this is the ranking; for Beverage's categories it is only display order.",
       validation: (Rule) => Rule.required().integer(),
     }),
     defineField({
-      name: 'summary',
-      title: 'Card description',
-      type: 'text',
-      group: 'content',
+      name: "summary",
+      title: "Card description",
+      type: "text",
+      group: "content",
       rows: 3,
       description:
         'Shown on the tier card — e.g. "An elegant opening tier: ten cold and ten hot canapés, a three-dish flying buffet, four desserts, coffee and the wedding cake."',
     }),
     defineField({
-      name: 'price',
-      title: 'Price',
-      type: 'price',
-      group: 'content',
+      name: "price",
+      title: "Price",
+      type: "price",
+      group: "content",
       description:
-        'Optional. A tier whose price is not trustworthy has none rather than a guess — see the note on this type.',
+        "Optional. A tier whose price is not trustworthy has none rather than a guess — see the note on this type.",
     }),
 
     // --- Menu ---------------------------------------------------------------
     defineField({
-      name: 'menuGroups',
-      title: 'Menu groups',
-      type: 'array',
-      group: 'menu',
-      of: [defineArrayMember({type: 'menuGroup'})],
+      name: "menuGroups",
+      title: "Menu groups",
+      type: "array",
+      group: "menu",
+      of: [defineArrayMember({ type: "menuGroup" })],
       description:
         'Cold Canapés, Hot Canapés, Flying Buffet, Desserts, Coffee Station, Wedding Cake — or, on Beverage, the wine packages. Read from the RENDERED catalogue pages, never from a text extraction: an automated pull drops every accented character and in places whole words ("Goat\'s Cheese" vanished from an Orchid line, "Gavi Di Gavi" from a wine name).',
     }),
     defineField({
-      name: 'signatureDishes',
-      title: 'Signature dishes',
-      type: 'array',
-      group: 'menu',
-      of: [defineArrayMember({type: 'signatureDish'})],
+      name: "signatureDishes",
+      title: "Signature dishes",
+      type: "array",
+      group: "menu",
+      of: [defineArrayMember({ type: "signatureDish" })],
       description:
         'The three photographed tiles above the menu columns. Only Reception has real photography; the other three render placeholder tiles, and Beverage has none at all because "signature dishes" is the wrong frame for a wine list.',
       validation: (Rule) => Rule.max(3),
     }),
     defineField({
-      name: 'includedNote',
-      title: 'What the tier includes',
-      type: 'text',
-      group: 'menu',
+      name: "includedNote",
+      title: "What the tier includes",
+      type: "text",
+      group: "menu",
       rows: 3,
       description:
-        'Anything true of the whole tier rather than one group. In-house cake is included in the reception package price, for instance.',
+        "Anything true of the whole tier rather than one group. In-house cake is included in the reception package price, for instance.",
     }),
   ],
   // Orderings sort on the document's own fields only — Sanity cannot sort a
@@ -121,28 +121,30 @@ export default defineType({
   // ordering here. The twelve tiers are a flat list in the Studio; if that
   // becomes awkward, the fix is a per-package child list in `structure.ts`,
   // not a denormalised package name copied onto every tier.
-  orderings: [{title: 'Tier order', name: 'orderAsc', by: [{field: 'order', direction: 'asc'}]}],
+  orderings: [
+    { title: "Tier order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
+  ],
   preview: {
     select: {
-      name: 'name',
-      amount: 'price.amount',
-      unit: 'price.unit',
-      status: 'price.provenance.status',
-      blocked: 'price.provenance.blocksPublication',
+      name: "name",
+      amount: "price.amount",
+      unit: "price.unit",
+      status: "price.provenance.status",
+      blocked: "price.provenance.blocksPublication",
     },
-    prepare({name, amount, unit, status, blocked}) {
+    prepare: ({ name, amount, unit, status, blocked }) => {
       const price = amount
-        ? `€${Number(amount).toFixed(2)} ${unit === 'per-person' ? 'pp' : (unit ?? '')}`.trim()
-        : 'no price'
+        ? `€${Number(amount).toFixed(2)} ${unit === "per-person" ? "pp" : (unit ?? "")}`.trim()
+        : "no price"
       return {
         title: name,
         subtitle: [
           price,
-          blocked ? 'withheld' : null,
-          status && status !== 'confirmed' ? status : null,
+          blocked ? "withheld" : null,
+          status && status !== "confirmed" ? status : null,
         ]
           .filter(Boolean)
-          .join(' · '),
+          .join(" · "),
       }
     },
   },

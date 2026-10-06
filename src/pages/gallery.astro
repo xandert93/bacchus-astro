@@ -64,9 +64,9 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "@data/gallery"
            parser-blocking and before #ggrid exists, the CSS filter is right
            at first paint. Keep it to this one job. */}
       <script is:inline>
-        ;(function () {
-          var requested = new URLSearchParams(location.search).get("filter")
-          var radio = requested && document.getElementById("gf-" + requested)
+        ;(() => {
+          const requested = new URLSearchParams(location.search).get("filter")
+          const radio = requested && document.getElementById("gf-" + requested)
           if (radio) radio.checked = true
         })()
       </script>

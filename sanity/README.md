@@ -59,7 +59,7 @@ The site already encodes this distinction visually in three separate places:
 `.package-menu-note-warning` (oxblood, unconfirmed), the "illustrative only"
 labels on the availability calendar, and the deposit page's warning box. Today
 each of those is hand-written into the HTML across eleven pages, so nothing in
-the markup knows *why* a disclaimer is there — which means nothing can remove
+the markup knows _why_ a disclaimer is there — which means nothing can remove
 it when the fact is finally signed off, and nothing stops a confirmed fact from
 keeping a stale warning.
 
@@ -87,7 +87,7 @@ keeps in sync by hand, and it will be wrong.
 derivable (`perPersonAmount`, `vatAmount`, `depositAmount`). Bacchus's pricing
 is generated internally and varies by season, so a quote that recomputed itself
 would silently change after it was sent. Worse, the one real client quote we
-have *does not reconcile* — its excl.-VAT subtotal, stated VAT and incl.-VAT
+have _does not reconcile_ — its excl.-VAT subtotal, stated VAT and incl.-VAT
 total don't add up to each other — so a total cannot be assumed recomputable
 from its parts at all.
 
@@ -98,15 +98,15 @@ numbers as floats, and never regenerate a sent quote from current prices.
 
 Not hypothetical ones. Each of these is a real bug or a real near-miss:
 
-| Guard | What it prevents |
-|---|---|
-| `price.unit` is required | The catalogue's corkage figure had to be withheld entirely because its source never said whether €6.50 was per bottle or per person. A price that can't name its unit can't be entered. |
+| Guard                               | What it prevents                                                                                                                                                                                                                                                      |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `price.unit` is required            | The catalogue's corkage figure had to be withheld entirely because its source never said whether €6.50 was per bottle or per person. A price that can't name its unit can't be entered.                                                                               |
 | `lightboxDetail` is **not** a field | Station details currently live in up to 4 places per card, and the card set is rendered **twice** in one file — 32 instances for 16 stations. A wording fix caught one occurrence of two and looked like it had worked. The caption is composed in the query instead. |
-| `weddingPackage.dietaryMarking` | High Tea's source carries no (V) marks at all. Badges and the foot-of-page legend must be suppressed and restored *together*, and markers must never be inferred from dish names. |
-| `capacity.basis` is required | "Up to 120 seated" (placeholder) vs 50–800 standing (confirmed) aren't comparable. A figure without its basis reads as authoritative. |
-| `alt` required on every image | The gallery and lightbox are pages whose entire content is images. |
-| Two separate consent booleans | A reviewer may agree to their name being used and not their photograph. |
-| `addOn.isIncludedAtNoCharge` | Catering furniture, basic decoration and the in-house coordinator are included free. Modelling them as €0 items risks them acquiring a priced quote line. |
+| `weddingPackage.dietaryMarking`     | High Tea's source carries no (V) marks at all. Badges and the foot-of-page legend must be suppressed and restored _together_, and markers must never be inferred from dish names.                                                                                     |
+| `capacity.basis` is required        | "Up to 120 seated" (placeholder) vs 50–800 standing (confirmed) aren't comparable. A figure without its basis reads as authoritative.                                                                                                                                 |
+| `alt` required on every image       | The gallery and lightbox are pages whose entire content is images.                                                                                                                                                                                                    |
+| Two separate consent booleans       | A reviewer may agree to their name being used and not their photograph.                                                                                                                                                                                               |
+| `addOn.isIncludedAtNoCharge`        | Catering furniture, basic decoration and the in-house coordinator are included free. Modelling them as €0 items risks them acquiring a priced quote line.                                                                                                             |
 
 ---
 
@@ -137,7 +137,7 @@ to guess whether something was forgotten.
 
 `documents/venueClosure.ts` is **not** something the project asked for. The
 calendar derives purely from bookings, which assumes every unavailable date is
-unavailable *because someone booked it* — and the hall repairs expected in 2027
+unavailable _because someone booked it_ — and the hall repairs expected in 2027
 are a counterexample already on record. Without it, the only way to close a
 date is a fake booking, which corrupts the data that quotes, testimonials and
 reporting all read.
@@ -156,7 +156,7 @@ from us, beyond those already tracked in `CLAUDE.md`:
    rather than everyone-an-administrator. Both are one-time decisions.
 2. **Personal-data retention.** `weddingPolicy.retentionMonths` defaults to 36
    and feeds the review date on every consent record. The number is the
-   client's call; the scheduled purge needs *a* number to work from.
+   client's call; the scheduled purge needs _a_ number to work from.
 3. **Waitlist double opt-in.** `verifiedAt` must gate every notification. This
    was asked for as anti-spam; it's also the only thing stopping an email
    reaching an address a stranger typed in.

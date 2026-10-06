@@ -30,7 +30,7 @@ const holders = new Set()
 const root = document.documentElement
 let pinnedScrollY = null
 
-export function lockScroll(owner) {
+export const lockScroll = (owner) => {
   if (holders.size === 0) {
     const hasScrollbar = window.innerWidth - root.clientWidth > 0
     root.classList.add("is-scroll-locked")
@@ -43,7 +43,7 @@ export function lockScroll(owner) {
   holders.add(owner)
 }
 
-export function unlockScroll(owner) {
+export const unlockScroll = (owner) => {
   if (!holders.delete(owner) || holders.size > 0) return
   root.classList.remove("is-scroll-locked", "is-scroll-locked-pinned")
   if (pinnedScrollY === null) return
@@ -55,6 +55,4 @@ export function unlockScroll(owner) {
   pinnedScrollY = null
 }
 
-export function isScrollLocked() {
-  return holders.size > 0
-}
+export const isScrollLocked = () => holders.size > 0
