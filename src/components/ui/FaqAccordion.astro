@@ -1,0 +1,136 @@
+---
+// The question-and-answer accordion: each question opens its answer, and
+// opening one closes the others. FaqSection wraps it in the standard "Good to
+// know" section; the deposit page sets it inside its own layout.
+// FaqAccordion.js wires the open and close.
+//
+// Any other attribute (data-reveal, style) lands on the list itself.
+import type { HTMLAttributes } from "astro/types"
+
+type Props = HTMLAttributes<"div"> & {
+  items: { question: string; answer: string }[]
+}
+const { items, ...passedAttributes } = Astro.props
+---
+
+<div class="faq" {...passedAttributes}>
+  {items.map((item) => (
+    <div class="faq-item">
+      <button class="faq-q">
+        {item.question}
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M8 2v12M2 8h12"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+      <div class="faq-a">
+        <p>{item.answer}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+<script>
+  import "./FaqAccordion.js"
+</script>
+
+<style>
+  /* Scoped to this component — the first piece of global.css to move into
+     a component (2026-10-05, then in FaqSection). Astro adds a
+     data-astro-cid-* attribute to every element this component renders and
+     to every selector below, so these rules can only match this component's
+     own markup: nothing elsewhere on the site can be caught by them, and the
+     .faq-* class names no longer have to be unique sitewide.
+
+     The .open class FaqAccordion.js toggles at runtime still matches, because
+     the elements themselves carry the attribute. Only an element CREATED by a
+     script would miss it — the one thing to watch for when moving styles
+     of JS-built markup (the testimonial cards, say) into a component. */
+  .faq {
+    display: grid;
+    gap: 1px;
+    background: rgba(var(--muted-ink-rgb), 0.1);
+  }
+
+  /* A custom property rather than a parent override, so a page can match the
+     items to its own section background (the deposit page's limestone)
+     without having to out-rank this file's scoped selector. */
+  .faq-item {
+    background: var(--faq-item-background, var(--paper));
+  }
+
+  .faq-q {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 22px 4px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    font-family: "Fraunces", serif;
+    font-size: clamp(16px, 1.9vw, 20px);
+    font-weight: 400;
+  }
+
+  .faq-q svg {
+    flex: none;
+    transition: transform 0.4s var(--ease);
+    color: var(--bronze);
+  }
+
+  .faq-item.open .faq-q svg {
+    transform: rotate(45deg);
+  }
+
+  /* grid-template-rows: 0fr -> 1fr, not max-height: 0 -> scrollHeight — the old
+     version needed JS to read .scrollHeight (main.js can't animate toward
+     "auto"/"none" directly), so every open/close read layout from JS. This
+     animates to the child's real intrinsic height with no measurement at
+     all: a single-row grid can be sized in fr units like any other track, and
+     a 0fr/1fr pair transitions like any other animatable value. min-height: 0
+     on the child is required, not optional — grid items default to
+     min-height: auto, which would refuse to shrink the row past the p's own
+     content height regardless of the track size, so 0fr would visually do
+     nothing without it. Bare 0fr is also not enough on its own, even with
+     min-height: 0 on the child: with the container's height auto (no definite
+     size to distribute), the row still fell back to a content-based automatic
+     minimum (measured ~22px, one line of the answer peeking out on every
+     "closed" item) instead of collapsing fully. Wrapping each side in
+     minmax(0, …) pins the track's own minimum to 0 independent of the child's
+     min-height, which is what actually collapses it — verified via computed
+     grid-template-rows (0px vs 74.78px) before/after. overflow: hidden on
+     .faq-a itself (not just the p) is also required, not redundant with the
+     p's own overflow: hidden — a 0-height grid row doesn't clip an
+     overflowing item on its own (overflow: visible is the default), so
+     without this the collapsed answer still painted at its natural height,
+     spilling past the row. Only visible in practice on the LAST faq-item:
+     every other item's spillover silently painted underneath the next
+     item's own opaque background and was invisible anyway, which is why an
+     earlier pass here that only added minmax() looked fixed until the last
+     question specifically was checked. */
+  .faq-a {
+    display: grid;
+    grid-template-rows: minmax(0, 0fr);
+    overflow: hidden;
+    transition: grid-template-rows 0.45s var(--ease);
+  }
+
+  .faq-item.open .faq-a {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .faq-a p {
+    min-height: 0;
+    overflow: hidden;
+    padding: 0 4px 22px;
+    max-width: 62ch;
+    color: var(--muted-ink);
+  }
+</style>

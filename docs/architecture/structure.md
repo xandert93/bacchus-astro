@@ -57,7 +57,9 @@ there is no long-lived branch to keep rebasing (trunk-based development).
 
 - `ui/`: small reusable parts. `Button`, `Photo`, `HeroImage`,
   `GalleryTile`, `Lightbox`, `CheckList`, `SocialLinks`, `ArrowIcon`,
-  `Particles`, `ProposedBadge` (the pill on every link to an unbuilt page).
+  `Particles`, `ProposedBadge` (the pill on every link to an unbuilt page),
+  `FaqAccordion` (the questions and answers inside `FaqSection`, also used
+  on its own).
 - `forms/`: form controls. `FormField` (label, error, notes), `TextInput`
   (every input and the textarea), `ChipGroup`, `OptionCardGroup`. Used by the
   enquiry wizard and the waitlist popover.
@@ -166,7 +168,7 @@ Every button is `<Button>` (`ui/Button.astro`).
 - Component scripts: `EnquiryForm.js` (imports `AvailabilityCalendar.js` so
   the calendar runs first), `AvailabilityCalendar.js` (every calendar, the
   quick-pick modal and the waitlist popover), `Testimonials.js`,
-  `FaqSection.js`, `Lightbox.js`, `PhotoCarousel.js`,
+  `FaqAccordion.js`, `Lightbox.js`, `PhotoCarousel.js`,
   `PackageTierSection.js` (the one tier controller for all four package
   pages), `ReceptionStations.js` (Reception's Stations only), `HomeStory.js`
   (the counters), `HomeMarquee.js`, `WeddingsPackages.js` (the triptych's

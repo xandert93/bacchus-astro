@@ -288,6 +288,6 @@ if (cssTarget) {
   const block =
     styleOpen.test(comp) && /<\/style>\s*$/.test(comp)
       ? comp.replace(/<\/style>\s*$/, `${indented}\n</style>\n`)
-      : `${comp}\n\n<style>\n  /* Scoped to this file (moved from global.css by\n     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */\n${indented}\n</style>\n`
+      : `${comp}\n\n<style>\n  /* Scoped to this file (moved from global.css by\n     scripts/scope-styles.mjs). See FaqAccordion.astro for how scoping works. */\n${indented}\n</style>\n`
   fs.writeFileSync(targetFile, block)
 }

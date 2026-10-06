@@ -1,8 +1,8 @@
-// FAQ accordion. Loaded by FaqSection.astro.
+// FAQ accordion. Loaded by FaqAccordion.astro.
 
 // ---------- FAQ accordion ----------
 // Height animation itself is pure CSS now (.faq-a's grid-template-rows
-// 0fr/1fr, see styles.css) — no .scrollHeight read/write here anymore.
+// 0fr/1fr, see FaqAccordion.astro) — no .scrollHeight read/write here anymore.
 // What's left is real logic CSS can't express on its own: cross-item
 // exclusivity (closing every other open item in the same .faq group).
 document.querySelectorAll(".faq-item").forEach((item) => {
