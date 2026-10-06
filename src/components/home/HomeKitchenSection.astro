@@ -2,11 +2,11 @@
 // "From the kitchen": three dishes in arch frames, numbered like courses,
 // then a call to request the menus. Restaurant-side content is kept to this
 // teaser while the events side is the focus.
-import Photo from "@components/ui/Photo.astro"
 import Button from "@components/ui/Button.astro"
-import { below } from "@lib/media-queries.js"
+import DishGrid from "@components/sections/DishGrid.astro"
+import type { Dish } from "@components/sections/DishGrid.astro"
 
-const DISHES = [
+const DISHES: Dish[] = [
   {
     course: "I",
     name: "Seared catch of the day",
@@ -48,22 +48,7 @@ const DISHES = [
         way it's always been at Bacchus.
       </p>
     </div>
-    <div class="dishes">
-      {DISHES.map((dish, i) => (
-        <article class="dish" data-reveal style={`--d: ${i * 130}ms`}>
-          <div class="arch arch-dish">
-            <span class="course-number">{dish.course}</span>
-            <Photo
-              src={dish.photo.src}
-              sizes={`${below.desktop} 100vw, 33vw`}
-              alt={dish.photo.alt}
-            />
-          </div>
-          <h4>{dish.name}</h4>
-          <p>{dish.description}</p>
-        </article>
-      ))}
-    </div>
+    <DishGrid dishes={DISHES} revealEach />
     <div
       class="cta-row"
       data-reveal
@@ -83,108 +68,11 @@ const DISHES = [
     gap: 14px;
   }
 
-  .dishes {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(18px, 2.6vw, 34px);
-  }
-
-  .dish {
-    position: relative;
-  }
-
-  .arch-dish {
-    overflow: hidden;
-    border-radius: 200px 200px 4px 4px;
-    aspect-ratio: 3/4;
-    background: #211d17;
-  }
-
-  .dish p {
-    color: var(--muted);
-    font-size: 14px;
-    margin-top: 6px;
-  }
-
-  .dish .course-number {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    z-index: 2;
-    font-size: 10.5px;
-    letter-spacing: 0.2em;
-    color: var(--gold-2);
-    background: rgba(var(--muted-ink-rgb), 0.6);
-    backdrop-filter: blur(6px);
-    padding: 7px 12px;
-    border-radius: 2px;
-  }
-
-  .dish:nth-child(2) {
-    transform: translateY(clamp(16px, 3vw, 44px));
-  }
-
-  .dishes.four-column-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .dishes.four-column-grid .dish:nth-child(2) {
-    transform: none;
-  }
-
-  @media (--below-desktop) {
-    .dishes.four-column-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  @media (--below-desktop) {
-    .dishes {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  @media (--below-desktop) {
-    .dish:nth-child(2) {
-      transform: none;
-    }
-  }
-
   @media (--below-tablet) {
     .cta-row {
       flex-direction: column;
       align-items: center;
     }
-  }
-
-  @media (--below-tablet) {
-    .dishes {
-      grid-template-columns: 1fr;
-      gap: 34px;
-    }
-  }
-
-  @media (--below-tablet) {
-    .arch-dish {
-      aspect-ratio: 4/5;
-    }
-  }
-
-  .dish :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 1.3s var(--ease);
-  }
-
-  .dish:hover :global(img) {
-    transform: scale(var(--image-hover-zoom-feature));
-  }
-
-  .dish :global(h4) {
-    font-size: 20px;
-    font-weight: 400;
-    margin-top: 22px;
   }
 
   @media (--below-tablet) {
