@@ -159,3 +159,32 @@ Agreed in principle; nothing written.
   to 50,000 loads a month (needs a card on file); check current pricing
   before quoting. Worth it only if the client likes the idea. See the
   ChatGPT chat.
+
+### Naming and spacing clean-up
+
+The scripts ported from the prototype break two code-style rules: names are
+abbreviated, and multi-line statements aren't followed by a blank line. Found
+on 2026-10-06 while reviewing `Testimonials.js`.
+
+- **Feature prefixes are left over from the prototype.** Its single shared
+  `main.js` put every feature in one scope, so names were prefixed to stop
+  clashes: `t` (testimonials: `tShow`, `tActive`), `lb` (lightbox), `wl`
+  (waitlist), `car` (photo carousel). Each Astro script is its own module, so
+  the prefixes no longer do anything. Drop them and use full names
+  (`showNextTestimonial`, `activeTestimonialIndex`).
+- **Short names everywhere**: `e`, `i`, `el`, `dx`, `btn`, `prevBtn`,
+  `quoteEl`, `cardsWrap` and the like.
+- **Several variables in one `let`** (`let a = 0, b = null, …`): 28 of
+  these across 9 files. One declaration per line is easier to scan.
+- **No blank line after multi-line statements**, e.g. `tPrev`/`tNext` in
+  `Testimonials.js`.
+- **Markup IDs have the same prefixes** (`tQuote`, `carTrack`, `wlPopover`,
+  `msgCharRing`, `goToFormBtn`), so renaming touches the `.astro` file as
+  well as its script. `tests/e2e/testimonials.spec.ts` selects `#tQuoteBox`
+  and `#tCards` and would need updating too.
+
+Worst first, by rough count of short names: `ReceptionStations.js`,
+`AvailabilityCalendar.js`, `EnquiryForm.js`, `Testimonials.js`,
+`site-nav.js`, then a long tail. Do it as one `refactor/…` branch per
+component (script, markup and specs together), each a pure rename, so the
+e2e suite proves nothing changed.
