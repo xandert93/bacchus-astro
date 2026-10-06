@@ -67,8 +67,10 @@ Restaurant features (gift vouchers and so on) wait until these are done.
 - Card (Stripe) and bank transfer. Fees, providers and the open question
   about Pay by Bank in Malta are in `docs/architecture/tech-stack.md`.
 - **Blocked** on the deposit-terms conflict (`docs/content/client-facts.md`).
-- The deposit page exists as a front end only (`secure-booking`), not yet
-  ported.
+- The deposit page's front end is ported to `/secure-booking` on the
+  `feat/deposit-page` branch (pushed to GitHub, not merged), with a
+  placeholder booking. It stays off `main` until the terms are settled and
+  the payment side is built.
 
 ### 5. Collecting testimonials
 
