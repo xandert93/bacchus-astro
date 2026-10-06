@@ -88,17 +88,17 @@ import IntroSplit from "@components/sections/IntroSplit.astro"
   .link-underline:hover .arrow {
     transform: translateX(4px);
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .link-underline:active {
       color: var(--gold);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .link-underline:active::after {
       transform: scaleX(1);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .link-underline:active .arrow {
       transform: translateX(4px);
     }

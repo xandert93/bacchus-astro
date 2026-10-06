@@ -75,7 +75,7 @@ const links = [menu.hub, ...menu.items]
   .mobile-nav-group.is-pinned-open .mobile-nav-group-trigger {
     cursor: default;
   }
-  @media (prefers-reduced-motion: reduce) {
+  @media (--reduced-motion) {
     .mobile-nav-sub {
       transition: none;
     }
@@ -112,7 +112,7 @@ const links = [menu.hub, ...menu.items]
     opacity: 1;
     transform: translateY(0);
   }
-  @media (prefers-reduced-motion: reduce) {
+  @media (--reduced-motion) {
     :global(.menu) .mobile-nav-sub-link {
       transform: none;
       transition:
@@ -123,12 +123,12 @@ const links = [menu.hub, ...menu.items]
   .mobile-nav-sub-link[aria-current="page"] {
     color: var(--gold-2);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .mobile-nav-sub-link:hover {
       color: var(--gold-2);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .mobile-nav-sub-link:active {
       color: var(--gold-2);
     }

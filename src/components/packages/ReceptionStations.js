@@ -3,6 +3,7 @@
 // ReceptionStations.astro. Imports tabs.js for window.BacchusTabs, which the
 // category tab bar uses.
 import "@scripts/tabs.js"
+import { below, hover, reducedMotion } from "@lib/media-queries.js"
 
 // ---------- Stage controller ----------
 // Originally the controller for real section A's standalone
@@ -81,8 +82,8 @@ import "@scripts/tabs.js"
   // from, so there's nothing to gate wrong there either way, but
   // checking once here avoids a matchMedia() call on every
   // pointerenter.
-  const supportsHover = window.matchMedia && window.matchMedia("(hover: hover)").matches
-  const tabletDown = window.matchMedia("(max-width: 859.98px)")
+  const supportsHover = window.matchMedia && window.matchMedia(hover).matches
+  const tabletDown = window.matchMedia(below.stationsDesktop)
 
   // ---- data, read once from the cards ----
   // dataset.labelFull fallback (2026-09-29, twenty-fifth pass) —
@@ -522,7 +523,7 @@ import "@scripts/tabs.js"
   // being replaced) rather than the 180ms the lightbox and wizard
   // use for an image or a step.
   const STAGE_FADE_MS = 220
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+  const reduceMotion = window.matchMedia(reducedMotion)
   let stageFadeTimer = null
 
   const stageFade = (out) => {
@@ -963,13 +964,13 @@ import "@scripts/tabs.js"
     // from, so there's nothing to gate wrong there either way, but
     // checking once here avoids a matchMedia() call on every
     // pointerenter.
-    const supportsHover = window.matchMedia && window.matchMedia("(hover: hover)").matches
+    const supportsHover = window.matchMedia && window.matchMedia(hover).matches
     // Only consulted by the "this moves" cue at the foot of this
     // function. Every other motion here is a scroll, and those are
     // already handled in CSS by scroll-behavior: auto under reduced
     // motion (section 9) — scrollTo honours the element's
     // scroll-behavior, so there is nothing for JS to branch on.
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const reduceMotion = window.matchMedia(reducedMotion)
     // Read off the element rather than hardcoded: the two carousel
     // sections carry different ids on their lists, because two
     // elements cannot share one. aria-controls has to name the one

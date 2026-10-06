@@ -4,6 +4,7 @@
 
 import { availabilityHooks } from "@scripts/lib/availability-hooks.js"
 import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
+import { hover } from "@lib/media-queries.js"
 
 // ---------- Mock wedding-date availability widget (illustrative concept — not live data) ----------
 // A page can have more than one instance (e.g. a showcase calendar plus a compact one
@@ -347,7 +348,7 @@ import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
     // not live — a device doesn't switch input capability mid-session. The
     // hint text next to the legend (see weddings.html) is split the same way,
     // via @media(hover) in styles.css, so it never disagrees with this.
-    const wlHoverCapable = window.matchMedia("(hover: hover)").matches
+    const wlHoverCapable = window.matchMedia(hover).matches
 
     const wlFormatIso = (iso) => {
       const parts = iso.split("-")

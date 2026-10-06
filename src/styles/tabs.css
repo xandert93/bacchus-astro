@@ -62,12 +62,12 @@
 .tab-bar button.active {
   color: var(--ink);
 }
-@media (hover: hover) {
+@media (--hover) {
   .tab-bar button:not(.active):hover {
     color: var(--limestone-2);
   }
 }
-@media (hover: none) {
+@media (--no-hover) {
   .tab-bar button:not(.active):active {
     color: var(--limestone-2);
   }
@@ -234,13 +234,13 @@
   height: 1px;
   background: var(--gold);
 }
-@media (max-width: 620.98px) {
+@media (--below-tablet) {
   .tab-bar {
     display: flex;
     width: 100%;
   }
 }
-@media (max-width: 620.98px) {
+@media (--below-tablet) {
   .tab-bar button {
     flex: 1;
     padding: 13px 6px;

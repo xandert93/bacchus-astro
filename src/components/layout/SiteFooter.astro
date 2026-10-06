@@ -79,7 +79,7 @@ import Photo from "@components/ui/Photo.astro"
     padding-bottom: 44px;
     border-bottom: 1px solid rgba(var(--limestone-rgb), 0.12);
   }
-  @media (min-width: 981px) {
+  @media (--from-desktop) {
     .footer-top.footer-top-two-col {
       grid-template-columns: 1.4fr 1fr;
     }
@@ -122,12 +122,12 @@ import Photo from "@components/ui/Photo.astro"
     font-size: 12px;
     font-family: "Newsreader", Georgia, serif;
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .footer-top {
       grid-template-columns: 1fr 1fr;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .footer-top {
       grid-template-columns: 1fr;
       gap: 30px;

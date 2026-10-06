@@ -32,7 +32,7 @@ interface Props {
     background: rgba(var(--gold-rgb), 0.55);
     animation: drift linear infinite;
   }
-  @media (prefers-reduced-motion: reduce) {
+  @media (--reduced-motion) {
     :global(.particle) {
       display: none;
     }

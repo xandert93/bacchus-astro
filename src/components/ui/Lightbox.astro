@@ -240,7 +240,7 @@
     color: var(--gold-2);
     transition: all 0.3s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .lightbox-close:hover,
     .lightbox-prev:hover,
     .lightbox-next:hover {
@@ -248,7 +248,7 @@
       color: var(--gold);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .lightbox-close:active,
     .lightbox-prev:active,
     .lightbox-next:active {
@@ -271,7 +271,7 @@
     width: 52px;
     height: 52px;
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .lightbox-prev,
     .lightbox-next {
       display: none;
@@ -288,19 +288,19 @@
   .lightbox-next {
     right: 18px;
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .lightbox-prev,
     .lightbox-next {
       width: 42px;
       height: 42px;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .lightbox-prev {
       left: 12px;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .lightbox-next {
       right: 12px;
     }

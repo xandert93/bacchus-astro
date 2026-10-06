@@ -106,14 +106,14 @@ import Button from "@components/ui/Button.astro"
       color 0.3s var(--ease),
       border-color 0.3s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .availability-modal-close:hover {
       background: var(--gold);
       color: var(--ink);
       border-color: var(--gold);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .availability-modal-close:active {
       background: var(--gold);
       color: var(--ink);

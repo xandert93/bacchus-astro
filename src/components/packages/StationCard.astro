@@ -7,6 +7,7 @@ import type { Station } from "@data/packages/reception-stations"
 import Photo from "@components/ui/Photo.astro"
 import PackageMenuItem from "./PackageMenuItem.astro"
 import Button from "@components/ui/Button.astro"
+import { below } from "@lib/media-queries.js"
 
 interface Props {
   station: Station
@@ -38,7 +39,7 @@ const detail = `${station.servingNote} ${station.items
   >
     <Photo
       src={station.photo.src}
-      sizes="(max-width: 620px) 85vw, 420px"
+      sizes={`${below.tablet} 85vw, 420px`}
       maxWidth={960}
       alt={station.photo.alt}
       loading="lazy"

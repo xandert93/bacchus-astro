@@ -257,7 +257,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     opacity: 1;
     transform: none;
   }
-  @media (prefers-reduced-motion: reduce) {
+  @media (--reduced-motion) {
     .nav-links > :global(li) > :global(a) > :global(.proposed-badge) {
       transform: none;
     }
@@ -369,7 +369,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       transform 0.3s var(--ease),
       opacity 0.3s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .burger:hover::before {
       transform: scale(1);
       opacity: 1;
@@ -378,7 +378,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
   .burger:active {
     transform: scale(0.94);
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .burger:active::before {
       transform: scale(1);
       opacity: 1;
@@ -427,17 +427,17 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     transition: none !important;
     animation: none !important;
   }
-  @media (max-width: 820px) {
+  @media (--below-hero-full) {
     .nav-links {
       display: none;
     }
   }
-  @media (max-width: 820px) {
+  @media (--below-hero-full) {
     .burger {
       display: block;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .brand .name {
       font-size: 16px;
       letter-spacing: 0.24em;
@@ -492,7 +492,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
   /* -48px. 16px to 10px each side; the links keep 20px of total
        horizontal padding, which is still comfortably above their 11.5px
        type. */
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     .nav-links > :global(li) > :global(a) {
       --nav-link-padding-start: 10px;
       --nav-link-padding-end: 10px;
@@ -500,7 +500,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
   }
   /* -18px. The links' own padding already separates them; the gap was
        additional breathing room, not structure. */
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     .nav-links {
       gap: 0;
     }
@@ -510,7 +510,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
   /* The underline follows these automatically (see the custom properties
        on .nav-links > li > a). Same (0,2,2) as the base split rule, so this
        wins on source order — it sits ~9,000 lines later inside the band. */
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     .nav-cta {
       gap: 10px;
     }
@@ -551,12 +551,12 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
      rather than a number invented here, and the .98 follows CLAUDE.md
      bug #22's house rule so the handover to 980px leaves no fractional
      gap. */
-  @media (max-width: 979.98px) {
+  @media (--below-desktop) {
     .nav-links {
       display: none;
     }
   }
-  @media (max-width: 979.98px) {
+  @media (--below-desktop) {
     .burger {
       display: block;
     }
@@ -594,7 +594,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     animation-delay: 0.35s;
     animation-duration: 0.7s;
   }
-  @media (prefers-reduced-motion: reduce) {
+  @media (--reduced-motion) {
     .nav::before {
       animation: none;
     }
@@ -679,27 +679,27 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     transition: none !important;
     animation: none !important;
   }
-  @media (max-width: 820px) {
+  @media (--below-hero-full) {
     .nav-cta :global(.button) {
       display: none;
     }
   }
   /* -20px. The sub-line is the widest part of the lockup and the mark
        plus "BACCHUS" still identify the site unambiguously. */
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     .brand .sub {
       display: none;
     }
   }
   /* -20px and -8px. */
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     .nav .wrap {
       gap: 14px;
     }
   }
   /* -24px. Reuses the existing compact token's own relationship rather
        than inventing a size: 22px to 16px each side, still a pill. */
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     .nav-cta :global(.button) {
       padding-left: 16px;
       padding-right: 16px;
@@ -712,12 +712,12 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
        the arrow did — but a matched pair reads as one deliberate group,
        and one icon on one pill read as an inconsistency. The labels carry
        the meaning on their own. */
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     .nav-cta :global(.button) :global(svg) {
       display: none;
     }
   }
-  @media (max-width: 979.98px) {
+  @media (--below-desktop) {
     .nav-cta :global(.button) {
       display: none;
     }
@@ -731,7 +731,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     animation-delay: 0.35s;
     animation-duration: 0.7s;
   }
-  @media (prefers-reduced-motion: reduce) {
+  @media (--reduced-motion) {
     .nav > .wrap {
       animation: none;
     }

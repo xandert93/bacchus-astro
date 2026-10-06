@@ -128,7 +128,7 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
 <style>
   /* Scoped to this file (moved from global.css by
      scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
-  @media (max-width: 920.98px) {
+  @media (--below-enquiry-two-column) {
     .enquiry-form {
       margin-top: clamp(32px, 5vw, 72px);
     }
@@ -242,12 +242,12 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
     gap: 22px;
     z-index: 0;
   }
-  @media (min-width: 921px) {
+  @media (--from-enquiry-two-column) {
     .wizard-progress {
       padding-top: 4px;
     }
   }
-  @media (min-width: 921px) {
+  @media (--from-enquiry-two-column) {
     .wizard-progress-line {
       top: 15px;
     }
@@ -263,12 +263,12 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
     border-top-style: solid;
     border-top-color: var(--gold);
   }
-  @media (max-width: 560px) {
+  @media (--below-wizard-step-labels) {
     .wizard-step-tab .wizard-step-label {
       display: none;
     }
   }
-  @media (max-width: 560px) {
+  @media (--below-wizard-step-labels) {
     .wizard-progress-line {
       left: calc(50% / var(--wiz-tab-count, 3) + 9px);
       right: calc(50% / var(--wiz-tab-count, 3) + 9px);
@@ -322,13 +322,13 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
       background 0.3s var(--ease),
       border-color 0.3s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .wizard-back-circle:hover {
       background: var(--paper);
       border-color: rgba(var(--muted-ink-rgb), 0.3);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .wizard-back-circle:active {
       background: var(--paper);
       border-color: rgba(var(--muted-ink-rgb), 0.3);
@@ -354,7 +354,7 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
       background-color 0.3s var(--ease),
       transform 0.3s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     :global(.review-edit-button:hover) {
       border-color: rgba(var(--gold-rgb), 0.4);
       background: rgba(var(--gold-rgb), 0.06);
@@ -369,18 +369,18 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
   .trust-sticky {
     display: none;
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .enquiry-form {
       grid-column: 1;
       grid-row: auto;
     }
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .enquiry-form {
       order: 2;
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .wizard-back-link:hover :global(svg) {
       transform: translateX(-4px);
     }
@@ -401,13 +401,13 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
      without this just sits flush-left in the now much wider column, reading
      as off-center. Not needed above 920px — there the card still shares its
      column with the rail, so it stays where the grid puts it. */
-  @media (max-width: 920.98px) {
+  @media (--below-enquiry-two-column) {
     .enquiry-form form {
       margin-inline: auto;
     }
   }
   /* Reverts to the original 480px at true mobile. */
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     form {
       max-width: 480px;
     }
@@ -445,7 +445,7 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
          circle-button pattern being reused here never animates its icon on
          hover (the calendar's month arrows behave the same), so this stays consistent with it. */
 
-  @media (hover: hover) {
+  @media (--hover) {
     .wizard-back-circle:hover :global(svg) {
       transform: none;
     }
@@ -458,7 +458,7 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
   :global(.review-edit-button) :global(svg) {
     flex: none;
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     form {
       padding: 22px;
     }

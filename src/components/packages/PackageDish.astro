@@ -7,6 +7,7 @@
 import type { PackageDish } from "@data/packages/types"
 import GalleryTile from "@components/ui/GalleryTile.astro"
 import "./PackageDish.css"
+import { below } from "@lib/media-queries.js"
 
 interface Props {
   dish: PackageDish
@@ -26,7 +27,7 @@ const { dish, tierId } = Astro.props
       tag={dish.category ?? ""}
       photo={{
         src: dish.photo.src,
-        sizes: "(max-width: 620px) 100vw, (max-width: 980px) 50vw, 30vw",
+        sizes: `${below.tablet} 100vw, ${below.desktop} 50vw, 30vw`,
         decoding: "async",
         alt: dish.photo.alt,
       }}

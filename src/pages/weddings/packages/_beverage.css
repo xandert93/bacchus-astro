@@ -3,14 +3,14 @@
    rather than the siblings' 3-across row — four cards in one row would
    squeeze each description into a column too narrow to read, and a
    3+1 wrap reads as a mistake. */
-@media (min-width: 700px) {
+@media (--from-wide-tablet) {
   .package-tier-cards {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 /* Two columns, not the siblings' three: wine entries carry a tasting
    note each, which needs a measure a third of the wrap can't give it. */
-@media (min-width: 981px) {
+@media (--from-desktop) {
   .package-menu-groups {
     grid-template-columns: repeat(2, 1fr);
   }

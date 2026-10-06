@@ -81,7 +81,7 @@ const { photo, tag, class: className, ...attrs } = Astro.props
   .gallery-item:not(.is-revealed) :global(img) {
     transition-delay: var(--d, 0ms);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .gallery-item:hover :global(img) {
       transform: scale(var(--image-hover-zoom-feature));
       filter: var(--image-hover-filter-boost);
@@ -104,13 +104,13 @@ const { photo, tag, class: className, ...attrs } = Astro.props
     transform: translateY(6px);
     transition: all 0.4s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .gallery-item:hover .gallery-tag {
       opacity: 1;
       transform: none;
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .gallery-item .gallery-tag {
       display: none;
     }
@@ -131,7 +131,7 @@ const { photo, tag, class: className, ...attrs } = Astro.props
     opacity: 0;
     transition: opacity 0.5s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .gallery-item:hover::after {
       opacity: 1;
     }
@@ -167,13 +167,13 @@ const { photo, tag, class: className, ...attrs } = Astro.props
       center / 13px no-repeat;
     pointer-events: none;
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .gallery-item::before {
       opacity: 0;
       transition: opacity 0.3s var(--ease);
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .gallery-item:hover::before {
       opacity: 1;
     }
@@ -202,7 +202,7 @@ const { photo, tag, class: className, ...attrs } = Astro.props
     opacity: 0;
     transition-delay: 0s;
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .gallery-item[data-reveal="img"]::before {
       transition: opacity 0.9s var(--ease);
       transition-delay: var(--d, 0ms);

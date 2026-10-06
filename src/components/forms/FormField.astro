@@ -120,7 +120,7 @@ const hasNote = Astro.slots.has("note")
   }
   /* Overrides the desktop 50% basis so the first and last name stack too,
      matching the form's single-column collapse at this breakpoint. */
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .field {
       flex-basis: 100%;
     }

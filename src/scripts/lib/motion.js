@@ -1,6 +1,8 @@
+import { reducedMotion } from "@lib/media-queries.js"
+
 // True when the visitor has asked their OS for reduced motion. Read once at
 // load, as main.js always did.
-export const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+export const reduce = window.matchMedia(reducedMotion).matches
 
 // When an entrance animation fires: once the element's top has come 20% of
 // the way up from the bottom of the viewport. Was 8% until 2026-10-05,

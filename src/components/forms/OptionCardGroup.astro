@@ -40,7 +40,7 @@ const { id, options } = Astro.props
     cursor: pointer;
     transition: all 0.35s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .option-card:hover {
       border-color: rgba(var(--gold-rgb), 0.4);
     }

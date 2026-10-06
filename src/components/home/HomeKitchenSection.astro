@@ -4,6 +4,7 @@
 // teaser while the events side is the focus.
 import Photo from "@components/ui/Photo.astro"
 import Button from "@components/ui/Button.astro"
+import { below } from "@lib/media-queries.js"
 
 const DISHES = [
   {
@@ -54,7 +55,7 @@ const DISHES = [
             <span class="course-number">{dish.course}</span>
             <Photo
               src={dish.photo.src}
-              sizes="(max-width: 980px) 100vw, 33vw"
+              sizes={`${below.desktop} 100vw, 33vw`}
               alt={dish.photo.alt}
             />
           </div>
@@ -122,34 +123,34 @@ const DISHES = [
   .dishes.four-column-grid .dish:nth-child(2) {
     transform: none;
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .dishes.four-column-grid {
       grid-template-columns: 1fr 1fr;
     }
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .dishes {
       grid-template-columns: 1fr 1fr;
     }
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .dish:nth-child(2) {
       transform: none;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .cta-row {
       flex-direction: column;
       align-items: center;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .dishes {
       grid-template-columns: 1fr;
       gap: 34px;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .arch-dish {
       aspect-ratio: 4/5;
     }
@@ -168,7 +169,7 @@ const DISHES = [
     font-weight: 400;
     margin-top: 22px;
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .cta-row :global(.button) {
       width: 100%;
       max-width: 300px;

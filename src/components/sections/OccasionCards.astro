@@ -89,12 +89,12 @@ const { eyebrow, cards } = Astro.props
     color: var(--muted-ink);
     font-size: 13.5px;
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .package-grid {
       grid-template-columns: 1fr 1fr;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-grid {
       grid-template-columns: 1fr;
     }

@@ -97,7 +97,7 @@
 .package-tier-content.package-tier-fade-in {
   animation: packageTierFadeIn 0.55s var(--ease);
 }
-@media (prefers-reduced-motion: reduce) {
+@media (--reduced-motion) {
   .package-tier-content.package-tier-fade-in {
     animation: none;
   }
@@ -178,7 +178,7 @@
 .package-tabs-lead p + p {
   margin-top: 12px;
 }
-@media (max-width: 840px) {
+@media (--below-package-tiers-desktop) {
   .package-tabs-grid {
     grid-template-columns: 1fr;
     grid-template-areas: "heading" "lead" "tabbar";
@@ -238,13 +238,13 @@
     border-color 0.4s var(--ease),
     transform 0.4s var(--ease);
 }
-@media (hover: hover) {
+@media (--hover) {
   .package-tier-card:hover {
     transform: translateY(-4px);
     border-color: rgba(var(--gold-rgb), 0.32);
   }
 }
-@media (hover: none) {
+@media (--no-hover) {
   .package-tier-card:active {
     transform: translateY(-2px);
   }
@@ -331,7 +331,7 @@
    selected card renders; the tab bar and cards stay in sync either
    way (see script), so switching tiers via the tab bar swaps which
    single card is shown here too. */
-@media (max-width: 840px) {
+@media (--below-package-tiers-desktop) {
   .package-tier-cards {
     grid-template-columns: 1fr;
   }
@@ -430,7 +430,7 @@
    --limestone-2 hover/tap computes to ~1.9:1, a real visible
    brightening (plain --limestone -> --limestone-2 measured at only
    ~1.1:1, imperceptible — see that rule's comment for the numbers). */
-@media (hover: hover) {
+@media (--hover) {
   .package-sticky-switch-btn:not(.active):hover {
     color: var(--limestone-2);
   }
@@ -438,7 +438,7 @@
 /* Same-page action button (switches tier, doesn't navigate away) —
    needs its own gated tap feedback per CLAUDE.md bug #19, or an
    unguarded :hover would read as stuck-active on touch after a tap. */
-@media (hover: none) {
+@media (--no-hover) {
   .package-sticky-switch-btn:not(.active):active {
     color: var(--limestone-2);
   }
@@ -482,7 +482,7 @@
   font-weight: 500;
   opacity: 0.75;
 }
-@media (min-width: 841px) {
+@media (--from-package-tiers-desktop) {
   .package-sticky-switch {
     top: calc(var(--nav-h) + 16px);
     left: 50%;
@@ -509,7 +509,7 @@
    than a sitewide breakpoint — this component only ever appears
    alongside the tier switcher it condenses, so it should flip in step
    with that, not with an unrelated global one. */
-@media (max-width: 840px) {
+@media (--below-package-tiers-desktop) {
   .package-sticky-switch {
     left: 16px;
     right: 16px;
@@ -650,7 +650,7 @@
    on narrower widths keeps both readable without touching the
    sitewide bottom-right placement used everywhere else (gallery.html's
    real grid, where tiles are never this narrow). */
-@media (max-width: 980px) {
+@media (--below-desktop) {
   .package-dishes-grid .gallery-item::before {
     top: 12px;
     bottom: auto;
@@ -683,7 +683,7 @@
    621px rules without a gap at fractional widths (CLAUDE.md bug #22)
    — and, more to the point here, so it flips at exactly the same
    width the station badge does. */
-@media (max-width: 620.98px) {
+@media (--below-tablet) {
   .package-dishes-grid .gallery-item::before {
     top: 5px;
     right: 5px;
@@ -1013,7 +1013,7 @@
      separate jump. */
   transition: height 0.5s var(--ease);
 }
-@media (prefers-reduced-motion: reduce) {
+@media (--reduced-motion) {
   .package-tier-view {
     transition: none;
   }
@@ -1219,17 +1219,17 @@ body.is-scrolling .package-sticky-switch {
      ancestor's stagger value can't leak into the hover-zoom's timing. */
   --d: 0ms;
 }
-@media (max-width: 980.98px) {
+@media (--below-desktop) {
   .package-menu-groups {
     grid-template-columns: 1fr 1fr;
   }
 }
-@media (max-width: 980.98px) {
+@media (--below-desktop) {
   .package-dishes-grid {
     --package-grid-column-gap: clamp(10px, 2vw, 22px);
   }
 }
-@media (max-width: 620.98px) {
+@media (--below-tablet) {
   .package-menu-groups {
     grid-template-columns: 1fr;
   }

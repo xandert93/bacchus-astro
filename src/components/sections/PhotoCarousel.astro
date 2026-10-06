@@ -122,18 +122,18 @@ const { slides } = Astro.props
        note below), just not as washed-out as the original figure. */
     filter: grayscale(0.18) brightness(0.97);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .slide:hover :global(img) {
       transform: scale(var(--image-hover-zoom-ambient));
       filter: grayscale(0) brightness(1);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .slide :global(img) {
       filter: grayscale(0) brightness(1);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .slide:active :global(img) {
       transform: scale(var(--image-hover-zoom-ambient));
     }
@@ -211,7 +211,7 @@ const { slides } = Astro.props
     transition: all 0.4s var(--ease);
     flex: none;
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .carousel-button:hover:not(:disabled) {
       background: var(--ink);
       color: var(--limestone);
@@ -219,7 +219,7 @@ const { slides } = Astro.props
       transform: scale(1.06);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .carousel-button:active:not(:disabled) {
       background: var(--ink);
       color: var(--limestone);
@@ -256,7 +256,7 @@ const { slides } = Astro.props
     color: var(--bronze);
     font-variant-numeric: tabular-nums;
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .slide {
       width: 76vw;
     }
