@@ -154,6 +154,13 @@ const { backgroundImage } = Astro.props
     text-transform: uppercase;
     color: var(--muted);
   }
+  /* Swipeable on touch (Testimonials.js). Same reasoning as the lightbox and
+     the photo carousel: without pan-y the browser treats every touch drag as
+     a possible scroll and cancels the pointer before a horizontal swipe can
+     register. Vertical page scrolling over the quote still works. */
+  .testimonial-quote-box {
+    touch-action: pan-y;
+  }
   .stars {
     display: flex;
     justify-content: center;
