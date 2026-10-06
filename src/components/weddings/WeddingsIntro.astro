@@ -1,53 +1,43 @@
 ---
 // The weddings page's opening: the three spaces and what's included, beside
 // the Secret Garden at night, with a link down to the packages.
-import CheckList from "@components/ui/CheckList.astro"
-import Photo from "@components/ui/Photo.astro"
+import IntroSplit from "@components/sections/IntroSplit.astro"
 ---
 
-<section class="section-padding">
-  <div class="wrap split">
-    <div>
-      <div class="eyebrow" data-reveal>
-        Three spaces, one wedding a day
-      </div>
-      <h2 data-reveal style="--d: 80ms">
-        The Secret Garden,
-        <br />
-        and the <em>Prince De Redin</em> Hall
-      </h2>
-      <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px; max-width: 52ch">
-        Bacchus is never shared on your day.
-      </p>
-      <p class="lead" data-reveal style="--d: 180ms; margin-top: 12px; max-width: 52ch">
-        The Prince De Redin Hall seats the wedding breakfast, the Terrace holds the bar
-        and late dancing, and the Secret Garden — home to Roman and Arab architectural
-        remains dating back to the 1st century — is kept for the ceremony, drinks and
-        photographs in between.
-      </p>
-      <CheckList
-        items={[
-          "Private hire of the Hall, Terrace and Secret Garden — one wedding a day, always",
-          "Set or bespoke menus, tasted in advance with your dedicated Events Manager",
-          "In-house wine list, sourced from Maltese producers",
-          "Indoor ceremony option if the Mdina weather turns",
-        ]}
-      />
-      <div data-reveal style="--d: 320ms; margin-top: 32px">
-        <a href="#packages" class="link-underline">
-          See the package categories <span class="arrow">↓</span>
-        </a>
-      </div>
-    </div>
-    <div class="ph-wrap" data-reveal="img">
-      <Photo
-        src="venue/secret-garden-night"
-        sizes="(max-width: 980px) 100vw, 50vw"
-        alt="The Secret Garden at Bacchus, candlelit tables strung with fairy lights at night"
-      />
-    </div>
+<IntroSplit
+  eyebrow="Three spaces, one wedding a day"
+  included={[
+    "Private hire of the Hall, Terrace and Secret Garden — one wedding a day, always",
+    "Set or bespoke menus, tasted in advance with your dedicated Events Manager",
+    "In-house wine list, sourced from Maltese producers",
+    "Indoor ceremony option if the Mdina weather turns",
+  ]}
+  photo={{
+    src: "venue/secret-garden-night",
+    alt: "The Secret Garden at Bacchus, candlelit tables strung with fairy lights at night",
+  }}
+>
+  <Fragment slot="heading">
+    The Secret Garden,
+    <br />
+    and the <em>Prince De Redin</em> Hall
+  </Fragment>
+  <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px; max-width: 52ch">
+    Bacchus is never shared on your day.
+  </p>
+  <p class="lead" data-reveal style="--d: 180ms; margin-top: 12px; max-width: 52ch">
+    The Prince De Redin Hall seats the wedding breakfast, the Terrace holds the bar and
+    late dancing, and the Secret Garden — home to Roman and Arab architectural remains
+    dating back to the 1st century — is kept for the ceremony, drinks and photographs in
+    between.
+  </p>
+
+  <div slot="after" data-reveal style="--d: 320ms; margin-top: 32px">
+    <a href="#packages" class="link-underline">
+      See the package categories <span class="arrow">↓</span>
+    </a>
   </div>
-</section>
+</IntroSplit>
 
 <style>
   /* Scoped to this file (moved from global.css by

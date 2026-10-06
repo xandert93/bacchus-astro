@@ -1,9 +1,9 @@
 ---
 // /corporate.
 import BaseLayout from "@layouts/BaseLayout.astro"
+import IntroSplit from "@components/sections/IntroSplit.astro"
 import PageHero from "@components/sections/PageHero.astro"
 import ArrowIcon from "@components/ui/ArrowIcon.astro"
-import CheckList from "@components/ui/CheckList.astro"
 import OccasionCards from "@components/sections/OccasionCards.astro"
 import GalleryPreview from "@components/sections/GalleryPreview.astro"
 import Lightbox from "@components/ui/Lightbox.astro"
@@ -11,7 +11,6 @@ import ProcessSteps from "@components/sections/ProcessSteps.astro"
 import FaqSection from "@components/sections/FaqSection.astro"
 import EnquirySection from "@components/enquiry/EnquirySection.astro"
 import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
-import Photo from "@components/ui/Photo.astro"
 ---
 
 <BaseLayout
@@ -42,41 +41,31 @@ import Photo from "@components/ui/Photo.astro"
     </Fragment>
   </PageHero>
 
-  <section class="section-padding">
-    <div class="wrap split">
-      <div>
-        <div class="eyebrow" data-reveal>
-          Full facility, one dedicated manager
-        </div>
-        <h2 data-reveal style="--d: 80ms">
-          Built for business, inside a 17th-century <em>estate</em>
-        </h2>
-        <p
-          data-reveal
-          style="--d: 160ms; color: var(--muted-ink); margin-top: 22px; max-width: 52ch"
-        >
-          Whether it's a quarterly review or a year-end gala, the function room
-          reconfigures around the shape of your event — and unlike a hotel conference
-          floor, nobody else is booked in beside you.
-        </p>
-        <CheckList
-          items={[
-            "AV, staging and lighting included as standard",
-            "Private bar and a dedicated event manager on the day",
-            "Daytime and evening hire, theatre-style or seated dinner layout",
-            "Part of a 4500m² historic estate within Mdina's walls",
-          ]}
-        />
-      </div>
-      <div class="ph-wrap" data-reveal="img">
-        <Photo
-          src="corporate/champagne-service"
-          sizes="(max-width: 980px) 100vw, 50vw"
-          alt="A waiter serving champagne to a guest in business attire"
-        />
-      </div>
-    </div>
-  </section>
+  <IntroSplit
+    eyebrow="Full facility, one dedicated manager"
+    included={[
+      "AV, staging and lighting included as standard",
+      "Private bar and a dedicated event manager on the day",
+      "Daytime and evening hire, theatre-style or seated dinner layout",
+      "Part of a 4500m² historic estate within Mdina's walls",
+    ]}
+    photo={{
+      src: "corporate/champagne-service",
+      alt: "A waiter serving champagne to a guest in business attire",
+    }}
+  >
+    <Fragment slot="heading">
+      Built for business, inside a 17th-century <em>estate</em>
+    </Fragment>
+    <p
+      data-reveal
+      style="--d: 160ms; color: var(--muted-ink); margin-top: 22px; max-width: 52ch"
+    >
+      Whether it's a quarterly review or a year-end gala, the function room reconfigures
+      around the shape of your event — and unlike a hotel conference floor, nobody else is
+      booked in beside you.
+    </p>
+  </IntroSplit>
 
   <OccasionCards
     eyebrow="What we cater for"

@@ -2,16 +2,15 @@
 // /celebrations. No process steps and no testimonials, as in the prototype:
 // none of the four real testimonials is celebration-specific.
 import BaseLayout from "@layouts/BaseLayout.astro"
+import IntroSplit from "@components/sections/IntroSplit.astro"
 import PageHero from "@components/sections/PageHero.astro"
 import ArrowIcon from "@components/ui/ArrowIcon.astro"
-import CheckList from "@components/ui/CheckList.astro"
 import OccasionCards from "@components/sections/OccasionCards.astro"
 import GalleryPreview from "@components/sections/GalleryPreview.astro"
 import Lightbox from "@components/ui/Lightbox.astro"
 import FaqSection from "@components/sections/FaqSection.astro"
 import EnquirySection from "@components/enquiry/EnquirySection.astro"
 import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
-import Photo from "@components/ui/Photo.astro"
 ---
 
 <BaseLayout
@@ -41,42 +40,31 @@ import Photo from "@components/ui/Photo.astro"
     </Fragment>
   </PageHero>
 
-  <section class="section-padding">
-    <div class="wrap split">
-      <div>
-        <div class="eyebrow" data-reveal>
-          The Terrace, and the Secret Garden beyond it
-        </div>
-        <h2 data-reveal style="--d: 80ms">
-          Smaller parties, the same historic <em>estate</em>
-        </h2>
-        <p
-          data-reveal
-          style="--d: 160ms; color: var(--muted-ink); margin-top: 22px; max-width: 52ch"
-        >
-          We cater for celebrations of all sorts — intimate family gatherings and
-          banquets, holy celebrations, graduations, birthdays and more — hosted across the
-          Terrace and Secret Garden, part of the same 17th-century estate as the
-          restaurant.
-        </p>
-        <CheckList
-          items={[
-            "Flexible group sizes, from a family table to a full banquet",
-            "Canapé and sharing menus, or a complete sit-down service",
-            "Flexible timing, including late sittings",
-            "Garden terrace open for warmer-month evenings",
-          ]}
-        />
-      </div>
-      <div class="ph-wrap" data-reveal="img">
-        <Photo
-          src="venue/terrace-marquee-tables"
-          sizes="(max-width: 980px) 100vw, 50vw"
-          alt="Round tables dressed in white under a marquee on the Terrace, set for an outdoor celebration"
-        />
-      </div>
-    </div>
-  </section>
+  <IntroSplit
+    eyebrow="The Terrace, and the Secret Garden beyond it"
+    included={[
+      "Flexible group sizes, from a family table to a full banquet",
+      "Canapé and sharing menus, or a complete sit-down service",
+      "Flexible timing, including late sittings",
+      "Garden terrace open for warmer-month evenings",
+    ]}
+    photo={{
+      src: "venue/terrace-marquee-tables",
+      alt: "Round tables dressed in white under a marquee on the Terrace, set for an outdoor celebration",
+    }}
+  >
+    <Fragment slot="heading">
+      Smaller parties, the same historic <em>estate</em>
+    </Fragment>
+    <p
+      data-reveal
+      style="--d: 160ms; color: var(--muted-ink); margin-top: 22px; max-width: 52ch"
+    >
+      We cater for celebrations of all sorts — intimate family gatherings and banquets,
+      holy celebrations, graduations, birthdays and more — hosted across the Terrace and
+      Secret Garden, part of the same 17th-century estate as the restaurant.
+    </p>
+  </IntroSplit>
 
   <OccasionCards
     eyebrow="Occasions we host"
