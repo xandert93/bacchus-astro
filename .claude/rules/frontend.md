@@ -10,6 +10,8 @@ This rule loads when Claude reads or edits a file under `src/`.
 Before the first edit under `src/` in a session, read these in full (once per
 session, not before every edit):
 
+- `docs/architecture/structure.md`: where things live and who owns each
+  file, so new code goes in the right place.
 - `docs/design/design-system.md`: the design rules.
 - `docs/engineering/known-bugs.md`: bugs found in this build. Check whether
   the change touches any of them.

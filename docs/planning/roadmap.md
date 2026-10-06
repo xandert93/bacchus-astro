@@ -2,15 +2,32 @@
 
 What's planned, in what order, and what's waiting in the backlog. The stack
 itself (what we chose, why, and how payments work) is in
-`docs/architecture/tech-stack.md`. Migration phases are in `CLAUDE.md`.
+`docs/architecture/tech-stack.md`.
 
 ---
 
 ## Contents
 
-1. [Events features, in priority order](#events-features-in-priority-order)
-2. [Other planned features](#other-planned-features)
-3. [Backlog](#backlog)
+1. [Migration phases](#migration-phases)
+2. [Events features, in priority order](#events-features-in-priority-order)
+3. [Other planned features](#other-planned-features)
+4. [Backlog](#backlog)
+
+---
+
+## Migration phases
+
+1. **Faithful port** (complete, 2026-10-04). Same markup, CSS and JS as the
+   prototype, content hardcoded, the repetition removed into components. No
+   redesigns; one new thing at a time. Every page is ported: `index`,
+   `weddings`, `corporate`, `celebrations`, `gallery`, and the four
+   packages at `/weddings/packages/{reception,banquet,high-tea,beverage}`.
+   `menu.html` is deliberately not ported (parked restaurant content).
+2. **Image pipeline** (done, apart from the originals still to come from
+   Bacchus). Every photo is built from its original where one exists; see
+   `docs/engineering/images.md`.
+3. **Sanity.** Schemas are drafted in `sanity/`.
+4. **Vercel deploy, forms, payments.**
 
 ---
 
