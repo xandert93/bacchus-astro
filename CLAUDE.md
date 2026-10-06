@@ -22,8 +22,9 @@ indexes them all.
 - `docs/content/client-facts.md` — venue, packages, prices, policies, the
   open conflicts, what is placeholder, and questions for the client.
 - `docs/content/catalogue-copy.md` — how catalogue text is proofed.
-- `docs/engineering/known-bugs.md` — fixed bugs as lessons. **"Bug #N" and
-  "CLAUDE.md bug #N" in code comments mean this list**; numbers never change.
+- `docs/engineering/known-bugs.md` — bugs found in the Astro build, each with
+  its cause, fix and the test that guards it. Started fresh on 2026-10-06;
+  "bug #N" in older code comments refers to the prototype's retired list.
 - `docs/planning/roadmap.md` — feature order and backlog.
 - `docs/architecture/tech-stack.md` — the chosen stack and why, the live
   Shopify site, payments.
@@ -282,7 +283,8 @@ Repo: `github.com/xandert93/bacchus-astro` (private), default branch `main`.
 - **Every feature or fix gets its own branch off `main`**, named
   `type/short-description` using the same types as commits
   (`feat/gallery-page`, `fix/testimonials-touch-autoplay`). One branch per
-  independent change, so each can be reviewed, merged or dropped alone.
+  independent change, so each can be reviewed, merged or dropped alone. Say
+  which branches were created when reporting back.
 - Commit on the branch in `type(scope): description` form, as small logical
   commits.
 - Before merging: `npm run check` at 0 errors, `npm run build` clean, and
@@ -293,9 +295,8 @@ Repo: `github.com/xandert93/bacchus-astro` (private), default branch `main`.
   `type(scope)` format.
 - `main` should always build and pass. Tiny docs-only edits to this file may
   go straight to `main`.
-- **Claude does not push.** The user pushes `main` (and any branch they want
-  on GitHub). If a change ever wants review on GitHub first, push the branch
-  and open a pull request instead of merging locally.
+- **Push `main` to GitHub after every merge** (`git push origin main`).
+  Feature branches stay local unless one wants review as a pull request.
 
 ## Checks and tests
 
@@ -310,9 +311,8 @@ Repo: `github.com/xandert93/bacchus-astro` (private), default branch `main`.
   `desktop` runs everything; `mobile` (Pixel 7) runs only tests tagged
   `@mobile`. Specs live in `tests/e2e/`.
 - When fixing a bug, add a test that fails without the fix — and confirm it
-  does fail against the old code, as was done for the nav underline.
-  Prototype bugs worth encoding as tests when their area is touched are in
-  `docs/engineering/known-bugs.md`.
+  does fail against the old code, as was done for the nav underline. Then
+  add the bug to `docs/engineering/known-bugs.md`.
 - Vitest is planned for pure logic (availability status, date maths, quote
   templating) once that logic is split out of `main.js`; nothing to unit
   test yet.

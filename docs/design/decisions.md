@@ -108,7 +108,7 @@ A four-step wizard: **the occasion** (event type, date) → **the specifics**
 - **Beverage is built differently on purpose.** It's added on top, not chosen
   instead. Four categories that combine freely, not three ranked tiers: a 2×2
   card grid, two-column lists (wines carry tasting notes), no sticky switcher
-  (four names don't fit on mobile, bug #13) and no dish tiles.
+  (four names don't fit on mobile) and no dish tiles.
 - **Cross-links**: Reception, Banquet and High Tea each link to the other two
   in a plain line of text, so a visitor can compare. Beverage links back to
   the packages section instead. A photo-card version was built and reverted
@@ -127,7 +127,6 @@ A four-step wizard: **the occasion** (event type, date) → **the specifics**
   both made the back arrow look like a timer too.
 - **The ring is an SVG stroke**, not a `conic-gradient`, which filled
   inconsistently.
-- Lessons from building it: bugs #16–#19.
 
 ---
 
