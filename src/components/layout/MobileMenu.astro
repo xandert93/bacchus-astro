@@ -3,7 +3,8 @@
 import { getImage } from "astro:assets"
 import SocialLinks from "@components/ui/SocialLinks.astro"
 import MobileNavGroup from "@components/nav/MobileNavGroup.astro"
-import { NAV_MENUS } from "@data/navigation"
+import ProposedBadge from "@components/ui/ProposedBadge.astro"
+import { NAV_MENUS, NAV_PAGES, hrefOf, unbuiltAttr } from "@data/navigation"
 import { image } from "@lib/images"
 
 interface Props {
@@ -34,17 +35,13 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       {NAV_MENUS.map((menu, i) => (
         <MobileNavGroup menu={menu} number={i + 1} />
       ))}
-      <a href="/gallery" class="mobile-nav-link">
-        <span>3</span>Gallery
-      </a>
-      {/* Mobile only. About is still out of the desktop bar, where it was
-         the one unbuilt top-level item with no panel behind it, so a click
-         produced nothing with no explanation. Here it carries the same
-         Proposed badge its sibling rows use, which is the explanation the
-         desktop bar had no room for. */}
-      <a href="#" class="mobile-nav-link" data-unbuilt>
-        <span>4</span>About<span class="mobile-nav-proposed-badge">Proposed</span>
-      </a>
+      {NAV_PAGES.map((link, i) => (
+        <a href={hrefOf(link)} class="mobile-nav-link" {...unbuiltAttr(link)}>
+          <span class="mobile-nav-number">{NAV_MENUS.length + i + 1}</span>
+          {link.label}
+          {link.unbuilt && <ProposedBadge />}
+        </a>
+      ))}
       <div class="mobile-nav-cta-row">
         <NavCtaButtons />
       </div>
@@ -234,35 +231,8 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     opacity: 1;
     transform: translateY(0);
   }
-  /* --bronze-on-dark, not --bronze: the overlay's background is --ink, where
-     plain --bronze measures 3.85:1 — the same reason the panel icons needed the
-     token. */
-  .mobile-nav-proposed-badge {
-    display: inline-block;
+  .menu .mobile-nav-link :global(.proposed-badge) {
     margin-left: 10px;
-    padding: 2px 8px;
-    border: 1px solid rgba(var(--bronze-on-dark-rgb), 0.45);
-    border-radius: 999px;
-    font-family: "Inter", sans-serif;
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--bronze-on-dark);
-    vertical-align: middle;
-  }
-  /* ".menu .mobile-nav-link span" is the big gold NUMBER treatment, and it
-     matches ANY span inside such a link — including a badge. At (0,2,1) it
-     beats the badge's own (0,1,0) class, so a badge in a top-level drawer row
-     would silently render as a 0.32em gold numeral with 12px of right margin.
-     Bug #14's shape exactly. Re-asserted here at (0,3,0); only the properties
-     the number rule actually sets need restating. */
-  .menu .mobile-nav-link .mobile-nav-proposed-badge {
-    font-size: 9px;
-    letter-spacing: 0.12em;
-    color: var(--bronze-on-dark);
-    margin-right: 0;
-    vertical-align: middle;
   }
   /* The 520px cap for an open .mobile-nav-sub lives on the original
      .mobile-nav-group.is-open rule earlier in this file, not here. While this
@@ -303,7 +273,10 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     transition: none !important;
     animation: none !important;
   }
-  .menu .mobile-nav-link :global(span) {
+  /* By class, not "span": a bare span selector also caught the row's
+     Proposed badge and turned it into a 0.38em gold numeral (bug #14's
+     shape), which then needed its own override to undo. */
+  .menu .mobile-nav-link .mobile-nav-number {
     color: var(--gold);
     /* 0.38em, up from the original 0.32em across two passes: em tracks the
        label, so each reduction shrank the numeral with it. These were already
