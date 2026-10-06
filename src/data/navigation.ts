@@ -1,5 +1,6 @@
-// The site's navigation: the two dropdowns in the desktop bar and the same
-// two groups in the mobile drawer, from one list so they can't drift apart.
+// The site's navigation: the two dropdowns and the plain links in the
+// desktop bar, and the same groups and links in the mobile drawer, from one
+// list so they can't drift apart.
 //
 // Item counts are load-bearing: each desktop panel lays its items out in a
 // three-column grid, so Restaurant's three are one clean row and Events'
@@ -175,3 +176,15 @@ export const NAV_MENUS: NavMenu[] = [
 
 // A link's href, falling back to "#" for a page that isn't built yet.
 export const hrefOf = (link: NavLink) => (link.unbuilt ? "#" : (link.href ?? "#"))
+
+// The plain top-level links after the two dropdowns, in both bars. On
+// desktop an unbuilt one wears its Proposed badge above the label, since
+// the bar has no room beside it.
+export const NAV_PAGES: NavLink[] = [
+  { label: "Gallery", href: "/gallery" },
+  { label: "About", unbuilt: true },
+]
+
+// The attribute site-nav.js looks for to keep an unbuilt link from
+// jumping to the top of the page (and from closing the drawer).
+export const unbuiltAttr = (link: NavLink) => (link.unbuilt ? { "data-unbuilt": "" } : {})

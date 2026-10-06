@@ -3,7 +3,8 @@
 // menu's hub page and its items as plain links. The same list as the
 // desktop dropdown (src/data/navigation.ts). site-nav.js opens one group
 // at a time.
-import { hrefOf, type NavMenu } from "@data/navigation"
+import { hrefOf, unbuiltAttr, type NavMenu } from "@data/navigation"
+import ProposedBadge from "@components/ui/ProposedBadge.astro"
 import NavChevron from "./NavChevron.astro"
 
 interface Props {
@@ -26,13 +27,9 @@ const links = [menu.hub, ...menu.items]
          links inside are never the thing being resized. */}
     <div class="mobile-nav-sub-items">
       {links.map((link) => (
-        <a
-          class="mobile-nav-sub-link"
-          href={hrefOf(link)}
-          {...(link.unbuilt ? { "data-unbuilt": "" } : {})}
-        >
+        <a class="mobile-nav-sub-link" href={hrefOf(link)} {...unbuiltAttr(link)}>
           {link.label}
-          {link.unbuilt && <span class="mobile-nav-proposed-badge">Proposed</span>}
+          {link.unbuilt && <ProposedBadge />}
         </a>
       ))}
     </div>
@@ -42,22 +39,8 @@ const links = [menu.hub, ...menu.items]
 <style>
   /* Scoped to this file (moved from global.css by
      scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
-  /* --bronze-on-dark, not --bronze: the overlay's background is --ink, where
-       plain --bronze measures 3.85:1 — the same reason the panel icons needed the
-       token. */
-  .mobile-nav-proposed-badge {
-    display: inline-block;
+  .mobile-nav-sub-link :global(.proposed-badge) {
     margin-left: 10px;
-    padding: 2px 8px;
-    border: 1px solid rgba(var(--bronze-on-dark-rgb), 0.45);
-    border-radius: 999px;
-    font-family: "Inter", sans-serif;
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--bronze-on-dark);
-    vertical-align: middle;
   }
   /* grid-template-rows: 0fr -> 1fr, NOT max-height (changed 2026-10-02).
        max-height needs a magic number large enough for the tallest group, and
@@ -194,7 +177,7 @@ const links = [menu.hub, ...menu.items]
   }
   :global(.menu) .mobile-nav-group-trigger .mobile-nav-number {
     color: var(--gold);
-    /* Matches .menu .mobile-nav-link span's 0.38em — see its note. */
+    /* Matches .menu .mobile-nav-link .mobile-nav-number's 0.38em — see its note. */
     font-size: 0.38em;
     vertical-align: text-top;
     letter-spacing: 0;

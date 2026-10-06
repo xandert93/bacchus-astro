@@ -1,0 +1,70 @@
+---
+// The "Proposed" pill on a link to a page that isn't built yet: the
+// dropdown rows, the drawer rows and the desktop bar's About. Before this
+// there were three hand-written copies, each with its own class and its own
+// idea of the size.
+//
+// Not oxblood: that is the sitewide "illustrative / unconfirmed data"
+// warning, and these are not unconfirmed facts — they are real proposals
+// that simply aren't built. Different signal, different colour.
+//
+//   tone   on-dark (default) — --bronze-on-dark, for the bar and the
+//          drawer, whose --ink ground puts plain --bronze at 3.85:1 ·
+//          bronze — plain --bronze, for the dropdown card: gold is spent
+//          on the row's hover border there, so a gold badge would be two
+//          golds doing two jobs; bronze pairs it with the row's icon
+//   small  the compact size, for the dropdown rows and the bar
+//
+// Spacing and position belong to the parent (a flex gap in the dropdown, a
+// margin in the drawer, absolute above the label in the bar). The pill is
+// this component's element, not the parent's, so a parent's rule reaches it
+// through :global(.proposed-badge).
+import type { HTMLAttributes } from "astro/types"
+
+type Props = HTMLAttributes<"span"> & {
+  tone?: "on-dark" | "bronze"
+  small?: boolean
+}
+
+const { tone = "on-dark", small = false, class: className, ...rest } = Astro.props
+---
+
+<span
+  class:list={[
+    "proposed-badge",
+    { "proposed-badge-bronze": tone === "bronze", "proposed-badge-small": small },
+    className,
+  ]}
+  {...rest}
+>
+  Proposed
+</span>
+
+<style>
+  /* nowrap so "PROPOSED" can never break across two lines in a narrow
+     column — it can fall to its own line after a wrapping label, which is
+     fine, but splitting the word itself is not. */
+  .proposed-badge {
+    display: inline-block;
+    white-space: nowrap;
+    padding: 2px 8px;
+    border: 1px solid rgba(var(--bronze-on-dark-rgb), 0.45);
+    border-radius: 999px;
+    font-family: "Inter", sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bronze-on-dark);
+    vertical-align: middle;
+  }
+  .proposed-badge-bronze {
+    border-color: rgba(var(--bronze-rgb), 0.55);
+    color: var(--bronze);
+  }
+  .proposed-badge-small {
+    padding: 1px 6px;
+    font-size: 8.5px;
+    vertical-align: 1px;
+  }
+</style>

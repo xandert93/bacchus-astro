@@ -13,7 +13,8 @@
 // bar's .wrap: it is position: fixed, so it anchors to the viewport either
 // way, and nesting keeps the natural .nav-dd:hover chain. A sibling was
 // tried in the prototype and reverted.
-import { hrefOf, type NavMenu } from "@data/navigation"
+import { hrefOf, unbuiltAttr, type NavMenu } from "@data/navigation"
+import ProposedBadge from "@components/ui/ProposedBadge.astro"
 import NavChevron from "./NavChevron.astro"
 import NavItemIcon from "./NavItemIcon.astro"
 import NavPanelPhoto from "./NavPanelPhoto.astro"
@@ -23,11 +24,10 @@ interface Props {
 }
 
 const { menu } = Astro.props
-const unbuiltAttr = (unbuilt?: boolean) => (unbuilt ? { "data-unbuilt": "" } : {})
 ---
 
 <li class="nav-dd nav-dd-split">
-  <a href={hrefOf(menu)} {...unbuiltAttr(menu.unbuilt)}>
+  <a href={hrefOf(menu)} {...unbuiltAttr(menu)}>
     {menu.label}
   </a>
   <button
@@ -44,11 +44,7 @@ const unbuiltAttr = (unbuilt?: boolean) => (unbuilt ? { "data-unbuilt": "" } : {
       <div class="nav-dd-panel-main">
         <div class="nav-dd-panel-heading-row">
           <div class="nav-dd-panel-heading">{menu.heading}</div>
-          <a
-            class="nav-dd-hub-link"
-            href={hrefOf(menu.hub)}
-            {...unbuiltAttr(menu.hub.unbuilt)}
-          >
+          <a class="nav-dd-hub-link" href={hrefOf(menu.hub)} {...unbuiltAttr(menu.hub)}>
             {menu.hub.label}
             <svg
               width="13"
@@ -72,7 +68,7 @@ const unbuiltAttr = (unbuilt?: boolean) => (unbuilt ? { "data-unbuilt": "" } : {
             <a
               class="nav-dd-item"
               href={hrefOf(item)}
-              {...unbuiltAttr(item.unbuilt)}
+              {...unbuiltAttr(item)}
               data-target={item.photo}
             >
               <span class="nav-dd-icon">
@@ -81,9 +77,7 @@ const unbuiltAttr = (unbuilt?: boolean) => (unbuilt ? { "data-unbuilt": "" } : {
               <span class="nav-dd-text">
                 <span class="nav-dd-label">
                   {item.label}
-                  {item.unbuilt && (
-                    <span class="nav-dd-item-proposed-badge">PROPOSED</span>
-                  )}
+                  {item.unbuilt && <ProposedBadge tone="bronze" small />}
                 </span>
                 <span class="nav-dd-desc">{item.description}</span>
               </span>
@@ -767,16 +761,9 @@ const unbuiltAttr = (unbuilt?: boolean) => (unbuilt ? { "data-unbuilt": "" } : {
   /* ---------- (b) Proposed-page markers ----------
        Several rows in these panels point at pages that do not exist yet.
        Rather than letting them look like working links in a pitch, each
-       carries a visible badge and the local JS preventDefault()s it.
-       Not oxblood: that is the sitewide "illustrative / unconfirmed data"
-       warning (per CLAUDE.md), and these are not unconfirmed facts — they
-       are real proposals that simply are not built. Different signal,
-       different colour.
-       --gold-2 rather than --bronze now that the card is dark — bronze
-       against rgba(--muted-ink) is too dim to read as a badge. The mobile
-       drawer's own badge below stays bronze, because that drawer's
-       background is --ink and bronze reads fine there; the two are not
-       meant to match, they are meant to each suit their own surface. */
+       carries a ProposedBadge (bronze, small) and site-nav.js
+       preventDefault()s it. The badge's own look lives in the component;
+       only its placement beside the label is this file's. */
   /* The badge's 8px margin-left used to follow it onto the next line
        when the label wrapped, indenting it under nothing — reported on
        "Preferred suppliers", which is the one label long enough to wrap and
@@ -801,26 +788,6 @@ const unbuiltAttr = (unbuilt?: boolean) => (unbuilt ? { "data-unbuilt": "" } : {
     flex-wrap: wrap;
     align-items: baseline;
     gap: 2px 8px;
-  }
-  /* nowrap so "PROPOSED" can never break across two lines in a narrow
-       column — it can fall to its own line after a wrapping label, which is
-       fine, but splitting the word itself is not. */
-  .nav-dd-item-proposed-badge {
-    display: inline-block;
-    white-space: nowrap;
-    padding: 1px 6px;
-    /* Bronze, not gold - see the note by .nav-dd-item's hover rules. Gold is
-         now spent entirely on the row's left border, and a gold badge sitting
-         beside a gold border is two golds doing two different jobs. Bronze pairs
-         it with .nav-dd-icon instead, which is already bronze. */
-    border: 1px solid rgba(var(--bronze-rgb), 0.55);
-    border-radius: 999px;
-    font-family: "Inter", sans-serif;
-    font-size: 8.5px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    color: var(--bronze);
-    vertical-align: 1px;
   }
   /* ============================================================
        (f) THE HUB MOVED OUT OF THE GRID, into the heading row
