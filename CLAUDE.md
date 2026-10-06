@@ -40,8 +40,8 @@ high-tea,beverage}` (the agreed URL scheme). `menu.html` is deliberately not
 - `main.js` split into per-component scripts (see Current structure).
 - Next: decide what sections the package pages carry (Visit, enquiry,
   gallery) and in what order — open question with the user.
-- Package styles merged 2026-10-05: `package-page.css` is shared by all four
-  pages; `package-stations.css` is Reception's Stations section only. A
+- Package styles merged 2026-10-05: `PackageTierSection.css` is shared by all four
+  pages; `ReceptionStations.css` is Reception's Stations section only. A
   computed-style diff (`scripts/style-snapshot.mjs`, before vs after)
   showed zero change on Reception. `package-tiers.js` is the one tier controller for all four (2026-10-05);
   `reception-package.js` holds only the Stations controllers.
@@ -119,9 +119,8 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 - Package pages (`src/pages/weddings/packages/`) are thin: hero, the
   shared `PackageTierSection` fed from `src/data/packages/<package>.ts`,
   the photo strip, enquiry. The package stylesheets are imported by the
-  components that need them (`PackageTierSection` → `package-page.css`,
-  `PackageDish` → `package-dish-placeholders.css`, `ReceptionStations` →
-  `package-stations.css`); only Beverage's page-specific overrides are
+  components that need them (`PackageTierSection.css`, `PackageDish.css`, `ReceptionStations.css`,
+  each beside its component); only Beverage's page-specific overrides are
   imported by its page. Scripts: `package-tiers.js` / `reception-package.js`,
   which `import "./tabs.js"` themselves so `window.BacchusTabs` exists
   before they run.
@@ -145,8 +144,15 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   Everything else lives with what it styles: a component's or page's own
   scoped `<style>`, or, for styles several pages share without one owning
   component, a plain stylesheet those pages import (`tabs.css`,
-  `gallery-grid.css`, `package-page.css` and its siblings).
+  `gallery-grid.css`).
   **Keep it that way: a new rule goes in the file that renders the element.**
+  **Where a stylesheet file lives says who owns it:** a plain `.css` file
+  with one owner sits beside that owner and is named after it
+  (`packages/PackageTierSection.css` beside `PackageTierSection.astro`; a
+  page's own sheet beside the page with a leading underscore, `_beverage.css`,
+  which Astro never treats as a route). `src/styles/` holds only files with
+  no single owner: `global.css`, the shared `tabs.css` and `gallery-grid.css`,
+  and the parked `secure-booking.css`.
   Elements a SCRIPT creates (calendar cells, particles, the testimonial
   quote's `<em>`) and elements rendered through a slot or by a child
   component don't carry the file's scoping attribute, so their rules wrap

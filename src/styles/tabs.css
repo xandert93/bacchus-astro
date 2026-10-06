@@ -3,7 +3,7 @@
    panels hold. Shared by the homepage's Weddings / Corporate / Celebrations
    tabs and the package pages' tier switcher, so it is its own file rather
    than one component's styles: the homepage imports it directly and
-   package-page.css pulls it in at the top. tabs.js drives both. */
+   PackageTierSection.css pulls it in at the top. tabs.js drives both. */
 
 .tab-panel p,
 .tab-panel li {
