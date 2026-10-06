@@ -83,7 +83,8 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   imports.
 - `src/components/`, grouped by what the component is for:
   - `ui/` — small reusable parts: `Photo`, `HeroImage`, `GalleryTile`,
-    `Lightbox`, `CheckList`, `SocialLinks`, `ArrowIcon`, `Particles`.
+    `Lightbox`, `CheckList`, `SocialLinks`, `ArrowIcon`, `Particles`,
+    `ProposedBadge` (the pill on every link to an unbuilt page).
   - `forms/` — form controls: `FormField` (label, error, notes), `TextInput`
     (every input and the textarea), `ChipGroup`, `OptionCardGroup`. Used by
     the enquiry wizard and the waitlist popover.
