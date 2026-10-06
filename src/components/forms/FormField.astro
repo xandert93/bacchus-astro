@@ -3,7 +3,7 @@
 // validation message and an optional note. Used by the enquiry wizard and
 // the waitlist popover.
 //
-// enquiry.js marks a field invalid by adding .bad, which shows the .error
+// EnquiryForm.js marks a field invalid by adding .bad, which shows the .error
 // line and shakes the field; it also shows and hides whole fields per
 // event type, which is what `hidden` sets the starting state of.
 //
@@ -17,7 +17,7 @@ interface Props {
   // Spans both columns of the form.
   full?: boolean
   id?: string
-  // Starts hidden (display: none) until enquiry.js shows it.
+  // Starts hidden (display: none) until EnquiryForm.js shows it.
   hidden?: boolean
   error?: string
   errorId?: string

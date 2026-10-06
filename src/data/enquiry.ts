@@ -1,7 +1,7 @@
 // The enquiry wizard's options and copy, shared by every page's form.
 //
 // CHIP_NOTES is read by both EnquirySection.astro (the note rendered on the
-// server for the page's default event type) and enquiry.js (the note swapped
+// server for the page's default event type) and EnquiryForm.js (the note swapped
 // in when a visitor changes chip). Kept close in length to each other on
 // purpose (79-88 characters): they swap in place, and very different lengths
 // wrapped to different line counts, causing layout shift on every switch.
@@ -21,7 +21,7 @@ export const CHIP_NOTES: Record<EventType, string> = {
 }
 
 // Step 2's two option-card questions. Only one shows at a time: tone for a
-// wedding, spaces for everything else (enquiry.js swaps them per type).
+// wedding, spaces for everything else (EnquiryForm.js swaps them per type).
 export interface EnquiryOption {
   // What the enquiry records, and what the review step shows.
   value: string

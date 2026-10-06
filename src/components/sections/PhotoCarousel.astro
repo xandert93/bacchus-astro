@@ -1,7 +1,7 @@
 ---
 // The drag/swipe photo strip: the homepage's "Across the estate" and each
 // package page's "A closer look". The section around it (heading, lead) is
-// the page's own; this is the strip and its controls. photo-carousel.js
+// the page's own; this is the strip and its controls. PhotoCarousel.js
 // drives it — dragging, the arrows, the progress bar and the "1–2 / 5"
 // counter — and finds it by the fixed ids below, so it's one per page.
 import Photo from "@components/ui/Photo.astro"
@@ -69,7 +69,7 @@ const { slides } = Astro.props
 </div>
 
 <script>
-  import "@scripts/photo-carousel.js"
+  import "./PhotoCarousel.js"
 </script>
 
 <style>

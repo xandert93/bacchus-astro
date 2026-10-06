@@ -117,7 +117,12 @@ for (const [name, opts] of [
       const path = (el) => {
         const parts = []
         while (el && el !== document.body) {
-          const i = [...el.parentElement.children].indexOf(el)
+          // <script> and <style> elements are skipped when counting, so
+          // moving a script tag (components render theirs in place) doesn't
+          // shift every later sibling's path.
+          const i = [...el.parentElement.children]
+            .filter((c) => c.tagName !== "SCRIPT" && c.tagName !== "STYLE")
+            .indexOf(el)
           parts.unshift(el.tagName.toLowerCase() + ":" + i)
           el = el.parentElement
         }

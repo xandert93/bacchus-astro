@@ -1,9 +1,9 @@
 // The illustrative availability calendar (every .availability instance on
 // the page), the weddings quick-pick modal, and the waitlist popover for
-// booked dates. Imported by enquiry.js and by the weddings page.
+// booked dates. Imported by EnquiryForm.js and by the weddings page.
 
-import { availabilityHooks } from "./lib/availability-hooks.js"
-import { lockScroll, unlockScroll } from "./lib/scroll-lock.js"
+import { availabilityHooks } from "@scripts/lib/availability-hooks.js"
+import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
 
 // ---------- Mock wedding-date availability widget (illustrative concept — not live data) ----------
 // A page can have more than one instance (e.g. a showcase calendar plus a compact one

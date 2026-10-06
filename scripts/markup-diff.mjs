@@ -28,7 +28,11 @@ const browser = await chromium.launch()
 const page = await browser.newPage()
 const dump = async (dist, route) => {
   const file = path.resolve(dist, `.${route}`, "index.html")
-  await page.setContent(fs.readFileSync(file, "utf8"), { waitUntil: "domcontentloaded" })
+  // Scripts are stripped first: an inline module script would otherwise run
+  // here and change the markup (the marquee doubles its own words, say),
+  // and only some scripts are inlined, so the two builds wouldn't match.
+  const html = fs.readFileSync(file, "utf8").replace(/<script[\s\S]*?<\/script>/g, "")
+  await page.setContent(html, { waitUntil: "domcontentloaded" })
   return page.evaluate(() => {
     const out = []
     const walk = (el, depth) => {

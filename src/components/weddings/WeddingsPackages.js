@@ -1,6 +1,6 @@
 // Weddings-only: the dining-card triptych's row-level reveal.
 
-import { REVEAL_ROOT_MARGIN } from "./lib/motion.js"
+import { REVEAL_ROOT_MARGIN } from "@scripts/lib/motion.js"
 
 // ---------- Weddings: package dining-card triptych reveal ----------
 // Triptych only (980px+). There, the three dining-format cards

@@ -1,7 +1,8 @@
 // Reception package page: the Stations section's controllers (stage,
-// category tabs, carousel, add-to-selection). The tier controller is the
-// shared package-tiers.js, imported here so it runs first.
-import "./package-tiers.js"
+// category tabs, carousel, add-to-selection). Loaded by
+// ReceptionStations.astro. Imports tabs.js for window.BacchusTabs, which the
+// category tab bar uses.
+import "@scripts/tabs.js"
 
 // ---------- Stage controller ----------
 // Originally the controller for real section A's standalone

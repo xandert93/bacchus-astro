@@ -1,5 +1,5 @@
 ---
-// "Good to know" accordion. Questions come in as data; faq.js wires the
+// "Good to know" accordion. Questions come in as data; FaqSection.js wires the
 // open/close (.faq-q / .faq-a). Default slot = heading, optional "lead"
 // slot = the paragraph under it.
 interface Props {
@@ -49,7 +49,7 @@ const hasLead = Astro.slots.has("lead")
 </section>
 
 <script>
-  import "@scripts/faq.js"
+  import "./FaqSection.js"
 </script>
 
 <style>
@@ -60,7 +60,7 @@ const hasLead = Astro.slots.has("lead")
      markup: nothing elsewhere on the site can be caught by them, and the
      .faq-* class names no longer have to be unique sitewide.
 
-     The .open class faq.js toggles at runtime still matches, because the
+     The .open class FaqSection.js toggles at runtime still matches, because the
      elements themselves carry the attribute. Only an element CREATED by a
      script would miss it — the one thing to watch for when moving styles
      of JS-built markup (the testimonial cards, say) into a component. */

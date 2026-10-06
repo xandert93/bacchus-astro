@@ -1,7 +1,7 @@
 ---
 // The four-step enquiry wizard: progress tabs, the step title, the four
 // steps, Back / Continue / Submit, then the sent panel that replaces it.
-// enquiry.js drives everything — moving between steps, validating each one,
+// EnquiryForm.js drives everything — moving between steps, validating each one,
 // building the review, submitting — and finds it all by id.
 //
 // The steps' content arrives from child components, so the step-change
@@ -139,7 +139,7 @@ const arrowPath = (direction: "back" | "forward") =>
 </div>
 
 <script>
-  import "@scripts/enquiry.js"
+  import "./EnquiryForm.js"
 </script>
 
 <style>

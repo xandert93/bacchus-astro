@@ -20,7 +20,7 @@
 //
 // Every image change waits on decode() before showing it — see CLAUDE.md's
 // rule on reused <img> elements.
-import { lockScroll, unlockScroll } from "./lib/scroll-lock.js"
+import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
 
 const lb = document.getElementById("lightbox")
 

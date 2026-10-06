@@ -1,6 +1,6 @@
 // The four real client testimonials (docs/testimonials-raw.md in the
 // prototype). Read by Testimonials.astro, which renders the picker cards and
-// dots from it at build time, and by testimonials.js, which renders the
+// dots from it at build time, and by Testimonials.js, which renders the
 // active quote and its meta line in the browser (the quote has to be
 // measured there to truncate at five lines).
 //
