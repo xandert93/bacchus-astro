@@ -1,0 +1,41 @@
+---
+// The three reassurances at the foot of the deposit page: the date is held,
+// someone is there to help, and the page is private. "Held for 7 days" is
+// illustrative, and says so (docs/content/client-facts.md).
+import SecureBookingIcon from "./SecureBookingIcon.astro"
+import type { SecureBookingIconName } from "./SecureBookingIcon.astro"
+
+const ASSURANCES: { icon: SecureBookingIconName; title: string; body: string }[] = [
+  {
+    icon: "calendar",
+    title: "Held for 7 days",
+    body: "Your date is reserved while we receive and match your deposit. This hold period is illustrative — we'll confirm the real figure with Bacchus before we go live.",
+  },
+  {
+    icon: "phone",
+    title: "Personal support",
+    body: "Your dedicated Events Manager is available Mon–Fri for any questions.",
+  },
+  {
+    icon: "shield-check",
+    title: "Secure details",
+    body: "This page is unique to your enquiry. Card payments are processed securely.",
+  },
+]
+---
+
+<section class="secure-booking-trust-footer-section">
+  <div class="secure-booking-container-large">
+    <div class="secure-booking-trust-footer-grid">
+      {ASSURANCES.map((assurance) => (
+        <div class="secure-booking-trust-footer-item">
+          <span class="secure-booking-icon-badge secure-booking-trust-footer-icon">
+            <SecureBookingIcon name={assurance.icon} size={20} />
+          </span>
+          <h4>{assurance.title}</h4>
+          <p>{assurance.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

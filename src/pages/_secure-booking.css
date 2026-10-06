@@ -1,27 +1,24 @@
-/* The secure-booking ("secure your date") deposit page's styles, set aside
-   from global.css on 2026-10-05. That page lives only in the prototype's
-   sandboxes/ for now and isn't ported, so NOTHING imports this file yet:
-   it is parked here, intact, for when roadmap step 4 brings the page over.
-   It was always its own namespace (secure-booking-*), deliberately kept
-   apart from the site's shared component classes. */
+/* The deposit page's own styles (/secure-booking), imported by the page.
+   Its own namespace (secure-booking-*), deliberately apart from the site's
+   shared component classes: the page is a close port of an outside (Lovable)
+   design, so it mirrors that layout rather than extending ours
+   (docs/design/decisions.md, "Other"). The prototype's archived CLAUDE.md
+   ("Deposit collection preview") records what was substituted (real logo,
+   photo and footer facts) and what was ported as-is.
+
+   One page-level stylesheet rather than a <style> per component, as it was
+   ported: the rules still read as one design, and splitting them into the
+   components is a later pass (see docs/engineering/refactoring-tools.md). */
 
 :root {
   /* Single source of truth for vertical rhythm between sections on
-     secure-booking.html. Each section contributes half of this as its own
+     the deposit page. Each section contributes half of this as its own
      top/bottom padding, so two adjacent sections combine to exactly this
      value; single-sided gaps (e.g. above the FAQ) use the full value.
      Change this one line to rescale every section gap on that page. */
-  --sb-gap: clamp(64px, 8vw, 128px);
+  --secure-booking-section-gap: clamp(64px, 8vw, 128px);
 }
 
-/* ==========================================================================
-   secure-booking.html — literal port of an external (Lovable) design.
-   Deliberately its own namespace (`sb-*`), not reusing site-wide component
-   classes, since this section mirrors a specific outside layout as closely
-   as possible rather than extending our own design-system components.
-   The prototype's archived CLAUDE.md ("Deposit collection preview") records
-   what was substituted (real logo/photo/footer facts) vs. ported as-is.
-   ========================================================================== */
 .secure-booking-nav {
   display: inline-flex;
   align-items: center;
@@ -65,13 +62,13 @@
   display: none;
 }
 
-@media (min-width: 640px) {
+@media (--from-secure-booking-small) {
   .secure-booking-hide-mobile {
     display: inline;
   }
 }
 
-@media (max-width: 639.98px) {
+@media (--below-secure-booking-small) {
   .secure-booking-nav svg {
     width: 18px;
     height: 18px;
@@ -91,7 +88,7 @@
   /* Top stays deliberately smaller than the standard section gap below —
      the hero already provides its own visual separation right above this
      one, so it doesn't need the full rhythm on that side too. */
-  padding: clamp(32px, 7vw, 96px) 0 calc(var(--sb-gap) / 2);
+  padding: clamp(32px, 7vw, 96px) 0 calc(var(--secure-booking-section-gap) / 2);
 }
 
 .secure-booking-summary-card {
@@ -103,7 +100,7 @@
 }
 
 /* Trial: cardless summary on mobile — no outer chrome, content sits flat. */
-@media (max-width: 640px) {
+@media (--below-secure-booking-small) {
   .secure-booking-summary-card {
     border: none;
     border-radius: 0;
@@ -156,7 +153,7 @@
   display: grid;
 }
 
-@media (min-width: 1024px) {
+@media (--from-secure-booking-large) {
   .secure-booking-summary-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -167,13 +164,13 @@
   border-bottom: 1px solid rgba(var(--ink-rgb), 0.1);
 }
 
-@media (min-width: 1024px) {
+@media (--from-secure-booking-large) {
   .secure-booking-summary-col {
     border-bottom: none;
   }
 }
 
-@media (min-width: 1024px) {
+@media (--from-secure-booking-large) {
   .secure-booking-summary-col-right {
     border-left: 1px solid rgba(var(--ink-rgb), 0.1);
   }
@@ -359,13 +356,13 @@
 /* Cardless mobile trial (cont'd): must come after the base rules above,
      since they use the padding/background shorthand and would otherwise
      win the cascade regardless of viewport. */
-@media (max-width: 640px) {
+@media (--below-secure-booking-small) {
   .secure-booking-summary-topbar {
     background: none;
   }
 }
 
-@media (max-width: 640px) {
+@media (--below-secure-booking-small) {
   .secure-booking-summary-topbar,
   .secure-booking-summary-col {
     padding-left: 0;
@@ -375,7 +372,7 @@
 
 /* Swap the top-divider bar for a self-contained callout, matching the
      "Demo bank details..." warning box's layout instead of a divided bar. */
-@media (max-width: 640px) {
+@media (--below-secure-booking-small) {
   .secure-booking-summary-footbar {
     margin-top: 24px;
     padding: clamp(12px, 2vw, 16px);
@@ -387,7 +384,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (--below-secure-booking-small) {
   .secure-booking-summary-footbar svg {
     color: var(--oxblood);
   }
@@ -395,7 +392,7 @@
 
 /* Match the 24px above/below rhythm already used by the two dividers in
      the price breakdown (before Subtotal, before Total). */
-@media (max-width: 640px) {
+@media (--below-secure-booking-small) {
   .secure-booking-summary-col {
     padding-top: 24px;
     padding-bottom: 24px;
@@ -405,7 +402,7 @@
 /* The right column's own border-bottom (from the shared .secure-booking-summary-col
      rule) leaves a stray divider under the deposit box — only the left/
      right column boundary itself should show one. */
-@media (max-width: 640px) {
+@media (--below-secure-booking-small) {
   .secure-booking-summary-col-right {
     border-bottom: none;
     padding-bottom: 0;
@@ -414,13 +411,13 @@
 
 /* Drop the pill chrome — quote ref reads as plain sub-text under the
      heading instead, icon + label, left-aligned, own line. */
-@media (max-width: 640px) {
+@media (--below-secure-booking-small) {
   .secure-booking-summary-topbar > div:first-child {
     flex: 1 1 100%;
   }
 }
 
-@media (max-width: 640px) {
+@media (--below-secure-booking-small) {
   .secure-booking-quote-badge {
     flex: 1 1 100%;
     margin-top: 6px;
@@ -437,7 +434,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (--below-secure-booking-small) {
   .secure-booking-quote-badge svg {
     color: var(--bronze);
   }
@@ -445,7 +442,7 @@
 
 .secure-booking-pay-section {
   background: var(--limestone-2);
-  padding: calc(var(--sb-gap) / 2) 0;
+  padding: calc(var(--secure-booking-section-gap) / 2) 0;
 }
 
 .secure-booking-pay-intro {
@@ -483,7 +480,7 @@
   gap: clamp(16px, 4vw, 24px);
 }
 
-@media (min-width: 1024px) {
+@media (--from-secure-booking-large) {
   .secure-booking-pay-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -500,9 +497,11 @@
     box-shadow 0.5s var(--ease);
 }
 
-.secure-booking-hover-card:hover {
-  border-color: rgba(var(--gold-rgb), 0.4);
-  box-shadow: 0 24px 70px -24px rgba(var(--ink-rgb), 0.16);
+@media (--hover) {
+  .secure-booking-hover-card:hover {
+    border-color: rgba(var(--gold-rgb), 0.4);
+    box-shadow: 0 24px 70px -24px rgba(var(--ink-rgb), 0.16);
+  }
 }
 
 .secure-booking-pay-card {
@@ -547,13 +546,16 @@
   color: var(--muted-ink);
 }
 
-.secure-booking-pay-card .button {
+/* Three classes, not two: <Button>'s own scoped .button rule is two
+   (.button plus Astro's scoping attribute), and which of two equal rules wins
+   would otherwise depend on the order the stylesheets load in. */
+.secure-booking-pay-card .button.secure-booking-pay-button {
   margin-top: 24px;
   font-size: 12px;
 }
 
-@media (max-width: 640px) {
-  .secure-booking-pay-card .button {
+@media (--below-secure-booking-small) {
+  .secure-booking-pay-card .button.secure-booking-pay-button {
     width: 100%;
     justify-content: center;
   }
@@ -636,7 +638,7 @@
     color 0.3s var(--ease);
 }
 
-@media (hover: hover) {
+@media (--hover) {
   .secure-booking-copy-button:hover {
     border-color: rgba(var(--gold-rgb), 0.4);
     color: var(--gold);
@@ -648,7 +650,7 @@
 }
 
 .secure-booking-support-section {
-  padding: calc(var(--sb-gap) / 2) 0;
+  padding: calc(var(--secure-booking-section-gap) / 2) 0;
   scroll-margin-top: 90px;
 }
 
@@ -657,13 +659,13 @@
   gap: clamp(14px, 3vw, 20px);
 }
 
-@media (min-width: 640px) {
+@media (--from-secure-booking-small) {
   .secure-booking-support-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-@media (min-width: 1024px) {
+@media (--from-secure-booking-large) {
   .secure-booking-support-grid {
     grid-template-columns: 1fr 1fr 1fr;
   }
@@ -717,28 +719,32 @@
   transition: color 0.3s var(--ease);
 }
 
-.secure-booking-support-card:hover .secure-booking-support-cta {
-  color: var(--gold);
-}
+@media (--hover) {
+  .secure-booking-support-card:hover .secure-booking-support-cta {
+    color: var(--gold);
+  }
 
-.secure-booking-support-card:hover
-  .secure-booking-support-cta
-  .secure-booking-button-arrow {
-  transform: translateX(4px);
+  .secure-booking-support-card:hover
+    .secure-booking-support-cta
+    .secure-booking-button-arrow {
+    transform: translateX(4px);
+  }
 }
 
 .secure-booking-faq-section {
   background: var(--limestone-2);
-  padding: calc(var(--sb-gap) / 2) 0;
+  padding: calc(var(--secure-booking-section-gap) / 2) 0;
 }
 
-.secure-booking-faq-section .faq-item {
-  background: var(--limestone-2);
+/* The FAQ items match the section's limestone instead of FaqAccordion's
+   default paper. */
+.secure-booking-faq-section {
+  --faq-item-background: var(--limestone-2);
 }
 
 .secure-booking-trust-footer-section {
   border-top: 1px solid rgba(var(--ink-rgb), 0.1);
-  padding: calc(var(--sb-gap) / 2) 0;
+  padding: calc(var(--secure-booking-section-gap) / 2) 0;
 }
 
 .secure-booking-trust-footer-grid {
@@ -746,7 +752,7 @@
   gap: clamp(24px, 6vw, 40px);
 }
 
-@media (min-width: 768px) {
+@media (--from-secure-booking-medium) {
   .secure-booking-trust-footer-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -818,7 +824,7 @@
     color 0.3s var(--ease),
     transform 0.3s var(--ease);
 }
-@media (hover: hover) {
+@media (--hover) {
   .secure-booking-float-help:hover {
     background: var(--ink);
     color: var(--gold-2);

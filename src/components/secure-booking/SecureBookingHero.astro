@@ -1,0 +1,29 @@
+---
+// The deposit page's hero: the compact HeroFrame, with the booking's own
+// occasion, spaces and date in the copy. No crumb and no buttons, as in the
+// design it ports: the page is a checkout, reached from an emailed link.
+import HeroFrame from "@components/sections/HeroFrame.astro"
+import HeroImage from "@components/ui/HeroImage.astro"
+import { DEMO_BOOKING } from "@data/demo-booking"
+---
+
+<HeroFrame small>
+  <HeroImage
+    slot="media"
+    src="weddings/toast"
+    alt="A bride and groom clinking champagne glasses"
+    heroHeightVh={62}
+  />
+  <div class="secure-booking-eyebrow">
+    <span class="secure-booking-rule"></span>Booking confirmation
+  </div>
+  <h1>
+    Secure your date <br class="secure-booking-hide-mobile" />
+    at <em>Bacchus</em>
+  </h1>
+  <p class="sub">Congratulations — your {DEMO_BOOKING.occasion} is approved!</p>
+  <p class="sub">
+    Review the details below and complete your deposit to confirm {DEMO_BOOKING.spaces}{" "}
+    for {DEMO_BOOKING.date}.
+  </p>
+</HeroFrame>

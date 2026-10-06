@@ -1,0 +1,46 @@
+---
+// "Common payment questions": the shared FAQ accordion under this page's own
+// heading block, on limestone (the items match it; see _secure-booking.css).
+import FaqAccordion from "@components/ui/FaqAccordion.astro"
+import SecureBookingIntro from "./SecureBookingIntro.astro"
+
+const QUESTIONS = [
+  {
+    question: "My card payment keeps failing",
+    answer:
+      "This is usually a bank security check. Try a different card, call your bank to authorise the transaction, or pay by bank transfer instead. Your date remains held.",
+  },
+  // Illustrative: splitting the deposit isn't a confirmed policy yet, like
+  // this page's other pitch-ready but unconfirmed claims.
+  {
+    question: "Can I pay the deposit in instalments?",
+    answer:
+      "Yes. If you'd prefer to split the deposit, reply to your quote or call us and we'll arrange a schedule that works for you.",
+  },
+  {
+    question: "How do I know my booking is confirmed?",
+    answer:
+      "For card payments, confirmation is instant. For bank transfers, we match your payment within 2 business days and send written confirmation by email.",
+  },
+  {
+    question: "Is this page secure?",
+    answer:
+      "Absolutely. This page is unique to your enquiry and card payments are processed through a PCI-compliant provider.",
+  },
+]
+---
+
+<section class="secure-booking-faq-section">
+  <div class="secure-booking-container-large">
+    <div class="secure-booking-faq">
+      <SecureBookingIntro eyebrow="Good to know">
+        Common payment questions
+        <Fragment slot="lead">
+          A few answers to put your mind at ease — and if yours isn't here, we're only
+          ever a message away.
+        </Fragment>
+      </SecureBookingIntro>
+      <FaqAccordion items={QUESTIONS} />
+    </div>
+  </div>
+</section>
