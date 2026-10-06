@@ -146,12 +146,11 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   component, a plain stylesheet those pages import (`tabs.css`,
   `gallery-grid.css`).
   **Keep it that way: a new rule goes in the file that renders the element.**
-  **Where a stylesheet or script file lives says who owns it:** a plain
-  `.css` (or `.js`) file
-  with one owner sits beside that owner and is named after it
+  **Where a stylesheet or script file lives says who owns it:** a `.css` or
+  `.js` file with one owner sits beside that owner and is named after it
   (`packages/PackageTierSection.css` beside `PackageTierSection.astro`; a
-  page's own sheet beside the page with a leading underscore, `_beverage.css`,
-  which Astro never treats as a route). `src/styles/` holds only files with
+  page's own file beside the page with a leading underscore, `_beverage.css`
+  or `_gallery.js`, which Astro never treats as a route). `src/styles/` holds only files with
   no single owner: `global.css`, the shared `tabs.css` and `gallery-grid.css`,
   and the parked `secure-booking.css`.
   Elements a SCRIPT creates (calendar cells, particles, the testimonial
