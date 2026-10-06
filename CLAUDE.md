@@ -146,7 +146,8 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   component, a plain stylesheet those pages import (`tabs.css`,
   `gallery-grid.css`).
   **Keep it that way: a new rule goes in the file that renders the element.**
-  **Where a stylesheet file lives says who owns it:** a plain `.css` file
+  **Where a stylesheet or script file lives says who owns it:** a plain
+  `.css` (or `.js`) file
   with one owner sits beside that owner and is named after it
   (`packages/PackageTierSection.css` beside `PackageTierSection.astro`; a
   page's own sheet beside the page with a leading underscore, `_beverage.css`,
@@ -181,15 +182,21 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   earlier DAY shows calendar cells changing state (the seeded statuses are
   relative to today), so re-take it. Node in Git Bash: `/tmp` means
   `C:\tmp`, not Git Bash's `/tmp`.
-- `src/scripts/` — one module per feature, each loaded by the component or
-  page that needs it, so a page only ships the JS it uses. `BaseLayout` loads
-  `site.js` (loaded class, particles, `[data-reveal]`, safe reveals) and
-  `site-nav.js` (bar, drawer, dropdowns). Components: `testimonials.js`,
-  `enquiry.js` (EnquiryForm; imports `availability.js`), `faq.js`, `lightbox.js`,
-  `photo-carousel.js` (PhotoCarousel). Pages: `tabs.js` + `home.js` (homepage), `availability.js` +
-  `weddings.js`, `gallery-filter.js`, `package-tiers.js` /
-  `reception-package.js`. Shared helpers in `src/scripts/lib/`:
-  `motion.js` (reduced motion), `scroll-lock.js`, `safe-reveal.js`,
+- **Scripts sit beside what they drive**, named after it, and the
+  component loads its own (`<script>import "./EnquiryForm.js"</script>`), so
+  a page ships only the JS for the components it renders and never has to
+  know which scripts they need. Component scripts: `EnquiryForm.js` (imports
+  `AvailabilityCalendar.js` so the calendar runs first),
+  `AvailabilityCalendar.js` (every calendar, the quick-pick modal and the
+  waitlist popover), `Testimonials.js`, `FaqSection.js`, `Lightbox.js`,
+  `PhotoCarousel.js`, `PackageTierSection.js`, `ReceptionStations.js`,
+  `HomeStory.js` (the counters), `HomeMarquee.js`, `WeddingsPackages.js`
+  (the triptych's row reveal). The gallery page's filter seed is
+  `pages/_gallery.js`. `src/scripts/` keeps only what has no single owner:
+  `site.js` (loaded class, particles, `[data-reveal]`, safe reveals — loaded
+  by `BaseLayout`), `site-nav.js` (bar, drawer and dropdowns together),
+  `tabs.js` (the homepage tabs and the package tier switcher), and
+  `lib/`: `motion.js` (reduced motion), `scroll-lock.js`, `safe-reveal.js`,
   `availability-hooks.js` (the two calls enquiry needs from the calendar).
 - **Scroll lock:** every overlay calls `lockScroll(owner)` /
   `unlockScroll(owner)` — never touches body overflow itself. Where scrollbars

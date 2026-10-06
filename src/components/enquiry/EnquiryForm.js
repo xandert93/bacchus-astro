@@ -1,9 +1,9 @@
 // The four-step enquiry wizard (#enquire). Loaded by EnquirySection.astro,
 // which also pulls in the availability calendar its date field embeds.
 
-import { reduce } from "./lib/motion.js"
-import { availabilityHooks } from "./lib/availability-hooks.js"
-import "./availability.js"
+import { reduce } from "@scripts/lib/motion.js"
+import { availabilityHooks } from "@scripts/lib/availability-hooks.js"
+import "./AvailabilityCalendar.js"
 import { CHIP_NOTES } from "@data/enquiry"
 
 // ---------- Enquiry form ----------

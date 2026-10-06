@@ -1,7 +1,7 @@
 // The drag/swipe photo strip (#carView / #carTrack): homepage "Across the
 // estate" and every package page's "closer look". No-ops without it.
 
-import { reduce } from "./lib/motion.js"
+import { reduce } from "@scripts/lib/motion.js"
 
 // ---------- Carousel ----------
 var track = document.getElementById("carTrack"),

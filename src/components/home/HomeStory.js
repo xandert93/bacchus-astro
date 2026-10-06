@@ -1,6 +1,6 @@
-// Homepage-only: the 1657 stat counters and the marquee loop.
+// The 1657 / 2 / 35+ facts count up the first time they scroll into view.
+// Loaded by HomeStory.astro.
 
-// ---------- Animated stat counters ----------
 var counted = false
 var facts = document.getElementById("facts")
 if (facts) {
@@ -32,7 +32,3 @@ if (facts) {
   )
   factObs.observe(facts)
 }
-
-// ---------- Marquee loop ----------
-var mt = document.getElementById("mtrack")
-if (mt) mt.innerHTML = mt.innerHTML + mt.innerHTML

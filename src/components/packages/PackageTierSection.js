@@ -12,7 +12,7 @@
 // Imports tabs.js so window.BacchusTabs exists before this runs: ES modules
 // evaluate their imports first, and a module imported by several scripts
 // on a page still runs once — no reliance on <script> order.
-import "./tabs.js"
+import "@scripts/tabs.js"
 
 // Page-specific tier controller. Drives every way of changing tier —
 // the tab bar, the tier cards, the sticky switcher and touch swipe —

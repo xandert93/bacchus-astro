@@ -1,5 +1,5 @@
 ---
-// The site's one full-screen photo viewer. Empty until lightbox.js fills it
+// The site's one full-screen photo viewer. Empty until Lightbox.js fills it
 // from the clicked photo — see that file for which elements open it and how
 // captions are built. The two detail paragraphs are only used by photos that
 // carry data-detail (reception's stations) and stay hidden otherwise.
@@ -51,7 +51,7 @@
 </div>
 
 <script>
-  import "@scripts/lightbox.js"
+  import "./Lightbox.js"
 </script>
 
 <style>
@@ -163,7 +163,7 @@
   }
   /* The two optional caption paragraphs under a lightbox photo — the
      serving note and the item list that reception's station photos carry
-     in data-detail (see lightbox.js). Moved here from the reception page's
+     in data-detail (see Lightbox.js). Moved here from the reception page's
      stylesheet with the lightbox itself (2026-10-05). The items line has no
      colour of its own: its old value referenced a token scoped to the
      stations section, which never reached the lightbox, so it has always

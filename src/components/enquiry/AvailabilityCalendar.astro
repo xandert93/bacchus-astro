@@ -7,7 +7,7 @@
 //   • "compact" — the enquiry form's own date picker, which always carries
 //                 the ids #availForm / #availPicked its styles key off
 //
-// The day cells are created by availability.js, which finds every
+// The day cells are created by AvailabilityCalendar.js, which finds every
 // .availability on the page and renders into its .availability-grid — so
 // the cell rules below are :global(): script-made elements never carry this
 // component's scoping attribute. All its state (the picked date, the
@@ -173,6 +173,10 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     </span>
   </div>
 </div>
+
+<script>
+  import "./AvailabilityCalendar.js"
+</script>
 
 <style>
   /* Scoped to this file (moved from global.css by

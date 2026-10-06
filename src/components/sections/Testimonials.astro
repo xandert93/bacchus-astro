@@ -3,7 +3,7 @@ import Particles from "@components/ui/Particles.astro"
 import Photo from "@components/ui/Photo.astro"
 import { TESTIMONIALS } from "@data/testimonials"
 // "From our guestbook" rotator. The picker cards and dots are rendered here
-// from src/data/testimonials.ts; testimonials.js fills the active quote and
+// from src/data/testimonials.ts; Testimonials.js fills the active quote and
 // its meta line (the quote is measured in the browser to cap it at five
 // lines) and runs the autoplay.
 interface Props {
@@ -119,7 +119,7 @@ const { backgroundImage } = Astro.props
 </section>
 
 <script>
-  import "@scripts/testimonials.js"
+  import "./Testimonials.js"
 </script>
 
 <style>

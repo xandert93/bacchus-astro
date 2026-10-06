@@ -7,8 +7,8 @@
 // The content is data (src/data/packages/reception.ts and
 // reception-stations.ts); this page only arranges the sections. The tier
 // section and its behaviour are shared with the other three package pages
-// (PackageTierSection, package-tiers.js); the stations are Reception-only
-// (ReceptionStations, reception-package.js). Every dish tile and station
+// (PackageTierSection, PackageTierSection.js); the stations are Reception-only
+// (ReceptionStations, ReceptionStations.js). Every dish tile and station
 // photo opens the shared lightbox, grouped so its arrows stay within the
 // tier, or the stations browser, that was opened.
 //
@@ -187,8 +187,4 @@ const carouselSlides = [
   </EnquirySection>
 
   <WaitlistPopover slot="after-footer" />
-
-  <script>
-    import "@scripts/reception-package.js"
-  </script>
 </BaseLayout>

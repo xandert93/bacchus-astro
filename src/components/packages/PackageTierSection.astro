@@ -1,7 +1,7 @@
 ---
 // The tier section every package page is built around: heading, tab bar
 // and lead, one card per tier, then the swipeable panels holding each
-// tier's signature dishes and full menu. package-tiers.js drives it all —
+// tier's signature dishes and full menu. PackageTierSection.js drives it all —
 // the tab bar, the cards, the sticky switcher and native swipe between
 // panels — and finds it by the fixed ids below, so it's one per page.
 //
@@ -157,3 +157,7 @@ const { tiers, id, stickySwitch = true } = Astro.props
     ))}
   </div>
 )}
+
+<script>
+  import "./PackageTierSection.js"
+</script>
