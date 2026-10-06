@@ -27,8 +27,7 @@ code they cover.
   conflicts, what is placeholder, and questions for the client.
 - `docs/content/catalogue-copy.md`: how catalogue text is proofed.
 - `docs/engineering/known-bugs.md`: bugs found in the Astro build, each with
-  its cause, fix and the test that guards it. Started fresh on 2026-10-06;
-  "bug #N" in older code comments refers to the prototype's retired list.
+  its cause, fix and the test that guards it. Started fresh on 2026-10-06.
 - `docs/engineering/images.md`: photo keys, originals, formats and `sizes`.
 - `docs/engineering/refactoring-tools.md`: the scripts that prove a style or
   markup refactor changed nothing.
