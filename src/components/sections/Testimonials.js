@@ -214,11 +214,33 @@ import { TESTIMONIALS } from "@data/testimonials"
 
   // No explicit tPause() here — tShow() calls tSync() itself, which is the
   // single source of truth for whether the loop should be running.
-  prevBtn.addEventListener("click", function () {
+  function tPrev() {
     tShow(tActive - 1)
-  })
-  nextBtn.addEventListener("click", function () {
+  }
+  function tNext() {
     tShow(tActive + 1)
+  }
+  prevBtn.addEventListener("click", tPrev)
+  nextBtn.addEventListener("click", tNext)
+
+  // A decisive horizontal swipe on the quote steps prev/next, the same as
+  // the arrows — the lightbox's gesture, touch and pen only: with a mouse,
+  // dragging across the quote is how a visitor selects its text.
+  var tSwipe = null
+  quoteBox.addEventListener("pointerdown", function (e) {
+    tSwipe = e.pointerType === "mouse" ? null : { x: e.clientX, y: e.clientY }
+  })
+  quoteBox.addEventListener("pointerup", function (e) {
+    if (!tSwipe) return
+    var dx = e.clientX - tSwipe.x
+    var dy = e.clientY - tSwipe.y
+    tSwipe = null
+    if (Math.abs(dx) <= 50 || Math.abs(dx) <= Math.abs(dy)) return
+    if (dx < 0) tNext()
+    else tPrev()
+  })
+  quoteBox.addEventListener("pointercancel", function () {
+    tSwipe = null
   })
 
   // requestAnimationFrame, not a fixed-interval tick: elapsed real time since
