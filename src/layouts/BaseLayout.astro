@@ -17,24 +17,35 @@ interface Props {
   // The shared "Visit Bacchus" band above the footer. Off on the package
   // pages, which never had it in the prototype.
   showVisitSection?: boolean
+  // A checkout page (the deposit page): SiteHeader's checkout bar, filled
+  // from the "header" slot, and no mobile drawer, since there's no nav to
+  // put in it.
+  checkout?: boolean
+  // Keeps the page out of search results. For pages reached only from a
+  // private link, like the deposit page.
+  noIndex?: boolean
 }
 const {
   title,
   showEnquireLink = false,
   menuBackgroundImage,
   showVisitSection = true,
+  checkout = false,
+  noIndex = false,
 } = Astro.props
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <SiteHead title={title} />
+    <SiteHead title={title} noIndex={noIndex} />
   </head>
   <body>
     <div class="grain"></div>
-    <SiteHeader />
-    <MobileMenu backgroundImage={menuBackgroundImage} />
+    <SiteHeader checkout={checkout}>
+      <slot name="header" />
+    </SiteHeader>
+    {!checkout && <MobileMenu backgroundImage={menuBackgroundImage} />}
 
     <slot />
 

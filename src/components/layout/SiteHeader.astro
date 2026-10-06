@@ -2,16 +2,29 @@
 // The desktop bar: brand, the Restaurant / Events dropdowns, Gallery and
 // About, and the two CTAs. Previously pasted into every page by hand; now
 // written once.
+//
+// The checkout variant (the deposit page) keeps only the brand, and that
+// isn't a link, so nothing in the bar leads someone away from paying. The
+// default slot fills the right-hand side in place of the nav, the CTAs and
+// the burger.
 import { NAV_MENUS, NAV_PAGES, hrefOf, unbuiltAttr } from "@data/navigation"
 import NavDropdown from "@components/nav/NavDropdown.astro"
 import Photo from "@components/ui/Photo.astro"
 import ProposedBadge from "@components/ui/ProposedBadge.astro"
 import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
+
+interface Props {
+  checkout?: boolean
+}
+const { checkout = false } = Astro.props
+
+const BrandTag = checkout ? "span" : "a"
+const brandLinkAttributes = checkout ? {} : { href: "/", "aria-label": "Bacchus home" }
 ---
 
 <header class="nav" id="nav">
   <div class="wrap">
-    <a href="/" class="brand" aria-label="Bacchus home">
+    <BrandTag class="brand" {...brandLinkAttributes}>
       <Photo
         src="brand/bacchus-logo"
         sizes="64px"
@@ -22,43 +35,50 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
         <span class="name">Bacchus</span>
         <span class="sub">Mdina · Est. 1660</span>
       </span>
-    </a>
-    <nav>
-      <ul class="nav-links" id="navlinks">
-        {NAV_MENUS.map((menu) => (
-          <NavDropdown menu={menu} />
-        ))}
-        {NAV_PAGES.map((link) => (
-          <li>
-            <a href={hrefOf(link)} {...unbuiltAttr(link)}>
-              {link.label}
-              {link.unbuilt && <ProposedBadge small />}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-    <div class="nav-cta">
-      {/* The two CTAs: why Book a table leads, see NavCtaButtons.
-       */}
-      <NavCtaButtons />
-      {/* Inside .nav-cta, matching every other page's header — the
-           @media rule that swaps the pills for the burger is scoped
-           ".nav-cta .button", so the burger has to be its sibling to be
-           the thing left standing at mobile widths. 
-*/}
-      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
-        <i></i>
-        <i></i>
-        <i></i>
-      </button>
-    </div>
+    </BrandTag>
+    {checkout ? (
+      <div class="nav-checkout">
+        <slot />
+      </div>
+    ) : (
+      <Fragment>
+        <nav>
+          <ul class="nav-links" id="navlinks">
+            {NAV_MENUS.map((menu) => (
+              <NavDropdown menu={menu} />
+            ))}
+            {NAV_PAGES.map((link) => (
+              <li>
+                <a href={hrefOf(link)} {...unbuiltAttr(link)}>
+                  {link.label}
+                  {link.unbuilt && <ProposedBadge small />}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div class="nav-cta">
+          {/* The two CTAs: why Book a table leads, see NavCtaButtons.
+           */}
+          <NavCtaButtons />
+          {/* Inside .nav-cta, matching every other page's header — the
+               @media rule that swaps the pills for the burger is scoped
+               ".nav-cta .button", so the burger has to be its sibling to be
+               the thing left standing at mobile widths. */}
+          <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+            <i></i>
+            <i></i>
+            <i></i>
+          </button>
+        </div>
+      </Fragment>
+    )}
   </div>
   {/* Dims the page below the nav while any panel is open. Toggled
        purely by :has() off the same states that open the panel, so
-       there is no second piece of JS state to keep in sync. 
-*/}
-  <div class="nav-dd-scrim" aria-hidden="true"></div>
+       there is no second piece of JS state to keep in sync.
+   */}
+  {!checkout && <div class="nav-dd-scrim" aria-hidden="true"></div>}
   <div class="progress" id="progress"></div>
 </header>
 
@@ -190,6 +210,15 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
        the CTAs to the right edge together.
   */
   .nav .wrap nav {
+    margin-left: auto;
+  }
+
+  /* The checkout variant's right-hand side, pushed to the edge the same way.
+     In the prototype the deposit page's badge sat beside the brand: it was
+     built when the bar was still space-between, and the switch to flex-start
+     (2026-10-02) left it behind.
+  */
+  .nav-checkout {
     margin-left: auto;
   }
 
