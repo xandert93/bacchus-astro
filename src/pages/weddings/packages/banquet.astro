@@ -1,66 +1,26 @@
 ---
-// The Banquet package page - the seated-dinner alternative to
-// reception-package.html's standing reception and high-tea-package.html's
-// afternoon table. Three tiers (Orchid, Dahlia, Sunflower), six courses each,
-// built to the same pattern as reception-package.html: same tier switcher,
-// same sticky switcher, same .package-menu-* markup, same shared chrome.
-// Linked from the Banquet card in weddings.html's packages section.
+// /weddings/packages/banquet — the Banquet package: a six-course seated
+// dinner in three tiers. The content is src/data/packages/banquet.ts.
 //
-// PRICING IS SHOWN WITH AN ON-PAGE WARNING, not silently resolved. The tier
-// prices (65/85/95 euro per person) come from the quote Bacchus shared;
-// separate client correspondence (2026-09-17) says banqueting "begins at
-// around 135 euro per person" and needs a dedicated meeting. Those disagree
-// materially about the same product, and CLAUDE.md's standing instruction is
-// not to pick one. So the catalogue figures are displayed and a
-// .package-menu-note-warning callout sits directly under the tier cards
-// stating the conflict in the client's own terms. Do not delete that callout
-// while the conflict is open - it is the only thing on the page telling a
-// reader the number above it is contested.
+// PRICING IS SHOWN WITH A WARNING, not silently resolved: the client quote
+// gives €65/€85/€95, while client correspondence says banqueting starts
+// around €135 per person. The warning note under the tier cards states the
+// conflict. Do not remove it while the conflict is open — it is the only
+// thing telling a reader the numbers above it are contested.
 //
-// Content is taken from docs/bacchus-wedding-catalogue.pdf, read from the
-// rendered pages rather than from extracted text. An automated text pull of
-// this PDF silently drops every accented character and, in places, whole
-// words - "Goat's Cheese" vanished from one Orchid line, "Gavi Di Gavi" from
-// a wine name. Do not rebuild these lists from a text extraction.
-//
-// Capitalisation and spelling follow reception-package.html's existing
-// house-style normalisation rather than the catalogue's own inconsistencies,
-// which is the convention that page already set. Corrections applied, listed
-// here so the client can confirm or reverse them: "SANWHICHES" to
-// "Sandwiches", "SAVORIES" to "Savouries", "Caramelized" to "Caramelised",
-// "Pine Not Roll" to "Pine Nut Roll", "Macaroons" to "Macarons" (the
-// catalogue's own Stations page says "Macaron Tower"), and sentence-cased
-// dish words raised to title case.
-//
-// This page carries NO signature-dish photo tiles, unlike
-// reception-package.html. That component captions each tile with a specific
-// dish name, and no per-dish photography exists for this package - a stand-in
-// under a real dish name would be a false claim rather than a placeholder.
-// Imagery is deliberately BLACKED OUT rather than filled with stand-in
-// photography, on request: the hero is a flat black .hero-media with a
-// labelled chip over it, and each tier leads with three
-// .package-dish-placeholder tiles - black, dashed oxblood border, the dish's
-// initials and a "photo to follow" line. None of them can be opened; there is
-// nothing to enlarge, so the page has no lightbox. A stand-in photo reads as
-// a finished choice in a walkthrough, whereas an empty black frame reads as
-// "still to come", which is the honest signal while the client sources
-// images. The carousel further down is the exception and does use real
-// generic Bacchus photography, labelled as such in its own lead.
-//
-// To swap real imagery in: put an <img> back inside .hero-media (see
-// reception-package.html) and drop .package-hero-placeholder; replace each
-// .package-dish-placeholder with .gallery-item/.gallery-tag markup and copy
-// the page-scoped lightbox controller back from reception-package.html.
-//
-import BaseLayout from "../../../layouts/BaseLayout.astro"
-import PageHero from "../../../components/PageHero.astro"
-import EnquirySection from "../../../components/EnquirySection.astro"
-import WaitlistPopover from "../../../components/WaitlistPopover.astro"
-import ArrowIcon from "../../../components/ArrowIcon.astro"
-import PhotoCarousel from "../../../components/PhotoCarousel.astro"
-// After BaseLayout, so these load after global.css (see package-page.css).
-import "../../../styles/package-page.css"
-import "../../../styles/package-dish-placeholders.css"
+// No photography yet: the hero and the signature dishes are deliberately
+// black "photo to follow" frames rather than stand-in shots, which would
+// read as finished choices. Pass PageHero an image, and give the dishes
+// photos in the data file, once Bacchus supplies them.
+import BaseLayout from "@layouts/BaseLayout.astro"
+import { BANQUET_TIERS } from "@data/packages/banquet"
+import PackageTierSection from "@components/packages/PackageTierSection.astro"
+import PackageMenuNote from "@components/packages/PackageMenuNote.astro"
+import PageHero from "@components/sections/PageHero.astro"
+import EnquirySection from "@components/enquiry/EnquirySection.astro"
+import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
+import ArrowIcon from "@components/ui/ArrowIcon.astro"
+import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
 
 // The "closer look" photo strip.
 const carouselSlides = [
@@ -121,503 +81,55 @@ const carouselSlides = [
     </Fragment>
   </PageHero>
 
-  <section class="section-padding on-dark on-dark-gold-wash">
-    <div class="wrap">
-      <div class="eyebrow" data-reveal>
-        From the catalogue
-      </div>
-      <div class="package-tabs-grid">
-        <h2 class="package-tabs-heading" data-reveal style="--d: 80ms">
-          Compare the three <em>tiers</em>
-        </h2>
-        <div
-          class="tab-bar package-tabs-tabbar"
-          role="tablist"
-          data-reveal
-          style="--d: 160ms"
-        >
-          <span class="pill" id="pill"></span>
-          <button class="active" data-tab="orchid" role="tab" aria-selected="true">
-            Orchid
-          </button>
-          <button data-tab="dahlia" role="tab" aria-selected="false">
-            Dahlia
-          </button>
-          <button data-tab="sunflower" role="tab" aria-selected="false">
-            Sunflower
-          </button>
-        </div>
-        <div class="package-tabs-lead" data-reveal style="--d: 220ms">
-          <p class="lead">
-            Orchid, Dahlia and Sunflower are three readings of the same six-course dinner,
-            each more lavish than the last.
-          </p>
-          <p class="lead">
-            Switch between them below — every course is taken straight from the printed
-            catalogue.
-          </p>
-        </div>
-      </div>
-
-      <div class="package-tier-cards" data-reveal style="--d: 280ms">
-        <button
-          type="button"
-          class="package-tier-card active"
-          data-tier-card="orchid"
-          aria-pressed="true"
-        >
-          <span class="package-tier-card-check" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path
-                d="M4 9.5l3 3 7-7.5"
-                stroke="currentColor"
-                stroke-width="2.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
-          <span class="package-tier-card-eyebrow">Banquet</span>
-          <b class="package-tier-card-name">Orchid</b>
-          <span class="package-tier-card-price">
-            €65<span class="package-tier-card-unit">per person</span>
-          </span>
-          <span class="package-tier-card-desc">
-            The opening banquet tier — carpaccio and ceviche to start, house pasta and
-            risotto, then beef or grey meagre.
-          </span>
-        </button>
-        <button
-          type="button"
-          class="package-tier-card"
-          data-tier-card="dahlia"
-          aria-pressed="false"
-        >
-          <span class="package-tier-card-check" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path
-                d="M4 9.5l3 3 7-7.5"
-                stroke="currentColor"
-                stroke-width="2.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
-          <span class="package-tier-card-eyebrow">Banquet</span>
-          <b class="package-tier-card-name">Dahlia</b>
-          <span class="package-tier-card-price">
-            €85<span class="package-tier-card-unit">per person</span>
-          </span>
-          <span class="package-tier-card-desc">
-            A richer middle tier — terrine and scallop ceviche, home-made tortellini and
-            lasagna, striploin or sea bass.
-          </span>
-        </button>
-        <button
-          type="button"
-          class="package-tier-card"
-          data-tier-card="sunflower"
-          aria-pressed="false"
-        >
-          <span class="package-tier-card-check" aria-hidden="true">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path
-                d="M4 9.5l3 3 7-7.5"
-                stroke="currentColor"
-                stroke-width="2.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </span>
-          <span class="package-tier-card-eyebrow">Banquet</span>
-          <b class="package-tier-card-name">Sunflower</b>
-          <span class="package-tier-card-price">
-            €95<span class="package-tier-card-unit">per person</span>
-          </span>
-          <span class="package-tier-card-desc">
-            Our most lavish banquet — prawn crudo and beef tartare, truffle agnolotti or
-            lobster ravioli, fillet with foie gras.
-          </span>
-        </button>
-      </div>
-
-      <div class="package-menu-note package-menu-note-warning" data-reveal>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.6"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
-          <path d="M12 9v4m0 4h.01" />
-        </svg>
-        <div class="package-menu-note-text">
-          <p>
-            <b>Banquet pricing needs confirming before this page goes live.</b>
-          </p>
-          <p>
-            The per-person figures above come from the quote Bacchus shared. Separate
-            correspondence from Bacchus describes banqueting as starting at around
-            &euro;135 per person and requiring a dedicated meeting — a material difference
-            from the tier prices shown here, on the same product.
-          </p>
-          <p>
-            We have deliberately not chosen between the two. Both are reproduced as
-            received, and we will publish a single set of figures once Bacchus confirms
-            which governs.
-          </p>
-        </div>
-      </div>
-
-      {/* Removed on request (2026-09-19) — redundant with the card grid
-           above, which already shows the selected tier's name + eyebrow +
-           checkmark. Commented out rather than deleted in case it's
-           wanted back (e.g. as an anchor once a visitor has scrolled
-           further down past the cards into the dish list, out of view
-           of the checkmark) — see the reasoning discussion around this
-           point. Note as of the 2026-09-22 swipe-carousel rework below,
-           the script no longer has any #packageTierName-aware code at
-           all (the old setTierName()/tierNameEl crossfade was removed
-           along with the fade-based tier switch it supported) — so
-           re-enabling this block would need new wiring, not just
-           uncommenting it.
-      <div class="package-now-viewing">Now viewing</div>
-      <div class="capacity">
-        Reception · <span id="packageTierName" class="package-tier-name">Daisy</span>
-      </div>
-      */}
-      {/* No data-reveal here (was: data-reveal style="--d: 300ms") — the
-           sitewide scroll-reveal observer (main.js, threshold: 0.18) needs
-           18% of a data-reveal target's OWN height visible before firing.
-           .panels wraps a whole tier's full content (3 dish photos + up
-           to 6 ingredient-list groups), so its height varies a lot by
-           tier and by viewport (much taller once .package-menu-groups
-           collapses to 1 column on mobile) — 18% of that was a large,
-           inconsistent scroll distance before anything appeared, reading
-           as "content stays hidden too long". The heading/tab-bar/lead
-           directly above already carry their own compact, well-behaved
-           reveals that cue "this section is arriving"; .panels itself
-           doesn't need a second scroll-gated fade on top of that. Same
-           reasoning CLAUDE.md already documents for why the dish tiles
-           skip data-reveal entirely (display:none tab-panels never fire
-           the observer) — this component just doesn't suit the generic
-           reveal mechanism. */}
-      <div class="package-tier-view" id="packageTierView">
-        <div class="panels" id="packageTierTrack">
-          <div class="tab-panel full active" data-panel="orchid">
-            <div class="package-tier-content">
-              <h4 class="package-dishes-label">Signature dishes</h4>
-              <div class="package-dishes-grid" data-reveal-group>
-                <figure class="package-dish">
-                  <div class="package-dish-placeholder" aria-hidden="true">
-                    <span class="package-dish-placeholder-initials">BC</span>
-                    <span class="package-dish-placeholder-note">Photo to follow</span>
-                  </div>
-                  <figcaption class="package-dish-name">Beef Carpaccio</figcaption>
-                </figure>
-                <figure class="package-dish">
-                  <div class="package-dish-placeholder" aria-hidden="true">
-                    <span class="package-dish-placeholder-initials">AR</span>
-                    <span class="package-dish-placeholder-note">Photo to follow</span>
-                  </div>
-                  <figcaption class="package-dish-name">Aquarello Risotto</figcaption>
-                </figure>
-                <figure class="package-dish">
-                  <div class="package-dish-placeholder" aria-hidden="true">
-                    <span class="package-dish-placeholder-initials">DC</span>
-                    <span class="package-dish-placeholder-note">Photo to follow</span>
-                  </div>
-                  <figcaption class="package-dish-name">
-                    Dark Chocolate & Chilli Tart
-                  </figcaption>
-                </figure>
-              </div>
-              <div class="package-menu-groups" data-reveal-safe>
-                <div class="package-menu-group">
-                  <h4>Welcome Drink &amp; Canapés</h4>
-                  <ul>
-                    <li>
-                      Brie &amp; Candied Walnuts{" "}
-                      <span class="package-veg-marker-keep-with-word">
-                        Leaves&nbsp;
-                        <span
-                          class="package-veg-marker"
-                          role="img"
-                          aria-label="Vegetarian"
-                        >
-                          V
-                        </span>
-                      </span>
-                    </li>
-                    <li>Smoked Salmon &amp; Lobster Blinis</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Starter Course</h4>
-                  <ul>
-                    <li>Beef Carpaccio &amp; Textures of Parmesan</li>
-                    <li>Octopus Carpaccio, Apple &amp; Radish Salad &amp; Apple Jelly</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Intermediate Course</h4>
-                  <ul>
-                    <li>Liguria Trofie, Beef Brisket &amp; Goat's Cheese Fondue</li>
-                    <li>Aquarello Risotto, Squid Ink &amp; Slow-Cooked Octopus</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Main Course</h4>
-                  <ul>
-                    <li>Shin of Beef, Bone Marrow Custard &amp; Espagnole Sauce</li>
-                    <li>
-                      Grey Meagre, Seasonal Chutney, Lemon &amp; Ginger Beurre Blanc
-                    </li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Dessert Course</h4>
-                  <ul>
-                    <li>Dark Chocolate &amp; Chilli Tart &amp; Biscotto Ice-Cream</li>
-                    <li>
-                      Baked &amp; Glazed White Chocolate Cheesecake &amp; Strawberry
-                      Sorbet
-                    </li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Celebratory Drink &amp; Wedding Cake</h4>
-                  <ul>
-                    <li>Wedding Cake — one tier per one hundred guests</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="tab-panel full" data-panel="dahlia">
-            <div class="package-tier-content">
-              <h4 class="package-dishes-label">Signature dishes</h4>
-              <div class="package-dishes-grid" data-reveal-group>
-                <figure class="package-dish">
-                  <div class="package-dish-placeholder" aria-hidden="true">
-                    <span class="package-dish-placeholder-initials">SC</span>
-                    <span class="package-dish-placeholder-note">Photo to follow</span>
-                  </div>
-                  <figcaption class="package-dish-name">Scallop Ceviche</figcaption>
-                </figure>
-                <figure class="package-dish">
-                  <div class="package-dish-placeholder" aria-hidden="true">
-                    <span class="package-dish-placeholder-initials">DT</span>
-                    <span class="package-dish-placeholder-note">Photo to follow</span>
-                  </div>
-                  <figcaption class="package-dish-name">Duck Tortellini</figcaption>
-                </figure>
-                <figure class="package-dish">
-                  <div class="package-dish-placeholder" aria-hidden="true">
-                    <span class="package-dish-placeholder-initials">BS</span>
-                    <span class="package-dish-placeholder-note">Photo to follow</span>
-                  </div>
-                  <figcaption class="package-dish-name">Beef Striploin</figcaption>
-                </figure>
-              </div>
-              <div class="package-menu-groups" data-reveal-safe>
-                <div class="package-menu-group">
-                  <h4>Welcome Drink &amp; Canapés</h4>
-                  <ul>
-                    <li>
-                      Brie &amp; Candied Walnuts{" "}
-                      <span class="package-veg-marker-keep-with-word">
-                        Leaves&nbsp;
-                        <span
-                          class="package-veg-marker"
-                          role="img"
-                          aria-label="Vegetarian"
-                        >
-                          V
-                        </span>
-                      </span>
-                    </li>
-                    <li>Smoked Salmon &amp; Lobster Blinis</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Starter Course</h4>
-                  <ul>
-                    <li>Chicken Terrine with Apricot &amp; Pistachio</li>
-                    <li>Scallop Ceviche, Pickled Radish &amp; Textures of Orange</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Intermediate Course</h4>
-                  <ul>
-                    <li>Home-Made Duck Tortellini, Parmesan &amp; Jus</li>
-                    <li>Home-Made Lasagna 'Bianca' with Chicken &amp; Pancetta</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Main Course</h4>
-                  <ul>
-                    <li>Beef Striploin, Sunchoke &amp; Béarnaise</li>
-                    <li>Steamed Smoky Sea Bass, Aubergine, Black Olives &amp; Chevre</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Dessert Course</h4>
-                  <ul>
-                    <li>Brioche, Gianduja Mousse &amp; Walnut Streusel</li>
-                    <li>
-                      Ricotta Tart, Pistachio Cream, Seasonal Berry Compote &amp; Green
-                      Tea
-                    </li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Celebratory Drink &amp; Wedding Cake</h4>
-                  <ul>
-                    <li>Wedding Cake — one tier per one hundred guests</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="tab-panel full" data-panel="sunflower">
-            <div class="package-tier-content">
-              <h4 class="package-dishes-label">Signature dishes</h4>
-              <div class="package-dishes-grid" data-reveal-group>
-                <figure class="package-dish">
-                  <div class="package-dish-placeholder" aria-hidden="true">
-                    <span class="package-dish-placeholder-initials">PC</span>
-                    <span class="package-dish-placeholder-note">Photo to follow</span>
-                  </div>
-                  <figcaption class="package-dish-name">Prawn Crudo</figcaption>
-                </figure>
-                <figure class="package-dish">
-                  <div class="package-dish-placeholder" aria-hidden="true">
-                    <span class="package-dish-placeholder-initials">LR</span>
-                    <span class="package-dish-placeholder-note">Photo to follow</span>
-                  </div>
-                  <figcaption class="package-dish-name">Lobster Ravioli</figcaption>
-                </figure>
-                <figure class="package-dish">
-                  <div class="package-dish-placeholder" aria-hidden="true">
-                    <span class="package-dish-placeholder-initials">BF</span>
-                    <span class="package-dish-placeholder-note">Photo to follow</span>
-                  </div>
-                  <figcaption class="package-dish-name">Beef Fillet</figcaption>
-                </figure>
-              </div>
-              <div class="package-menu-groups" data-reveal-safe>
-                <div class="package-menu-group">
-                  <h4>Welcome Drink &amp; Canapés</h4>
-                  <ul>
-                    <li>
-                      Brie &amp; Candied Walnuts{" "}
-                      <span class="package-veg-marker-keep-with-word">
-                        Leaves&nbsp;
-                        <span
-                          class="package-veg-marker"
-                          role="img"
-                          aria-label="Vegetarian"
-                        >
-                          V
-                        </span>
-                      </span>
-                    </li>
-                    <li>Smoked Salmon &amp; Lobster Blinis</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Starter Course</h4>
-                  <ul>
-                    <li>Prawn Crudo, Seasonal Fruit &amp; Prosciutto di San Daniele</li>
-                    <li>Beef Tartare, Brown Butter Hollandaise &amp; Croutons</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Intermediate Course</h4>
-                  <ul>
-                    <li>Home-Made Black Truffle Agnolotti</li>
-                    <li>Home-Made Lobster Ravioli &amp; Prawn Bisque</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Main Course</h4>
-                  <ul>
-                    <li>Beef Fillet, Foie Gras, Truffle &amp; Jus</li>
-                    <li>Tuna Steak, Cannellini Puree &amp; Pickled Vegetables</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Dessert Course</h4>
-                  <ul>
-                    <li>Symphony of Valrhona Chocolate</li>
-                    <li>Le Grand Opera — a Bacchus classic</li>
-                  </ul>
-                </div>
-                <div class="package-menu-group">
-                  <h4>Celebratory Drink &amp; Wedding Cake</h4>
-                  <ul>
-                    <li>Wedding Cake — one tier per one hundred guests</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Sits OUTSIDE .package-tier-view/.panels deliberately. It used to
-           be the last block inside each of the three .package-tier-content
-           blocks — byte-identical in all three — which meant it replayed
-           the whole tier-switch motion every time: the click path animates
-           .package-tier-content wholesale (packageTierFadeIn), and the
-           swipe path slid it across with its panel. A descendant can't opt
-           out of an ancestor's opacity/transform animation, so the only
-           real fix was to lift it out of the animated container. Doing
-           that also collapses the three identical copies into one.
-
-           data-reveal (not .package-reveal) so it still fades in once when
-           scrolled to, matching .package-stations-note directly below it —
-           the tier switcher's own JS never touches [data-reveal] elements,
-           which is exactly why it stays put now on every switch. */}
-      <div class="package-menu-note" data-reveal>
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.6"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="12" cy="12" r="9" />
-          <path d="M12 11v5m0-8h.01" />
-        </svg>
-        <div class="package-menu-note-text">
-          <p>
-            <span class="package-veg-marker" aria-hidden="true">
-              V
-            </span>{" "}
-            vegetarian.
-          </p>
-          <p>
-            Menu items may contain or come into contact with allergens — please discuss
-            requirements with the Bacchus sales team.
-          </p>
-          <p>
-            BCL is certified Halal by The World Islamic Call Society (Malta Branch). Full
-            terms are in the printed catalogue.
-          </p>
-        </div>
-      </div>
+  <PackageTierSection tiers={BANQUET_TIERS}>
+    <Fragment slot="heading">
+      Compare the three <em>tiers</em>
+    </Fragment>
+    <Fragment slot="lead">
+      <p class="lead">
+        Orchid, Dahlia and Sunflower are three readings of the same six-course dinner,
+        each more lavish than the last.
+      </p>
+      <p class="lead">
+        Switch between them below — every course is taken straight from the printed
+        catalogue.
+      </p>
+    </Fragment>
+    <Fragment slot="after-cards">
+      <PackageMenuNote variant="warning">
+        <p>
+          <b>Banquet pricing needs confirming before this page goes live.</b>
+        </p>
+        <p>
+          The per-person figures above come from the quote Bacchus shared. Separate
+          correspondence from Bacchus describes banqueting as starting at around &euro;135
+          per person and requiring a dedicated meeting — a material difference from the
+          tier prices shown here, on the same product.
+        </p>
+        <p>
+          We have deliberately not chosen between the two. Both are reproduced as
+          received, and we will publish a single set of figures once Bacchus confirms
+          which governs.
+        </p>
+      </PackageMenuNote>
+    </Fragment>
+    <Fragment slot="after-panels">
+      <PackageMenuNote>
+        <p>
+          <span class="package-veg-marker" aria-hidden="true">
+            V
+          </span>{" "}
+          vegetarian.
+        </p>
+        <p>
+          Menu items may contain or come into contact with allergens — please discuss
+          requirements with the Bacchus sales team.
+        </p>
+        <p>
+          BCL is certified Halal by The World Islamic Call Society (Malta Branch). Full
+          terms are in the printed catalogue.
+        </p>
+      </PackageMenuNote>
       <div class="package-stations-note" data-reveal style="--d: 60ms">
         <p>
           Comparing formats? Also see our{" "}
@@ -631,51 +143,8 @@ const carouselSlides = [
           menus.
         </p>
       </div>
-    </div>
-  </section>
-
-  <div
-    class="package-sticky-switch"
-    id="packageStickySwitch"
-    role="tablist"
-    aria-label="Switch tier"
-    aria-hidden="true"
-  >
-    <span class="pill"></span>
-    <button
-      type="button"
-      class="package-sticky-switch-btn active"
-      data-tier-switch="orchid"
-      role="tab"
-      aria-selected="true"
-      aria-label="Switch to Orchid, €65 per person"
-    >
-      <span class="package-sticky-switch-name">Orchid</span>
-      <span class="package-sticky-switch-price">€65</span>
-    </button>
-    <button
-      type="button"
-      class="package-sticky-switch-btn"
-      data-tier-switch="dahlia"
-      role="tab"
-      aria-selected="false"
-      aria-label="Switch to Dahlia, €85 per person"
-    >
-      <span class="package-sticky-switch-name">Dahlia</span>
-      <span class="package-sticky-switch-price">€85</span>
-    </button>
-    <button
-      type="button"
-      class="package-sticky-switch-btn"
-      data-tier-switch="sunflower"
-      role="tab"
-      aria-selected="false"
-      aria-label="Switch to Sunflower, €95 per person"
-    >
-      <span class="package-sticky-switch-name">Sunflower</span>
-      <span class="package-sticky-switch-price">€95</span>
-    </button>
-  </div>
+    </Fragment>
+  </PackageTierSection>
 
   <section class="section-padding">
     <div class="wrap">
@@ -715,6 +184,6 @@ const carouselSlides = [
   <WaitlistPopover slot="after-footer" />
 
   <script>
-    import "../../../scripts/package-tiers.js"
+    import "@scripts/package-tiers.js"
   </script>
 </BaseLayout>

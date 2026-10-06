@@ -1,0 +1,47 @@
+---
+// A note box on a package page. "info" (bronze) is confirmed catalogue copy
+// — the allergen and halal notes. "warning" (oxblood) is for facts that are
+// NOT confirmed or are contested — Banquet's pricing conflict, High Tea's
+// missing vegetarian markings, Beverage's quote-only prices. Never use the
+// info style for something unconfirmed: the colour is how a reader tells
+// the two apart. The paragraphs go in the slot.
+interface Props {
+  variant?: "info" | "warning"
+}
+
+const { variant = "info" } = Astro.props
+---
+
+<div
+  class:list={[
+    "package-menu-note",
+    { "package-menu-note-warning": variant === "warning" },
+  ]}
+  data-reveal
+>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    {variant === "warning" ? (
+      <>
+        <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" />
+        <path d="M12 9v4m0 4h.01" />
+      </>
+    ) : (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 11v5m0-8h.01" />
+      </>
+    )}
+  </svg>
+  <div class="package-menu-note-text">
+    <slot />
+  </div>
+</div>

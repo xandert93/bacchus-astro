@@ -1,0 +1,128 @@
+---
+// One question in a form: its label, the control (default slot), the
+// validation message and an optional note. Used by the enquiry wizard and
+// the waitlist popover.
+//
+// enquiry.js marks a field invalid by adding .bad, which shows the .error
+// line and shakes the field; it also shows and hides whole fields per
+// event type, which is what `hidden` sets the starting state of.
+//
+// Slots: default — the control(s); "note-top" — a note between the label
+// and the control; "after-error" — anything under the validation message
+// (the guest count's hint); "note" — a note at the bottom.
+interface Props {
+  label?: string
+  // The id of the control the label names.
+  for?: string
+  // Spans both columns of the form.
+  full?: boolean
+  id?: string
+  // Starts hidden (display: none) until enquiry.js shows it.
+  hidden?: boolean
+  error?: string
+  errorId?: string
+  // For a note a script rewrites (the event type's note swaps per chip).
+  noteId?: string
+}
+
+const {
+  label,
+  for: labelFor,
+  full = false,
+  id,
+  hidden = false,
+  error,
+  errorId,
+  noteId,
+} = Astro.props
+const hasNoteTop = Astro.slots.has("note-top")
+const hasNote = Astro.slots.has("note")
+---
+
+<div
+  class:list={["field", { full }]}
+  id={id}
+  style={hidden ? "display: none" : undefined}
+>
+  {label && <label for={labelFor}>{label}</label>}
+  {hasNoteTop && (
+    <p class="field-note field-note-top">
+      <slot name="note-top" />
+    </p>
+  )}
+  <slot />
+  {error && (
+    <div class="error" id={errorId}>
+      {error}
+    </div>
+  )}
+  <slot name="after-error" />
+  {hasNote && (
+    <p class="field-note" id={noteId}>
+      <slot name="note" />
+    </p>
+  )}
+</div>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .field-note {
+    font-size: 12px;
+    color: var(--muted-ink);
+    margin-top: 8px;
+    font-family: "Newsreader", Georgia, serif;
+  }
+  .error {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 11.5px;
+    color: var(--oxblood);
+    margin-top: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s var(--ease);
+  }
+  .field.bad .error {
+    margin-top: 8px;
+    height: 18px;
+    opacity: 1;
+  }
+  .field-note-top {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    /* Half the row (minus half the 12px column gap) by default, so a pair of
+         adjacent .field elements without .full (currently just first + last
+         name) sit side by side — the only place this form actually needs two
+         columns. Everything else opts into a full-width row via .full below. */
+    flex: 1 1 calc(50% - 6px);
+    /* Flex items default to min-width:auto, refusing to shrink below their
+         content's intrinsic width — same reasoning as .split > * {min-width:0}
+         elsewhere, guards against a field ever overflowing its 50% share. */
+    min-width: 0;
+  }
+  .field.full {
+    flex: 1 1 100%;
+  }
+  .field label {
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    margin-bottom: 9px;
+  }
+  .field.bad {
+    animation: shake 0.4s;
+  }
+  /* Overrides the desktop 50% basis so the first and last name stack too,
+     matching the form's single-column collapse at this breakpoint. */
+  @media (max-width: 620.98px) {
+    .field {
+      flex-basis: 100%;
+    }
+  }
+</style>

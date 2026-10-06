@@ -1,0 +1,108 @@
+---
+// Every non-hero photograph on the site. Takes a key from src/lib/images.ts
+// ("venue/secret-garden-night") and renders it through astro:assets, so each
+// device downloads a copy sized for how big the photo is actually drawn.
+//
+//   • From an untouched ORIGINAL: a <picture> with AVIF (smaller at equal
+//     quality) and a WebP fallback, each at its own quality — same recipe as
+//     HeroImage. The <img> carries every attribute passed in (class,
+//     loading, data-*), so selectors and scripts aimed at the img still hit.
+//   • From a WEB COPY (no original yet — see WEB_COPY_ONLY): a plain <img>.
+//     The copy itself is served untouched at its own size, and only smaller
+//     variants are generated from it. Re-encoding an already-lossy file at
+//     full size would compress it twice.
+//
+// `sizes` is required and must describe how wide the photo is drawn at each
+// breakpoint — it's how the browser chooses a file before CSS has loaded.
+// `maxWidth` caps the largest copy for photos that are only ever small.
+import { getImage } from "astro:assets"
+import type { HTMLAttributes } from "astro/types"
+import { image, isWebCopyOnly } from "@lib/images"
+
+type ImgAttributes = Omit<
+  HTMLAttributes<"img">,
+  "src" | "srcset" | "sizes" | "width" | "height"
+>
+
+interface Props extends ImgAttributes {
+  src: string
+  alt: string
+  sizes: string
+  maxWidth?: number
+}
+
+const { src: key, alt, sizes, maxWidth, decoding = "async", ...rest } = Astro.props
+
+const AVIF_QUALITY = 62
+const WEBP_QUALITY = 82
+// Scaled-down variants of an already-lossy web copy get a gentler setting,
+// since they are being compressed for a second time.
+const WEB_COPY_QUALITY = 88
+
+const meta = image(key)
+const webCopy = isWebCopyOnly(key)
+const cap = Math.min(meta.width, maxWidth ?? Infinity)
+const widths = [320, 480, 640, 960, 1280, 1600, 1920, 2400]
+  .filter((w) => w < cap)
+  .concat(webCopy && cap === meta.width ? [] : [cap])
+
+let avifSrcset: string | null = null
+let imgSrc: string
+let imgSrcset: string
+
+if (webCopy) {
+  const scaled = widths.length
+    ? await getImage({ src: meta, widths, format: "webp", quality: WEB_COPY_QUALITY })
+    : null
+  if (cap === meta.width) {
+    // The copy itself, untouched, as the largest candidate.
+    imgSrc = meta.src
+    imgSrcset = [scaled?.srcSet.attribute, `${meta.src} ${meta.width}w`]
+      .filter(Boolean)
+      .join(", ")
+  } else {
+    imgSrc = scaled!.src
+    imgSrcset = scaled!.srcSet.attribute
+  }
+} else {
+  const [avif, webp] = await Promise.all([
+    getImage({ src: meta, widths, format: "avif", quality: AVIF_QUALITY }),
+    getImage({ src: meta, widths, format: "webp", quality: WEBP_QUALITY }),
+  ])
+  avifSrcset = avif.srcSet.attribute
+  imgSrc = webp.src
+  imgSrcset = webp.srcSet.attribute
+}
+
+// Intrinsic size at the largest candidate's width, so the browser reserves
+// the right shape before the file arrives.
+const width = cap
+const height = Math.round((meta.height / meta.width) * cap)
+---
+
+{avifSrcset ? (
+  <picture>
+    <source type="image/avif" srcset={avifSrcset} sizes={sizes} />
+    <img
+      src={imgSrc}
+      srcset={imgSrcset}
+      sizes={sizes}
+      width={width}
+      height={height}
+      alt={alt}
+      decoding={decoding}
+      {...rest}
+    />
+  </picture>
+) : (
+  <img
+    src={imgSrc}
+    srcset={imgSrcset}
+    sizes={sizes}
+    width={width}
+    height={height}
+    alt={alt}
+    decoding={decoding}
+    {...rest}
+  />
+)}

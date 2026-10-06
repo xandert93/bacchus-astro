@@ -1,0 +1,58 @@
+---
+// The slow ribbon of occasions under the hero. Decorative (aria-hidden):
+// home.js duplicates the run so the loop is seamless.
+---
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="mtrack">
+    <span>Weddings</span>
+    <span>Corporate dinners</span>
+    <span>Private celebrations</span> <span>Garden receptions</span>
+    <span>Maltese wine list</span>
+    <span>Bastion views</span>
+  </div>
+</div>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .marquee {
+    background: var(--ink);
+    color: var(--limestone);
+    padding: 16px 0;
+    overflow: hidden;
+    border-top: 1px solid rgba(var(--gold-rgb), 0.2);
+    border-bottom: 1px solid rgba(var(--gold-rgb), 0.2);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    width: max-content;
+    animation: slide 38s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  .marquee :global(span) {
+    font-family: "Fraunces", serif;
+    font-size: clamp(15px, 1.7vw, 21px);
+    padding: 0 30px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    color: rgba(var(--limestone-rgb), 0.82);
+  }
+  .marquee :global(span)::after {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+  @keyframes slide {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+</style>

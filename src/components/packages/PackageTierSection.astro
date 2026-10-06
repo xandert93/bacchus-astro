@@ -1,0 +1,159 @@
+---
+// The tier section every package page is built around: heading, tab bar
+// and lead, one card per tier, then the swipeable panels holding each
+// tier's signature dishes and full menu. package-tiers.js drives it all —
+// the tab bar, the cards, the sticky switcher and native swipe between
+// panels — and finds it by the fixed ids below, so it's one per page.
+//
+// Slots:
+//   heading      — the h2's content ("Compare the three <em>tiers</em>")
+//   lead         — the paragraphs beside the tab bar
+//   after-cards  — under the tier cards (Banquet's pricing warning, say)
+//   after-panels — under the menus: the allergen note and cross-links.
+//                  Deliberately OUTSIDE the panels: anything inside them
+//                  replays the tier-switch animation on every switch,
+//                  since a descendant can't opt out of its ancestor's.
+//
+// The sticky switcher (a compact tier picker pinned while the menus are in
+// view) sizes its buttons to fit three short names on a phone; Beverage's
+// four categories wouldn't fit, so it turns it off.
+import type { PackageTier } from "@data/packages/types"
+import PackageDish from "./PackageDish.astro"
+import PackageMenuGroup from "./PackageMenuGroup.astro"
+import "@styles/package-page.css"
+
+interface Props {
+  tiers: PackageTier[]
+  id?: string
+  stickySwitch?: boolean
+}
+
+const { tiers, id, stickySwitch = true } = Astro.props
+---
+
+<section class="section-padding on-dark on-dark-gold-wash" id={id}>
+  <div class="wrap">
+    <div class="eyebrow" data-reveal>
+      From the catalogue
+    </div>
+    <div class="package-tabs-grid">
+      <h2 class="package-tabs-heading" data-reveal style="--d: 80ms">
+        <slot name="heading" />
+      </h2>
+      <div
+        class="tab-bar package-tabs-tabbar"
+        role="tablist"
+        data-reveal
+        style="--d: 160ms"
+      >
+        <span class="pill" id="pill"></span>
+        {tiers.map((tier, i) => (
+          <button
+            class:list={{ active: i === 0 }}
+            data-tab={tier.id}
+            role="tab"
+            aria-selected={i === 0 ? "true" : "false"}
+          >
+            {tier.name}
+          </button>
+        ))}
+      </div>
+      <div class="package-tabs-lead" data-reveal style="--d: 220ms">
+        <slot name="lead" />
+      </div>
+    </div>
+
+    <div class="package-tier-cards" data-reveal style="--d: 280ms">
+      {tiers.map((tier, i) => (
+        <button
+          type="button"
+          class:list={["package-tier-card", { active: i === 0 }]}
+          data-tier-card={tier.id}
+          aria-pressed={i === 0 ? "true" : "false"}
+        >
+          <span class="package-tier-card-check" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path
+                d="M4 9.5l3 3 7-7.5"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span class="package-tier-card-eyebrow">{tier.eyebrow}</span>
+          <b class="package-tier-card-name">{tier.name}</b>
+          <span class="package-tier-card-price">
+            {tier.price}
+            {tier.priceUnit && (
+              <span class="package-tier-card-unit">{tier.priceUnit}</span>
+            )}
+          </span>
+          <span class="package-tier-card-desc">{tier.description}</span>
+        </button>
+      ))}
+    </div>
+
+    <slot name="after-cards" />
+
+    {/* No data-reveal on the panels: the reveal observer waits for a share
+         of an element's OWN height to be visible, and a whole tier's menu
+         is tall and varies by tier and viewport, so it read as content
+         staying hidden too long. The heading, tab bar and lead above
+         already announce the section. */}
+    <div class="package-tier-view" id="packageTierView">
+      <div class="panels" id="packageTierTrack">
+        {tiers.map((tier, i) => (
+          <div class:list={["tab-panel full", { active: i === 0 }]} data-panel={tier.id}>
+            <div class="package-tier-content">
+              {tier.intro && <p class="package-panel-intro">{tier.intro}</p>}
+              {tier.dishes && (
+                <>
+                  <h4 class="package-dishes-label">{tier.dishesLabel}</h4>
+                  <div class="package-dishes-grid" data-reveal-group>
+                    {tier.dishes.map((dish) => (
+                      <PackageDish dish={dish} tierId={tier.id} />
+                    ))}
+                  </div>
+                </>
+              )}
+              <div class="package-menu-groups" data-reveal-safe>
+                {tier.groups.map((group) => (
+                  <PackageMenuGroup group={group} />
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <slot name="after-panels" />
+  </div>
+</section>
+
+{stickySwitch && (
+  <div
+    class="package-sticky-switch"
+    id="packageStickySwitch"
+    role="tablist"
+    aria-label="Switch tier"
+    aria-hidden="true"
+  >
+    <span class="pill" />
+    {tiers.map((tier, i) => (
+      <button
+        type="button"
+        class:list={["package-sticky-switch-btn", { active: i === 0 }]}
+        data-tier-switch={tier.id}
+        role="tab"
+        aria-selected={i === 0 ? "true" : "false"}
+        aria-label={`Switch to ${tier.name}, ${tier.price} ${tier.priceUnit}`}
+      >
+        <span class="package-sticky-switch-name">{tier.name}</span>
+        <span class="package-sticky-switch-price">{tier.price}</span>
+      </button>
+    ))}
+  </div>
+)}

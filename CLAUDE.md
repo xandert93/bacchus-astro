@@ -73,34 +73,66 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
 - `src/layouts/BaseLayout.astro` — `<head>`, grain, nav, drawer, Visit
   section, footer, the script. Props: `title`, `showEnquireLink`,
   `menuBackgroundImage`. Has a named slot `after-footer` for page overlays.
-- `src/components/` — chrome (`SiteHeader`, `MobileMenu`, `SocialLinks`,
-  `VisitSection`, `SiteFooter`), shared sections (`PageHero` on top of
-  `HeroFrame`, which the homepage's portcullis hero also uses,
-  `EnquirySection`, `FaqSection`, `ProcessSteps`, `GalleryPreview`,
-  `Testimonials`, `OccasionCards`, `WaitlistPopover`, `Lightbox`), widgets
-  that used to be copy-pasted markup (`AvailabilityCalendar` — the weddings
-  diary, its modal copy and the form's compact picker; `PhotoCarousel` — the
-  homepage and package-page photo strips; `GalleryTile` — gallery, previews
-  and Reception's dish tiles) and small parts (`CheckList`, `ArrowIcon`,
-  `Particles`). Repeating content (FAQ entries, process
-  steps, gallery photos, checklist items) is passed as arrays and rendered
-  with `map()` — the shape Sanity data will arrive in later.
+- **Pages compose; components hold the markup.** A page file is
+  frontmatter plus a list of sections (the homepage is ~45 lines). Content
+  that repeats or will come from Sanity lives in `src/data/` and is rendered
+  with `map()`; one-off copy stays in the component that shows it.
+- **Import with the path aliases** (`tsconfig.json`): `@components/…`,
+  `@layouts/…`, `@data/…`, `@lib/…`, `@scripts/…`, `@styles/…`,
+  `@assets/…` — never `../../../`, so files can move without breaking
+  imports.
+- `src/components/`, grouped by what the component is for:
+  - `ui/` — small reusable parts: `Photo`, `HeroImage`, `GalleryTile`,
+    `Lightbox`, `CheckList`, `SocialLinks`, `ArrowIcon`, `Particles`.
+  - `forms/` — form controls: `FormField` (label, error, notes), `TextInput`
+    (every input and the textarea), `ChipGroup`, `OptionCardGroup`. Used by
+    the enquiry wizard and the waitlist popover.
+  - `layout/` — chrome on every page: `SiteHeader`, `MobileMenu`,
+    `SiteFooter`, `VisitSection`.
+  - `nav/` — `NavDropdown` (one desktop dropdown), `MobileNavGroup` (one
+    drawer group), `NavChevron`, `NavItemIcon`, `NavPanelPhoto`. Both bars
+    render from `src/data/navigation.ts`.
+  - `sections/` — sections several pages share: `HeroFrame` (the hero
+    shell) and `PageHero` on top of it, `IntroSplit`, `FaqSection`,
+    `ProcessSteps`, `GalleryPreview`, `Testimonials`, `OccasionCards`,
+    `PhotoCarousel`.
+  - `enquiry/` — `EnquirySection` (layout) → `EnquiryForm` (the wizard) →
+    `EnquiryStepOccasion` / `Specifics` / `Details` / `Review`, plus
+    `EnquirySentPanel`, `EnquiryTrustRail`, `AvailabilityCalendar`,
+    `AvailabilityModal`, `WaitlistPopover`.
+  - `packages/` — `PackageTierSection` (the tier section all four package
+    pages share) with `PackageDish`, `PackageMenuGroup`, `PackageMenuItem`,
+    `PackageMenuNote`; Reception's `ReceptionStations` → `StationsBrowser`
+    → `StationCard`.
+  - `home/`, `weddings/` — sections only one page uses (`HomeHero`,
+    `HomeStory`, `HomeEventsSection`, `WeddingsPackages`,
+    `WeddingsAvailability`, …).
+- `.button` is deliberately NOT a component: it is a sitewide primitive
+  (global.css) that scripts also create (Reception's stage "Add to
+  selection") and other components style in context (`.nav-cta
+:global(.button)`), so its styles must stay global anyway.
 - `EnquirySection` props: `eventType` (sets the selected chip AND the
   initial visibility of every field enquiry.js toggles per type, so there is no
   post-load flash), `datePicker` (`inline` compact calendar, or `modal` for
   weddings, which has the full diary on the page), `eyebrow`, `railPhoto`;
   named slots `heading` and `lead`.
-- Package pages (`src/pages/weddings/packages/`) import their own CSS
-  after `BaseLayout` (`package-page.css` + `package-dish-placeholders.css` /
-  `package-beverage.css`, or `package-stations.css`) and their own script
-  (`package-tiers.js` / `reception-package.js`). Those scripts
-  `import "./tabs.js"` themselves, so `window.BacchusTabs` exists before
-  they run regardless of `<script>` order. Small CSS files are
-  inlined into the page by Astro (`build.inlineStylesheets: "auto"`), after
-  the linked ones, so cascade order is preserved.
+- Package pages (`src/pages/weddings/packages/`) are thin: hero, the
+  shared `PackageTierSection` fed from `src/data/packages/<package>.ts`,
+  the photo strip, enquiry. The package stylesheets are imported by the
+  components that need them (`PackageTierSection` → `package-page.css`,
+  `PackageDish` → `package-dish-placeholders.css`, `ReceptionStations` →
+  `package-stations.css`); only Beverage's page-specific overrides are
+  imported by its page. Scripts: `package-tiers.js` / `reception-package.js`,
+  which `import "./tabs.js"` themselves so `window.BacchusTabs` exists
+  before they run.
 - `src/data/gallery.ts` — the full gallery's photos and filters.
 - `src/data/enquiry.ts` — event types and chip notes. Read by both
   `EnquirySection.astro` and `enquiry.js` — one list.
+- `src/data/packages/` — the four packages' tiers and menus
+  (`types.ts` has the shape, shaped for the drafted Sanity schemas) and
+  Reception's sixteen stations. Catalogue house-style notes live at the top
+  of each file.
+- `src/data/navigation.ts` — both nav menus, for the bar and the drawer.
 - `src/data/testimonials.ts` — the four testimonials. `Testimonials.astro`
   renders the picker cards and dots from it at build time; `testimonials.js`
   renders the active quote (it has to measure it to cap it at five lines).
@@ -131,7 +163,10 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   `scripts/style-snapshot.mjs` baseline before, re-snapshot after,
   `scripts/style-diff.mjs` must show 0 changes, and
   `scripts/state-diff.mjs <old dist> <new dist>` must say "same" for every
-  interaction state. Expect run-to-run noise of a few hundredths of a pixel
+  interaction state. When markup moves into components or data, also run
+  `scripts/markup-diff.mjs <old dist> <new dist>`: it compares every
+  element's tag, attributes and text, which the style snapshot can't see.
+  `scripts/list-selectors.mjs <file>` lists a file's rules for planning. Expect run-to-run noise of a few hundredths of a pixel
   in mobile text widths (seen between two snapshots of the SAME build), and
   in the photo carousel's transition timing; anything else is real. If
   Playwright fails with "Target page, context or browser has been closed",
@@ -144,7 +179,7 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   page that needs it, so a page only ships the JS it uses. `BaseLayout` loads
   `site.js` (loaded class, particles, `[data-reveal]`, safe reveals) and
   `site-nav.js` (bar, drawer, dropdowns). Components: `testimonials.js`,
-  `enquiry.js` (imports `availability.js`), `faq.js`, `lightbox.js`,
+  `enquiry.js` (EnquiryForm; imports `availability.js`), `faq.js`, `lightbox.js`,
   `photo-carousel.js` (PhotoCarousel). Pages: `tabs.js` + `home.js` (homepage), `availability.js` +
   `weddings.js`, `gallery-filter.js`, `package-tiers.js` /
   `reception-package.js`. Shared helpers in `src/scripts/lib/`:

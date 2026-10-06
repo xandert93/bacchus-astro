@@ -1,0 +1,124 @@
+---
+// "Beyond the tiers": the sixteen Reception stations, with the notes that
+// say what on them is ours rather than the catalogue's. Reception-only.
+// The content is src/data/packages/reception-stations.ts; the browsing
+// behaviour is reception-package.js (see StationsBrowser for the two
+// layouts).
+import StationsBrowser from "./StationsBrowser.astro"
+import "@styles/package-stations.css"
+---
+
+<section
+  class="section-padding package-stations package-stations-hybrid on-dark on-dark-gold-wash"
+  id="stations-hybrid"
+  aria-labelledby="stations-hybrid-title"
+>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" data-reveal>
+        Beyond the tiers
+      </div>
+      <h2 id="stations-hybrid-title" data-reveal style="--d: 80ms">
+        Stations your guests will <em>remember</em>
+      </h2>
+      <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px">
+        Sixteen tables and towers to layer onto any{" "}
+        <a href="#reception-tiers" class="link-underline-inline">
+          Reception tier
+        </a>{" "}
+        — Daisy, Lavender or Rose — each priced per person and carved, shucked or built to
+        order.
+      </p>
+    </div>
+
+    <div class="package-stations-hybrid-mobtab">
+      <StationsBrowser variant="stage" />
+    </div>
+
+    <div class="package-stations-hybrid-desktop">
+      <StationsBrowser variant="carousel" />
+    </div>
+
+    <div class="package-stations-photo-note" data-reveal>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 9v4m0 4h.01M10.3 3.9 2.5 17.5A1.5 1.5 0 0 0 3.8 20h16.4a1.5 1.5 0 0 0 1.3-2.5L13.7 3.9a1.5 1.5 0 0 0-2.6 0Z" />
+      </svg>
+      <span>
+        Station photography above is illustrative placeholder imagery, not of Bacchus — to
+        be replaced with the venue's own.
+      </span>
+    </div>
+    {/* Sits alongside the photography note and carries the same
+         oxblood treatment for the same reason: it is the only thing
+         on the page telling a reader that these badges are inferred
+         rather than given. DO NOT DELETE while that is true. The
+         catalogue marks (V) across the Reception tiers but not once
+         across the Stations list, so unlike the Reception tier menus above
+         — where every badge is the client's own — all thirty-six
+         here are our reading of a dish name. Same reasoning that
+         kept high-tea-package.html unmarked entirely; the difference
+         is that this page shows the guesses and says so, rather than
+         withholding them. */}
+    <div class="package-stations-photo-note package-stations-veg-note" data-reveal>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 9v4m0 4h.01M10.3 3.9 2.5 17.5A1.5 1.5 0 0 0 3.8 20h16.4a1.5 1.5 0 0 0 1.3-2.5L13.7 3.9a1.5 1.5 0 0 0-2.6 0Z" />
+      </svg>
+      <span>
+        <span class="package-veg-marker" aria-hidden="true">
+          V
+        </span>{" "}
+        marks a dish we believe to be vegetarian. Unlike the Reception tier menus, the
+        catalogue gives no vegetarian markings for the stations, so every mark here is
+        inferred from the dish name and none is confirmed by Bacchus. Three things in
+        particular need checking before this is shown to a guest: cheeses, which depend on
+        whether animal or microbial rennet is used — Parmigiano Reggiano, Camembert, Blue
+        Stilton and Ġbejna are left unmarked for that reason, and the cheeses that are
+        marked are assumptions; stocks and sauces in the pasta, risotto and stir-fried
+        dishes; and the marshmallows on the Crêpe Table, left unmarked as gelatine is
+        usual. Dressings served on oysters and lobster are not marked at all, as the dish
+        beneath them is not vegetarian.
+      </span>
+    </div>
+    <div class="package-stations-photo-note package-stations-labels-note" data-reveal>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M12 9v4m0 4h.01M10.3 3.9 2.5 17.5A1.5 1.5 0 0 0 3.8 20h16.4a1.5 1.5 0 0 0 1.3-2.5L13.7 3.9a1.5 1.5 0 0 0-2.6 0Z" />
+      </svg>
+      <span>
+        The six groupings above — Boards &amp; Cured, Fruits of the Sea, Grill &amp;
+        Roast, Across Asia, Pasta &amp; Pizza, To Finish — are our own editorial grouping,
+        not the catalogue's or Bacchus's. The catalogue lists all sixteen stations flat,
+        and this grouping also reorders them away from catalogue order.
+      </span>
+    </div>
+  </div>
+</section>

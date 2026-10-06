@@ -1,7 +1,7 @@
 // The testimonials carousel (#testimonials). Loaded by Testimonials.astro.
 
 import { reduce } from "./lib/motion.js"
-import { TESTIMONIALS } from "../data/testimonials"
+import { TESTIMONIALS } from "@data/testimonials"
 
 // ---------- Testimonials rotator ----------
 ;(function () {

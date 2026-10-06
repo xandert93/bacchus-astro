@@ -1,0 +1,206 @@
+---
+// "Built in 1657": the building's history, three counted-up facts and the
+// arch-framed bastion photograph. home.js counts the facts up on scroll.
+import Photo from "@components/ui/Photo.astro"
+---
+
+<section class="section-padding story" id="story">
+  <div class="wrap grid">
+    <div>
+      <div class="eyebrow" data-reveal>
+        A chamber built for gunpowder, kept for the table
+      </div>
+      <h2 data-reveal style="--d: 80ms">
+        Built in 1657, still standing <em>guard</em> over dinner
+      </h2>
+      <p data-reveal style="--d: 180ms; margin-top: 28px">
+        Grand Master Fra Martino de Redin raised these chambers between 1657 and 1660 as a
+        magazine for Mdina's bastion walls. Where the city once stored its defence,
+        Bacchus now keeps its cellar, its kitchen, and its longest tables.
+      </p>
+      <p data-reveal style="--d: 250ms">
+        Guests still enter through the original iron portcullis before the stone opens
+        into two vaulted rooms and a garden beyond — unchanged in shape for over 360
+        years.
+      </p>
+      <div class="facts" id="facts">
+        <div data-reveal style="--d: 320ms">
+          <span class="fact-number" data-count="1657" data-plain="1">
+            0
+          </span>
+          <span class="label">Chambers built</span>
+        </div>
+        <div data-reveal style="--d: 400ms">
+          <span class="fact-number" data-count="2">
+            0
+          </span>
+          <span class="label">Vaulted rooms</span>
+        </div>
+        <div data-reveal style="--d: 480ms">
+          <span class="fact-number" data-count="35" data-suffix="+">
+            0
+          </span>
+          <span class="label">Years serving Mdina</span>
+        </div>
+      </div>
+      <div class="cta-row" data-reveal style="--d: 560ms; margin-top: 40px">
+        <a href="#events" class="button button-dark">
+          <span>Explore the spaces</span>
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+            <path
+              d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+              stroke="currentColor"
+              stroke-width="1.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="story-visual">
+      <div class="arch" data-reveal="img">
+        <Photo
+          src="venue/mdina-bastion-view"
+          sizes="(max-width: 980px) 100vw, 50vw"
+          alt="A view along Mdina's bastion walls, looking out over the Maltese countryside"
+        />
+      </div>
+      <div class="badge" data-reveal="scale" style="--d: 400ms">
+        <div class="badge-number">
+          360<span style="font-size: 0.55em">yrs</span>
+        </div>
+        <div class="badge-caption">Of the same stone, the same arches</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  @media (max-width: 620.98px) {
+    .cta-row {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  @media (max-width: 620.98px) {
+    .cta-row :global(.button) {
+      width: 100%;
+      max-width: 300px;
+      justify-content: center;
+    }
+  }
+  /* Scoped to this page (moved from global.css by
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .story p {
+    font-family: "Newsreader", Georgia, serif;
+  }
+  .story {
+    background: linear-gradient(180deg, var(--paper), #f3eddf);
+  }
+  .story p {
+    color: var(--muted-ink);
+    margin-bottom: 18px;
+    max-width: 52ch;
+  }
+  @media (max-width: 900px) {
+    .story p {
+      max-width: none;
+    }
+  }
+  /* Below ~900px, .section-head's own max-width (760px, or #events's/.story's
+       column width once narrower than that) is already doing the narrowing —
+       the extra 52ch cap on top of it just makes the paragraph noticeably
+       narrower than the heading above it instead of matching it. Placed after
+       the base rule above, not before (CLAUDE.md bug #2: same selector, same
+       specificity — source order decides). */
+  .facts {
+    display: flex;
+    gap: clamp(20px, 4vw, 48px);
+    margin-top: 38px;
+    flex-wrap: wrap;
+  }
+  .facts .fact-number {
+    font-family: "Fraunces", serif;
+    font-size: clamp(30px, 4.4vw, 50px);
+    color: var(--ink);
+    display: block;
+    line-height: 1;
+  }
+  .facts .label {
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    margin-top: 10px;
+    display: block;
+  }
+  :global(.on-dark) .facts .fact-number {
+    color: var(--limestone-2);
+  }
+  .story-visual {
+    position: relative;
+  }
+  .story-visual .badge {
+    position: absolute;
+    bottom: -26px;
+    left: -26px;
+    background: var(--ink);
+    color: var(--limestone);
+    padding: clamp(16px, 3.5vw, 22px) clamp(18px, 4.5vw, 26px);
+    border-radius: 3px;
+    border: 1px solid rgba(var(--gold-rgb), 0.3);
+    max-width: clamp(150px, 34vw, 230px);
+    box-shadow: 0 26px 60px -24px rgba(var(--muted-ink-rgb), 0.6);
+  }
+  /* Scales with the badge's own padding/max-width above (clamp, not fixed
+       34px) — needed now that .story-visual goes full-width at 760px and below
+       instead of staying capped at 440px, so the badge itself must shrink to
+       match a much smaller image instead of overwhelming it. */
+  .story-visual .badge .badge-number {
+    font-family: "Fraunces", serif;
+    font-size: clamp(24px, 6vw, 34px);
+    color: var(--gold-2);
+    line-height: 1;
+  }
+  .story-visual .badge .badge-caption {
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  @media (max-width: 760.98px) {
+    .story-visual {
+      order: -1;
+    }
+  }
+  @media (max-width: 760.98px) {
+    .story-visual .badge {
+      left: auto;
+      right: 20px;
+      bottom: 20px;
+    }
+  }
+  .story .grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(36px, 6vw, 86px);
+    align-items: center;
+  }
+  @media (max-width: 760.98px) {
+    .story .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .story-visual .arch {
+    aspect-ratio: 3/4;
+  }
+</style>

@@ -1,0 +1,129 @@
+---
+// A single-choice row of pill buttons (the enquiry's event type and contact
+// method). enquiry.js moves .is-selected between them and writes the choice
+// to a hidden input beside the group; this only renders the starting state.
+import type { ChipIcon } from "@data/enquiry"
+
+interface Props {
+  id: string
+  options: { value: string; icon?: ChipIcon }[]
+  selected?: string
+}
+
+const { id, options, selected } = Astro.props
+---
+
+<div class="chips" id={id}>
+  {options.map((option) => (
+    <button
+      type="button"
+      class:list={["chip", { "is-selected": option.value === selected }]}
+      data-v={option.value}
+    >
+      {option.icon && (
+        <svg
+          width={option.icon.width}
+          height={option.icon.height}
+          viewBox={option.icon.viewBox}
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path d={option.icon.path} />
+        </svg>
+      )}
+      {option.value}
+    </button>
+  ))}
+</div>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 5px;
+  }
+  .chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 0px;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
+    border-radius: var(--radius-card);
+    font-family: "Inter", sans-serif;
+    font-size: 10.5px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
+    background: var(--paper);
+    color: var(--ink);
+    transition:
+      background-color 0.3s var(--ease),
+      border-color 0.3s var(--ease),
+      color 0.3s var(--ease),
+      transform 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+  @media (hover: hover) {
+    .chip:hover {
+      background-color: var(--limestone);
+    }
+  }
+  .chip.is-selected {
+    background: var(--ink);
+    color: var(--limestone);
+    border-color: var(--ink);
+    box-shadow: 0 3px 12px rgba(var(--ink-rgb), 0.12);
+  }
+  @media (hover: hover) {
+    .chip.is-selected:hover {
+      background: var(--ink-2);
+      border-color: var(--ink-2);
+    }
+  }
+  @media (hover: none) {
+    .chip:active {
+      background-color: var(--limestone);
+    }
+  }
+  @media (hover: none) {
+    .chip.is-selected:active {
+      background: var(--ink-2);
+      border-color: var(--ink-2);
+    }
+  }
+  /* Equal-width chips (event type, and how to reply) above phone width;
+     content-hugging below it. */
+  @media (min-width: 621px) {
+    .chips .chip {
+      flex: 1 1 0;
+      text-align: center;
+    }
+  }
+  /* Content-width chips get too narrow for longer labels to fit on one line
+     once the form itself has gone single-column — same lesson as the tab-bar
+     overflow (prototype bug #13): fit a small fixed item count in equal-width
+     rows rather than letting text wrap inside a pill. */
+  @media (max-width: 620.98px) {
+    .chip {
+      flex: 1 1 calc(50% - 5px);
+      text-align: center;
+    }
+  }
+  .chip :global(svg) {
+    flex: none;
+    /* Optical nudge, not a box-model bug — flex's align-items:center matches
+         the SVG's geometric box to the text's line box, but the Font Awesome
+         glyphs' visible "ink" isn't centered within their own viewBox, reading
+         as sitting slightly below the text otherwise (see CLAUDE.md bug #8,
+         same class of fix). */
+    margin-top: -1.5px;
+  }
+</style>

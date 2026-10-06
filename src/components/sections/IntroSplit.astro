@@ -1,0 +1,40 @@
+---
+// The opening section of each event page (weddings, corporate,
+// celebrations): eyebrow, heading, a paragraph or two and what's included,
+// beside a photograph. The photo comes first on narrow screens (.split's
+// image-led order, global.css).
+//
+// Slots: "heading" — the h2's content; default — the paragraphs, which
+// each page words and spaces its own way; "after" — anything under the
+// list (the weddings page's link down to its packages).
+import CheckList from "@components/ui/CheckList.astro"
+import Photo from "@components/ui/Photo.astro"
+
+interface Props {
+  eyebrow: string
+  included: string[]
+  // src is a key from src/lib/images.ts.
+  photo: { src: string; alt: string }
+}
+
+const { eyebrow, included, photo } = Astro.props
+---
+
+<section class="section-padding">
+  <div class="wrap split">
+    <div>
+      <div class="eyebrow" data-reveal>
+        {eyebrow}
+      </div>
+      <h2 data-reveal style="--d: 80ms">
+        <slot name="heading" />
+      </h2>
+      <slot />
+      <CheckList items={included} />
+      <slot name="after" />
+    </div>
+    <div class="ph-wrap" data-reveal="img">
+      <Photo src={photo.src} sizes="(max-width: 980px) 100vw, 50vw" alt={photo.alt} />
+    </div>
+  </div>
+</section>

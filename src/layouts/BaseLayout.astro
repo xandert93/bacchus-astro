@@ -3,11 +3,11 @@
 // mobile drawer, the shared "Visit Bacchus" section, the footer and the site
 // script. A page supplies its title and its own content; everything else
 // comes from here.
-import "../styles/global.css"
-import SiteHeader from "../components/SiteHeader.astro"
-import MobileMenu from "../components/MobileMenu.astro"
-import VisitSection from "../components/VisitSection.astro"
-import SiteFooter from "../components/SiteFooter.astro"
+import "@styles/global.css"
+import SiteHeader from "@components/layout/SiteHeader.astro"
+import MobileMenu from "@components/layout/MobileMenu.astro"
+import VisitSection from "@components/layout/VisitSection.astro"
+import SiteFooter from "@components/layout/SiteFooter.astro"
 
 interface Props {
   title: string
@@ -57,8 +57,8 @@ const {
       // Sitewide behaviour only. Each component brings its own script
       // (Testimonials, EnquirySection, Lightbox…), and Astro bundles a
       // component's script once per page, only on pages that use it.
-      import "../scripts/site.js"
-      import "../scripts/site-nav.js"
+      import "@scripts/site.js"
+      import "@scripts/site-nav.js"
     </script>
   </body>
 </html>

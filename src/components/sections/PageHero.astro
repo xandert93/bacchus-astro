@@ -1,0 +1,147 @@
+---
+// The short hero at the top of every subpage: crumb → h1 → paragraph(s) →
+// optional CTAs, on the 24px rhythm described in the prototype's CLAUDE.md
+// ("Hero structure"). The frame around it (photo, scrim, particles, the
+// fade-up entrance) is HeroFrame, shared with the homepage's portcullis hero.
+//
+// Slots: default = the h1's content (rich text, so <em> works), "sub" = the
+// paragraph, "sub-secondary" = an optional second paragraph (the package
+// pages), "ctas" = the buttons. Optional slots only render their wrapper
+// when the page actually passes something, via Astro.slots.has().
+interface Props {
+  // Omit for the black "photography to follow" placeholder the package
+  // pages use while real imagery is sourced.
+  // src is a key from src/lib/images.ts.
+  image?: { src: string; alt: string }
+  // The page one level up. Home for top-level pages, Weddings for packages.
+  parent?: { href: string; label: string }
+  // The last crumb, i.e. this page's own name.
+  crumb: string
+}
+import HeroFrame from "@components/sections/HeroFrame.astro"
+import HeroImage from "@components/ui/HeroImage.astro"
+
+const { image, parent = { href: "/", label: "Home" }, crumb } = Astro.props
+const hasSecondarySub = Astro.slots.has("sub-secondary")
+const hasCtas = Astro.slots.has("ctas")
+---
+
+<HeroFrame small mediaClass={image ? undefined : "package-hero-placeholder"}>
+  {image && <HeroImage slot="media" src={image.src} alt={image.alt} heroHeightVh={62} />}
+  {!image && (
+    <span slot="overlay" class="package-hero-placeholder-label">
+      Image placeholder — real photography to follow
+    </span>
+  )}
+  <div class="crumb fade-up" style="transition-delay: 0.1s">
+    <a href={parent.href}>{parent.label}</a>
+    <svg width="7" height="10" viewBox="0 0 7 10" fill="none">
+      <path
+        d="M1 1l5 4-5 4"
+        stroke="currentColor"
+        stroke-width="1.3"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      ></path>
+    </svg>
+    <span>{crumb}</span>
+  </div>
+  <h1 class="fade-up" style="transition-delay: 0.2s">
+    <slot />
+  </h1>
+  <p class="sub fade-up" style="transition-delay: 0.32s">
+    <slot name="sub" />
+  </p>
+  {hasSecondarySub && (
+    <p class="sub fade-up" style="transition-delay: 0.38s">
+      <slot name="sub-secondary" />
+    </p>
+  )}
+  {hasCtas && (
+    <div class="hero-ctas fade-up" style="transition-delay: 0.44s">
+      <slot name="ctas" />
+    </div>
+  )}
+</HeroFrame>
+
+<style>
+  /* Scoped to this component. The hero's frame and the compact .hero-sm
+     variant are styled in HeroFrame.astro. */
+  .crumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(var(--limestone-rgb), 0.55);
+    margin-bottom: 24px;
+  }
+  .crumb a {
+    transition: color 0.3s;
+  }
+  .crumb a:hover {
+    color: var(--gold-2);
+  }
+  .crumb svg {
+    opacity: 0.6;
+  }
+  /* --- Placeholder imagery -------------------------------------------
+     Banquet's and High Tea's heroes (and their dish tiles, see
+     package-dish-placeholders.css) have no real photography yet. Both are
+     deliberately blacked out rather than filled with a stand-in shot: a
+     stand-in reads as a finished choice
+     when the page is walked through, whereas an empty black frame reads
+     as "still to come", which is the honest signal while the client is
+     sourcing images. Both carry a visible label saying so, so nobody has
+     to infer it from the colour alone.
+
+     Replacing it: pass the page's photo to PageHero as `image`, which drops
+     both the black frame and the label.
+
+     .package-hero-placeholder sits on HeroFrame's .hero-media (passed in as
+     mediaClass), so it carries HeroFrame's scoping attribute, not this
+     file's — hence :global(). */
+  :global(.package-hero-placeholder) {
+    background: #000;
+  }
+  /* A plain line of small type in the bottom-right of the black frame,
+     not a pill. The pill version carried a background, border and
+     padding, which made it wide enough to collide with the hero's CTA
+     buttons at tablet and laptop widths — .hero-content only reserves
+     clamp(46px, 7vh, 76px) of space below those buttons, and at 1440x900
+     that resolves to ~63px against a pill occupying ~32-56px from the
+     bottom. Seven pixels of clearance, and none at all once the pill
+     wrapped to two lines. Plain type is short enough to sit inside that
+     gutter at every width.
+
+     Spans the hero edge-to-edge and right-aligns, rather than being
+     pinned by a `right` offset. A full-width block can't overflow its
+     container, so there's no shrink-to-fit cap left to get wrong (the
+     bug the pill had on phones), and it wraps on its own if it ever
+     needs to. The max-width/margin/padding trio is copied from .wrap so
+     the text lands exactly on the hero copy's own right edge instead of
+     floating at an unrelated offset — that's what "adequate offset"
+     means here, the same gutter everything else on the page uses.
+
+     Sits above .hero-scrim (z-index 2) but below .hero-content (3), so
+     the scrim can't dim it and it can't overlap the h1. */
+  .package-hero-placeholder-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(12px, 1.8vw, 20px);
+    z-index: 2;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 44px);
+    font-family: "Inter", sans-serif;
+    font-size: clamp(8.5px, 1.05vw, 10.5px);
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    line-height: 1.4;
+    text-align: right;
+    text-transform: uppercase;
+    color: rgba(var(--oxblood-on-dark-rgb), 0.92);
+  }
+</style>

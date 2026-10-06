@@ -1,0 +1,26 @@
+---
+// A course or category within a tier: its title, an optional italic first
+// line, and the items.
+import type { PackageMenuGroup } from "@data/packages/types"
+import PackageMenuItem from "./PackageMenuItem.astro"
+
+interface Props {
+  group: PackageMenuGroup
+}
+
+const { group } = Astro.props
+---
+
+<div class="package-menu-group">
+  <h4>{group.title}</h4>
+  <ul>
+    {group.subhead && (
+      <li class="package-group-subhead">
+        <i>{group.subhead}</i>
+      </li>
+    )}
+    {group.items.map((item) => (
+      <PackageMenuItem item={item} />
+    ))}
+  </ul>
+</div>

@@ -1,0 +1,243 @@
+---
+// The "notify me" popover a Booked calendar date opens. One instance per
+// page, position: fixed, shared by every calendar on that page; availability.js
+// wires it to whichever .availability instances exist.
+import FormField from "@components/forms/FormField.astro"
+import TextInput from "@components/forms/TextInput.astro"
+---
+
+<div class="wl-popover" id="wlPopover" role="dialog" aria-label="Join the waitlist">
+  <button type="button" class="wl-popover-close" id="wlPopoverClose" aria-label="Close">
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    >
+      <path d="M6 6l12 12M18 6 6 18" />
+    </svg>
+  </button>
+  <span class="wl-popover-arrow" aria-hidden="true"></span>
+  <div class="wl-popover-eyebrow">Notify me</div>
+  <h4 id="wlPopoverDate">—</h4>
+  <div class="wl-popover-body">
+    <p class="wl-popover-copy">
+      This date is booked. Leave your email and we'll let you know if it opens up.
+    </p>
+    <form class="wl-form" id="wlPopoverForm">
+      <FormField label="Name" for="wlPopName">
+        <TextInput id="wlPopName" placeholder="Your name" underline={false} />
+      </FormField>
+      <FormField label="Email" for="wlPopEmail">
+        <TextInput
+          id="wlPopEmail"
+          type="email"
+          required
+          placeholder="you@email.com"
+          underline={false}
+        />
+      </FormField>
+      <div class="wl-form-actions">
+        <button type="submit" class="button button-gradient button-small">
+          <span>Join the waitlist</span>
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="wl-popover-success" hidden>
+    <div class="wl-success">
+      <span class="wl-success-icon">
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m4 12 5 5L20 6" />
+        </svg>
+      </span>
+      <p>
+        You're on the list. We'll email <b id="wlPopoverEmailOut"></b> the moment this
+        date opens up.
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Scoped to this component (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* A real <form> (not just a styled div) so Enter in a field fires submit
+     natively — the popover's own field, see waitlist-prompt.html. That means it
+     also matches the sitewide bare `form` selector's own card look (white
+     background, border, shadow, padding, 500px max-width, meant for the full-
+     page enquiry form) — this strips all of that back off rather than fighting
+     its specificity, since form.wl-form is already more specific than the
+     plain element selector. */
+  form.wl-form {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    max-width: none;
+  }
+  .wl-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .wl-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 2px;
+  }
+  /* Matches .wl-popover h4's own margin-top (below) so the success state reads
+     with the same breathing room under the date heading that the form state
+     already gets from .wl-popover-copy's margin-top — put on the wrapping
+     .wl-popover-success rather than .wl-success p itself, since .wl-success is
+     a flex row (icon + text) and a margin on just the p would push the text
+     down without the icon, breaking their top alignment. */
+  .wl-popover-success {
+    margin-top: clamp(10px, 2.5vw, 16px);
+  }
+  .wl-success {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .wl-success-icon {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--avail-green-bg);
+    color: var(--avail-green-fg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wl-success p {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--muted-ink);
+    padding-top: 3px;
+  }
+  .wl-success p b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  /* ---------- A: popover anchored to the clicked cell ---------- */
+  .wl-popover {
+    position: fixed;
+    /* Above .availability-modal/.lightbox (970) on purpose — weddings.html's
+       quick-pick "Change date" modal reuses the same .diary calendar as the
+       showcase, so the popover has to be able to open from inside it too. Not
+       a "modal stacked on modal" problem, just this needing to be the topmost
+       thing on the page whenever it's open, same as any anchored
+       tooltip/popover pattern — a plain z-index miss (500) had it rendering
+       underneath the modal instead. */
+    z-index: 980;
+    width: min(300px, calc(100vw - 32px));
+    background: #fff;
+    border-radius: var(--radius-card);
+    box-shadow: 0 30px 70px -30px rgba(var(--muted-ink-rgb), 0.55);
+    padding: 20px 22px;
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+    pointer-events: none;
+    transition:
+      opacity 0.2s var(--ease),
+      transform 0.2s var(--ease);
+  }
+  .wl-popover.show {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .wl-popover-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--muted-ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  @media (hover: hover) {
+    .wl-popover-close:hover {
+      background: rgba(var(--ink-rgb), 0.06);
+      color: var(--ink);
+    }
+  }
+  .wl-popover-eyebrow {
+    font-family: "Inter", sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--bronze);
+  }
+  .wl-popover h4 {
+    font-family: "Fraunces", serif;
+    font-weight: 500;
+    font-size: 17px;
+    margin-top: clamp(10px, 2.5vw, 16px);
+    padding-right: 20px;
+  }
+  .wl-popover-copy {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--muted-ink);
+    margin-top: 6px;
+    margin-bottom: 16px;
+  }
+  /* Follows the clicked cell's horizontal position via --wl-arrow-left (set in
+     JS, clamped so it never drifts past the popover's own rounded corners) —
+     the popover box itself is independently clamped to the viewport, so the
+     two can disagree once a cell sits near a screen edge; the arrow drifting
+     toward that edge rather than staying dead-center is what keeps it pointing
+     at the actual cell in that case. */
+  .wl-popover-arrow {
+    position: absolute;
+    left: var(--wl-arrow-left, 50%);
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    transform: translateX(-50%) rotate(45deg);
+  }
+  .wl-popover[data-placement="bottom"] .wl-popover-arrow {
+    top: -6px;
+    box-shadow: -2px -2px 4px -2px rgba(var(--muted-ink-rgb), 0.15);
+  }
+  .wl-popover[data-placement="top"] .wl-popover-arrow {
+    bottom: -6px;
+    box-shadow: 2px 2px 4px -2px rgba(var(--muted-ink-rgb), 0.15);
+  }
+  /* Overrides the desktop 50% basis so email/phone stack too, matching the
+       old grid's single-column collapse at this breakpoint. */
+  /* Overrides .field's own row-layout flex-basis (meant for two fields side by
+     side in the site's wide enquiry form) — every .wl-form is single-column, in
+     spaces too narrow for that to make sense. */
+  .wl-form :global(.field) {
+    flex: none;
+  }
+  .wl-form-actions :global(.button) {
+    flex: 1;
+    justify-content: center;
+  }
+</style>

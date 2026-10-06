@@ -1,0 +1,189 @@
+---
+// The enquiry section (#enquire) closing every events page: the pitch and
+// reassurances on the left, the four-step wizard on the right. What differs
+// per page comes in as props and slots; the wizard itself is EnquiryForm.
+import type { EventType } from "@data/enquiry"
+import Photo from "@components/ui/Photo.astro"
+import EnquiryTrustRail from "./EnquiryTrustRail.astro"
+import EnquiryForm from "./EnquiryForm.astro"
+
+interface Props {
+  // Preselects the event type, and with it every field the wizard shows or
+  // hides per type — rendered in that state, so nothing flashes on load.
+  eventType: EventType
+  // "inline": the compact calendar sits in the form (most pages).
+  // "modal": a summary row + "Pick a date" button opening the page's own
+  // quick-pick modal (weddings, which already shows the full diary above).
+  datePicker?: "inline" | "modal"
+  eyebrow?: string
+  // src is a key from src/lib/images.ts.
+  railPhoto: { src: string; alt: string; caption: string }
+}
+const {
+  eventType,
+  datePicker = "inline",
+  eyebrow = "Start planning",
+  railPhoto,
+} = Astro.props
+---
+
+<section class="section-padding enquire" id="enquire">
+  <div class="wrap">
+    <div class="grid">
+      <div class="enquiry-intro">
+        <div class="eyebrow" data-reveal>
+          {eyebrow}
+        </div>
+        <h2 data-reveal style="--d: 80ms">
+          <slot name="heading" />
+        </h2>
+        <p class="lead" data-reveal style="--d: 160ms">
+          <slot name="lead" />
+        </p>
+
+        <EnquiryTrustRail />
+
+        <figure class="rail-photo" data-reveal="img" style="--d: 320ms">
+          <Photo
+            src={railPhoto.src}
+            alt={railPhoto.alt}
+            loading="lazy"
+            sizes="(max-width: 980px) 100vw, 40vw"
+            maxWidth={1600}
+          />
+          <figcaption>{railPhoto.caption}</figcaption>
+        </figure>
+      </div>
+
+      <EnquiryForm eventType={eventType} datePicker={datePicker} />
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Scoped to this component (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .enquire {
+    position: relative;
+    background:
+      radial-gradient(120% 80% at 85% 0%, rgba(var(--gold-rgb), 0.1), transparent 60%),
+      linear-gradient(180deg, #f3eddf, var(--paper) 55%, var(--paper));
+    overflow: hidden;
+  }
+  .enquire::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(var(--bronze-rgb), 0.45),
+      transparent
+    );
+  }
+  /* Same trick the wizard steps use (.wizard-step.active{display:contents})
+       — removes .enquiry-intro's own box so its children (eyebrow, h2, lead,
+       trust-rail) become direct items of .grid's own grid, sitting alongside
+       .enquiry-form as genuine siblings, which is what lets .trust-rail below get
+       reordered after the form specifically rather than always sitting right
+       after the lead paragraph. Needs to beat .enquiry-form's own order:2 (set at
+       the shared 980px breakpoint above and still in effect here) — anything
+       less than that just lands it back before the form. */
+  @media (max-width: 920.98px) {
+    .enquiry-intro {
+      display: contents;
+    }
+  }
+  .enquire .rail-photo {
+    margin-top: 26px;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 16 / 10;
+  }
+  .enquire .rail-photo figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 40px 20px 16px;
+    background: linear-gradient(transparent, rgba(var(--ink-rgb), 0.82));
+    color: rgba(var(--limestone-rgb), 0.9);
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 13.5px;
+    font-style: italic;
+  }
+  @media (max-width: 920.98px) {
+    .enquire .rail-photo {
+      display: none;
+    }
+  }
+  /* #availability .availability.diary's own margin-inline:auto (added above, near
+       #availability .split) is scoped to that section's own later, 920px
+       collapse point instead of living here — this section's own two-column
+       split now holds past 980px, so centering it here as well would be
+       wrong for the 921-980px gap. */
+  @media (max-width: 980.98px) {
+    .enquiry-intro {
+      grid-column: 1;
+      grid-row: auto;
+    }
+  }
+  @media (max-width: 980.98px) {
+    .enquiry-intro {
+      order: 1;
+    }
+  }
+  .enquire .wrap {
+    position: relative;
+  }
+  /* Right column is a fixed 500px track (not 1fr) so it matches the form
+     card's own max-width exactly — matches the showcase calendar's own
+     .availability.diary width (styles.css) so every widget on the page shares one
+     sourced width. Left column (the rail) takes whatever's left. */
+  .enquire .grid {
+    display: grid;
+    align-items: start;
+    grid-template-columns: 1fr 500px;
+    gap: clamp(32px, 5vw, 72px);
+  }
+  /* Collapse point moved down from the site's usual 980px: with the right
+       column now a fixed 500px (not 1fr), the left column is what shrinks as
+       the viewport narrows, and stays reasonably readable all the way down
+       to ~920px — only below that does it get genuinely cramped. */
+  @media (max-width: 920.98px) {
+    .enquire .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  /* .grid's own gap used to apply exactly once, between the rail block and
+       the form — now that .enquiry-intro's children are direct grid items too, it
+       was landing between every one of them instead, stacking on top of
+       their own margins. Zeroed here and replaced with one explicit
+       margin-top on the form, so only the rail-to-form transition keeps
+       that spacing. */
+  @media (max-width: 920.98px) {
+    .enquire .grid {
+      gap: 0;
+    }
+  }
+  .enquiry-intro .lead {
+    margin-top: 20px;
+    max-width: 42ch;
+  }
+  .enquire .rail-photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.4s var(--ease);
+  }
+  .enquire .rail-photo:hover :global(img) {
+    transform: scale(var(--image-hover-zoom-ambient));
+  }
+  @media (max-width: 980.98px) {
+    .enquire .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,103 @@
+---
+// "Across the estate": a heading row and the ten-photo strip.
+import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
+
+const carouselSlides = [
+  {
+    src: "venue/hall-chandeliers-banquet",
+    alt: "The banquet room dressed with chair sashes and long tables",
+    caption: "The Banquet Room",
+  },
+  {
+    src: "venue/ballroom-night",
+    alt: "The function room lit for an evening reception",
+    caption: "Reception, After Dark",
+  },
+  {
+    src: "weddings/toast",
+    alt: "A bride and groom clinking champagne glasses",
+    caption: "The First Toast",
+  },
+  {
+    src: "weddings/oysters",
+    alt: "A tray of oysters served to guests at a wedding",
+    caption: "Oysters, On Ice",
+  },
+  {
+    src: "weddings/cake-chandelier",
+    alt: "A tiered wedding cake beneath a crystal chandelier",
+    caption: "The Cake, Under Crystal",
+  },
+  {
+    src: "celebrations/tea-pour",
+    alt: "A guest pouring tea at an outdoor garden celebration",
+    caption: "An Afternoon in the Garden",
+  },
+  {
+    src: "celebrations/friends",
+    alt: "Friends embracing at a long outdoor table",
+    caption: "Old Friends, Long Table",
+  },
+  {
+    src: "corporate/guests-chatting",
+    alt: "Colleagues chatting at a corporate event",
+    caption: "Business, Unhurried",
+  },
+  {
+    src: "corporate/champagne-service",
+    alt: "A waiter serving champagne to a guest in business attire",
+    caption: "Champagne on Arrival",
+  },
+  {
+    src: "food-and-drink/canapes-tray",
+    alt: "A tray of canapés",
+    caption: "The Reception Tray",
+  },
+]
+---
+
+<section class="section-padding gallery" id="gallery">
+  <div class="wrap">
+    <div class="head-row">
+      <div>
+        <div class="eyebrow" data-reveal>
+          Across the estate
+        </div>
+        <h2 data-reveal style="--d: 80ms">
+          An evening, in <em>ten</em> frames
+        </h2>
+      </div>
+      <p
+        class="lead"
+        data-reveal
+        style="--d: 160ms; max-width: 34ch; padding-bottom: 8px"
+      >
+        Drag, swipe or use the arrows — or see every photograph in the{" "}
+        <a href="/gallery" class="link-underline-inline">
+          gallery
+        </a>
+        .
+      </p>
+    </div>
+  </div>
+  <PhotoCarousel slides={carouselSlides} />
+</section>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* At phone width the shared tab-bar padding takes over again, as it did
+       when both rules sat in global.css with that one later in the file. */
+  .gallery .head-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: clamp(30px, 4vw, 48px);
+  }
+  .gallery {
+    background: #f3eddf;
+    overflow: hidden;
+  }
+</style>

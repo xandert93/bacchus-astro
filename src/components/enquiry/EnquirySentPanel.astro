@@ -1,0 +1,178 @@
+---
+// Shown in place of the form once an enquiry is sent: a confirmation and
+// what happens next. enquiry.js reveals it (.show) and fills #sentCopyLine
+// with where the confirmation email went.
+---
+
+<div class="enquiry-sent-panel" id="sent" role="status">
+  <div class="seal">
+    <svg
+      width="30"
+      height="30"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="m4 12 5 5L20 6" />
+    </svg>
+  </div>
+  <h3>
+    Your enquiry is <em>with us</em>
+  </h3>
+  <p id="sentLine">
+    Thank you — we have everything we need to start putting your proposal together.
+  </p>
+  <p id="sentCopyLine"></p>
+  <ul class="next-steps">
+    <li>
+      <span class="next-step-number">1</span>
+      <div>
+        <b>A confirmation email, now</b>
+        <p>A copy of everything you reviewed, for your records.</p>
+      </div>
+    </li>
+    <li>
+      <span class="next-step-number">2</span>
+      <div>
+        <b>A personal reply within two working days</b>
+        <p>Availability confirmed, with pricing for your date and party size.</p>
+      </div>
+    </li>
+    <li>
+      <span class="next-step-number">3</span>
+      <div>
+        <b>A viewing, whenever suits</b>
+        <p>Walk the Hall, the Terrace and the Secret Garden at your own pace.</p>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* ---------- Sent state ---------- */
+  /* The confirmation shown in place of the form once it's sent. It used to
+       borrow the calendar's card styling by carrying the .availability class
+       itself; it has its own copy of that card now (the white card below),
+       since the calendar's styles live in AvailabilityCalendar.astro. */
+  .enquiry-sent-panel {
+    background: #fff;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.1);
+    border-radius: var(--radius-card);
+    padding: clamp(22px, 4vw, 44px);
+    box-shadow: 0 40px 90px -60px rgba(var(--muted-ink-rgb), 0.4);
+  }
+  .enquiry-sent-panel {
+    display: none;
+    text-align: center;
+    padding: clamp(30px, 5vw, 56px) clamp(18px, 3vw, 34px);
+  }
+  .enquiry-sent-panel.show {
+    display: block;
+    animation: sentIn 0.7s var(--ease) both;
+  }
+  .enquiry-sent-panel .seal {
+    width: 74px;
+    height: 74px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--bronze);
+    background: rgba(var(--gold-rgb), 0.14);
+    box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.5);
+  }
+  .enquiry-sent-panel h3 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(26px, 3.2vw, 36px);
+  }
+  .enquiry-sent-panel > p {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 16px;
+    color: var(--muted-ink);
+    max-width: 46ch;
+    margin: 12px auto 0;
+  }
+  .next-steps {
+    margin: 28px auto 0;
+    max-width: 420px;
+    text-align: left;
+    display: grid;
+    gap: 18px;
+  }
+  .next-steps .next-step-number {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: "Fraunces", serif;
+    font-size: 12px;
+    background: var(--ink);
+    color: var(--limestone-2);
+  }
+  .next-steps p {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 14px;
+    color: var(--muted-ink);
+    margin-top: 2px;
+  }
+  .enquiry-sent-panel .seal :global(svg) {
+    animation: sealTick 0.7s 0.25s var(--ease) both;
+  }
+  .enquiry-sent-panel h3 :global(em) {
+    font-family: "Newsreader", Georgia, serif;
+    font-style: italic;
+    color: var(--bronze);
+  }
+  .next-steps li {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 14px;
+    align-items: start;
+    opacity: 0;
+    animation: revealUp 0.5s var(--ease) both;
+  }
+  .next-steps li:nth-child(1) {
+    animation-delay: 0.3s;
+  }
+  .next-steps li:nth-child(2) {
+    animation-delay: 0.45s;
+  }
+  .next-steps li:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+  .next-steps :global(b) {
+    font-family: "Newsreader", Georgia, serif;
+    font-weight: 500;
+    font-size: 15.5px;
+  }
+  @keyframes sentIn {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  @keyframes sealTick {
+    from {
+      opacity: 0;
+      transform: scale(0.5) rotate(-12deg);
+    }
+  }
+  @keyframes revealUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

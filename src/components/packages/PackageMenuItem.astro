@@ -1,0 +1,36 @@
+---
+// One line of a package menu: a dish, or a wine (name, grape and producer,
+// tasting note). A vegetarian dish ends in the (V) marker, wrapped together
+// with the dish's last word so the marker can never wrap onto a line of its
+// own.
+import { isWine, type PackageMenuItem, type PackageWine } from "@data/packages/types"
+
+interface Props {
+  item: PackageMenuItem | PackageWine
+}
+
+const { item } = Astro.props
+const words = isWine(item) ? [] : item.name.split(" ")
+const lastWord = words.pop()
+const leadingWords = words.join(" ")
+---
+
+{isWine(item) ? (
+  <li>
+    <span class="package-wine-name">{item.name}</span>
+    <span class="package-wine-meta">{item.meta}</span>
+    {item.note && <span class="package-wine-note">{item.note}</span>}
+  </li>
+) : item.vegetarian ? (
+  <li>
+    {leadingWords && `${leadingWords} `}
+    <span class="package-veg-marker-keep-with-word">
+      {lastWord}&nbsp;
+      <span class="package-veg-marker" role="img" aria-label="Vegetarian">
+        V
+      </span>
+    </span>
+  </li>
+) : (
+  <li>{item.name}</li>
+)}

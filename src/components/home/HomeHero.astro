@@ -1,0 +1,187 @@
+---
+// The homepage hero: the venue's photograph behind an iron portcullis that
+// lifts on load (the site's signature entrance), then the headline, copy and
+// CTAs fading up in sequence once the bars have cleared, and a scroll cue.
+// The frame itself is HeroFrame; the timings are the inline delays below.
+import HeroFrame from "@components/sections/HeroFrame.astro"
+import HeroImage from "@components/ui/HeroImage.astro"
+---
+
+<HeroFrame id="top">
+  <HeroImage
+    slot="media"
+    id="heroImg"
+    src="venue/ballroom-night"
+    alt="The Bacchus function room lit for an evening reception, with chandeliers and candlelight"
+    heroHeightVh={100}
+  />
+  <div slot="overlay" class="portcullis">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+  <h1>
+    <span class="hero-text-mask">
+      <span style="transition-delay: 1.55s">The Silent City</span>
+    </span>
+    <span class="hero-text-mask">
+      <span style="transition-delay: 1.72s">
+        keeps <em>one</em> table
+      </span>
+    </span>
+  </h1>
+  <p class="sub fade-up" style="transition-delay: 1.95s">
+    Two vaulted 17th-century chambers hold our restaurant table, while weddings and
+    private events unfold separately across the Hall, Terrace and Secret Garden.
+  </p>
+  <div class="kicker fade-up" style="transition-delay: 2.15s">
+    Mdina, Malta — within the walls since 1660
+  </div>
+  <div class="hero-ctas fade-up" style="transition-delay: 2.32s">
+    <a href="#enquire" class="button button-gradient button-shimmer">
+      <span>Plan your event</span>
+      <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+        <path
+          d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+          stroke="currentColor"
+          stroke-width="1.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </a>
+    <a href="/gallery" class="button button-ghost">
+      <span>See the rooms</span>
+    </a>
+  </div>
+  <div slot="after" class="scroll-cue">
+    Scroll<i></i>
+  </div>
+</HeroFrame>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  .portcullis {
+    position: absolute;
+    inset: 0;
+    z-index: 25;
+    display: flex;
+    pointer-events: none;
+  }
+  .portcullis .bar {
+    flex: 1;
+    background: linear-gradient(180deg, #2c2820 0%, #14120d 100%);
+    border-left: 1px solid rgba(0, 0, 0, 0.4);
+    border-right: 1px solid rgba(var(--bronze-rgb), 0.2);
+    transform: translateY(0%);
+    animation: rise 1.05s cubic-bezier(0.7, 0, 0.2, 1) forwards;
+  }
+  .portcullis .bar:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .portcullis .bar:nth-child(2) {
+    animation-delay: 0.18s;
+  }
+  .portcullis .bar:nth-child(3) {
+    animation-delay: 0.26s;
+  }
+  .portcullis .bar:nth-child(4) {
+    animation-delay: 0.34s;
+  }
+  .portcullis .bar:nth-child(5) {
+    animation-delay: 0.42s;
+  }
+  .portcullis .bar:nth-child(6) {
+    animation-delay: 0.5s;
+  }
+  .portcullis .bar:nth-child(7) {
+    animation-delay: 0.58s;
+  }
+  .portcullis .bar:nth-child(8) {
+    animation-delay: 0.66s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .portcullis .bar {
+      animation: none;
+      transform: translateY(-115%);
+    }
+  }
+  :global(.hero) .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--gold-2);
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }
+  .hero-text-mask {
+    display: block;
+    overflow: hidden;
+  }
+  .scroll-cue {
+    position: absolute;
+    right: clamp(20px, 5vw, 44px);
+    bottom: clamp(58px, 9vh, 104px);
+    z-index: 4;
+    writing-mode: vertical-rl;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .scroll-cue i {
+    display: block;
+    width: 1px;
+    height: 64px;
+    background: linear-gradient(180deg, var(--gold), transparent);
+    animation: cue 2.2s var(--ease-io) infinite;
+  }
+  @media (max-width: 820px) {
+    .scroll-cue {
+      display: none;
+    }
+  }
+  .hero-text-mask > :global(span) {
+    display: block;
+    transform: translateY(105%);
+    transition: transform 1.15s var(--ease);
+  }
+  :global(.loaded) .hero-text-mask > :global(span) {
+    transform: translateY(0);
+  }
+  @keyframes rise {
+    to {
+      transform: translateY(-115%);
+    }
+  }
+  @keyframes cue {
+    0% {
+      transform: scaleY(0);
+      transform-origin: top;
+    }
+    50% {
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+    51% {
+      transform: scaleY(1);
+      transform-origin: bottom;
+    }
+    100% {
+      transform: scaleY(0);
+      transform-origin: bottom;
+    }
+  }
+</style>

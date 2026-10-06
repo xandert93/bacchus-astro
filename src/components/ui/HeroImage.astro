@@ -1,0 +1,80 @@
+---
+// A hero photograph, served through Astro's image pipeline (astro:assets).
+//
+// SOURCE FILES: the untouched high-resolution originals from Bacchus
+// (src/assets/images/, JPEG, 2752–5056px wide), never the web copies
+// in public/images/. Those were already compressed once, and resizing them
+// meant compressing twice — visible as softness and blockiness. Measured on
+// the Weddings hero at 1600px: the old route scored 40.7 dB PSNR against the
+// original at 92 KB; AVIF from the original scores 43.2 dB at 77 KB, i.e.
+// better quality AND smaller.
+//
+// FORMATS: a <picture> offering AVIF first and WebP as the fallback. AVIF
+// is markedly smaller at the same quality; browsers that can't decode it
+// (older Safari) take the WebP. Built with getImage() rather than the
+// <Picture> component so each format gets its own quality setting — the
+// two encoders' quality scales don't mean the same thing.
+//
+// SIZES: tells the browser how wide the photo will be DRAWN, before CSS
+// loads, so it can pick a file. A hero is object-fit: cover at 118% of the
+// hero's height (.hero-media img in global.css), so it is either as wide as
+// the viewport or — on a tall screen, where its height is what's being
+// filled — wider: 1.18 × hero height × the photo's aspect ratio. It is then
+// also scaled up to 1.24× by the Ken Burns drift, so both figures include
+// that, or the browser would pick a file a size too small and the photo
+// would look soft mid-drift.
+import { getImage } from "astro:assets"
+import { image } from "@lib/images"
+
+interface Props {
+  // A key from src/lib/images.ts, e.g. "venue/ballroom-night".
+  src: string
+  alt: string
+  // The hero's height as a percentage of the viewport (100 on the homepage,
+  // 62 for .hero-sm).
+  heroHeightVh: number
+  id?: string
+}
+const { src: key, alt, heroHeightVh, id } = Astro.props
+const src = image(key)
+
+const IMG_HEIGHT_RATIO = 1.18 // .hero-media img { height: 118% }
+const MAX_DRIFT_SCALE = 1.24 // the kenburns keyframes' largest scale
+const AVIF_QUALITY = 62
+const WEBP_QUALITY = 82
+
+const aspect = src.width / src.height
+// Drawn width when height-bound, in vh.
+const heightBoundVh = IMG_HEIGHT_RATIO * heroHeightVh * aspect
+// Viewport shape (w/h) below which the photo is height-bound.
+const crossover = Math.round(heightBoundVh * 10)
+const sizes =
+  `(max-aspect-ratio: ${crossover}/1000) ${Math.ceil(heightBoundVh * MAX_DRIFT_SCALE)}vh, ` +
+  `${Math.ceil(100 * MAX_DRIFT_SCALE)}vw`
+
+// Never upscale: candidates above the source's own width are dropped.
+const widths = [640, 960, 1280, 1600, 1920, 2400, 2880, 3200, src.width]
+  .filter((w, i, all) => w <= src.width && all.indexOf(w) === i)
+  .sort((a, b) => a - b)
+
+const [avif, webp] = await Promise.all([
+  getImage({ src, widths, format: "avif", quality: AVIF_QUALITY }),
+  getImage({ src, widths, format: "webp", quality: WEBP_QUALITY }),
+])
+---
+
+<picture>
+  <source type="image/avif" srcset={avif.srcSet.attribute} sizes={sizes} />
+  <img
+    src={webp.src}
+    srcset={webp.srcSet.attribute}
+    sizes={sizes}
+    width={src.width}
+    height={src.height}
+    alt={alt}
+    id={id}
+    loading="eager"
+    fetchpriority="high"
+    decoding="async"
+  />
+</picture>

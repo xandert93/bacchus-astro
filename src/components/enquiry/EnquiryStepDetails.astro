@@ -1,0 +1,31 @@
+---
+// Wizard step 3, "Your details": name, email, phone and how to reply. Last
+// on purpose — people hand over contact details more readily once they've
+// invested in the questions before it.
+import { CONTACT_METHODS } from "@data/enquiry"
+import FormField from "@components/forms/FormField.astro"
+import TextInput from "@components/forms/TextInput.astro"
+import ChipGroup from "@components/forms/ChipGroup.astro"
+---
+
+<FormField full>
+  <Fragment slot="note">
+    We'll only use these details to follow up about your enquiry.
+  </Fragment>
+</FormField>
+<FormField label="First name" for="firstName" error="Please enter your first name.">
+  <TextInput id="firstName" placeholder="First name" />
+</FormField>
+<FormField label="Last name" for="lastName" error="Please enter your last name.">
+  <TextInput id="lastName" placeholder="Last name" />
+</FormField>
+<FormField label="Email" for="email" full error="Enter a valid email address.">
+  <TextInput id="email" type="email" placeholder="you@example.com" />
+</FormField>
+<FormField label="Phone" for="phone" full error="Enter a phone number.">
+  <TextInput id="phone" type="tel" placeholder="e.g. +356 7912 3456" />
+</FormField>
+<FormField label="How should we get back to you?" full>
+  <ChipGroup id="prefer" options={CONTACT_METHODS} selected="Email" />
+  <input type="hidden" id="preferVal" value="Email" />
+</FormField>
