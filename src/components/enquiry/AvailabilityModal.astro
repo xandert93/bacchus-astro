@@ -1,0 +1,146 @@
+---
+// The weddings page's quick-pick date modal, opened from the enquiry form's
+// "Pick a date" button: a second copy of the diary calendar, kept in sync
+// with the one on the page by availability.js's shared selection, so the
+// form's date can be filled without scrolling back up to #availability.
+// Only for pages whose EnquirySection uses datePicker="modal".
+import AvailabilityCalendar from "./AvailabilityCalendar.astro"
+---
+
+<div class="availability-modal" id="availModal">
+  <div class="availability-modal-backdrop" data-avail-modal-close></div>
+  <div class="availability-modal-panel">
+    <button
+      type="button"
+      class="availability-modal-close"
+      data-avail-modal-close
+      aria-label="Close"
+    >
+      <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+        <path
+          d="M2 2l14 14M16 2 2 16"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+    <AvailabilityCalendar
+      variant="diary"
+      id="availModalGrid"
+      dialogLabel="Choose your wedding date"
+    >
+      <button
+        slot="foot-action"
+        type="button"
+        class="button button-gradient button-small availability-modal-done"
+        id="availModalDone"
+        disabled
+      >
+        <span>Use this date</span>
+        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+          <path
+            d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </AvailabilityCalendar>
+  </div>
+</div>
+
+<style>
+  /* Scoped to this file (moved from global.css by
+     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+  /* ---------- Quick-pick calendar modal (weddings.html only) ----------
+       Reuses .availability.diary + .availability-foot unchanged inside a fixed overlay — same
+       show/hide technique as .lightbox below (opacity+visibility with a matched
+       transition-delay, not display:none, so it can actually fade — see main.js
+       for why display-based show/hide caused so much trouble on .availability-picked). */
+  .availability-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 970;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow-y: auto;
+    background: rgba(10, 9, 6, 0.7);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.35s var(--ease),
+      visibility 0s linear 0.35s;
+  }
+  .availability-modal.show {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.35s var(--ease),
+      visibility 0s linear 0s;
+  }
+  .availability-modal-backdrop {
+    position: absolute;
+    inset: 0;
+  }
+  .availability-modal-panel {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    margin: auto;
+    padding-top: 48px;
+  }
+  .availability-modal-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid rgba(var(--limestone-rgb), 0.4);
+    color: var(--limestone);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition:
+      background 0.3s var(--ease),
+      color 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+  @media (hover: hover) {
+    .availability-modal-close:hover {
+      background: var(--gold);
+      color: var(--ink);
+      border-color: var(--gold);
+    }
+  }
+  @media (hover: none) {
+    .availability-modal-close:active {
+      background: var(--gold);
+      color: var(--ink);
+      border-color: var(--gold);
+    }
+  }
+  .availability-modal-panel :global(.availability.diary) {
+    margin: 0;
+    max-width: none;
+  }
+  .availability-modal-done {
+    flex: none;
+  }
+  .availability-modal-done:disabled {
+    opacity: 0.3;
+    cursor: auto;
+    /* .button's hover (translateY + box-shadow) and ::after sheen sweep, plus its
+         :active scale-down, aren't guarded by :disabled anywhere in the shared
+         .button rules (styles.css) — browsers don't reliably suppress :hover/:active
+         on a disabled native <button> on their own, so without this the full
+         button animation set still fires while it's supposed to be inert. */
+    pointer-events: none;
+  }
+</style>
