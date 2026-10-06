@@ -26,3 +26,6 @@ pnpm-debug.log*
 # playwright
 test-results/
 playwright-report/
+
+# personal Claude Code instructions
+CLAUDE.local.md

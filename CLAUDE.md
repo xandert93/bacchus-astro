@@ -1,30 +1,44 @@
 # Bacchus — Astro build
 
 Production rebuild of the Bacchus site (restaurant + events venue, Mdina,
-Malta). The vanilla HTML prototype lives next door in `../bacchus-prototype`
-and stays the source of truth for **design decisions, content facts and the
-known-bugs list** — read its `CLAUDE.md` before changing anything visual. Don't
-duplicate that file's content here; this file only covers what is specific to
-the Astro project.
+Malta). The vanilla HTML prototype lives next door in `../bacchus-prototype`;
+it is frozen as of 2026-10-02 except for pitch-critical fixes, so changes are
+not made in two places.
 
-The prototype is frozen as of 2026-10-02 except for pitch-critical fixes, so
-changes are not made in two places.
+Personal working preferences are in `CLAUDE.local.md` (gitignored).
 
-## The user is learning Astro
+## Reference docs
 
-Never used Astro before this project; wants to learn it as we go. Knows React
-(props, components), Next.js (layouts, file-based routing) and some Vue
-(slots), so map Astro concepts onto those and spend the words on where Astro
-differs. When an Astro concept appears for the first time, explain briefly
-what it is, why Astro does it that way, and what it gains this site compared
-with the prototype. Once per concept, not every time.
+Not loaded at launch; read the relevant one before changing anything it
+covers. Two path-scoped rules in `.claude/rules/` make that automatic:
+touching `src/` brings up a rule to read the design, decisions and bug docs,
+and touching package files one to read the content docs. `docs/README.md`
+indexes them all.
 
-**Also new to Vitest and Playwright, and wants to do them hands-on (stated
-2026-10-04).** For the next several times a test is about to be written or
-run, don't just do it: walk the user through it step by step (what to type,
-where, what output to expect) so they can try it themselves and report
-back. Only take over once they say they're comfortable. Full note in the prototype's `CLAUDE.md` under "How
-this user likes to work".
+- `docs/design/design-system.md` — palette, type, motion, layout and naming
+  rules. **Read before changing anything visual.**
+- `docs/design/decisions.md` — settled UX decisions and why (nav, enquiry
+  form, calendar, package pages, testimonials, carousel).
+- `docs/content/client-facts.md` — venue, packages, prices, policies, the
+  open conflicts, what is placeholder, and questions for the client.
+- `docs/content/catalogue-copy.md` — how catalogue text is proofed.
+- `docs/engineering/known-bugs.md` — fixed bugs as lessons. **"Bug #N" and
+  "CLAUDE.md bug #N" in code comments mean this list**; numbers never change.
+- `docs/planning/roadmap.md` — feature order and backlog.
+- `docs/architecture/tech-stack.md` — the chosen stack and why, the live
+  Shopify site, payments.
+
+Rules that apply everywhere:
+
+- **Never present an unconfirmed fact as settled** (prices, capacity, space
+  names, policies). Unconfirmed or contested facts get the oxblood note; the
+  two open conflicts stay flagged until the client settles them.
+- **Real Bacchus photography only.** Never add fabricated imagery.
+- **British English**, with accents restored on foreign words.
+- **No abbreviated class names**: `.package-dining-card`, not `.pk-card`.
+- **Check every breakpoint**; prefer `clamp()`; respect reduced motion.
+- **Content is visible by default**; an animation may never be what makes it
+  appear.
 
 ## Migration plan
 
@@ -239,7 +253,7 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   wizard was extracted this way, after diffing all five prototype copies.)
 - The new nav reaches every ported page, including ones that had the old
   flat nav in the prototype. The mobile drawer still needs its first review
-  (open item in the prototype's `CLAUDE.md`).
+  (`docs/design/decisions.md`).
 - **Swapping an existing `<img>`'s `src` must wait on `img.decode()` before
   revealing it.** Browsers keep painting the previous bitmap until the new
   one is decoded, so any reused image (lightbox, stations stage) flashes
@@ -298,7 +312,7 @@ Repo: `github.com/xandert93/bacchus-astro` (private), default branch `main`.
 - When fixing a bug, add a test that fails without the fix — and confirm it
   does fail against the old code, as was done for the nav underline.
   Prototype bugs worth encoding as tests when their area is touched are in
-  the prototype's "Known bugs fixed" list.
+  `docs/engineering/known-bugs.md`.
 - Vitest is planned for pure logic (availability status, date maths, quote
   templating) once that logic is split out of `main.js`; nothing to unit
   test yet.
