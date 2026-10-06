@@ -316,11 +316,13 @@ import "@scripts/tabs.js"
       // directly (see that rule's own comment) instead of a second,
       // parallel .package-stations-stage-footer one, so the two
       // contexts can't drift out of styling sync again.
-      stage.add = el(
-        "button",
-        "button button-gradient button-small package-station-add-button",
-      )
-      stage.add.type = "button"
+      // Copied from the hidden Button StationsBrowser renders, rather
+      // than built here: a copy keeps the Button component's scoping
+      // attribute, so its styles reach it like every other button. One
+      // built with createElement would have no attribute and no styles.
+      stage.add = root
+        .querySelector("template[data-station-add-button]")
+        .content.firstElementChild.cloneNode(true)
       stage.add.addEventListener("click", function () {
         toggle(state.selected)
       })
@@ -1663,7 +1665,7 @@ import "@scripts/tabs.js"
     //
     // The animation itself is .button-shimmer's, reused rather than
     // reinvented — same keyframe (btn-shimmer-sweep, defined in
-    // styles.css), same 5s cycle, same cap of THREE repeats. That
+    // Button.astro), same 5s cycle, same cap of THREE repeats. That
     // cap is not arbitrary and is not ours to re-pick: it is
     // recorded on .button-shimmer as the point where drawing the
     // eye stops and nagging starts, "sits oddly against the site's

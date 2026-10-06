@@ -12,6 +12,7 @@
 // own lightbox group.
 import { STATIONS, STATION_CATEGORIES } from "@data/packages/reception-stations"
 import StationCard from "./StationCard.astro"
+import Button from "@components/ui/Button.astro"
 
 interface Props {
   variant: "stage" | "carousel"
@@ -97,6 +98,12 @@ const nextArrow = "M1 5h11M8.5 1.5 12 5 8.5 8.5"
         />
         <ul class="package-stations-thumbnails" role="list" hidden />
       </>
+    )}
+
+    {isStage && (
+      <template data-station-add-button>
+        <Button variant="gradient" small class="package-station-add-button" />
+      </template>
     )}
 
     <div class="package-stations-carousel">

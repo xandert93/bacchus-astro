@@ -4,6 +4,7 @@
 // wires it to whichever .availability instances exist.
 import FormField from "@components/forms/FormField.astro"
 import TextInput from "@components/forms/TextInput.astro"
+import Button from "@components/ui/Button.astro"
 ---
 
 <div class="wl-popover" id="wlPopover" role="dialog" aria-label="Join the waitlist">
@@ -41,9 +42,9 @@ import TextInput from "@components/forms/TextInput.astro"
         />
       </FormField>
       <div class="wl-form-actions">
-        <button type="submit" class="button button-gradient button-small">
+        <Button type="submit" variant="gradient" small>
           <span>Join the waitlist</span>
-        </button>
+        </Button>
       </div>
     </form>
   </div>

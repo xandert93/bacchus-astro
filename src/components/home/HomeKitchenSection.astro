@@ -3,6 +3,7 @@
 // then a call to request the menus. Restaurant-side content is kept to this
 // teaser while the events side is the focus.
 import Photo from "@components/ui/Photo.astro"
+import Button from "@components/ui/Button.astro"
 
 const DISHES = [
   {
@@ -67,37 +68,14 @@ const DISHES = [
       data-reveal
       style="--d: 340ms; margin-top: clamp(38px, 5vw, 58px)"
     >
-      <a href="#enquire" class="button button-light">
+      <Button href="#enquire" variant="light" arrow>
         <span>Request the full menus</span>
-        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-          <path
-            d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
-            stroke="currentColor"
-            stroke-width="1.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </a>
+      </Button>
     </div>
   </div>
 </section>
 
 <style>
-  /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
-  .button-light {
-    /* Filled (not outline) at rest, at reduced opacity — hover intensifies to
-         full solid rather than dropping to transparent. --bd matches --bg so
-         the border reads as part of the fill, not a separate outline. Used for
-         non-hero secondary CTAs on dark backgrounds (the hero's own secondary
-         CTA uses the real .button-ghost below instead). */
-    --bg: rgba(var(--limestone-rgb), 0.88);
-    --fg: var(--ink);
-    --bd: rgba(var(--limestone-rgb), 0.88);
-    --bg-h: var(--limestone);
-    --fg-h: var(--ink);
-  }
   .cta-row {
     display: flex;
     flex-wrap: wrap;

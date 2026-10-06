@@ -1,9 +1,9 @@
 ---
 // Four-photo strip linking through to the filtered full gallery. Tiles open
 // the page's <Lightbox /> (Lightbox.js), so a page using this needs one.
-import ArrowIcon from "@components/ui/ArrowIcon.astro"
 import GalleryTile from "@components/ui/GalleryTile.astro"
 import "@styles/gallery-grid.css"
+import Button from "@components/ui/Button.astro"
 
 interface Props {
   // Kept from the prototype because global.css targets these ids
@@ -33,15 +33,15 @@ const tag = category[0].toUpperCase() + category.slice(1)
           {lead}
         </p>
       </div>
-      <a
+      <Button
         href={`/gallery?filter=${category}`}
-        class="button button-dark"
+        variant="dark"
+        arrow
         data-reveal
         style="--d: 120ms"
       >
         <span>View Gallery</span>
-        <ArrowIcon />
-      </a>
+      </Button>
     </div>
     <div class="gallery-grid gallery-grid-four-col" id="ggrid">
       {photos.map((photo, i) => (

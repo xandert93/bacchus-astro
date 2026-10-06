@@ -2,6 +2,7 @@
 // "Built in 1657": the building's history, three counted-up facts and the
 // arch-framed bastion photograph. HomeStory.js counts the facts up on scroll.
 import Photo from "@components/ui/Photo.astro"
+import Button from "@components/ui/Button.astro"
 ---
 
 <section class="section-padding story" id="story">
@@ -44,18 +45,9 @@ import Photo from "@components/ui/Photo.astro"
         </div>
       </div>
       <div class="cta-row" data-reveal style="--d: 560ms; margin-top: 40px">
-        <a href="#events" class="button button-dark">
+        <Button href="#events" variant="dark" arrow>
           <span>Explore the spaces</span>
-          <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-            <path
-              d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
-              stroke="currentColor"
-              stroke-width="1.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </a>
+        </Button>
       </div>
     </div>
     <div class="story-visual">

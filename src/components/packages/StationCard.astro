@@ -6,6 +6,7 @@
 import type { Station } from "@data/packages/reception-stations"
 import Photo from "@components/ui/Photo.astro"
 import PackageMenuItem from "./PackageMenuItem.astro"
+import Button from "@components/ui/Button.astro"
 
 interface Props {
   station: Station
@@ -70,9 +71,10 @@ const detail = `${station.servingNote} ${station.items
       ))}
     </ul>
     <p class="package-station-serving-note">{station.servingNote}</p>
-    <button
-      type="button"
-      class="button button-gradient button-small package-station-add-button"
+    <Button
+      variant="gradient"
+      small
+      class="package-station-add-button"
       data-station={station.number}
       aria-pressed="false"
       hidden
@@ -93,6 +95,6 @@ const detail = `${station.servingNote} ${station.items
       </svg>
       <span class="package-station-add-button-label">Add to selection</span>
       <span class="package-stations-visually-hidden">— {station.name}</span>
-    </button>
+    </Button>
   </div>
 </li>

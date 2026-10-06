@@ -38,8 +38,8 @@ pipeline yet; one new thing at a time.
 high-tea,beverage}` (the agreed URL scheme). `menu.html` is deliberately not
   ported (parked restaurant content).
 - `main.js` split into per-component scripts (see Current structure).
-- Next: decide what sections the package pages carry (Visit, enquiry,
-  gallery) and in what order — open question with the user.
+- Package pages carry: hero, tiers, a closer look (photo strip), Stations
+  (Reception only), the enquiry section, Visit, footer.
 - Package styles merged 2026-10-05: `PackageTierSection.css` is shared by all four
   pages; `ReceptionStations.css` is Reception's Stations section only. A
   computed-style diff (`scripts/style-snapshot.mjs`, before vs after)
@@ -107,10 +107,17 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   - `home/`, `weddings/` — sections only one page uses (`HomeHero`,
     `HomeStory`, `HomeEventsSection`, `WeddingsPackages`,
     `WeddingsAvailability`, …).
-- `.button` is deliberately NOT a component: it is a sitewide primitive
-  (global.css) that scripts also create (Reception's stage "Add to
-  selection") and other components style in context (`.nav-cta
-:global(.button)`), so its styles must stay global anyway.
+- **Every button is `<Button>`** (`ui/Button.astro`): `href` makes an
+  `<a>`, `as="span"` a decorative pill inside a card that is itself the
+  link, otherwise a `<button>` (type="button" by default). `variant`
+  (gradient · ghost · dark · light · gold-outline), `small`, `shimmer` and
+  `arrow` (the trailing ArrowIcon) set the look; any other attribute, or a
+  `class`, goes straight onto the element, so parents still style buttons in
+  context. Button.astro owns every `.button` style. The one button a script
+  needs (Reception's stage "Add to selection") is copied from a hidden
+  `<template>` Button in StationsBrowser rather than built with
+  createElement, so it carries the component's scoping like the rest —
+  **do the same for any button a script adds later.**
 - `EnquirySection` props: `eventType` (sets the selected chip AND the
   initial visibility of every field enquiry.js toggles per type, so there is no
   post-load flash), `datePicker` (`inline` compact calendar, or `modal` for
@@ -136,8 +143,8 @@ Sanity (schemas already drafted in `../bacchus-prototype/sanity/`). **Phase 4**
   renders the picker cards and dots from it at build time; `testimonials.js`
   renders the active quote (it has to measure it to cap it at five lines).
 - **Styles: global.css holds only what is genuinely sitewide** (cleaned
-  2026-10-06, 10,299 lines down to ~870): design tokens, the reset and base
-  element styles, the shared primitives (`.button` family, `.eyebrow`,
+  2026-10-06, 10,299 lines down to ~570): design tokens, the reset and base
+  element styles, the shared primitives (`.eyebrow`,
   `.lead`, headings, `.link-underline-inline`, `.wrap`, section padding,
   `.on-dark`, `.section-head`, `.split`, `.arch`), and sitewide behaviour
   hooks (`[data-reveal]`, the scroll lock, safe reveals, reduced motion).
