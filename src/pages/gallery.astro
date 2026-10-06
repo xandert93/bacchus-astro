@@ -65,8 +65,8 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "@data/gallery"
            at first paint. Keep it to this one job. */}
       <script is:inline>
         ;(() => {
-          var requested = new URLSearchParams(location.search).get("filter")
-          var radio = requested && document.getElementById("gf-" + requested)
+          const requested = new URLSearchParams(location.search).get("filter")
+          const radio = requested && document.getElementById("gf-" + requested)
           if (radio) radio.checked = true
         })()
       </script>

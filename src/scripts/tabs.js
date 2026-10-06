@@ -25,8 +25,8 @@ import { reduce } from "./lib/motion.js"
 export const initTabGroup = (container, opts) => {
   opts = opts || {}
   if (!container) return null
-  var groupTabs = [].slice.call(container.querySelectorAll("button"))
-  var groupPill = container.querySelector(".pill")
+  const groupTabs = [].slice.call(container.querySelectorAll("button"))
+  const groupPill = container.querySelector(".pill")
   if (!groupTabs.length) return null
   const movePill = (btn) => {
     if (!groupPill) return
@@ -51,7 +51,7 @@ export const initTabGroup = (container, opts) => {
       document.querySelectorAll(opts.panelSelector).forEach((p) => {
         p.classList.remove("active")
       })
-      var panel = document.querySelector(
+      const panel = document.querySelector(
         opts.panelSelector + '[data-panel="' + btn.dataset.tab + '"]',
       )
       if (panel) panel.classList.add("active")
@@ -67,7 +67,7 @@ export const initTabGroup = (container, opts) => {
     })
   })
   const syncPill = () => {
-    var a = container.querySelector("button.active")
+    const a = container.querySelector("button.active")
     if (!a) return
     // Also on load/resize, not just on click: a row that fit a moment
     // ago may not after a resize, and a page deep-linked to a later tab
@@ -133,14 +133,14 @@ export const initTabGroup = (container, opts) => {
 // someone who was only switching tabs.
 export const ensureTabVisibleIn = (container, btn) => {
   if (!container || !btn) return
-  var style = window.getComputedStyle(container)
-  var padLeft = parseFloat(style.paddingLeft) || 0
-  var padRight = parseFloat(style.paddingRight) || 0
-  var barRect = container.getBoundingClientRect()
-  var innerLeft = barRect.left + padLeft
-  var innerRight = barRect.right - padRight
-  var btnRect = btn.getBoundingClientRect()
-  var behavior = reduce ? "auto" : "smooth"
+  const style = window.getComputedStyle(container)
+  const padLeft = parseFloat(style.paddingLeft) || 0
+  const padRight = parseFloat(style.paddingRight) || 0
+  const barRect = container.getBoundingClientRect()
+  const innerLeft = barRect.left + padLeft
+  const innerRight = barRect.right - padRight
+  const btnRect = btn.getBoundingClientRect()
+  const behavior = reduce ? "auto" : "smooth"
   if (btnRect.left < innerLeft) {
     container.scrollBy({ left: btnRect.left - innerLeft, behavior: behavior })
   } else if (btnRect.right > innerRight) {

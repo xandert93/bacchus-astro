@@ -5,16 +5,16 @@ import { TESTIMONIALS } from "@data/testimonials"
 
 // ---------- Testimonials rotator ----------
 ;(() => {
-  var section = document.getElementById("testimonials")
-  var quoteBox = document.getElementById("tQuoteBox")
-  var quoteEl = document.getElementById("tQuote")
-  var metaEl = document.getElementById("tMeta")
-  var cardsWrap = document.getElementById("tCards")
-  var dotsWrap = document.getElementById("tDots")
-  var prevBtn = document.getElementById("tPrev")
-  var nextBtn = document.getElementById("tNext")
-  var ringFill = document.getElementById("tRingFill")
-  var starsWrap = document.getElementById("tStars")
+  const section = document.getElementById("testimonials")
+  const quoteBox = document.getElementById("tQuoteBox")
+  const quoteEl = document.getElementById("tQuote")
+  const metaEl = document.getElementById("tMeta")
+  const cardsWrap = document.getElementById("tCards")
+  const dotsWrap = document.getElementById("tDots")
+  const prevBtn = document.getElementById("tPrev")
+  const nextBtn = document.getElementById("tNext")
+  const ringFill = document.getElementById("tRingFill")
+  const starsWrap = document.getElementById("tStars")
   if (
     !section ||
     !quoteBox ||
@@ -28,9 +28,9 @@ import { TESTIMONIALS } from "@data/testimonials"
     !starsWrap
   )
     return
-  var stars = [].slice.call(starsWrap.children)
+  const stars = [].slice.call(starsWrap.children)
   // Keep in sync with the r="23" on #tRingFill/.testimonial-ring-track in the markup.
-  var T_RING_CIRC = 2 * Math.PI * 23
+  const T_RING_CIRC = 2 * Math.PI * 23
   ringFill.style.strokeDasharray = String(T_RING_CIRC)
 
   // The testimonials themselves live in src/data/testimonials.ts, shared
@@ -38,39 +38,39 @@ import { TESTIMONIALS } from "@data/testimonials"
   // <em> markers become real <em> elements (see tBuildQuoteNodes) — the
   // gold comes from Testimonials.astro's .quote blockquote em rule, the
   // italic from <em>'s own default.
-  var items = TESTIMONIALS
+  const items = TESTIMONIALS
 
-  var tActive = 0,
+  let tActive = 0,
     tFadeTimer = null,
     tRafId = null,
     tCycleStart = null,
     tProgress = 0
-  var T_FADE_MS = 220
-  var T_CYCLE_MS = 8000
+  const T_FADE_MS = 220
+  const T_CYCLE_MS = 8000
 
   // Cards and dots are rendered by Testimonials.astro, one per item, in order.
-  var cards = [].slice.call(cardsWrap.children)
+  const cards = [].slice.call(cardsWrap.children)
   cards.forEach((card, i) => {
     card.addEventListener("click", () => {
       tShow(i)
     })
   })
-  var dots = [].slice.call(dotsWrap.children)
+  const dots = [].slice.call(dotsWrap.children)
 
-  var T_MAX_LINES = 5
+  const T_MAX_LINES = 5
 
   // Turns <em>...</em> markers in a quote string into real <em> elements
   // (plain text elsewhere) — safe here since `text` only ever comes from
   // our own hardcoded items array above, never remote/user content.
   const tBuildQuoteNodes = (text) => {
-    var frag = document.createDocumentFragment()
-    var re = /<em>(.*?)<\/em>/g
-    var lastIndex = 0,
+    const frag = document.createDocumentFragment()
+    const re = /<em>(.*?)<\/em>/g
+    let lastIndex = 0,
       m
     while ((m = re.exec(text))) {
       if (m.index > lastIndex)
         frag.appendChild(document.createTextNode(text.slice(lastIndex, m.index)))
-      var em = document.createElement("em")
+      const em = document.createElement("em")
       em.textContent = m[1]
       frag.appendChild(em)
       lastIndex = re.lastIndex
@@ -86,13 +86,13 @@ import { TESTIMONIALS } from "@data/testimonials"
   // gets an ellipsis instead of the closing mark, so `closed` is omitted.
   const tSetQuoteContent = (text, closed) => {
     quoteEl.textContent = ""
-    var open = document.createElement("span")
+    const open = document.createElement("span")
     open.className = "testimonial-quote-mark"
     open.textContent = "“"
     quoteEl.appendChild(open)
     quoteEl.appendChild(tBuildQuoteNodes(text))
     if (closed) {
-      var close = document.createElement("span")
+      const close = document.createElement("span")
       close.className = "testimonial-quote-mark"
       close.textContent = "”"
       quoteEl.appendChild(close)
@@ -100,31 +100,31 @@ import { TESTIMONIALS } from "@data/testimonials"
   }
 
   const tRender = (i) => {
-    var item = items[i]
+    const item = items[i]
     tSetQuoteContent(item.quote, true)
-    var lineHeight = parseFloat(getComputedStyle(quoteEl).lineHeight)
+    const lineHeight = parseFloat(getComputedStyle(quoteEl).lineHeight)
     if (lineHeight) {
-      var maxHeight = lineHeight * T_MAX_LINES + 1
+      const maxHeight = lineHeight * T_MAX_LINES + 1
       // Word-split on the <em>-stripped text, not item.quote directly — an
       // </em> could otherwise land past the cut and leave an emphasis span
       // unclosed. The truncated result is always rendered as plain text
       // (tSetQuoteContent falls back to that automatically when there's no
       // <em> marker left to match), which is an acceptable simplification
       // since none of the current quotes actually reach the 5-line cap.
-      var words = item.quote.replace(/<\/?em>/g, "").split(" ")
+      const words = item.quote.replace(/<\/?em>/g, "").split(" ")
       while (words.length > 1 && quoteEl.scrollHeight > maxHeight) {
         words.pop()
         tSetQuoteContent(words.join(" ") + "…", false)
       }
     }
     metaEl.textContent = ""
-    var nameEl = document.createElement("div")
+    const nameEl = document.createElement("div")
     nameEl.className = "testimonial-meta-name"
     nameEl.textContent = item.name
     metaEl.appendChild(nameEl)
-    var sub = [item.category, item.location]
+    const sub = [item.category, item.location]
     if (item.date) sub.push(item.date)
-    var subEl = document.createElement("div")
+    const subEl = document.createElement("div")
     subEl.className = "testimonial-meta-sub"
     subEl.textContent = sub.join(" · ")
     metaEl.appendChild(subEl)
@@ -153,7 +153,7 @@ import { TESTIMONIALS } from "@data/testimonials"
   // the Fraunces web font (loaded with font-display: swap) both affect wrap.
   const tMeasureMinHeight = () => {
     quoteBox.style.minHeight = "0px"
-    var max = 0
+    let max = 0
     items.forEach((item, i) => {
       tRender(i)
       max = Math.max(max, quoteBox.offsetHeight)
@@ -226,14 +226,14 @@ import { TESTIMONIALS } from "@data/testimonials"
   // A decisive horizontal swipe on the quote steps prev/next, the same as
   // the arrows — the lightbox's gesture, touch and pen only: with a mouse,
   // dragging across the quote is how a visitor selects its text.
-  var tSwipe = null
+  let tSwipe = null
   quoteBox.addEventListener("pointerdown", (e) => {
     tSwipe = e.pointerType === "mouse" ? null : { x: e.clientX, y: e.clientY }
   })
   quoteBox.addEventListener("pointerup", (e) => {
     if (!tSwipe) return
-    var dx = e.clientX - tSwipe.x
-    var dy = e.clientY - tSwipe.y
+    const dx = e.clientX - tSwipe.x
+    const dy = e.clientY - tSwipe.y
     tSwipe = null
     if (Math.abs(dx) <= 50 || Math.abs(dx) <= Math.abs(dy)) return
     if (dx < 0) tNext()
@@ -279,13 +279,13 @@ import { TESTIMONIALS } from "@data/testimonials"
   // on every relevant state change (visibility, hover, a new testimonial
   // shown) instead of scattering one-off tStart()/tPause() calls that each
   // only covered their own trigger and left the others with no way back in.
-  var tHovering = false,
+  let tHovering = false,
     tInView = false
   const tSync = () => {
     if (!reduce && tInView && !tHovering) tStart()
     else tPause()
   }
-  var tObs = new IntersectionObserver(
+  const tObs = new IntersectionObserver(
     (es) => {
       es.forEach((e) => {
         tInView = e.isIntersecting

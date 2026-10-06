@@ -139,7 +139,8 @@ if (lb) {
     const reveal = () => {
       if (mine === token) lbImg.classList.remove("lightbox-loading")
     }
-    lbImg.decode ? lbImg.decode().then(reveal, reveal) : reveal()
+    if (lbImg.decode) lbImg.decode().then(reveal, reveal)
+    else reveal()
   }
 
   const openAt = (item) => {
@@ -164,7 +165,8 @@ if (lb) {
         if (mine !== token) return
         setTimeout(() => lbImg.classList.remove("lightbox-fade"), 20)
       }
-      lbImg.decode ? lbImg.decode().then(fadeIn, fadeIn) : fadeIn()
+      if (lbImg.decode) lbImg.decode().then(fadeIn, fadeIn)
+      else fadeIn()
     }, LB_FADE_MS)
   }
 

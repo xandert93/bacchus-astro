@@ -9,15 +9,15 @@ import { reduce } from "./lib/motion.js"
 import { isScrollLocked, lockScroll, unlockScroll } from "./lib/scroll-lock.js"
 
 // ---------- Nav: scroll state, progress bar, section spy, parallax ----------
-var nav = document.getElementById("nav"),
+const nav = document.getElementById("nav"),
   progress = document.getElementById("progress")
-var links = [].slice.call(document.querySelectorAll("#navlinks a"))
-var heroImg = document.getElementById("heroImg")
-var ticking = false
+const links = [].slice.call(document.querySelectorAll("#navlinks a"))
+const heroImg = document.getElementById("heroImg")
+let ticking = false
 const onScroll = () => {
-  var y = window.scrollY || 0
+  const y = window.scrollY || 0
   if (nav) nav.classList.toggle("stuck", y > 60)
-  var max = document.documentElement.scrollHeight - window.innerHeight
+  const max = document.documentElement.scrollHeight - window.innerHeight
   if (progress) progress.style.transform = "scaleX(" + (max > 0 ? y / max : 0) + ")"
   if (heroImg && !reduce && y < window.innerHeight)
     heroImg.style.transform = "translate3d(0," + y * 0.22 + "px,0)"
@@ -44,7 +44,7 @@ const onScroll = () => {
 // isn't perceptible). This generalises that to vertical page scrolling,
 // where it applies for identical reasons — the tier section is simply
 // where it was noticed, being tall, image-heavy and full of reveals.
-var scrollingOffTimer = null
+let scrollingOffTimer = null
 const markScrolling = () => {
   document.body.classList.add("is-scrolling")
   clearTimeout(scrollingOffTimer)
@@ -71,7 +71,7 @@ window.addEventListener(
 onScroll()
 
 if (links.length) {
-  var secObs = new IntersectionObserver(
+  const secObs = new IntersectionObserver(
     (es) => {
       es.forEach((e) => {
         if (e.isIntersecting)
@@ -84,24 +84,25 @@ if (links.length) {
   )
   links.forEach((l) => {
     if (!l.dataset.sec) return
-    var el = document.getElementById(l.dataset.sec)
+    const el = document.getElementById(l.dataset.sec)
     if (el) secObs.observe(el)
   })
 }
 
 // ---------- Mobile menu ----------
-var burger = document.getElementById("burger")
-var mlinks = [].slice.call(document.querySelectorAll(".mobile-nav-link"))
+const burger = document.getElementById("burger")
+const mlinks = [].slice.call(document.querySelectorAll(".mobile-nav-link"))
 mlinks.forEach((a, i) => {
   a.style.setProperty("--m-delay", 0.16 + i * 0.075 + "s")
 })
 const pageKey = (p) => {
-  var seg = p.split("#")[0].split("?")[0].split("/").filter(Boolean).pop() || "index.html"
+  const seg =
+    p.split("#")[0].split("?")[0].split("/").filter(Boolean).pop() || "index.html"
   return seg.replace(/\.html$/, "")
 }
-var curPage = pageKey(location.pathname)
+const curPage = pageKey(location.pathname)
 mlinks.forEach((a) => {
-  var href = a.getAttribute("href")
+  const href = a.getAttribute("href")
   if (!href || href.charAt(0) === "#") return
   if (pageKey(href) === curPage) a.setAttribute("aria-current", "page")
 })
@@ -144,7 +145,7 @@ const closeMenu = () => {
 // the desktop panel's 0.3s fade are the same bug, and the first desktop fix
 // only removed the classes — which starts the fade rather than skipping it.
 const withoutNavTransitions = (fn) => {
-  var root = document.documentElement
+  const root = document.documentElement
   root.classList.add("nav-no-anim")
   void root.offsetHeight
   fn()
@@ -159,13 +160,13 @@ const closeMenuInstantly = () => {
 // snapping the overlay shut would just look abrupt, and for a row that goes
 // nowhere it would be worse than abrupt.
 const closeMenuForLink = (a) => {
-  var href = a.getAttribute("href")
-  var leaves = href && href.charAt(0) !== "#" && !a.hasAttribute("data-unbuilt")
+  const href = a.getAttribute("href")
+  const leaves = href && href.charAt(0) !== "#" && !a.hasAttribute("data-unbuilt")
   return leaves ? closeMenuInstantly : closeMenu
 }
 if (burger) {
   burger.addEventListener("click", () => {
-    var open = document.body.classList.toggle("menu-open")
+    const open = document.body.classList.toggle("menu-open")
     burger.setAttribute("aria-expanded", open ? "true" : "false")
     if (open) lockScroll("drawer")
     else unlockScroll("drawer")
@@ -194,7 +195,7 @@ if (burger) {
 // here and leaving the copies to drift. HTMLElement.click() dispatches
 // regardless of the button being display: none, and nothing in those
 // handlers inspects event.isTrusted.
-var navCutover = window.matchMedia("(min-width: 980px)")
+const navCutover = window.matchMedia("(min-width: 980px)")
 const onNavCutoverChange = (e) => {
   if (!e.matches || !burger) return
   if (!document.body.classList.contains("menu-open")) return
@@ -241,7 +242,7 @@ window.addEventListener("pagehide", forceDrawerClosedWithoutAnimating)
 window.addEventListener("pageshow", (e) => {
   // A genuine fresh load needs none of this: CSS already has .menu at
   // opacity 0 / visibility hidden, so there is nothing to hide.
-  var locked = document.body.classList.contains("menu-open") || isScrollLocked()
+  const locked = document.body.classList.contains("menu-open") || isScrollLocked()
   if (!e.persisted && !locked) return
   forceDrawerClosedWithoutAnimating()
   requestAnimationFrame(() => {
@@ -282,7 +283,7 @@ document.addEventListener("keydown", (e) => {
     })
   })
 
-  var dds = [].slice.call(document.querySelectorAll(".nav-dd"))
+  const dds = [].slice.call(document.querySelectorAll(".nav-dd"))
 
   // Promotes every data-src in one dropdown to a real src, once. One <img>
   // per crossfade state would otherwise mean every panel photograph
@@ -307,13 +308,13 @@ document.addEventListener("keydown", (e) => {
   // the trigger's box before reaching the panel. A short close-delay
   // tolerates being briefly "outside" while still moving. See the long
   // comment above .nav-dd.is-hovering in styles.css.
-  var ddHoverCapable = window.matchMedia("(hover: hover)").matches
-  var ddInstances = []
+  const ddHoverCapable = window.matchMedia("(hover: hover)").matches
+  const ddInstances = []
   dds.forEach((dd) => {
-    var ddChevronButton = dd.querySelector(".nav-dd-split-chevron-button")
+    const ddChevronButton = dd.querySelector(".nav-dd-split-chevron-button")
     if (!ddChevronButton) return
-    var ddLink = dd.querySelector(":scope > a")
-    var ddCloseTimer = null
+    const ddLink = dd.querySelector(":scope > a")
+    let ddCloseTimer = null
 
     const closeDd = () => {
       clearTimeout(ddCloseTimer)
@@ -336,7 +337,7 @@ document.addEventListener("keydown", (e) => {
 
     ddChevronButton.addEventListener("click", () => {
       primeDropdownMedia(dd)
-      var open = dd.classList.toggle("is-open")
+      const open = dd.classList.toggle("is-open")
       ddChevronButton.setAttribute("aria-expanded", open ? "true" : "false")
       if (open) {
         closeOtherDds()
@@ -361,9 +362,9 @@ document.addEventListener("keydown", (e) => {
     // label, so the bar still says where you are once the page it names is
     // one level down. The label's own href is checked too, since the hub is
     // a real page in this structure.
-    var ddHasActive = false
+    let ddHasActive = false
     ;[].slice.call(dd.querySelectorAll(".nav-dd-item, .nav-dd-hub-link")).forEach((a) => {
-      var href = a.getAttribute("href")
+      const href = a.getAttribute("href")
       if (href && href !== "#" && pageKey(href) === curPage) {
         a.classList.add("active")
         // The dot is visual only; this is what tells a screen reader.
@@ -372,7 +373,7 @@ document.addEventListener("keydown", (e) => {
       }
     })
     if (ddLink) {
-      var ownHref = ddLink.getAttribute("href")
+      const ownHref = ddLink.getAttribute("href")
       if (ownHref && ownHref !== "#" && pageKey(ownHref) === curPage) {
         ddHasActive = true
       }
@@ -417,7 +418,7 @@ document.addEventListener("keydown", (e) => {
   // Plain top-level links (Gallery, and anything else not in a dropdown).
   ;[].slice.call(document.querySelectorAll(".nav-links > li > a")).forEach((a) => {
     if (a.closest(".nav-dd")) return
-    var href = a.getAttribute("href")
+    const href = a.getAttribute("href")
     if (href && href !== "#" && pageKey(href) === curPage) {
       a.classList.add("active")
     }
@@ -440,8 +441,8 @@ document.addEventListener("keydown", (e) => {
   // .menu-scroll, not #mobmenu — the overlay's scrolling moved one level in
   // so that .menu-bg could stop fighting .menu's transform. Falls back to
   // the overlay itself for any page that still has the older structure.
-  var overlayRoot = document.getElementById("mobmenu")
-  var overlayEl = overlayRoot
+  const overlayRoot = document.getElementById("mobmenu")
+  const overlayEl = overlayRoot
     ? overlayRoot.querySelector(".menu-scroll") || overlayRoot
     : null
   if (overlayEl && nav) {
@@ -478,12 +479,12 @@ document.addEventListener("keydown", (e) => {
   // real phone before deciding whether collapsing is wanted at all. Set
   // back to false for the accordion. Nothing else needs changing - the
   // CSS rules this drives are keyed off .is-pinned-open.
-  var DRAWER_GROUPS_PINNED_OPEN = false
+  const DRAWER_GROUPS_PINNED_OPEN = false
 
-  var groups = [].slice.call(document.querySelectorAll(".mobile-nav-group"))
+  const groups = [].slice.call(document.querySelectorAll(".mobile-nav-group"))
   groups.forEach((g, gi) => {
-    var trigger = g.querySelector(".mobile-nav-group-trigger")
-    var sub = g.querySelector(".mobile-nav-sub")
+    const trigger = g.querySelector(".mobile-nav-group-trigger")
+    const sub = g.querySelector(".mobile-nav-sub")
     // aria-controls, generated here rather than authored per page: the
     // trigger already announced its expanded state but never said WHAT it
     // expands, so a screen reader had no way to associate the two. Ids are
@@ -493,9 +494,9 @@ document.addEventListener("keydown", (e) => {
       if (!sub.id) sub.id = "mobile-nav-sub-" + (gi + 1)
       trigger.setAttribute("aria-controls", sub.id)
     }
-    var hasActive = false
+    let hasActive = false
     ;[].slice.call(g.querySelectorAll(".mobile-nav-sub-link")).forEach((a) => {
-      var href = a.getAttribute("href")
+      const href = a.getAttribute("href")
       if (href && href !== "#" && pageKey(href) === curPage) {
         a.setAttribute("aria-current", "page")
         hasActive = true
@@ -515,7 +516,7 @@ document.addEventListener("keydown", (e) => {
     }
     if (trigger) {
       trigger.addEventListener("click", () => {
-        var open = g.classList.toggle("is-open")
+        const open = g.classList.toggle("is-open")
         trigger.setAttribute("aria-expanded", open ? "true" : "false")
         // One group open at a time. The drawer is a height-constrained
         // surface and these groups are tall - measured on a 375x667 phone,
@@ -527,7 +528,7 @@ document.addEventListener("keydown", (e) => {
         groups.forEach((other) => {
           if (other === g) return
           other.classList.remove("is-open")
-          var t = other.querySelector(".mobile-nav-group-trigger")
+          const t = other.querySelector(".mobile-nav-group-trigger")
           if (t) t.setAttribute("aria-expanded", "false")
         })
       })
@@ -545,15 +546,15 @@ document.addEventListener("keydown", (e) => {
   // of hard-coding "Restaurant", so reordering the nav moves this with it.
   const applyDefaultGroupState = () => {
     if (!groups.length) return
-    var target = null
+    let target = null
     groups.forEach((g) => {
       if (g.dataset.hasActive === "true") target = g
     })
     if (!target) target = groups[0]
     groups.forEach((g) => {
-      var open = g === target
+      const open = g === target
       g.classList.toggle("is-open", open)
-      var t = g.querySelector(".mobile-nav-group-trigger")
+      const t = g.querySelector(".mobile-nav-group-trigger")
       if (t) t.setAttribute("aria-expanded", open ? "true" : "false")
     })
     restaggerDrawerRows()
@@ -568,7 +569,7 @@ document.addEventListener("keydown", (e) => {
   // recomputed whenever which group is open changes.
   const restaggerDrawerRows = () => {
     if (!overlayRoot) return
-    var rows = []
+    const rows = []
     ;[].slice
       .call(overlayRoot.querySelectorAll(".mobile-nav-group, .mobile-nav-link"))
       .forEach((el) => {
@@ -576,7 +577,7 @@ document.addEventListener("keydown", (e) => {
           rows.push(el)
           return
         }
-        var t = el.querySelector(".mobile-nav-group-trigger")
+        const t = el.querySelector(".mobile-nav-group-trigger")
         if (t) rows.push(t)
         if (!el.classList.contains("is-open")) return
         ;[].slice.call(el.querySelectorAll(".mobile-nav-sub-link")).forEach((a) => {
@@ -637,7 +638,7 @@ document.addEventListener("keydown", (e) => {
   // the panel alone, since the visitor is staying on it.
   ddInstances.forEach((i) => {
     ;[].slice.call(i.dd.querySelectorAll("a[href]")).forEach((a) => {
-      var href = a.getAttribute("href")
+      const href = a.getAttribute("href")
       if (!href || href.charAt(0) === "#") return
       a.addEventListener("click", () => {
         // Everything that holds this panel open has to let go INSIDE one
@@ -659,7 +660,7 @@ document.addEventListener("keydown", (e) => {
         // neither cancels it nor preventDefaults anything.
         withoutNavTransitions(() => {
           a.blur()
-          var active = document.activeElement
+          const active = document.activeElement
           if (active && i.dd.contains(active)) active.blur()
           i.closeDd()
         })
@@ -685,9 +686,9 @@ document.addEventListener("keydown", (e) => {
   // :focus-within with transitions LIVE and starts a 0.3s fade one frame
   // before the freeze, which is the worst possible moment to start one.
   window.addEventListener("pagehide", () => {
-    var active = document.activeElement
+    const active = document.activeElement
     if (!active || active === document.body) return
-    var inPanel = false
+    let inPanel = false
     ddInstances.forEach((i) => {
       if (i.dd.contains(active)) inPanel = true
     })
@@ -747,7 +748,7 @@ document.addEventListener("keydown", (e) => {
   // what happens at init and is safe because every row is at opacity 0 at
   // that moment anyway.
   if (burger && groups.length && !DRAWER_GROUPS_PINNED_OPEN) {
-    var resetTimer = null
+    let resetTimer = null
     burger.addEventListener("click", () => {
       clearTimeout(resetTimer)
       resetTimer = null

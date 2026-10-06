@@ -33,19 +33,19 @@ import "@scripts/tabs.js"
 // function — see that variable's own comment below for the full
 // reasoning.
 ;[].slice.call(document.querySelectorAll('[data-stations="stage"]')).forEach((root) => {
-  var tabs = [].slice.call(root.querySelectorAll(".package-stations-category-tab"))
-  var panel = root.querySelector("#stations-panel")
-  var indexEl = root.querySelector(".package-stations-index")
-  var stageEl = root.querySelector(".package-stations-stage")
-  var thumbsEl = root.querySelector(".package-stations-thumbnails")
-  var track = root.querySelector(".package-stations-card-list")
-  var cardEls = [].slice.call(root.querySelectorAll(".package-station-card"))
-  var nav = root.querySelector(".package-stations-carousel-nav")
-  var prevBtn = root.querySelector("[data-carousel-prev]")
-  var nextBtn = root.querySelector("[data-carousel-next]")
-  var countCur = root.querySelector("[data-carousel-current]")
-  var countTot = root.querySelector("[data-carousel-total]")
-  var tabsEl = root.querySelector(".package-stations-category-tabs")
+  const tabs = [].slice.call(root.querySelectorAll(".package-stations-category-tab"))
+  const panel = root.querySelector("#stations-panel")
+  const indexEl = root.querySelector(".package-stations-index")
+  const stageEl = root.querySelector(".package-stations-stage")
+  const thumbsEl = root.querySelector(".package-stations-thumbnails")
+  const track = root.querySelector(".package-stations-card-list")
+  const cardEls = [].slice.call(root.querySelectorAll(".package-station-card"))
+  const nav = root.querySelector(".package-stations-carousel-nav")
+  const prevBtn = root.querySelector("[data-carousel-prev]")
+  const nextBtn = root.querySelector("[data-carousel-next]")
+  const countCur = root.querySelector("[data-carousel-current]")
+  const countTot = root.querySelector("[data-carousel-total]")
+  const tabsEl = root.querySelector(".package-stations-category-tabs")
   if (!tabs.length || !stageEl || !track || !cardEls.length) return
 
   // SECTION C ONLY (2026-09-29) — the one behavioural branch in
@@ -67,22 +67,22 @@ import "@scripts/tabs.js"
   // section B's own carousel controller already documents,
   // asked for here specifically for the phone carousel, not the
   // tablet thumbnails.
-  var isMobtabClone = !!root.closest(".package-stations-hybrid-mobtab")
+  const isMobtabClone = !!root.closest(".package-stations-hybrid-mobtab")
 
-  var PLUS = "M12 5v14M5 12h14"
-  var TICK = "M5 12l5 5 9-10"
+  const PLUS = "M12 5v14M5 12h14"
+  const TICK = "M5 12l5 5 9-10"
   // Same 14-unit span/centering as PLUS/TICK above (5-19 out of
   // the shared 0 0 24 24 viewBox), so the hover-only "Remove"
   // icon reads as the same family rather than a mismatched size.
-  var CROSS = "M5 5l14 14M19 5 5 19"
+  const CROSS = "M5 5l14 14M19 5 5 19"
   // Gates the hover-to-"Remove" swap in paintAdd() below to real
   // pointer devices, matching this file's other hover/touch
   // splits (CLAUDE.md bug #19) — touch has no hover to trigger it
   // from, so there's nothing to gate wrong there either way, but
   // checking once here avoids a matchMedia() call on every
   // pointerenter.
-  var supportsHover = window.matchMedia && window.matchMedia("(hover: hover)").matches
-  var tabletDown = window.matchMedia("(max-width: 859.98px)")
+  const supportsHover = window.matchMedia && window.matchMedia("(hover: hover)").matches
+  const tabletDown = window.matchMedia("(max-width: 859.98px)")
 
   // ---- data, read once from the cards ----
   // dataset.labelFull fallback (2026-09-29, twenty-fifth pass) —
@@ -97,13 +97,13 @@ import "@scripts/tabs.js"
   // Provably behaviour-neutral for real section A: it has no
   // data-label-full anywhere, so `|| t.textContent` is exactly
   // what already ran for it.
-  var groups = tabs.map((t) => ({
+  const groups = tabs.map((t) => ({
     id: t.dataset.group,
     label: (t.dataset.labelFull || t.textContent).trim(),
     tab: t,
   }))
-  var stations = cardEls.map((card) => {
-    var img = card.querySelector("img")
+  const stations = cardEls.map((card) => {
+    const img = card.querySelector("img")
     return {
       id: card.dataset.station,
       group: card.dataset.group,
@@ -125,28 +125,28 @@ import "@scripts/tabs.js"
     }
   })
   const byId = (id) => {
-    for (var i = 0; i < stations.length; i++)
+    for (let i = 0; i < stations.length; i++)
       if (stations[i].id === id) return stations[i]
     return null
   }
   const inGroup = (g) => stations.filter((s) => s.group === g)
   const groupLabel = (g) => {
-    for (var i = 0; i < groups.length; i++) if (groups[i].id === g) return groups[i].label
+    for (let i = 0; i < groups.length; i++) if (groups[i].id === g) return groups[i].label
     return ""
   }
 
-  var state = { group: groups[0].id, selected: stations[0].id, added: {} }
+  const state = { group: groups[0].id, selected: stations[0].id, added: {} }
 
   // ---- small DOM helpers ----
   const el = (tag, cls, text) => {
-    var n = document.createElement(tag)
+    const n = document.createElement(tag)
     if (cls) n.className = cls
     if (text != null) n.textContent = text
     return n
   }
   const svg = (path, size, cls) => {
-    var ns = "http://www.w3.org/2000/svg"
-    var s = document.createElementNS(ns, "svg")
+    const ns = "http://www.w3.org/2000/svg"
+    const s = document.createElementNS(ns, "svg")
     s.setAttribute("width", size)
     s.setAttribute("height", size)
     s.setAttribute("viewBox", "0 0 24 24")
@@ -157,13 +157,13 @@ import "@scripts/tabs.js"
     s.setAttribute("stroke-linejoin", "round")
     s.setAttribute("aria-hidden", "true")
     if (cls) s.setAttribute("class", cls)
-    var p = document.createElementNS(ns, "path")
+    const p = document.createElementNS(ns, "path")
     p.setAttribute("d", path)
     s.appendChild(p)
     return s
   }
   const priceEl = (amount) => {
-    var p = el("p", "package-station-price")
+    const p = el("p", "package-station-price")
     p.appendChild(el("span", "package-station-price-amount", amount))
     p.appendChild(document.createTextNode(" "))
     p.appendChild(el("span", "package-station-price-unit", "per person"))
@@ -173,8 +173,8 @@ import "@scripts/tabs.js"
   // screen reader. Desktop index rows only — the tablet thumbnails
   // have no width for the suffix and keep the bare amount.
   const listPriceEl = (tag, cls, amount) => {
-    var n = el(tag, cls, amount)
-    var short = el("span", "package-station-price-unit-short", "pp")
+    const n = el(tag, cls, amount)
+    const short = el("span", "package-station-price-unit-short", "pp")
     short.setAttribute("aria-hidden", "true")
     n.appendChild(short)
     n.appendChild(el("span", "package-stations-visually-hidden", " per person"))
@@ -186,22 +186,22 @@ import "@scripts/tabs.js"
   const eyebrowEl = (tag, text) => el(tag, "eyebrow eyebrow-static", text)
 
   // ---- build: desktop index ----
-  var rows = []
+  const rows = []
   if (indexEl) {
     groups.forEach((g) => {
-      var wrap = el("div", "package-stations-index-group")
+      const wrap = el("div", "package-stations-index-group")
       wrap.appendChild(eyebrowEl("h3", g.label))
-      var ul = el("ul", "package-stations-index-list")
+      const ul = el("ul", "package-stations-index-list")
       ul.setAttribute("role", "list")
       inGroup(g.id).forEach((s) => {
-        var li = el("li")
-        var b = el("button", "package-stations-index-row")
+        const li = el("li")
+        const b = el("button", "package-stations-index-row")
         b.type = "button"
         b.dataset.station = s.id
         b.setAttribute("aria-controls", "package-stations-stage")
         b.setAttribute("aria-current", "false")
         b.appendChild(el("span", "package-stations-index-row-name", s.name))
-        var tick = svg(TICK, 14, "package-stations-index-row-added-marker")
+        const tick = svg(TICK, 14, "package-stations-index-row-added-marker")
         tick.removeAttribute("aria-hidden")
         tick.setAttribute("role", "img")
         tick.setAttribute("aria-label", "in your selection")
@@ -225,8 +225,8 @@ import "@scripts/tabs.js"
   // Up/Down/Home/End move through all sixteen in visual order and
   // select as they go, so the stage follows focus like a tab list.
   const rowKeys = (e) => {
-    var i = rows.indexOf(e.currentTarget),
-      n = i
+    const i = rows.indexOf(e.currentTarget)
+    let n
     if (e.key === "ArrowDown") n = (i + 1) % rows.length
     else if (e.key === "ArrowUp") n = (i - 1 + rows.length) % rows.length
     else if (e.key === "Home") n = 0
@@ -238,9 +238,9 @@ import "@scripts/tabs.js"
   }
 
   // ---- build: stage ----
-  var stage = {}
+  const stage = {}
   ;(() => {
-    var fig = el("figure", "package-stations-stage-figure")
+    const fig = el("figure", "package-stations-stage-figure")
     stage.img = el("img")
     stage.img.width = 880
     stage.img.height = 1100
@@ -249,7 +249,7 @@ import "@scripts/tabs.js"
 
     stage.expand = el("button", "package-stations-stage-expand-button")
     stage.expand.type = "button"
-    var ex = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+    const ex = document.createElementNS("http://www.w3.org/2000/svg", "svg")
     ex.setAttribute("width", "13")
     ex.setAttribute("height", "13")
     ex.setAttribute("viewBox", "0 0 14 14")
@@ -268,13 +268,13 @@ import "@scripts/tabs.js"
     // so its own clicks (and its Enter/Space, which fire a click)
     // bubble up to here. One listener, so nothing double-fires.
     fig.addEventListener("click", () => {
-      var s = byId(state.selected)
+      const s = byId(state.selected)
       if (s && s.figure) s.figure.click()
     })
 
-    var cap = el("div", "package-stations-stage-caption")
+    const cap = el("div", "package-stations-stage-caption")
     stage.category = eyebrowEl("p", "")
-    var title = el("div", "package-stations-stage-title")
+    const title = el("div", "package-stations-stage-title")
     stage.name = el("h3", "package-stations-stage-name")
     stage.price = priceEl("")
     title.appendChild(stage.name)
@@ -282,7 +282,7 @@ import "@scripts/tabs.js"
     cap.appendChild(stage.category)
     cap.appendChild(title)
 
-    var body = el("div", "package-stations-stage-body")
+    const body = el("div", "package-stations-stage-body")
     stage.items = el("ul", "package-station-item-list")
     stage.items.setAttribute("role", "list")
     // SUPERSEDED (2026-09-30) — the gold diamond divider added
@@ -326,23 +326,23 @@ import "@scripts/tabs.js"
   })()
 
   // ---- build: tablet thumbnails ----
-  var thumbs = []
+  let thumbs = []
   if (thumbsEl) {
     thumbs = stations.map((s) => {
-      var li = el("li")
+      const li = el("li")
       li.dataset.group = s.group
-      var b = el("button", "package-stations-thumbnail")
+      const b = el("button", "package-stations-thumbnail")
       b.type = "button"
       b.setAttribute("aria-controls", "package-stations-stage")
       b.setAttribute("aria-pressed", "false")
-      var imgWrap = el("span", "package-stations-thumbnail-figure")
-      var img = el("img")
+      const imgWrap = el("span", "package-stations-thumbnail-figure")
+      const img = el("img")
       img.src = s.src
       img.alt = ""
       img.loading = "lazy"
       img.decoding = "async"
       imgWrap.appendChild(img)
-      var meta = el("span", "package-stations-thumbnail-meta")
+      const meta = el("span", "package-stations-thumbnail-meta")
       meta.appendChild(el("span", "package-stations-thumbnail-name", s.name))
       // Bare amount, no "pp" — the thumbnails have no room for it
       // (see .package-stations-thumbnail-meta), and the stage
@@ -366,7 +366,7 @@ import "@scripts/tabs.js"
       setGroup(t.dataset.group)
     })
     t.addEventListener("keydown", (e) => {
-      var n = i
+      let n
       if (e.key === "ArrowRight") n = (i + 1) % tabs.length
       else if (e.key === "ArrowLeft") n = (i - 1 + tabs.length) % tabs.length
       else if (e.key === "Home") n = 0
@@ -408,23 +408,23 @@ import "@scripts/tabs.js"
   // ---- carousel (< 621px) ----
   // Native scroll-snap, not a pointer-drag component — which is
   // why CLAUDE.md bug #11's touch-action: pan-y isn't needed here.
-  var carIndex = 0
+  let carIndex = 0
   const visibleCards = () => cardEls.filter((c) => !c.hidden)
   const scrollToCard = (i) => {
-    var list = visibleCards()
+    const list = visibleCards()
     i = Math.max(0, Math.min(list.length - 1, i))
-    var pad = parseFloat(getComputedStyle(track).paddingLeft) || 0
+    const pad = parseFloat(getComputedStyle(track).paddingLeft) || 0
     track.scrollTo({ left: list[i].offsetLeft - track.offsetLeft - pad })
   }
   const syncCarousel = () => {
-    var list = visibleCards()
+    const list = visibleCards()
     if (!list.length || !countCur || !countTot) return
-    var pad = parseFloat(getComputedStyle(track).paddingLeft) || 0
-    var x = track.scrollLeft + pad + track.offsetLeft,
-      best = 0,
-      dist = Infinity
+    const pad = parseFloat(getComputedStyle(track).paddingLeft) || 0
+    const x = track.scrollLeft + pad + track.offsetLeft
+    let best = 0
+    let dist = Infinity
     list.forEach((c, i) => {
-      var d = Math.abs(c.offsetLeft - x)
+      const d = Math.abs(c.offsetLeft - x)
       if (d < dist) {
         dist = d
         best = i
@@ -463,14 +463,14 @@ import "@scripts/tabs.js"
   // here — that would arm the stage crossfade timer on every
   // scroll frame, for a stage this width never shows.
   const syncGroupFromScroll = () => {
-    var list = visibleCards()
-    var current = list[carIndex]
+    const list = visibleCards()
+    const current = list[carIndex]
     if (!current) return
     state.selected = current.dataset.station
     state.group = current.dataset.group
     syncTabsAria()
   }
-  var ticking = false
+  let ticking = false
   // DEBOUNCED, not per-frame (2026-09-29) — a tab click also
   // scrolls this same track (scrollToCard, in setGroup below),
   // and that scroll — same as a swipe — fires many scroll events
@@ -485,7 +485,7 @@ import "@scripts/tabs.js"
   // finished — this only re-checks once 120ms has passed with no
   // further scroll events, which is after a swipe ends too, not
   // just after a click-triggered animation.
-  var scrollSettleTimer = null
+  let scrollSettleTimer = null
   track.addEventListener(
     "scroll",
     () => {
@@ -521,9 +521,9 @@ import "@scripts/tabs.js"
   // own T_FADE_MS — this is the same kind of move (a panel of copy
   // being replaced) rather than the 180ms the lightbox and wizard
   // use for an image or a step.
-  var STAGE_FADE_MS = 220
-  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
-  var stageFadeTimer = null
+  const STAGE_FADE_MS = 220
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+  let stageFadeTimer = null
 
   const stageFade = (out) => {
     // Inline styles, not a class. Same reasoning as the rotator's
@@ -551,10 +551,10 @@ import "@scripts/tabs.js"
 
   // ---- state changes ----
   const select = (id) => {
-    var s = byId(id)
+    const s = byId(id)
     if (!s) return
     // Re-selecting the current station shouldn't replay the fade.
-    var changed = id !== state.selected
+    const changed = id !== state.selected
     state.selected = id
     state.group = s.group // keeps the tabs in step across a resize
     render(changed)
@@ -609,7 +609,7 @@ import "@scripts/tabs.js"
   // CLAUDE.md bug #19 already catalogues for plain :hover.
   const paintAdd = (btn, on, name) => {
     if (!btn) return
-    var wasOn = btn.getAttribute("aria-pressed") === "true"
+    const wasOn = btn.getAttribute("aria-pressed") === "true"
     // Suppresses the "Remove" swap for exactly the hover session
     // a button was clicked during (2026-09-30, on request:
     // "shown after the first mouseexit... before that, Added" —
@@ -627,13 +627,13 @@ import "@scripts/tabs.js"
     }
     btn.setAttribute("aria-pressed", on ? "true" : "false")
     if (name) btn.dataset.stationName = name
-    var showRemove =
+    const showRemove =
       on && supportsHover && btn.dataset.hovering === "1" && !btn.dataset.suppressRemove
-    var iconPath = showRemove ? CROSS : on ? TICK : PLUS
-    var labelText = showRemove ? "Remove" : on ? "Added" : "Add to selection"
+    const iconPath = showRemove ? CROSS : on ? TICK : PLUS
+    const labelText = showRemove ? "Remove" : on ? "Added" : "Add to selection"
     // The station name as hidden text, so a screen reader doesn't
     // hear sixteen identical "Add to selection" buttons.
-    var labelName = name || btn.dataset.stationName
+    const labelName = name || btn.dataset.stationName
     // Mutate the existing icon/label nodes in place rather than
     // clearing and rebuilding them on every call (2026-09-30,
     // REAL BUG, reported as "the add icon is now shifting
@@ -649,11 +649,11 @@ import "@scripts/tabs.js"
     // so the transition keeps working exactly as it does
     // everywhere else. Only the very first paint (no existing
     // children yet) still builds from scratch.
-    var iconEl = btn.querySelector(".package-station-add-button-icon")
-    var labelEl = btn.querySelector(".package-station-add-button-label")
-    var hiddenEl = btn.querySelector(".package-stations-visually-hidden")
+    const iconEl = btn.querySelector(".package-station-add-button-icon")
+    const labelEl = btn.querySelector(".package-station-add-button-label")
+    const hiddenEl = btn.querySelector(".package-stations-visually-hidden")
     if (iconEl && labelEl) {
-      var pathEl = iconEl.querySelector("path")
+      const pathEl = iconEl.querySelector("path")
       if (pathEl) pathEl.setAttribute("d", iconPath)
       labelEl.textContent = labelText
       if (labelName) {
@@ -693,7 +693,7 @@ import "@scripts/tabs.js"
 
   // Everything the stage shows for one station, in one place, so
   // the crossfade can defer exactly this and nothing else.
-  var stageFadeToken = 0
+  let stageFadeToken = 0
 
   const fillStage = (sel) => {
     stage.img.src = sel.src
@@ -722,21 +722,21 @@ import "@scripts/tabs.js"
   // even shows.
   const syncTabsAria = () => {
     tabs.forEach((t) => {
-      var on = t.dataset.group === state.group
+      const on = t.dataset.group === state.group
       t.setAttribute("aria-selected", on ? "true" : "false")
       t.tabIndex = on ? 0 : -1
     })
   }
   const render = (fade) => {
-    var sel = byId(state.selected)
+    const sel = byId(state.selected)
 
     syncTabsAria()
     syncPanelRole()
 
     rows.forEach((r) => {
-      var id = r.dataset.station
+      const id = r.dataset.station
       r.setAttribute("aria-current", id === state.selected ? "true" : "false")
-      var tick = r.querySelector(".package-stations-index-row-added-marker")
+      const tick = r.querySelector(".package-stations-index-row-added-marker")
       if (state.added[id]) tick.removeAttribute("hidden")
       else tick.setAttribute("hidden", "")
     })
@@ -744,7 +744,7 @@ import "@scripts/tabs.js"
     if (fade && !reduceMotion.matches) {
       clearTimeout(stageFadeTimer)
       stageFade(true)
-      var fadeToken = ++stageFadeToken
+      const fadeToken = ++stageFadeToken
       stageFadeTimer = setTimeout(() => {
         fillStage(byId(state.selected))
         // Fade back in only once the new photo can be painted — the
@@ -805,11 +805,11 @@ import "@scripts/tabs.js"
 // skipped). This way there is exactly one system deciding which tab
 // is selected, and this only ever reacts to it.
 ;(() => {
-  var bar = document.querySelector(
+  const bar = document.querySelector(
     ".package-stations-hybrid-mobtab .package-stations-category-tabs",
   )
   if (!bar) return
-  var pill = bar.querySelector(".pill")
+  const pill = bar.querySelector(".pill")
   if (!pill) return
   // width/height + translate(x, y), not translateX with a fixed
   // top/bottom inset (2026-09-29) — the fixed inset only worked
@@ -853,9 +853,9 @@ import "@scripts/tabs.js"
   // tab bar could still be mid-animation, recalculating a delta
   // against an in-between (not yet settled) bounding rect and
   // visibly correcting itself — the reported flicker.
-  var last = null
+  let last = null
   const syncPill = () => {
-    var current = bar.querySelector('[aria-selected="true"]')
+    const current = bar.querySelector('[aria-selected="true"]')
     if (current && current !== last) {
       last = current
       // Read before write (2026-09-29) — ensureTabVisible only
@@ -936,45 +936,45 @@ import "@scripts/tabs.js"
 ;[].slice
   .call(document.querySelectorAll('[data-stations="carousel"]'))
   .forEach((root, instance) => {
-    var catButtons = [].slice.call(
+    const catButtons = [].slice.call(
       root.querySelectorAll(".package-stations-category-tab"),
     )
-    var tabsEl = root.querySelector(".package-stations-category-tabs")
-    var indexEl = root.querySelector(".package-stations-index")
-    var track = root.querySelector(".package-stations-card-list")
-    var cardEls = [].slice.call(root.querySelectorAll(".package-station-card"))
-    var nav = root.querySelector(".package-stations-carousel-nav")
-    var prevBtn = root.querySelector("[data-carousel-prev]")
-    var nextBtn = root.querySelector("[data-carousel-next]")
-    var countCur = root.querySelector("[data-carousel-current]")
-    var countTot = root.querySelector("[data-carousel-total]")
-    var progressFill = root.querySelector("[data-carousel-progress]")
+    const tabsEl = root.querySelector(".package-stations-category-tabs")
+    const indexEl = root.querySelector(".package-stations-index")
+    const track = root.querySelector(".package-stations-card-list")
+    const cardEls = [].slice.call(root.querySelectorAll(".package-station-card"))
+    const nav = root.querySelector(".package-stations-carousel-nav")
+    const prevBtn = root.querySelector("[data-carousel-prev]")
+    const nextBtn = root.querySelector("[data-carousel-next]")
+    const countCur = root.querySelector("[data-carousel-current]")
+    const countTot = root.querySelector("[data-carousel-total]")
+    const progressFill = root.querySelector("[data-carousel-progress]")
     if (!catButtons.length || !track || !cardEls.length) return
 
-    var PLUS = "M12 5v14M5 12h14"
-    var TICK = "M5 12l5 5 9-10"
+    const PLUS = "M12 5v14M5 12h14"
+    const TICK = "M5 12l5 5 9-10"
     // Same 14-unit span/centering as PLUS/TICK above (5-19 out of
     // the shared 0 0 24 24 viewBox), so the hover-only "Remove"
     // icon reads as the same family rather than a mismatched size.
-    var CROSS = "M5 5l14 14M19 5 5 19"
+    const CROSS = "M5 5l14 14M19 5 5 19"
     // Gates the hover-to-"Remove" swap in paintAdd() below to real
     // pointer devices, matching this file's other hover/touch
     // splits (CLAUDE.md bug #19) — touch has no hover to trigger it
     // from, so there's nothing to gate wrong there either way, but
     // checking once here avoids a matchMedia() call on every
     // pointerenter.
-    var supportsHover = window.matchMedia && window.matchMedia("(hover: hover)").matches
+    const supportsHover = window.matchMedia && window.matchMedia("(hover: hover)").matches
     // Only consulted by the "this moves" cue at the foot of this
     // function. Every other motion here is a scroll, and those are
     // already handled in CSS by scroll-behavior: auto under reduced
     // motion (section 9) — scrollTo honours the element's
     // scroll-behavior, so there is nothing for JS to branch on.
-    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
     // Read off the element rather than hardcoded: the two carousel
     // sections carry different ids on their lists, because two
     // elements cannot share one. aria-controls has to name the one
     // in THIS section or it points at the other carousel.
-    var LIST_ID = track.id
+    const LIST_ID = track.id
 
     // ---- data, read once from the cards ----
     // Only what the index needs. The old version also pulled each
@@ -983,7 +983,7 @@ import "@scripts/tabs.js"
     // cloneNode dance so the vegetarian badges survived being read
     // as text. None of that is needed when the card itself is what
     // the visitor looks at.
-    var stations = cardEls.map((card, i) => ({
+    const stations = cardEls.map((card, i) => ({
       i: i,
       id: card.dataset.station,
       group: card.dataset.group,
@@ -1002,24 +1002,24 @@ import "@scripts/tabs.js"
     // screen together, since the buttons stop at 979.98px exactly
     // where the index starts. Reading the button's visible text
     // would have quietly retitled the index.
-    var groups = catButtons.map((b) => ({
+    const groups = catButtons.map((b) => ({
       id: b.dataset.group,
       label: (b.dataset.labelFull || b.textContent).trim(),
       button: b,
     }))
-    var added = {}
+    const added = {}
     const inGroup = (g) => stations.filter((s) => s.group === g)
 
     // ---- small DOM helpers ----
     const el = (tag, cls, text) => {
-      var n = document.createElement(tag)
+      const n = document.createElement(tag)
       if (cls) n.className = cls
       if (text != null) n.textContent = text
       return n
     }
     const svg = (path, size, cls) => {
-      var ns = "http://www.w3.org/2000/svg"
-      var s = document.createElementNS(ns, "svg")
+      const ns = "http://www.w3.org/2000/svg"
+      const s = document.createElementNS(ns, "svg")
       s.setAttribute("width", size)
       s.setAttribute("height", size)
       s.setAttribute("viewBox", "0 0 24 24")
@@ -1030,7 +1030,7 @@ import "@scripts/tabs.js"
       s.setAttribute("stroke-linejoin", "round")
       s.setAttribute("aria-hidden", "true")
       if (cls) s.setAttribute("class", cls)
-      var p = document.createElementNS(ns, "path")
+      const p = document.createElementNS(ns, "path")
       p.setAttribute("d", path)
       s.appendChild(p)
       return s
@@ -1038,8 +1038,8 @@ import "@scripts/tabs.js"
     // The list form: "€12.50 pp" visually, "€12.50 per person" to a
     // screen reader. See .package-station-price-unit-short.
     const listPriceEl = (cls, amount) => {
-      var n = el("span", cls, amount)
-      var short = el("span", "package-station-price-unit-short", "pp")
+      const n = el("span", cls, amount)
+      const short = el("span", "package-station-price-unit-short", "pp")
       short.setAttribute("aria-hidden", "true")
       n.appendChild(short)
       n.appendChild(el("span", "package-stations-visually-hidden", " per person"))
@@ -1058,22 +1058,22 @@ import "@scripts/tabs.js"
     // once. Reorder the markup without reordering the buttons and the
     // index's Up/Down keys would start jumping around the track;
     // keep the two in step.
-    var rows = []
+    const rows = []
     if (indexEl) {
       groups.forEach((g) => {
-        var wrap = el("div", "package-stations-index-group")
+        const wrap = el("div", "package-stations-index-group")
         wrap.appendChild(eyebrowEl("h3", g.label))
-        var ul = el("ul", "package-stations-index-list")
+        const ul = el("ul", "package-stations-index-list")
         ul.setAttribute("role", "list")
         inGroup(g.id).forEach((s) => {
-          var li = el("li")
-          var b = el("button", "package-stations-index-row")
+          const li = el("li")
+          const b = el("button", "package-stations-index-row")
           b.type = "button"
           b.dataset.station = s.id
           b.setAttribute("aria-controls", LIST_ID)
           b.setAttribute("aria-current", "false")
           b.appendChild(el("span", "package-stations-index-row-name", s.name))
-          var tick = svg(TICK, 14, "package-stations-index-row-added-marker")
+          const tick = svg(TICK, 14, "package-stations-index-row-added-marker")
           tick.removeAttribute("aria-hidden")
           tick.setAttribute("role", "img")
           tick.setAttribute("aria-label", "in your selection")
@@ -1098,8 +1098,8 @@ import "@scripts/tabs.js"
     // Up/Down/Home/End move through all sixteen in visual order,
     // scrolling the track as they go so the carousel follows focus.
     const rowKeys = (e) => {
-      var i = rows.indexOf(e.currentTarget),
-        n = i
+      const i = rows.indexOf(e.currentTarget)
+      let n
       if (e.key === "ArrowDown") n = (i + 1) % rows.length
       else if (e.key === "ArrowUp") n = (i - 1 + rows.length) % rows.length
       else if (e.key === "Home") n = 0
@@ -1123,7 +1123,7 @@ import "@scripts/tabs.js"
       })
     }
     const goToGroup = (g) => {
-      var first = inGroup(g)[0]
+      const first = inGroup(g)[0]
       if (first) goTo(first.i)
     }
     // 1px of tolerance, because a snapped scrollLeft is routinely
@@ -1132,11 +1132,11 @@ import "@scripts/tabs.js"
     const atStart = () => track.scrollLeft <= 1
     const atEnd = () => track.scrollLeft >= track.scrollWidth - track.clientWidth - 1
     const nearestIndex = () => {
-      var x = track.scrollLeft + trackPad() + track.offsetLeft,
-        best = 0,
-        dist = Infinity
+      const x = track.scrollLeft + trackPad() + track.offsetLeft
+      let best = 0
+      let dist = Infinity
       stations.forEach((s, i) => {
-        var d = Math.abs(s.card.offsetLeft - x)
+        const d = Math.abs(s.card.offsetLeft - x)
         if (d < dist) {
           dist = d
           best = i
@@ -1155,11 +1155,11 @@ import "@scripts/tabs.js"
     // the one row in the column that never lights up, and the counter
     // would stop at 15 / 16. At the end of a list "the last one" is
     // also just the truer answer than "the one on the left".
-    var current = -1
+    let current = -1
     const syncPosition = () => {
-      var i = atEnd() ? stations.length - 1 : nearestIndex()
+      const i = atEnd() ? stations.length - 1 : nearestIndex()
       current = i
-      var s = stations[i]
+      const s = stations[i]
 
       if (countCur) countCur.textContent = String(i + 1)
       if (countTot) countTot.textContent = String(stations.length)
@@ -1184,7 +1184,7 @@ import "@scripts/tabs.js"
     }
 
     // rAF-throttled, same shape as the version this replaces.
-    var ticking = false
+    let ticking = false
     const queueSync = () => {
       if (ticking) return
       ticking = true
@@ -1251,8 +1251,8 @@ import "@scripts/tabs.js"
     // mousedown on the figure is never captured, so its click
     // reaches the lightbox exactly as it did before this drag
     // existed.
-    var drag = null // { startX, startScrollLeft, moved }
-    var DRAG_CLICK_SUPPRESS_PX = 5 // below this, treat it as a click
+    let drag = null // { startX, startScrollLeft, moved }
+    const DRAG_CLICK_SUPPRESS_PX = 5 // below this, treat it as a click
     // A real drag ending on the "Add to selection" button must not
     // also fire that button's click — same click-after-drag problem
     // the homepage carousel's own drag doesn't have to solve, since
@@ -1282,7 +1282,7 @@ import "@scripts/tabs.js"
     // scroll listener below, and guarded so a drag that pauses
     // mid-gesture without moving doesn't get snapping restored
     // underneath it.
-    var resnapTimer = null
+    let resnapTimer = null
     const queueResnap = () => {
       clearTimeout(resnapTimer)
       resnapTimer = setTimeout(() => {
@@ -1304,7 +1304,7 @@ import "@scripts/tabs.js"
 
     track.addEventListener("pointerdown", (e) => {
       if (e.pointerType !== "mouse") return
-      var body = e.target.closest(".package-station-card-body")
+      const body = e.target.closest(".package-station-card-body")
       if (!body || e.target.closest(".package-station-add-button")) return
       drag = { startX: e.clientX, startScrollLeft: track.scrollLeft, moved: 0 }
       clearTimeout(resnapTimer)
@@ -1314,7 +1314,7 @@ import "@scripts/tabs.js"
     })
     track.addEventListener("pointermove", (e) => {
       if (!drag) return
-      var dx = e.clientX - drag.startX
+      const dx = e.clientX - drag.startX
       drag.moved = Math.max(drag.moved, Math.abs(dx))
       track.scrollLeft = drag.startScrollLeft - dx
     })
@@ -1346,7 +1346,7 @@ import "@scripts/tabs.js"
     // before.
     const paintAdd = (btn, on, name) => {
       if (!btn) return
-      var wasOn = btn.getAttribute("aria-pressed") === "true"
+      const wasOn = btn.getAttribute("aria-pressed") === "true"
       // Suppresses the "Remove" swap for exactly the hover session
       // a button was clicked during — see the stage controller's
       // own copy of this function for the full reasoning (kept
@@ -1357,13 +1357,13 @@ import "@scripts/tabs.js"
       }
       btn.setAttribute("aria-pressed", on ? "true" : "false")
       if (name) btn.dataset.stationName = name
-      var showRemove =
+      const showRemove =
         on && supportsHover && btn.dataset.hovering === "1" && !btn.dataset.suppressRemove
-      var iconPath = showRemove ? CROSS : on ? TICK : PLUS
-      var labelText = showRemove ? "Remove" : on ? "Added" : "Add to selection"
+      const iconPath = showRemove ? CROSS : on ? TICK : PLUS
+      const labelText = showRemove ? "Remove" : on ? "Added" : "Add to selection"
       // The station name as hidden text, so a screen reader doesn't
       // hear sixteen identical "Add to selection" buttons.
-      var labelName = name || btn.dataset.stationName
+      const labelName = name || btn.dataset.stationName
       // Mutate the existing icon/label nodes in place rather than
       // clearing and rebuilding them on every call (2026-09-30,
       // REAL BUG, reported as "the add icon is now shifting
@@ -1379,11 +1379,11 @@ import "@scripts/tabs.js"
       // so the transition keeps working exactly as it does
       // everywhere else. Only the very first paint (no existing
       // children yet) still builds from scratch.
-      var iconEl = btn.querySelector(".package-station-add-button-icon")
-      var labelEl = btn.querySelector(".package-station-add-button-label")
-      var hiddenEl = btn.querySelector(".package-stations-visually-hidden")
+      const iconEl = btn.querySelector(".package-station-add-button-icon")
+      const labelEl = btn.querySelector(".package-station-add-button-label")
+      const hiddenEl = btn.querySelector(".package-stations-visually-hidden")
       if (iconEl && labelEl) {
-        var pathEl = iconEl.querySelector("path")
+        const pathEl = iconEl.querySelector("path")
         if (pathEl) pathEl.setAttribute("d", iconPath)
         labelEl.textContent = labelText
         if (labelName) {
@@ -1422,7 +1422,7 @@ import "@scripts/tabs.js"
     const paintAdded = (s) => {
       paintAdd(s.addBtn, !!added[s.id], s.name)
       if (s.row) {
-        var tick = s.row.querySelector(".package-stations-index-row-added-marker")
+        const tick = s.row.querySelector(".package-stations-index-row-added-marker")
         if (added[s.id]) tick.removeAttribute("hidden")
         else tick.setAttribute("hidden", "")
       }
@@ -1458,14 +1458,14 @@ import "@scripts/tabs.js"
     // since the lightbox is JS too.
     stations.forEach((s) => {
       if (!s.badge) return
-      var b = el("button", s.badge.className)
+      const b = el("button", s.badge.className)
       b.type = "button"
       b.setAttribute("aria-label", "Enlarge photo of " + s.name)
       while (s.badge.firstChild) b.appendChild(s.badge.firstChild)
       // The glyph was inside an aria-hidden <span> and so was hidden
       // with it; the button's own aria-label would take precedence
       // anyway, but marking it keeps the markup honest on its own.
-      var glyph = b.querySelector("svg")
+      const glyph = b.querySelector("svg")
       if (glyph) glyph.setAttribute("aria-hidden", "true")
       s.badge.parentNode.replaceChild(b, s.badge)
       s.badge = b
@@ -1491,7 +1491,7 @@ import "@scripts/tabs.js"
     // same sixteen stations cannot all answer to #oyster-royale, and
     // two of them writing to history on scroll would fight. B owns
     // it; A and C ignore the hash entirely.
-    var ownsHash = instance === 0
+    const ownsHash = instance === 0
     const slug = (name) =>
       name
         .toLowerCase()
@@ -1538,16 +1538,16 @@ import "@scripts/tabs.js"
     // than one ancestor could carry a transform. m42 is the
     // translateY component.
     const transformOffsetY = (node) => {
-      var y = 0,
+      let y = 0,
         el = node
       while (el && el !== document.body) {
-        var t = getComputedStyle(el).transform
+        const t = getComputedStyle(el).transform
         if (t && t !== "none") {
           try {
             y += new DOMMatrixReadOnly(t).m42
-          } catch (e) {
+          } catch {
             // matrix(a, b, c, d, tx, ty) — sixth value.
-            var parts = t.match(/matrix\(([^)]+)\)/)
+            const parts = t.match(/matrix\(([^)]+)\)/)
             if (parts) y += parseFloat(parts[1].split(",")[5]) || 0
           }
         }
@@ -1556,24 +1556,24 @@ import "@scripts/tabs.js"
       return y
     }
     const revealCard = (card) => {
-      var navH =
+      const navH =
         parseFloat(
           getComputedStyle(document.documentElement).getPropertyValue("--nav-h"),
         ) || 74
-      var pad = 20
-      var top = navH + pad
-      var band = window.innerHeight - top - pad
-      var rect = card.getBoundingClientRect()
-      var cardTop = rect.top + window.pageYOffset - transformOffsetY(card)
-      var y =
+      const pad = 20
+      const top = navH + pad
+      const band = window.innerHeight - top - pad
+      const rect = card.getBoundingClientRect()
+      const cardTop = rect.top + window.pageYOffset - transformOffsetY(card)
+      const y =
         band >= rect.height ? cardTop - top - (band - rect.height) / 2 : cardTop - top
       window.scrollTo({ top: Math.max(0, y) })
     }
 
     const applyHash = () => {
       if (!ownsHash || !location.hash) return
-      var want = location.hash.slice(1).toLowerCase()
-      for (var i = 0; i < stations.length; i++) {
+      const want = location.hash.slice(1).toLowerCase()
+      for (let i = 0; i < stations.length; i++) {
         if (stations[i].slug === want) {
           goTo(i)
           revealCard(stations[i].card)
@@ -1591,13 +1591,13 @@ import "@scripts/tabs.js"
     // that frame, so a scroll-bound call would stamp the previous
     // station and the final event of a fling would leave the hash
     // one behind with nothing following to correct it.
-    var lastHashed = -1
+    let lastHashed = -1
     const writeHash = () => {
       if (!ownsHash || current < 0 || current === lastHashed) return
       lastHashed = current
       try {
         history.replaceState(null, "", "#" + stations[current].slug)
-      } catch (e) {
+      } catch {
         /* file:// in some browsers refuses replaceState; the
          carousel is unaffected, so this is not worth surfacing. */
       }
@@ -1648,7 +1648,7 @@ import "@scripts/tabs.js"
     // "there is more this way" permanently and statically, at every
     // width. This is a second, transient signal layered on a fix
     // that already landed — a nicety, not a repair.
-    var cued = false
+    let cued = false
 
     // Settled means the BOTTOM of the cards is in the viewport —
     // you are looking at a whole card, not the top half of one
@@ -1674,8 +1674,8 @@ import "@scripts/tabs.js"
     // "you have seen a whole card" anyway, and it stays true for
     // the rest of the section rather than for one moment in it.
     const cardsSettled = () => {
-      var r = track.getBoundingClientRect()
-      var vh = window.innerHeight
+      const r = track.getBoundingClientRect()
+      const vh = window.innerHeight
       // Taller than the screen and so never able to fit: settled
       // once it has reached the top and still covers most of it.
       if (r.height > vh - 40) return r.top <= 90 && r.bottom > vh * 0.75
@@ -1684,7 +1684,7 @@ import "@scripts/tabs.js"
       return r.bottom <= vh - 8 && r.bottom > 0
     }
 
-    var cueTicking = false
+    let cueTicking = false
     const teardownCue = () => {
       window.removeEventListener("scroll", onCueScroll)
       window.removeEventListener("resize", onCueScroll)

@@ -6,11 +6,11 @@
 // What's left is real logic CSS can't express on its own: cross-item
 // exclusivity (closing every other open item in the same .faq group).
 document.querySelectorAll(".faq-item").forEach((item) => {
-  var q = item.querySelector(".faq-q"),
+  const q = item.querySelector(".faq-q"),
     a = item.querySelector(".faq-a")
   if (!q || !a) return
   q.addEventListener("click", () => {
-    var open = item.classList.contains("open")
+    const open = item.classList.contains("open")
     item
       .closest(".faq")
       .querySelectorAll(".faq-item.open")

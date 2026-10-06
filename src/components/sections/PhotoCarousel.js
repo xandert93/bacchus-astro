@@ -4,21 +4,21 @@
 import { reduce } from "@scripts/lib/motion.js"
 
 // ---------- Carousel ----------
-var track = document.getElementById("carTrack"),
+const track = document.getElementById("carTrack"),
   view = document.getElementById("carView")
 if (track && view) {
-  var slides = [].slice.call(track.children)
-  var prev = document.getElementById("prev"),
+  const slides = [].slice.call(track.children)
+  const prev = document.getElementById("prev"),
     next = document.getElementById("next")
-  var bar = document.getElementById("carBar"),
+  const bar = document.getElementById("carBar"),
     now = document.getElementById("carNow"),
     total = document.getElementById("carTotal")
-  var index = 0,
+  let index = 0,
     drag = null,
     autoTimer = null
 
   const cstep = () => {
-    var r = slides[0].getBoundingClientRect()
+    const r = slides[0].getBoundingClientRect()
     return r.width + parseFloat(getComputedStyle(track).gap || 0)
   }
   // How far the track can travel before its last slide sits flush with
@@ -40,7 +40,7 @@ if (track && view) {
   // overshooting into blank space. The final step is therefore a short
   // one — deliberately, since the alternative is an unreachable slide.
   const maxIndex = () => {
-    var step = cstep()
+    const step = cstep()
     return step > 0 ? Math.ceil(maxOffset() / step) : 0
   }
   // What the counter names. index is a scroll POSITION, not a slide, and
@@ -69,13 +69,13 @@ if (track && view) {
   // is usually peeking in by a sliver, and counting that would claim more
   // than the visitor can really see.
   const visibleSlideRange = () => {
-    var windowStart = offsetFor(index)
-    var windowEnd = windowStart + view.clientWidth
-    var base = slides[0].offsetLeft
-    var first = -1,
+    const windowStart = offsetFor(index)
+    const windowEnd = windowStart + view.clientWidth
+    const base = slides[0].offsetLeft
+    let first = -1,
       last = -1
     slides.forEach((slide, i) => {
-      var left = slide.offsetLeft - base
+      const left = slide.offsetLeft - base
       // 1px of tolerance: these are fractional at most viewport widths.
       if (left >= windowStart - 1 && left + slide.offsetWidth <= windowEnd + 1) {
         if (first === -1) first = i
@@ -99,7 +99,7 @@ if (track && view) {
     track.style.transform = "translate3d(" + -offsetFor(index) + "px,0,0)"
     if (prev) prev.disabled = index <= 0
     if (next) next.disabled = index >= maxIndex()
-    var range = visibleSlideRange()
+    const range = visibleSlideRange()
     if (now)
       now.textContent =
         range.first === range.last
@@ -151,7 +151,7 @@ if (track && view) {
   const up = () => {
     if (!drag) return
     track.style.transition = ""
-    var shift = Math.round(-drag.moved / cstep())
+    const shift = Math.round(-drag.moved / cstep())
     go(
       drag.start +
         (Math.abs(drag.moved) > cstep() * 0.12
@@ -201,10 +201,10 @@ if (track && view) {
   // absolute position the way a pointer drag does, so treating it as
   // continuous input would mean reconstructing momentum from scratch for
   // very little gain on what's a discrete, five-slide carousel.
-  var wheelDeltaX = 0,
+  let wheelDeltaX = 0,
     wheelLocked = false
-  var WHEEL_STEP_PX = 40 // accumulated deltaX that commits one slide
-  var WHEEL_LOCK_MS = 350 // ignore further wheel input until this settles
+  const WHEEL_STEP_PX = 40 // accumulated deltaX that commits one slide
+  const WHEEL_LOCK_MS = 350 // ignore further wheel input until this settles
   view.addEventListener(
     "wheel",
     (e) => {
@@ -242,10 +242,11 @@ if (track && view) {
       go(index >= maxIndex() ? 0 : index + 1)
     }, 5200)
   }
-  var carObs = new IntersectionObserver(
+  const carObs = new IntersectionObserver(
     (es) => {
       es.forEach((e) => {
-        e.isIntersecting ? startAuto() : pauseAuto()
+        if (e.isIntersecting) startAuto()
+        else pauseAuto()
       })
     },
     { threshold: 0.4 },

@@ -13,7 +13,7 @@ import "./lib/safe-reveal.js"
 requestAnimationFrame(() => {
   document.body.classList.add("loaded")
 })
-var yrEl = document.getElementById("yr")
+const yrEl = document.getElementById("yr")
 if (yrEl) yrEl.textContent = new Date().getFullYear()
 
 // ---------- Ambient particles ----------
@@ -22,10 +22,10 @@ if (!reduce) {
     ["particles", 20],
     ["particles2", 10],
   ].forEach((cfg) => {
-    var pf = document.getElementById(cfg[0])
+    const pf = document.getElementById(cfg[0])
     if (!pf) return
-    for (var pi = 0; pi < cfg[1]; pi++) {
-      var p = document.createElement("div")
+    for (let pi = 0; pi < cfg[1]; pi++) {
+      const p = document.createElement("div")
       p.className = "particle"
       p.style.left = Math.random() * 100 + "%"
       p.style.animationDuration = 9 + Math.random() * 10 + "s"
@@ -66,13 +66,13 @@ if (!reduce) {
 
 // Shared backstop for both observers. Sweeps only what is still waiting,
 // once scrolling settles, and unhooks itself when nothing is left.
-var revealPending = []
-var revealSweepTimer = null
+const revealPending = []
+let revealSweepTimer = null
 const revealSweep = () => {
   if (!revealPending.length) return
-  var limit = window.innerHeight * (isScrolledToBottom() ? 1 : REVEAL_SWEEP_LINE)
+  const limit = window.innerHeight * (isScrolledToBottom() ? 1 : REVEAL_SWEEP_LINE)
   revealPending.slice().forEach((entry) => {
-    var r = entry.el.getBoundingClientRect()
+    const r = entry.el.getBoundingClientRect()
     // Horizontal check as well as vertical: an element parked off-screen
     // inside a horizontal scroller still has an ordinary vertical rect,
     // and sweeping those in would spend their entrance before they are
@@ -89,10 +89,10 @@ const queueRevealSweep = () => {
   revealSweepTimer = setTimeout(revealSweep, 120)
 }
 const trackReveal = (el, show) => {
-  var entry = {
+  const entry = {
     el: el,
     show: () => {
-      var at = revealPending.indexOf(entry)
+      const at = revealPending.indexOf(entry)
       if (at !== -1) revealPending.splice(at, 1)
       show()
     },
@@ -103,11 +103,11 @@ const trackReveal = (el, show) => {
 window.addEventListener("scroll", queueRevealSweep, { passive: true })
 window.addEventListener("load", revealSweep)
 
-var revObs = new IntersectionObserver(
+const revObs = new IntersectionObserver(
   (es) => {
     es.forEach((e) => {
       if (e.isIntersecting || e.boundingClientRect.top < 0) {
-        var entry = e.target.__revealEntry
+        const entry = e.target.__revealEntry
         if (entry) entry.show()
         revObs.unobserve(e.target)
       }
@@ -124,8 +124,8 @@ document.querySelectorAll('[data-reveal]:not([data-reveal="img"])').forEach((el)
 })
 
 document.querySelectorAll('[data-reveal="img"]').forEach((wrap) => {
-  var img = wrap.querySelector("img")
-  var seen = false,
+  const img = wrap.querySelector("img")
+  let seen = false,
     loaded = !img || img.complete
   const reveal = () => {
     requestAnimationFrame(() => {
@@ -146,11 +146,11 @@ document.querySelectorAll('[data-reveal="img"]').forEach((wrap) => {
   // image-load gate and the double requestAnimationFrame (CLAUDE.md bug
   // #1 — without both, the transition can be skipped entirely) still
   // decide when it actually appears.
-  var entry = trackReveal(wrap, () => {
+  const entry = trackReveal(wrap, () => {
     seen = true
     tryReveal()
   })
-  var imgObs = new IntersectionObserver(
+  const imgObs = new IntersectionObserver(
     (es) => {
       es.forEach((e) => {
         if (e.isIntersecting || e.boundingClientRect.top < 0) {

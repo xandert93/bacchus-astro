@@ -30,12 +30,12 @@ import { REVEAL_ROOT_MARGIN } from "@scripts/lib/motion.js"
 // keeps running regardless — a harmless no-op once a card already carries
 // .is-revealed.
 ;(() => {
-  var list = document.querySelector(".package-dining-card-list")
+  const list = document.querySelector(".package-dining-card-list")
   if (!list) return
-  var cards = list.querySelectorAll(".package-dining-card")
+  const cards = list.querySelectorAll(".package-dining-card")
   if (!cards.length) return
-  var triptych = window.matchMedia("(min-width: 980px)")
-  var obs = new IntersectionObserver(
+  const triptych = window.matchMedia("(min-width: 980px)")
+  const obs = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return
