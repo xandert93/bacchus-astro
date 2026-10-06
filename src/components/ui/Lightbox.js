@@ -18,8 +18,8 @@
 // the station price spans), and optional data-detail ("<serving note>. <item>
 // · <item> (V) · …") rendered as two paragraphs with real veg badges.
 //
-// Every image change waits on decode() before showing it — see CLAUDE.md's
-// rule on reused <img> elements.
+// Every image change waits on decode() before showing it: a reused <img>
+// keeps painting the old bitmap until the new one has decoded.
 import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
 
 const lb = document.getElementById("lightbox")
@@ -150,8 +150,8 @@ if (lb) {
   }
 
   // Prev/next: fade out on a fixed clock, swap, fade back in once decoded.
-  // The 20ms floor keeps a frame boundary when decode is instant (CLAUDE.md
-  // bug #7); no wraparound at the ends.
+  // The 20ms floor keeps a frame boundary when decode is instant (the
+  // same-tick class-swap bug); no wraparound at the ends.
   const navigate = (step) => {
     const next = current + step
     if (next < 0 || next >= group.length) return

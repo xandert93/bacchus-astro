@@ -11,7 +11,7 @@
 // and `--below-<name>` (anything narrower). They're written in range syntax,
 // `(width < 980px)` / `(width >= 980px)`, so a pair can never leave a gap or
 // overlap between them, which the old `max-width: 979.98px` habit existed to
-// avoid (prototype bug #22).
+// avoid (the .98 breakpoint pairing).
 //
 // Restart the dev server after editing this file: the PostCSS config only
 // reads it at startup.
@@ -30,8 +30,8 @@ export const breakpoints = {
   // the smallest phones.
   largePhone: 481,
   // Below: the nav dropdown's items go to one column. 621 to 699px is the
-  // stations and wedding triptych's small-button band (prototype bug #20).
-  // From here, Beverage's lists go to two columns.
+  // stations and wedding triptych's small-button band (the non-shrinking button
+  // overflow). From here, Beverage's lists go to two columns.
   wideTablet: 700,
   // Below: hero content sits higher and the homepage scroll cue hides. The
   // prototype's burger cut-over; the burger itself moved to `desktop`.

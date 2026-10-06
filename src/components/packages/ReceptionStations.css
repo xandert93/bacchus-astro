@@ -28,7 +28,7 @@
      the 2-up flex-basis has to subtract it (see section 5), so the
      two can never drift apart — the same "one value, consumed
      twice" move as --package-grid-column-gap in styles.css
-     (CLAUDE.md bug #24). */
+     (the drifting grid gaps). */
   --station-carousel-gap: clamp(14px, 1.6vw, 20px);
   /* The site's nav is position: fixed at --nav-h, so anything
      scrolled to would otherwise land underneath it. NOT used by
@@ -97,7 +97,7 @@
 /* Doubled class deliberately — .is-revealed .eyebrow::before in
    styles.css is (0,2,0), so a single-class modifier would be
    strictly less specific and lose outright rather than by source
-   order (CLAUDE.md bug #14). */
+   order (the weaker-override trap). */
 .eyebrow.eyebrow-static::before {
   transform: scaleX(1);
 }
@@ -322,7 +322,7 @@
    .tab-bar's look — outlined track, gold-gradient pill on the
    active one, uppercase 11px labels, squared 3px/2px corners —
    rebuilt as its own component rather than reusing the class.
-   See note 8 in the block header for why (bug #13, six of them).
+   See note 8 in the block header for why (the hidden-scrollbar overflow, six of them).
 
    THESE ARE NO LONGER TABS (2026-09-25). They used to filter the
    card list down to one category, which is what earned the
@@ -379,7 +379,7 @@
    was written unqualified and deliberately specific — the
    .is-enhanced ancestor plus :has() — to avoid tying with the
    display: flex rule above and being settled by source order
-   (bug #2's trap). It overshot: :has() contributes the
+   (the same-specificity collision's trap). It overshot: :has() contributes the
    specificity of its most specific argument, so
    `[data-label-full]` took the selector to (0,4,0), which beat the
    (0,3,0) `@media (min-width: 980px) { … display: none }` at the
@@ -388,15 +388,15 @@
    Media queries add no specificity, so a stronger selector wins
    inside one just as easily as outside it.
 
-   That is CLAUDE.md bug #14 from the other direction: #14 is a new
+   That is the weaker-override trap from the other direction: that one is a new
    override losing because it was LESS specific, this was a new
    override winning something it was never meant to touch because
    it was MORE. The fix is not to re-tune specificity a third time
    but to remove the overlap — these buttons only exist below 980px,
    so the rule that sizes them has no business being live above it.
    Non-overlapping ranges mean neither rule has to out-specify the
-   other (bug #10's lesson), and the max side is written .98 below
-   the min it hands over to (bug #22). */
+   other (the inline-style override bug's lesson), and the max side is written .98 below
+   the min it hands over to (the .98 breakpoint pairing). */
 @media (--below-desktop) {
   .package-stations-browser.is-enhanced
     .package-stations-category-tabs:has([data-label-full]) {
@@ -456,7 +456,7 @@
 @media (--below-tablet) {
   /* Full-bleed and faded at the right edge, so a cut-off tab
      reads as "scroll for more" instead of as a layout bug — the
-     affordance .tab-bar itself is missing (bug #13). */
+     affordance .tab-bar itself is missing (the hidden-scrollbar overflow). */
   .package-stations-browser.is-enhanced .package-stations-category-tabs {
     width: auto;
     max-width: none;
@@ -492,7 +492,7 @@
      Reset back to transparent/pill-radius for every mobtab tab —
      (0,4,0) against the rule's own (0,3,0), matching the wrapper-
      class-plus-full-base-selector pattern used throughout this
-     fixture (CLAUDE.md bug #14). */
+     fixture (the weaker-override trap). */
   .package-stations-hybrid-mobtab
     .package-stations-browser.is-enhanced
     .package-stations-category-tab {
@@ -510,7 +510,7 @@
    changes, nothing new invented. Specificity bumped the same way as
    every other override in this fixture: adding the wrapper class
    takes the selector one class past what it's cancelling, (0,4,0),
-   so this doesn't depend on source order (CLAUDE.md bug #14).
+   so this doesn't depend on source order (the weaker-override trap).
 
    Used to also reset the individual tabs' own background at this
    width (a :not([aria-current="true"]) rule, since mobile used to
@@ -552,7 +552,7 @@
    boundaries used to be the same number, which left no width with
    neither — moving only one of them would have opened a band with
    no category navigation at all. Paired .98 below the index's own
-   min-width per bug #22. */
+   min-width per the .98 breakpoint pairing. */
 @media (--from-desktop) {
   .package-stations-browser.is-enhanced .package-stations-category-tabs {
     display: none;
@@ -733,7 +733,7 @@
    reception-package.html takes for its dish tiles at the same
    width. Unpaired max-width query is fine: the rule it overrides
    is unqualified, so there is no min-width boundary to leave a gap
-   beside (bug #22). The <svg>'s own width/height attributes are
+   beside (the .98 breakpoint pairing). The <svg>'s own width/height attributes are
    presentation attributes — the weakest thing in the cascade — so
    this resizes the glyph without touching sixteen bits of markup. */
 @media (--below-tablet) {
@@ -749,7 +749,7 @@
   }
 }
 /* Hidden until hover on a mouse; ALWAYS visible on touch, where
-   cursor: zoom-in communicates nothing (bug #19). */
+   cursor: zoom-in communicates nothing (the sticky touch hover). */
 @media (--hover) {
   .package-station-card-expand-badge {
     opacity: 0;
@@ -907,7 +907,7 @@
 }
 
 /* The scroller itself, at every width. Native scroll-snap handles
-   touch AND trackpad wheel scrolling (CLAUDE.md bug #11's
+   touch AND trackpad wheel scrolling (the touch-action drag bug's
    touch-action: pan-y isn't needed here — the mouse-only drag added
    below never engages for touch, so there's no JS gesture fighting
    the browser's own horizontal pan/wheel chaining). Behind
@@ -933,7 +933,7 @@
    plain mouse for free (touch swipe and trackpad wheel scroll both
    already work via the scroll-snap rule above). Gated to
    (hover: hover) so touch never shows a cursor it can't use,
-   matching this file's other hover/touch splits (CLAUDE.md bug #19). */
+   matching this file's other hover/touch splits (the sticky touch hover). */
 @media (--hover) {
   .package-stations-browser.is-enhanced .package-stations-card-list {
     cursor: grab;
@@ -945,7 +945,7 @@
    or a photo doesn't paint a selection highlight instead of
    scrolling.
 
-   TWO specificity traps here, both CLAUDE.md bug #14 (a new
+   TWO specificity traps here, both the weaker-override trap (a new
    override losing outright because it is LESS specific, so source
    order never gets a say):
      1. The grab rule above is three classes (0,3,0). Written as
@@ -1043,9 +1043,9 @@
 
      The basis subtracts exactly one --station-carousel-gap because
      two cards have one gap between them; both come from the same
-     token so they cannot drift (bug #24's lesson).
+     token so they cannot drift (the drifting-grid-gaps lesson).
 
-     Headroom check for bug #20, since a .button inside a
+     Headroom check for the non-shrinking button overflow, since a .button inside a
      percentage-split container is exactly what that bug was:
      the narrowest card here is ~272px at a 621px viewport, less
      .package-station-card-body's 20px of padding each side = 232px
@@ -1066,7 +1066,7 @@
 
    WHY A PEEK AT ALL. An exact two-up fills the track edge to edge,
    which leaves the last visible card flush with the wrap and no
-   hint that fourteen more follow — CLAUDE.md bug #13's exact shape
+   hint that fourteen more follow — the hidden-scrollbar overflow's exact shape
    (hidden overflow, no affordance), with only the arrows and the
    counter to carry it. Dividing by 2.2 leaves roughly a quarter of
    the third card showing, which is the affordance the phone tier
@@ -1088,13 +1088,13 @@
    its width out of the same budget the "Add to selection" button
    is already tight in. At 621px a 2.2 divisor gives a 241px card
    and 201px of inner width against that button's ~197px
-   min-content — about 4px of slack, i.e. bug #20 with no margin
+   min-content — about 4px of slack, i.e. the non-shrinking button overflow with no margin
    at all, and my 197px is an estimate rather than a measurement.
    At 700px the numbers are 274px and 234px, ~37px of slack.
    Computed from the deficit rather than reached for: 684px is
    where ~30px of slack returns, and 700 is the next round number
    above it — and one this project has already landed on once, for
-   the packages section (bug #20's own note). Below 700 the band
+   the packages section (the non-shrinking button overflow's own note). Below 700 the band
    above keeps the exact fit, where the arrows and counter do the
    affordance work alone.
 
@@ -1276,8 +1276,8 @@
 .package-stations-carousel-arrow:disabled {
   opacity: 0.35;
   /* cursor: auto, not not-allowed — a disabled arrow isn't an
-     error, just not the current actionable option (CLAUDE.md,
-     "Non-interactive-but-related-context elements"). */
+     error, just not the current actionable option (docs/design/
+     design-system.md, "Interaction"). */
   cursor: auto;
 }
 /* Inverted, not just deepened (2026-09-30, on request) — was
@@ -1326,7 +1326,7 @@
 
    ::before, not ::after, following the same convention — on
    .button, ::after is the hover sheen and ::before is the cue, so
-   the two never fight over one slot (bug #2/#14's shape). This
+   the two never fight over one slot (the specificity traps' shape). This
    arrow is not a .button and has both free, but the convention is
    worth keeping for whoever reads it next.
 
@@ -1582,7 +1582,7 @@
 /* Sized down a step (2026-09-28): clamp(14.5px, 1.3vw, 16.5px),
    down from clamp(15.5px, 1.35vw, 17.5px) — both bounds trimmed
    ~1px, not just the ceiling. That's a different move from the
-   card title's own clamp lesson (CLAUDE.md-style: min answers
+   card title's own clamp lesson (min answers
    "how small this may ever get", max answers "how large it
    should get", and they're not a ratio) — there the floor was
    already right and only the ceiling was oversized. Here the
@@ -1613,7 +1613,7 @@
      station name was only ever a marker-size-bump away from doing.
      min-width:0 is the actual fix (a flex item's default min-width:
      auto refuses to shrink below its own content size regardless of
-     overflow/white-space, the same lesson as CLAUDE.md's .split > *
+     overflow/white-space, the same lesson as the .split > *
      precedent); nowrap+ellipsis then make that shrink graceful
      instead of a silent character clip. No name is long enough to
      actually truncate at any width tried so far — this is a guard
@@ -1790,7 +1790,7 @@
 }
 /* Touch gets the same surface on press but no nudge — a 3px slide
    under a finger that is covering the row communicates nothing
-   (bug #19's family: state that only makes sense with a pointer).
+   (the sticky touch hover's family: state that only makes sense with a pointer).
    Deliberately not brightening name or price here either, for the
    same reason: a colour change with nothing else moving is easy
    to miss on a transient press with no pointer to notice it
@@ -1855,7 +1855,7 @@
    painted behind them, i.e. a large empty grey card for the length
    of the swap. Nothing else sets a transition on this element, so
    there is no same-specificity rule to silently drop half of this
-   one (CLAUDE.md bug #2). */
+   one (the same-specificity collision). */
 .package-stations-stage {
   transition: opacity 0.22s var(--ease);
 }
@@ -1902,9 +1902,9 @@
   /* The sitewide food-photo hover itself now lives in styles.css
      (folded into the shared .gallery-item rule, 2026-10-01). Kept on
      the FIGURE, never the card: the card itself links nowhere, and a
-     card that looks interactive but isn't reads as broken (CLAUDE.md
-     records flattening an inherited whole-card hover twice for
-     exactly this) — this comment survives as the reason it's scoped
+     card that looks interactive but isn't reads as broken (an inherited
+     whole-card hover has been flattened twice already for exactly
+     this) — this comment survives as the reason it's scoped
      there rather than to .package-stations-stage-card. */
   .package-stations-stage-expand-button {
     position: absolute;
@@ -2328,7 +2328,7 @@
    the tenth-pass changelog entry for the exact list.
 
    THE HANDOFF IS 860px, matching section A's OWN real tablet
-   cutoff exactly (859.98/860 — bug #22's pairing) — confirmed
+   cutoff exactly (859.98/860 — the .98 breakpoint pairing's pairing) — confirmed
    with the user before building rather than guessed, because it
    determines whether request #2 (degrade to "one card + a peek"
    when two-plus-peek gets too tight) has anywhere to apply. AT
@@ -2439,7 +2439,7 @@
    alone is only (0,2,0) — this one matches the base rule's own
    compound selector plus the wrapper class, (0,4,0), so it wins on
    specificity rather than depending on landing after it in the
-   file (CLAUDE.md bug #14).
+   file (the weaker-override trap).
 
    Briefly narrowed to 621-859.98px only (thirtieth pass, same day)
    while the phone tab bar wrapped to two rows and needed its own,
@@ -2688,7 +2688,7 @@
    1122px instead solves for DOUBLE that floor, 74px of slack —
    still derived from the existing number rather than invented,
    just no longer treating "barely doesn't break" as "comfortable
-   enough to wait for." Paired .98 below per bug #22. If 1122
+   enough to wait for." Paired .98 below per the .98 breakpoint pairing. If 1122
    still reads as late once seen, the fix is the same formula
    with a bigger slack target, not a bigger guess — worked
    examples at a few candidate targets, same fixed 280px index
@@ -2823,7 +2823,7 @@
    .package-stations-category-tabs { display: flex }, three
    classes, (0,3,0), with no media query at all). Specificity
    decides regardless of which rule sits in a narrower media
-   query or later in the file — CLAUDE.md bug #14's exact shape,
+   query or later in the file — the weaker-override trap's exact shape,
    a new override losing not to source order but to a plainly
    higher specificity number it was never checked against. Fixed
    by matching the base rule's own compound selector and adding

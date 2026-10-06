@@ -14,7 +14,7 @@ import { CHIP_NOTES } from "@data/enquiry"
 const dateNativeWrap = document.getElementById("dateNativeWrap"),
   dateCalWrap = document.getElementById("dateCalWrap")
 const dateNative = document.getElementById("dateNative")
-// Backup date is a plain informational field (see CLAUDE.md) — Bacchus's own
+// Backup date is a plain informational field — Bacchus's own
 // reference in case the first choice is taken, not a second live availability
 // check, so it only makes sense next to the exclusive Wedding date picker.
 const backupDateField = document.getElementById("backupDateField")
@@ -30,7 +30,7 @@ const isoOfDate = (d) =>
 // Minimum-notice floors on the native date fields, mirroring the wedding
 // calendar's own 3-month minimum below (WEDDING_MIN_NOTICE_MONTHS) —
 // placeholders, not confirmed Bacchus policy, same "illustrative only"
-// status as the rest of this mock data (see CLAUDE.md). Corporate/
+// status as the rest of this mock data (docs/content/client-facts.md). Corporate/
 // Celebration/Other enquiries use the plain dateNative field and get a
 // shorter 2-week floor instead, since they don't take over the whole
 // estate the way a wedding does. A backup date is still a wedding date,
@@ -144,11 +144,11 @@ const syncDateMode = () => {
   if (isWedding) {
     if (isActualTransition) {
       // Fade + lift in when switching to Wedding from another event type
-      // (opacity+lift, not clip-path — see CLAUDE.md's known-bugs list).
+      // (opacity+lift, not clip-path, which once broke the mobile menu).
       // .is-revealed is added on a double-rAF, one real painted frame after display
       // switches from none, since toggling display and opacity/transform
       // in the same tick can get coalesced into a single paint with no
-      // in-between frame to animate from (see bug #1 in CLAUDE.md).
+      // in-between frame to animate from (see the reveal frame-gap bug).
       dateCalWrap.style.display = ""
       dateCalWrap.classList.remove("is-revealed")
       requestAnimationFrame(() => {
@@ -201,7 +201,7 @@ const syncChipNote = (isInitial) => {
     return
   }
   // Same fixed-clock fade-out/swap/fade-in as the availability widget's
-  // picked-date swap above (see CLAUDE.md bug #7) — a synchronous class+text
+  // picked-date swap above (see the same-tick class-swap bug) — a synchronous class+text
   // swap in one tick can get coalesced into a single paint with nothing to
   // transition from.
   chipNote.classList.add("swapping")

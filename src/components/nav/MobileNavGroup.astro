@@ -98,8 +98,8 @@ const links = [menu.hub, ...menu.items]
        reads as further on them. main.js folds the OPEN group's sub-links into the
        same --m-delay sequence as the top-level rows, so the whole thing counts
        down the list once rather than running two staggers side by side.
-       color stays out of the delay, per bug #12 — a delayed hover colour is what
-       made the top-level links feel laggy once. */
+       color stays out of the delay, per the leaking transition delay — a delayed
+       hover colour is what made the top-level links feel laggy once. */
   :global(.menu) .mobile-nav-sub-link {
     opacity: 0;
     transform: translateY(18px);
@@ -165,7 +165,7 @@ const links = [menu.hub, ...menu.items]
     /* Delay lives on the opacity/transform entries only, via the same
          --m-delay custom property styles.css uses — never the
          transitionDelay shorthand, which would also delay the colour
-         transition and make the tap feel laggy (CLAUDE.md bug #12). */
+         transition and make the tap feel laggy (the leaking transition delay). */
     transition:
       opacity 0.6s var(--ease) var(--m-delay, 0s),
       transform 0.7s var(--ease) var(--m-delay, 0s),

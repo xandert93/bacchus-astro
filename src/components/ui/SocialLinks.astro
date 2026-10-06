@@ -51,8 +51,8 @@ const { class: extraClass } = Astro.props
       color: var(--gold);
     }
   }
-  /* Gated, and given the :active fallback it never had (bug #19). Reaches the
-     footer on every page as well as the drawer's own copy, deliberately — the
+  /* Gated, and given the :active fallback it never had (the sticky touch hover).
+     Reaches the footer on every page as well as the drawer's own copy, deliberately — the
      footer pair is less obvious about it only because tapping one leaves the
      site entirely, whereas the drawer's sits on screen through the overlay's
      0.5s fade. Same latch either way. */

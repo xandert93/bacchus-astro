@@ -483,7 +483,7 @@ h2 em {
   object-fit: cover;
   /* Higher specificity than [data-reveal="img"] > img (styles.css), whose
      own transition list (opacity + transform) this would otherwise
-     silently replace wholesale — same collision as CLAUDE.md bug #2, just
+     silently replace wholesale — same collision as the same-specificity collision, just
      via specificity instead of source order. Folding opacity in here too
      so the scroll-reveal fade-in still animates instead of snapping. */
   transition:

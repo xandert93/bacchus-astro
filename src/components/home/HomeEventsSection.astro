@@ -190,8 +190,8 @@ const OCCASIONS = [
   /* .arch-tab/.arch-dish are modifiers, not ancestor-scoped rules — menu.html
        nests .dish inside its own (unrelated) .tab-panel tab system, so a
        .tab-panel .arch / .dish .arch pair would both match the same element
-       there, silently resolving by CSS source order alone (see CLAUDE.md bug
-       #2). Applying the modifier directly to the element sidesteps that. */
+       there, silently resolving by CSS source order alone (the same-specificity
+       collision). Applying the modifier directly to the element sidesteps that. */
   .arch-tab {
     position: relative;
     aspect-ratio: 4/5;

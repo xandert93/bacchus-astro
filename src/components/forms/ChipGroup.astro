@@ -109,7 +109,7 @@ const { id, options, selected } = Astro.props
   }
   /* Content-width chips get too narrow for longer labels to fit on one line
      once the form itself has gone single-column — same lesson as the tab-bar
-     overflow (prototype bug #13): fit a small fixed item count in equal-width
+     overflow (the hidden-scrollbar overflow): fit a small fixed item count in equal-width
      rows rather than letting text wrap inside a pill. */
   @media (--below-tablet) {
     .chip {
@@ -122,7 +122,7 @@ const { id, options, selected } = Astro.props
     /* Optical nudge, not a box-model bug — flex's align-items:center matches
          the SVG's geometric box to the text's line box, but the Font Awesome
          glyphs' visible "ink" isn't centered within their own viewBox, reading
-         as sitting slightly below the text otherwise (see CLAUDE.md bug #8,
+         as sitting slightly below the text otherwise (see Newsreader's line-box bias,
          same class of fix). */
     margin-top: -1.5px;
   }

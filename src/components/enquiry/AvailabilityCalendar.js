@@ -40,7 +40,7 @@ import { hover } from "@lib/media-queries.js"
   // staffing and supplier coordination overnight. 3 months is a
   // reasonable placeholder, not a confirmed Bacchus policy — same
   // "illustrative only" status as the rest of this mock data, flag for
-  // the client before treating it as real (see CLAUDE.md).
+  // the client before treating it as real (docs/content/client-facts.md).
   const WEDDING_MIN_NOTICE_MONTHS = 3
   const minBookableDate = new Date(
     today.getFullYear(),
@@ -319,8 +319,8 @@ import { hover } from "@lib/media-queries.js"
   // alternative (kept in that sandbox for reference). First shipped on
   // .availability.diary (weddings.html's showcase + quick-pick modal), then
   // extended to .availability.compact (the enquiry-form date-pickers on
-  // index/corporate/celebrations/gallery.html) — see CLAUDE.md's waitlist
-  // roadmap entry.
+  // index/corporate/celebrations/gallery.html) — see the waitlist entries in
+  // docs/design/decisions.md and docs/planning/roadmap.md.
   //
   // A single shared popover per page (position:fixed, markup duplicated once
   // per page like every other widget here — see the wizard/testimonials
@@ -328,7 +328,7 @@ import { hover } from "@lib/media-queries.js"
   // can ever be open at a time even where a page has two instances
   // (weddings.html's showcase + modal). Everything below no-ops via the
   // `if (wlPop)` guard on any page without that markup, same as every other
-  // optional widget in this file (bug #4).
+  // optional widget in this file (the missing-markup guard).
   const wlPop = document.getElementById("wlPopover")
   let wireWaitlistGrid = () => {} // no-op unless wlPop exists, replaced below
   if (wlPop) {

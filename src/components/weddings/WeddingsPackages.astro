@@ -312,11 +312,11 @@ const DINING = [
 
          Deliberately CSS rather than the inline `style="--d: …"` these cards used
          to carry: an inline custom property beats every stylesheet rule at every
-         width (CLAUDE.md bug #10), so a mobile query could never have cancelled
-         it. Below 980px the cards are stacked or 2-up and reveal individually as
-         each scrolls into view, where a delay is just lag on a card the visitor
-         is already looking at — so the stagger has to be able to switch off, and
-         living here is what lets it. */
+         width (the inline-style override bug), so a mobile query could never have
+         cancelled it. Below 980px the cards are stacked or 2-up and reveal
+         individually as each scrolls into view, where a delay is just lag on a
+         card the visitor is already looking at — so the stagger has to be able to
+         switch off, and living here is what lets it. */
   /* Slowed deliberately, and much further than a normal reveal: this is the
          one moment the page states outright that there are three options, and
          the cards arriving one at a time over a couple of seconds is what makes
@@ -331,7 +331,7 @@ const DINING = [
          Declared at 0,2,0 (.package-dining-card-item .package-dining-card), not
          as a bare .package-dining-card — this media query sits ABOVE the base
          .package-dining-card rule in the file, so an equal-specificity override
-         here would lose on source order (CLAUDE.md bug #14: check what is
+         here would lose on source order (the weaker-override trap: check what is
          already targeting the element, and at what weight, before assuming a
          later-looking rule wins).
 
@@ -344,7 +344,8 @@ const DINING = [
          A standalone `transition-delay` longhand here would hand the --d
          values below to border-color as well, which is what made the hover
          border on cards 2 and 3 arrive 0.6s and 1.2s late. See the matching
-         note on .package-dining-card's own transition, and CLAUDE.md bug #12. */
+         note on .package-dining-card's own transition, and the leaking transition
+         delay. */
   /* Two-up tablet tier: a leftover third card centers itself on its own row
        rather than forcing a premature drop to one column. The floating "or"
        disc and the triptych's middle-card offset (980px+ below) both assume a
@@ -359,13 +360,13 @@ const DINING = [
        ~660px viewport rendered a ~620px-tall square image inside a 900px+ card
        sitting between two compact layouts.
 
-       Why 700 existed, and why coming below it is safe now: CLAUDE.md bug #20.
-       At a 50/50 split the card's own .package-card-link (a .button, deliberately
-       flex-shrink:0 with a nowrap label) stops fitting and overflows rather than
-       compressing — measured as a ~10px deficit right around 620-626px once
-       .package-dining-card-body's own padding came out of the column width, and
-       700px was the measured floor for the full-size button. At 621px there is
-       ~230px of usable width inside the card body against a full .button's
+       Why 700 existed, and why coming below it is safe now: the non-shrinking
+       button overflow. At a 50/50 split the card's own .package-card-link (a
+       .button, deliberately flex-shrink:0 with a nowrap label) stops fitting and
+       overflows rather than compressing — measured as a ~10px deficit right around
+       620-626px once .package-dining-card-body's own padding came out of the
+       column width, and 700px was the measured floor for the full-size button. At
+       621px there is ~230px of usable width inside the card body against a full .button's
        ~252px with a long label. The 621-699.98px block further down sizes the
        button to .button-small's own dimensions in that band, bringing it to
        ~222px, which fits. Keep the two together — that button rule is what makes
@@ -378,17 +379,18 @@ const DINING = [
        hole was hit for real at 699.2px on the tier below. The 0.02 offset is
        the Bootstrap convention — browsers round reported widths to two decimal
        places — and is preferred over overlapping the two ranges, which would
-       make the outcome depend on source order (CLAUDE.md bug #10).
+       make the outcome depend on source order (the inline-style override bug).
        The same hole existed on every other paired breakpoint in this file
        (620/621, 639/640, 760/761, 920/921, 980/981) and all of them were closed
-       the same way in the same pass — see CLAUDE.md bug #22. Every max-width
+       the same way in the same pass — see the .98 breakpoint pairing. Every max-width
        query here now ends .98 below the min-width it hands over to. */
-  /* The CLAUDE.md bug #20 guard that lets the 2-up tier above start at 621px
+  /* The non-shrinking-button guard that lets the 2-up tier above start at 621px
        rather than 700px (see its comment for the measurements). .button-small's
        own dimensions reused rather than a new size invented. Belt-and-braces
        against today's copy — the four visible labels all read "View menu" now,
        which fits either way — but the moment any of them is lengthened again the
-       bottom of this band overflows exactly as bug #20 describes. */
+       bottom of this band overflows exactly as the non-shrinking button overflow
+       describes. */
   /* The "or" marker: a gold-ringed disc between two formats. Stacked between
        cards on narrow screens, floated into the column gap on wide ones. */
   .package-dining-card-or {
@@ -431,10 +433,10 @@ const DINING = [
     border-radius: var(--radius-card);
     overflow: hidden;
     /* Restates [data-reveal]'s own opacity/transform transition (same
-         specificity, 0,1,0) alongside the new border-color entry — per CLAUDE.md
-         bug #2, a same-specificity rule wins wholesale, not per-property, so
-         adding border-color alone here would've silently dropped the reveal
-         animation. */
+         specificity, 0,1,0) alongside the new border-color entry — per
+         the same-specificity collision, a same-specificity rule wins wholesale,
+         not per-property, so adding border-color alone here would've silently
+         dropped the reveal animation. */
     /* And the same bug once more, one property further out: `transition` is a
          shorthand, so it also resets transition-delay to 0s. [data-reveal] sets
          `transition-delay: var(--d, 0ms)` as a separate longhand at the same
@@ -451,7 +453,7 @@ const DINING = [
          border even began to move, then took another 0.5s to arrive. Read as
          a broken hover, and was reported as one.
 
-         Exactly CLAUDE.md bug #12, which records the same mistake on the
+         Exactly the leaking transition delay, which records the same mistake on the
          mobile drawer's link stagger and the same fix: put the delay on the
          entries that want it via a custom property and leave the others with
          no var, rather than reaching for the shorthand's delay slot. */
@@ -909,7 +911,7 @@ const DINING = [
        border (0.22) is doing deliberate work marking it as a different kind of
        thing. The alternative discussed was an :active treatment under
        (hover: none), matching this site's usual tap-feedback pattern
-       (CLAUDE.md bug #19), which keeps the border as a response to a tap. Not
+       (the sticky touch hover), which keeps the border as a response to a tap. Not
        taken yet.
 
        The border is a gradient, not a flat gold — --gold-gradient-soft, the
@@ -1029,7 +1031,7 @@ const DINING = [
        folded into that selector list purely because of source order — that block
        sits earlier in this file than .package-beverage-card's base rule directly
        above, so a bare `.package-beverage-card` override there would be equal
-       specificity (0,1,0) and lose outright (CLAUDE.md bug #14). Declared here,
+       specificity (0,1,0) and lose outright (the weaker-override trap). Declared here,
        after the rule it overrides, so no specificity games are needed.
 
        The padding-box layer is this card's own 120deg ink gradient, not the

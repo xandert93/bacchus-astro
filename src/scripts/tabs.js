@@ -99,7 +99,7 @@ export const initTabGroup = (container, opts) => {
 // onto it and left both sitting outside the scroll viewport, so the
 // SELECTED tab showed as a clipped sliver ("Themed Bars" rendering as
 // a single "T" behind half a gold pill) with no scrollbar and no hint
-// anything was off-screen. CLAUDE.md bug #13's "hidden scrollbar, zero
+// anything was off-screen. the hidden-scrollbar overflow's "hidden scrollbar, zero
 // affordance" failure mode, reached by a different route: not content
 // a visitor can't FIND, but the one they just picked.
 //

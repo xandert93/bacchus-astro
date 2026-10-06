@@ -199,8 +199,8 @@ import { TESTIMONIALS } from "@data/testimonials"
       // A second, short timeout — not nested requestAnimationFrame — gives the
       // browser a paint boundary between the content swap and the style
       // change. Doing both in the same tick lets it coalesce into one paint
-      // with no in-between frame to animate the fade-back-in across (bug #7
-      // in CLAUDE.md); this mirrors the wizard's showStep() sequencing. Same
+      // with no in-between frame to animate the fade-back-in across (the
+      // same-tick class-swap bug); this mirrors the wizard's showStep() sequencing. Same
       // reasoning applies to re-adding is-in here rather than alongside the
       // tRender() call above — it needs its own frame boundary to replay the
       // stars' staggered entrance instead of snapping straight to visible.

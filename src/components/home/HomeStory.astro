@@ -116,8 +116,8 @@ import { below } from "@lib/media-queries.js"
        column width once narrower than that) is already doing the narrowing —
        the extra 52ch cap on top of it just makes the paragraph noticeably
        narrower than the heading above it instead of matching it. Placed after
-       the base rule above, not before (CLAUDE.md bug #2: same selector, same
-       specificity — source order decides). */
+       the base rule above, not before (the same-specificity collision: same
+       selector, same specificity — source order decides). */
   .facts {
     display: flex;
     gap: clamp(20px, 4vw, 48px);

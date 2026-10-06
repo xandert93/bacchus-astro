@@ -3,7 +3,7 @@
 // keep the viewBox's 3:2 ratio AND land on even numbers both ways (12x8 in
 // the bar, 18x12 in the drawer): anything else letterboxes the path or puts
 // the rotation centre on a half pixel, and the glyph shimmers as it turns
-// (prototype bug #31).
+// (the chevron shimmer).
 interface Props {
   size?: "bar" | "drawer"
 }
@@ -33,8 +33,8 @@ const [width, height] = size === "bar" ? [12, 8] : [18, 12]
   /* Promoted to its own compositing layer so the browser rasterises the
      1.4px stroke once and composites the rotation, rather than
      re-antialiasing it at every angle (which reads as shimmering rather than
-     turning). An attempted fix for prototype bug #31, still unconfirmed —
-     the prototype's notes record both attempts and the remaining suspects.
+     turning). An attempted fix for the chevron shimmer, which it didn't
+     cure; a thicker stroke or a filled triangle are the untested options.
      will-change keeps a standing layer, which is the right trade for two
      small visible interactive glyphs; transform-origin is stated so it
      can't drift if the box size changes. Who rotates it, and when, is the

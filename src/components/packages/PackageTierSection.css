@@ -18,7 +18,7 @@
      .package-dishes-grid (the signature-dish tiles). They stack directly on
      top of each other and are both repeat(3, 1fr), so they only read as one
      column structure if their gaps match too; when they didn't, every column
-     after the first started somewhere different (CLAUDE.md bug #24). One
+     after the first started somewhere different (the drifting grid gaps). One
      token rather than two equal literals, so they cannot drift apart again. */
   --package-grid-column-gap: clamp(32px, 5.5vw, 72px);
 }
@@ -53,7 +53,7 @@
    .panels entirely (a single element, not one per tab-panel), so
    there's nothing there for a class/display toggle to even animate.
    The name is a single persistent <span> whose text content is
-   swapped by JS with a fixed setTimeout crossfade (CLAUDE.md bug #7 —
+   swapped by JS with a fixed setTimeout crossfade (the same-tick class-swap bug —
    swapping text and toggling a class in the same tick can get
    coalesced into one paint with no frame to animate from), not tied
    to which .tab-panel is active. */
@@ -119,7 +119,7 @@
   column-gap: clamp(16px, 3vw, 32px);
   row-gap: 22px;
   /* Was clamp(44px, 6vw, 72px) — sized for when .package-menu-pdf-note
-     (removed, see CLAUDE.md) sat in this gap and ate into it via its
+     (since removed) sat in this gap and ate into it via its
      own -6px top margin. With nothing left to break the gap up, the
      old value read as too much empty space before "Now viewing" —
      brought down to match the clamp(32px, 4.5vw, 48px) rhythm already
@@ -137,7 +137,7 @@
    grid cell and throws off vertical alignment against the heading —
    zero it out in this context specifically. */
 /* Equal-width tabs. flex:1 (the pattern .tab-bar already uses
-   sitewide at mobile widths, bug #13) doesn't actually guarantee
+   sitewide at mobile widths, the hidden-scrollbar overflow) doesn't actually guarantee
    equal widths here: flex:1 expands to flex-basis:0, and a button
    can never shrink below its own text's min-content width (white-
    space:nowrap) — "Lavender" is longer than "Daisy"/"Rose", so it
@@ -184,7 +184,7 @@
     grid-template-areas: "heading" "lead" "tabbar";
   }
   /* Once wrapped, switch to the same full-width/flex:1 pattern the
-     sitewide mobile tab-bar already uses (bug #13) instead of the
+     sitewide mobile tab-bar already uses (the hidden-scrollbar overflow) instead of the
      fixed 120px buttons — those are sized for sitting compactly next
      to the heading and would otherwise leave the wrapped row's edges
      empty rather than the buttons collectively filling it. */
@@ -436,7 +436,7 @@
   }
 }
 /* Same-page action button (switches tier, doesn't navigate away) —
-   needs its own gated tap feedback per CLAUDE.md bug #19, or an
+   needs its own gated tap feedback per the sticky touch hover, or an
    unguarded :hover would read as stuck-active on touch after a tap. */
 @media (--no-hover) {
   .package-sticky-switch-btn:not(.active):active {
@@ -494,8 +494,8 @@
   /* Explicit fixed width rather than flex's own content-based
      sizing (which would otherwise leave "Lavender €57" visibly
      wider than "Daisy €53"/"Rose €64") — same fix, same reason, as
-     .package-tabs-tabbar button's own 120px width above (bug #13: flex
-     alone doesn't guarantee equal widths once labels differ in
+     .package-tabs-tabbar button's own 120px width above (the hidden-scrollbar
+     overflow: flex alone doesn't guarantee equal widths once labels differ in
      length). Sized to comfortably fit the longest pairing
      ("Lavender €57") at this font-size/letter-spacing/padding, with
      some headroom. */
@@ -527,7 +527,7 @@
      single line in play, ~70px at this size/tracking) fits well
      inside that with room to spare, so none of the three ever hits
      its own min-content floor before reaching an equal 1/3 share
-     (bug #13's actual failure mode). Same reasoning already covers
+     (the hidden-scrollbar overflow's actual failure mode). Same reasoning already covers
      .package-tabs-tabbar button's own flex:1 fallback below 840px. */
   .package-sticky-switch-btn {
     flex: 1;
@@ -583,7 +583,7 @@
    brightness 0.95 -> 0.965) on the grounds that a big desaturation
    jump suited a wall of gallery tiles but not three dish photos that
    are the point of the panel. Its hover line restated the sitewide
-   end state purely to win on specificity (CLAUDE.md bug #2).
+   end state purely to win on specificity (the same-specificity collision).
 
    Both are gone because the premise is. .gallery-item is no longer
    muted at rest anywhere — see its own note in styles.css — so this
@@ -627,7 +627,7 @@
    in this section, measured in elements rather than milliseconds.
 
    (0,2,1) against the sitewide rule's (0,1,1), so it wins on
-   specificity rather than source order (CLAUDE.md bug #14). Scoped to
+   specificity rather than source order (the weaker-override trap). Scoped to
    .panels so menu.html's own unrelated .tab-panel lists keep theirs. */
 .panels .tab-panel li {
   opacity: 1;
@@ -672,7 +672,7 @@
    28px badge covers roughly a third of it. It lives HERE rather than
    in styles.css because this file already owns the badge's override
    for this grid; a second rule there would sit at the same (0,2,0)
-   specificity and be settled by load order alone (CLAUDE.md bug #2).
+   specificity and be settled by load order alone (the same-specificity collision).
 
    background-size has to come down with the box: a 13px glyph left
    inside a 22px ring has 4.5px of clearance and reads cramped. It
@@ -680,7 +680,7 @@
    so the shorthand doesn't need restating.
 
    620.98, not the 620 this was written at, so it hands over to the
-   621px rules without a gap at fractional widths (CLAUDE.md bug #22)
+   621px rules without a gap at fractional widths (the .98 breakpoint pairing)
    — and, more to the point here, so it flips at exactly the same
    width the station badge does. */
 @media (--below-tablet) {
@@ -773,8 +773,8 @@
    so the circle stays a true circle regardless of the letter's own
    advance width, and Inter rather than the lists' Newsreader — this
    is UI chrome, not body copy, matching the 3-font system's roles in
-   CLAUDE.md. The -1px margin-block-start is the same optical nudge as
-   bug #8: a box that's centred by its metrics still sits visibly low
+   docs/design/design-system.md. The -1px margin-block-start is the same optical nudge as
+   Newsreader's line-box bias: a box that's centred by its metrics still sits visibly low
    against serif text on either side of it.
 
    Deliberately not a fixed px font-size: the badge scales with
@@ -1022,7 +1022,7 @@
    (Reception/High Tea), placed after the tier content. Previously a
    copy-pasted "Explore the Stations add-on" link left over from
    generating this page off reception-package.html's pattern —
-   Stations is Reception-only (see CLAUDE.md), so that link was wrong
+   Stations is Reception-only, so that link was wrong
    here. Sits outside .package-tier-view/.panels so it renders once
    regardless of which tier is active, not duplicated per tab-panel. */
 .package-stations-note {
@@ -1071,7 +1071,7 @@
    `.panels .tab-panel.full` (three classes, and all three tiers
    carry `.full`) rather than !important: it exceeds
    `.tab-panel.active`'s specificity outright, so it wins without
-   depending on source order (CLAUDE.md bug #14). */
+   depending on source order (the weaker-override trap). */
 .panels .tab-panel.full {
   display: block;
   animation: none;
@@ -1187,7 +1187,7 @@ body.is-scrolling .package-sticky-switch {
    Doubled class (0,2,0) rather than relying on this rule sitting after
    .on-dark in the file — .on-dark's `background` shorthand resets
    background-image, so an equal-specificity longhand would be winning
-   on source order alone (CLAUDE.md bug #2). */
+   on source order alone (the same-specificity collision). */
 .on-dark.on-dark-gold-wash {
   background-image:
     radial-gradient(120% 80% at 85% 0%, rgba(var(--gold-rgb), 0.06), transparent 60%),

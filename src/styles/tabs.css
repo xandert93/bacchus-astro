@@ -75,9 +75,9 @@
 /* Sitewide gap, not a deliberate omission — every .tab-bar instance (this
    Events section, menu.html's own tab bar, sandboxes/reception-package.html's
    tier switcher) gave inactive tabs zero hover feedback. Same
-   :not(.active) guard as .tab-bar button.active above (bug #2/#14: keeps
+   :not(.active) guard as .tab-bar button.active above (the specificity traps: keeps
    this from fighting that rule at equal specificity), and the usual
-   hover/touch split (bug #19) since these are same-page, non-navigating
+   hover/touch split (the sticky touch hover) since these are same-page, non-navigating
    controls. Resting/hover was first tried as plain --limestone (full
    opacity) -> --limestone-2 — computed contrast ratio between those two
    tokens is ~1.1:1, essentially imperceptible (anything under ~1.5:1 reads
@@ -142,7 +142,7 @@
      descender is generous enough that the visible mass of a lowercase line
      rides a couple of px above the line's geometric centre, so even with
      the row made symmetric above, the copy still read as leaning toward
-     the divider above it. CLAUDE.md bug #8, same font, same cause: box
+     the divider above it. Newsreader's line-box bias, same font, same cause: box
      metrics correct, optics not, and a small nudge is the fix.
 
      One dial rather than two literals — whatever comes off the bottom goes
@@ -188,7 +188,7 @@
   animation: liIn 0.6s var(--ease) forwards;
 }
 /* No rule above the first item — framing the whole list in dividers reads
-   as boxed-in (see CLAUDE.md's "Divided lists"). border-top goes too, not
+   as boxed-in (docs/design/design-system.md, "Spacing details"). border-top goes too, not
    just the image: it keeps this row's spacing byte-identical to what it was
    before the divider moved to a background. */
 .tab-panel li:first-child {

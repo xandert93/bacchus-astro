@@ -170,12 +170,12 @@ const { backgroundImage } = Astro.props
   }
   /* Per-star entrance, staggered by nth-child (fixed at 5 stars, so a static
      CSS stagger works without JS needing to manage per-element delays — unlike
-     bug #13's mobile-drawer case, .star has no other transition for a shared
-     transition-delay to bleed into). #tStars.is-in-view is toggled from tRender() in
-     main.js on every testimonial change, not just once on page load, since the
-     rating is per-review data and the whole point is to replay this each time
-     a new review comes in — separate from the one-time [data-reveal] fade
-     already on the outer #tStars container itself. */
+     the hidden-scrollbar overflow's mobile-drawer case, .star has no other
+     transition for a shared transition-delay to bleed into). #tStars.is-in-view is
+     toggled from tRender() in main.js on every testimonial change, not just once
+     on page load, since the rating is per-review data and the whole point is to
+     replay this each time a new review comes in — separate from the one-time
+     [data-reveal] fade already on the outer #tStars container itself. */
   .stars .star {
     opacity: 0;
     transform: scale(0.4);
@@ -227,7 +227,7 @@ const { backgroundImage } = Astro.props
   /* Selector matches `.quote blockquote`'s specificity (class+type) and beats
      it on source order, instead of losing to it — a plain `.testimonial-quote` class
      selector is less specific than `.quote blockquote` and silently lost the
-     font-size override entirely (bug #2 pattern in CLAUDE.md: a losing
+     font-size override entirely (the weaker-override trap: a losing
      override, not a dropped property, but the same root cause). Truncation
      past 5 lines is done in JS (see tRender in main.js) rather than
      `-webkit-line-clamp`, which doesn't reliably clamp centered text
@@ -265,7 +265,7 @@ const { backgroundImage } = Astro.props
     display: grid;
     place-items: center;
     /* Named properties rather than "all", so nothing else on this element
-       can pick up the timing by accident (bug #2). */
+       can pick up the timing by accident (the same-specificity collision). */
     transition:
       background-color 0.3s var(--ease),
       color 0.3s var(--ease);
@@ -404,8 +404,8 @@ const { backgroundImage } = Astro.props
   /* Hover (and press, on touch) inverts the chip: gold fill, ink icon. The
      original state (0.65 alpha ink to solid ink, gold-2 to gold) barely moved
      over the dark photo behind this section, and on touch there was no state
-     at all — bug #19's missing (hover: none) fallback, on a control that never
-     navigates away. The next arrow's timer ring is deliberately left gold
+     at all — the sticky touch hover's missing (hover: none) fallback, on a control
+     that never navigates away. The next arrow's timer ring is deliberately left gold
      (tried inverting it to ink; it read worse). While hovered, its progress
      stroke sits on the gold fill and is hard to see — which is also when
      autoplay is paused, so nothing is lost. */

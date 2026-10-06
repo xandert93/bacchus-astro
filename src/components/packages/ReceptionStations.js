@@ -78,7 +78,7 @@ import { below, hover, reducedMotion } from "@lib/media-queries.js"
   const CROSS = "M5 5l14 14M19 5 5 19"
   // Gates the hover-to-"Remove" swap in paintAdd() below to real
   // pointer devices, matching this file's other hover/touch
-  // splits (CLAUDE.md bug #19) — touch has no hover to trigger it
+  // splits (the sticky touch hover) — touch has no hover to trigger it
   // from, so there's nothing to gate wrong there either way, but
   // checking once here avoids a matchMedia() call on every
   // pointerenter.
@@ -408,7 +408,7 @@ import { below, hover, reducedMotion } from "@lib/media-queries.js"
 
   // ---- carousel (< 621px) ----
   // Native scroll-snap, not a pointer-drag component — which is
-  // why CLAUDE.md bug #11's touch-action: pan-y isn't needed here.
+  // why the touch-action drag bug's touch-action: pan-y isn't needed here.
   let carIndex = 0
   const visibleCards = () => cardEls.filter((c) => !c.hidden)
   const scrollToCard = (i) => {
@@ -532,7 +532,7 @@ import { below, hover, reducedMotion } from "@lib/media-queries.js"
     // which carries data-reveal and picks up .is-revealed on
     // scroll — and [data-reveal].is-revealed is (0,2,0), so a
     // single-class toggle in here is the kind of silent no-op
-    // CLAUDE.md bug #15 records. Inline always wins; clearing the
+    // the outranked toggle class records. Inline always wins; clearing the
     // properties lets the stylesheet reassert itself.
     //
     // Fades the WHOLE stage, not its figure/caption/body
@@ -540,7 +540,7 @@ import { below, hover, reducedMotion } from "@lib/media-queries.js"
     // stage's own --ink-3 surface and border painted behind them
     // for the length of the swap — a large empty grey card sitting
     // in the middle of the section, which is the same artefact
-    // CLAUDE.md's bug list calls the "grey blob". The box has to go
+    // once known as the "grey blob". The box has to go
     // with its contents.
     //
     // Unlike the rotator's tFade this does not lift: the stage is a
@@ -607,7 +607,7 @@ import { below, hover, reducedMotion } from "@lib/media-queries.js"
   // own repeated calls re-attaching it) and pointerType is
   // checked so a touch device's brief synthetic pointerenter (some
   // browsers fire one on tap) can't get this stuck the way
-  // CLAUDE.md bug #19 already catalogues for plain :hover.
+  // the sticky touch hover already catalogues for plain :hover.
   const paintAdd = (btn, on, name) => {
     if (!btn) return
     const wasOn = btn.getAttribute("aria-pressed") === "true"
@@ -758,7 +758,7 @@ import { below, hover, reducedMotion } from "@lib/media-queries.js"
           // A second, short timeout rather than a nested
           // requestAnimationFrame — the browser can coalesce rAFs
           // into one paint, leaving no in-between frame for the
-          // fade back in to animate across (CLAUDE.md bug #7).
+          // fade back in to animate across (the same-tick class-swap bug).
           stageFadeTimer = setTimeout(() => {
             stageFade(false)
           }, 30)
@@ -833,7 +833,7 @@ import { below, hover, reducedMotion } from "@lib/media-queries.js"
   // this bar too. This bar can't just use initTabGroup wholesale:
   // its selected state is driven by the phone carousel's scroll
   // position, not by clicks on these buttons, so the pill sync
-  // below has to stay its own thing. Guarded per CLAUDE.md bug #4 —
+  // below has to stay its own thing. Guarded per the missing-markup guard —
   // if tabs.js somehow hasn't loaded, the tab bar still works,
   // it just won't auto-scroll.
   const ensureTabVisible = (btn) => {
@@ -923,7 +923,7 @@ import { below, hover, reducedMotion } from "@lib/media-queries.js"
 // truth to keep in step — the bug the old select()/setGroup() pair
 // had to work at.
 //
-// Guarded per CLAUDE.md bug #4 — no-ops cleanly if the section
+// Guarded per the missing-markup guard — no-ops cleanly if the section
 // isn't on the page, so it is safe to lift into main.js later.
 //
 // RUNS ONCE PER data-stations="carousel" SECTION. Written to
@@ -960,7 +960,7 @@ import { below, hover, reducedMotion } from "@lib/media-queries.js"
     const CROSS = "M5 5l14 14M19 5 5 19"
     // Gates the hover-to-"Remove" swap in paintAdd() below to real
     // pointer devices, matching this file's other hover/touch
-    // splits (CLAUDE.md bug #19) — touch has no hover to trigger it
+    // splits (the sticky touch hover) — touch has no hover to trigger it
     // from, so there's nothing to gate wrong there either way, but
     // checking once here avoids a matchMedia() call on every
     // pointerenter.
@@ -1475,7 +1475,7 @@ import { below, hover, reducedMotion } from "@lib/media-queries.js"
     // ---- deep linking ----
     // A URL that opens the page already parked on one station:
     // reception-package.html#oyster-royale (merged 2026-09-30; known
-    // not to work correctly on mobile yet — see CLAUDE.md). Useful
+    // not to work correctly on mobile yet). Useful
     // for pointing a couple (or Bacchus) at a single item from an
     // email or a quote without saying "scroll down and find it".
     // Same idea as this page's own #rose, which addresses a tier.
