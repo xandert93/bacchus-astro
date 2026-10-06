@@ -77,7 +77,9 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   `src/data/navigation.ts`.
 - `sections/`: sections several pages share. `HeroFrame` (the hero shell)
   and `PageHero` on top of it, `IntroSplit`, `FaqSection`, `ProcessSteps`,
-  `GalleryPreview`, `Testimonials`, `OccasionCards`, `PhotoCarousel`.
+  `GalleryPreview`, `Testimonials`, `OccasionCards`, `PhotoCarousel`, and
+  `DishGrid` (arch-framed dishes: the homepage kitchen section and the menu
+  page's tabs).
 - `enquiry/`: `EnquirySection` (layout) → `EnquiryForm` (the wizard) →
   `EnquiryStepOccasion` / `Specifics` / `Details` / `Review`, plus
   `EnquirySentPanel`, `EnquiryTrustRail`, `AvailabilityCalendar`,
@@ -86,9 +88,9 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   share) with `PackageDish`, `PackageMenuGroup`, `PackageMenuItem`,
   `PackageMenuNote`; Reception's `ReceptionStations` → `StationsBrowser` →
   `StationCard`.
-- `home/`, `weddings/`: sections only one page uses (`HomeHero`,
+- `home/`, `weddings/`, `menu/`: sections only one page uses (`HomeHero`,
   `HomeStory`, `HomeEventsSection`, `WeddingsPackages`,
-  `WeddingsAvailability`, …).
+  `WeddingsAvailability`, `MenuCourseTabs`, `MenuEnquireCall`, …).
 - `secure-booking/`: the deposit page's sections (`SecureBookingHero`,
   `BookingSummary`, `DepositPaymentOptions` with its `BankDetailRow`s,
   `PaymentSupport`, `PaymentFaq`, `BookingAssurances`, `PaymentHelpButton`),
@@ -162,7 +164,9 @@ Every button is `<Button>` (`ui/Button.astro`).
   page's own file sits beside the page with a leading underscore
   (`_beverage.css`, `_gallery.js`; a draft's `_secure-booking.css`), which Astro never
   treats as a route. `src/styles/` holds only files with no single owner:
-  `global.css` and the shared `tabs.css` and `gallery-grid.css`.
+  `global.css` and the shared `tabs.css`, `gallery-grid.css` and
+  `enquire-background.css` (the parchment band behind `EnquirySection` and
+  the menu page's closing call to action).
 - **`_secure-booking.css` is one page-level stylesheet**, not a `<style>` per
   component: it was ported whole, in its own `secure-booking-*` namespace.
   Splitting it into the components is a later pass.
