@@ -231,7 +231,13 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
      same two insets the underline uses, so it stays centred in the compact
      band too. bottom: 100% less the link's 10px top padding, plus a 4px gap
      to the cap height. line-height 1.2 keeps the pill short enough to clear
-     the top of the 74px bar. */
+     the top of the 74px bar.
+     Hidden until the item is hovered (the same li:hover the underline
+     uses, so anywhere in the 74px band shows it) or keyboard-focused: the
+     moment it matters is the moment someone reaches for the link. On a
+     touch tablet the first tap latches :hover, so the tap that goes nowhere
+     is also the one that shows why. Rises 3px as it fades in; reduced
+     motion keeps the fade and drops the rise. */
   .nav-links > :global(li) > :global(a) > :global(.proposed-badge) {
     position: absolute;
     bottom: calc(100% - 6px);
@@ -240,6 +246,21 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     width: fit-content;
     margin-inline: auto;
     line-height: 1.2;
+    opacity: 0;
+    transform: translateY(3px);
+    transition:
+      opacity 0.35s var(--ease),
+      transform 0.35s var(--ease);
+  }
+  .nav-links > :global(li:hover) > :global(a) > :global(.proposed-badge),
+  .nav-links > :global(li) > :global(a:focus-visible) > :global(.proposed-badge) {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-links > :global(li) > :global(a) > :global(.proposed-badge) {
+      transform: none;
+    }
   }
   /* Scrim: dims the page below the nav while the dropdown is open, same trick
      as the BNY reference — puts the panel's own content in relief instead of
