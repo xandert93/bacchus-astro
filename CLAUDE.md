@@ -22,8 +22,9 @@ indexes them all.
 - `docs/content/client-facts.md` — venue, packages, prices, policies, the
   open conflicts, what is placeholder, and questions for the client.
 - `docs/content/catalogue-copy.md` — how catalogue text is proofed.
-- `docs/engineering/known-bugs.md` — fixed bugs as lessons. **"Bug #N" and
-  "CLAUDE.md bug #N" in code comments mean this list**; numbers never change.
+- `docs/engineering/known-bugs.md` — bugs found in the Astro build, each with
+  its cause, fix and the test that guards it. Started fresh on 2026-10-06;
+  "bug #N" in older code comments refers to the prototype's retired list.
 - `docs/planning/roadmap.md` — feature order and backlog.
 - `docs/architecture/tech-stack.md` — the chosen stack and why, the live
   Shopify site, payments.
@@ -310,9 +311,8 @@ Repo: `github.com/xandert93/bacchus-astro` (private), default branch `main`.
   `desktop` runs everything; `mobile` (Pixel 7) runs only tests tagged
   `@mobile`. Specs live in `tests/e2e/`.
 - When fixing a bug, add a test that fails without the fix — and confirm it
-  does fail against the old code, as was done for the nav underline.
-  Prototype bugs worth encoding as tests when their area is touched are in
-  `docs/engineering/known-bugs.md`.
+  does fail against the old code, as was done for the nav underline. Then
+  add the bug to `docs/engineering/known-bugs.md`.
 - Vitest is planned for pure logic (availability status, date maths, quote
   templating) once that logic is split out of `main.js`; nothing to unit
   test yet.
