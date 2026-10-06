@@ -46,11 +46,11 @@ Mapbox load figures elsewhere in these docs.
 
 ## Alternatives, if the Vercel pair is ever outgrown
 
-| Tool | Cost | Cookie banner? | Notes |
-|---|---|---|---|
-| **Vercel Web Analytics + Speed Insights** | free tier | No | Already on the platform. Start here. |
-| **Plausible** or **Fathom** | ~€9–14/mo | No | Privacy-first, EU-hosted options, more detail than Vercel's. |
-| **Google Analytics 4** | free | **Yes** | Far more detailed, much heavier, and the consent banner is unavoidable. |
+| Tool                                      | Cost      | Cookie banner? | Notes                                                                   |
+| ----------------------------------------- | --------- | -------------- | ----------------------------------------------------------------------- |
+| **Vercel Web Analytics + Speed Insights** | free tier | No             | Already on the platform. Start here.                                    |
+| **Plausible** or **Fathom**               | ~€9–14/mo | No             | Privacy-first, EU-hosted options, more detail than Vercel's.            |
+| **Google Analytics 4**                    | free      | **Yes**        | Far more detailed, much heavier, and the consent banner is unavoidable. |
 
 The honest ranking for this project: start with the Vercel pair, move to
 Plausible only if a specific question comes up that it cannot answer. GA4 is
