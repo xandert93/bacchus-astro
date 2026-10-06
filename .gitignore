@@ -30,5 +30,9 @@ playwright-report/
 # personal Claude Code instructions
 CLAUDE.local.md
 
+# local-only copy of the prototype's sandboxes (design comparisons), served by
+# the dev server at /prototype/sandboxes/; never committed
+/public/prototype/
+
 # ESLint cache
 .eslintcache

@@ -9,8 +9,18 @@ import globals from "globals"
 import typescript from "typescript-eslint"
 
 export default [
+  // ESLint doesn't read .gitignore, so anything ignored there that holds
+  // JavaScript is listed again here. public/prototype/ is the local-only copy
+  // of the prototype's sandboxes, written in the prototype's older style.
   {
-    ignores: ["dist/", ".astro/", "node_modules/", "test-results/", "playwright-report/"],
+    ignores: [
+      "dist/",
+      ".astro/",
+      "node_modules/",
+      "test-results/",
+      "playwright-report/",
+      "public/prototype/",
+    ],
   },
 
   javascript.configs.recommended,
