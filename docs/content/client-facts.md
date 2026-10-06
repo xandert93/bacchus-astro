@@ -95,8 +95,8 @@ All from the emails unless marked.
 
 All from the emails.
 
-- **Length**: usually 5 hours. Some run 6–8. The client advises against going
-  past 8.
+- **Length**: packages are usually 5 hours. With overtime (~€10-15 per person per additional hour), some run 6–8 hours. The client advises against going
+  past 8 and that 6 works best.
 
 - **Formats**: seated and standing receptions are both offered.
 
@@ -123,12 +123,17 @@ All from the emails.
   drink and the real cake are served straight away. Couples may bring their own
   cake; the same display-cake convention applies.
 
-- **Menu tasting**: from the chosen package, 6 cold dishes, 6 hot dishes and
-  4 desserts of the couple's choice. Stations can't be tasted. About €40 per
-  person before booking, refunded if they book; free once the contract is
-  signed. Still unknown: whether a tasting needs its own booking, and whether
-  every dish is available on any given day. Until then the enquiry form only
-  mentions tasting in the message field's note.
+- **Menu tasting** (emails, updated with what the user was told directly,
+  October 2026):
+  - **Request it in advance.**
+  - The couple names their package and picks **16 items from it**: 6 hot
+    dishes, 6 cold dishes and 4 desserts.
+  - **Stations can't be tasted at all.**
+  - **About €40 per person**, deducted from the wedding cost if the couple
+    goes on to sign and pay the deposit.
+  - **Free** if the couple has already paid (the deposit and the rest). The
+    emails put it as "free once the contract is signed"; the two may differ
+    slightly, so confirm the exact point before publishing it.
 
 ---
 
@@ -280,8 +285,8 @@ Everything below is illustrative and is labelled as such on the page.
 
 - **Parking**: what is "the Tomba"?
 
-- **Tasting**: does it need its own booking, and is every dish available on any
-  day?
+- **Tasting**: at what point does it become free: signing the contract, paying
+  the deposit, or paying in full?
 
 - **Catering off-site**: does BCL cater outside the venue? If so, that's a
   second service with its own page.
