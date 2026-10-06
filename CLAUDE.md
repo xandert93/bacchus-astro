@@ -283,7 +283,8 @@ Repo: `github.com/xandert93/bacchus-astro` (private), default branch `main`.
 - **Every feature or fix gets its own branch off `main`**, named
   `type/short-description` using the same types as commits
   (`feat/gallery-page`, `fix/testimonials-touch-autoplay`). One branch per
-  independent change, so each can be reviewed, merged or dropped alone.
+  independent change, so each can be reviewed, merged or dropped alone. Say
+  which branches were created when reporting back.
 - Commit on the branch in `type(scope): description` form, as small logical
   commits.
 - Before merging: `npm run check` at 0 errors, `npm run build` clean, and
@@ -294,9 +295,8 @@ Repo: `github.com/xandert93/bacchus-astro` (private), default branch `main`.
   `type(scope)` format.
 - `main` should always build and pass. Tiny docs-only edits to this file may
   go straight to `main`.
-- **Claude does not push.** The user pushes `main` (and any branch they want
-  on GitHub). If a change ever wants review on GitHub first, push the branch
-  and open a pull request instead of merging locally.
+- **Push `main` to GitHub after every merge** (`git push origin main`).
+  Feature branches stay local unless one wants review as a pull request.
 
 ## Checks and tests
 
