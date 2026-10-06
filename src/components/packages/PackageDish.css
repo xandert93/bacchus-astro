@@ -1,6 +1,6 @@
 /* The black "photo to follow" dish tiles that stand in for photography
    (Banquet and High Tea, for now). Imported by PackageDish. The grid,
-   label and dish names are shared (package-page.css). */
+   label and dish names are shared (PackageTierSection.css). */
 /* Square, matching the 1:1 crop reception-package.html's real dish
    photography is shot at, so swapping a real <img> in later doesn't
    change the grid's proportions. No hover, no cursor change and no

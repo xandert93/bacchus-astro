@@ -1,7 +1,7 @@
 /* Reception only: the Stations add-on section (stage, category tabs,
    carousel, station cards, add-to-selection) and its own eyebrow variant.
    Imported by ReceptionStations. Everything Reception shares with the
-   other package pages lives in package-page.css. Until 2026-10-05 this file was
+   other package pages lives in PackageTierSection.css. Until 2026-10-05 this file was
    the prototype page's whole inline stylesheet, including its own drifted
    copy of the shared package styles. */
 

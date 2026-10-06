@@ -1,4 +1,4 @@
-@import "./tabs.css";
+@import "@styles/tabs.css";
 
 /* The tier section all four package pages share (PackageTierSection and
    the package components inside it): tab bar, tier cards, sticky
@@ -543,7 +543,7 @@
    ingredient lists. Reuses .gallery-item/.gallery-tag as-is for the
    photo itself (see gallery.html) — this just supplies the 3-col grid
    and the name caption underneath. Shared by Reception (real photos, .gallery-item tiles) and
-   Banquet / High Tea (black placeholders, package-dish-placeholders.css). */
+   Banquet / High Tea (black placeholders, PackageDish.css). */
 .package-dishes-label {
   font-family: "Inter", sans-serif;
   font-size: 11.5px;
