@@ -18,11 +18,11 @@ import { from } from "@lib/media-queries.js"
 // Page-specific tier controller. Drives every way of changing tier —
 // the tab bar, the tier cards, the sticky switcher and touch swipe —
 // plus the #hash sync that makes a tier directly linkable without
-// needing a separate page for each (see the "package switcher vs.
-// separate pages" discussion in CLAUDE.md). tabs.js's shared tab
+// needing a separate page for each (tiers are a comparison, not three
+// destinations: docs/design/decisions.md). tabs.js's shared tab
 // helper still supplies the sliding pill and aria bookkeeping; the
 // carousel below is this page's own. Guarded the same way every other
-// page-specific script here is (bug #4 — no-ops if .tab-bar is absent).
+// page-specific script here is (the missing-markup guard — no-ops if .tab-bar is absent).
 ;(() => {
   const tabs = [].slice.call(document.querySelectorAll(".tab-bar button"))
   if (!tabs.length) return
@@ -144,7 +144,7 @@ import { from } from "@lib/media-queries.js"
   // Remove, reflow, re-add restarts the animation even if it has
   // already run, so returning to an already-seen tier replays the
   // fade — re-adding an animation class without a reflow in between
-  // is a silent no-op (same shape as CLAUDE.md bug #7).
+  // is a silent no-op (same shape as the same-tick class-swap bug).
   const playContentFade = () => {
     const panel = panelFor(TIERS[index])
     const content = panel && panel.querySelector(".package-tier-content")
@@ -243,7 +243,7 @@ import { from } from "@lib/media-queries.js"
   // Watching the panels themselves fixes the whole class of causes at
   // once (fonts, a late image decode, anything that reflows) rather
   // than chasing each trigger separately. Guarded for ResizeObserver
-  // per CLAUDE.md bug #4 — where it's missing, behaviour is simply
+  // per the missing-markup guard — where it's missing, behaviour is simply
   // what it was before.
   if (window.ResizeObserver) {
     const panelHeightObserver = new ResizeObserver(() => {

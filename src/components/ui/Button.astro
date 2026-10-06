@@ -1,7 +1,7 @@
 ---
 // Every pill button on the site. Renders an <a> when given `href`, a
 // <button> otherwise (type="button" unless told it submits — a bare
-// <button> inside a form would submit it, prototype bug #6), or, with
+// <button> inside a form would submit it, the implicit-submit bug), or, with
 // as="span", a decorative pill inside a card whose whole surface is the
 // real link.
 //
@@ -208,7 +208,7 @@ const classes = [
      needs no extra pseudo-element, which leaves ::before free for
      .button-shimmer's sweep (below) and ::after free for .button's own hover
      sheen, so this composes cleanly with both rather than fighting over the
-     same two pseudo-element slots (see bug #2/#14 in CLAUDE.md for what that
+     same two pseudo-element slots (the specificity traps are what that
      fight looks like). Proved out in sandboxes/button-gradient.html before
      landing here; superseded that sandbox, which is now removed. */
   .button-gradient {
@@ -330,8 +330,8 @@ const classes = [
      class+pseudo-class), one declared unconditionally and the other only
      under :hover, so whichever rule happens to load LATER in the
      stylesheet wins outright regardless of which one is actually meant to
-     apply live (CLAUDE.md bug #2/#14's exact mechanic — this is that
-     mechanic biting a case neither bug entry anticipated: an unconditional
+     apply live (the specificity traps' exact mechanic — this is that
+     mechanic biting a case neither trap anticipated: an unconditional
      rule and a conditional one, not two unconditional ones). `color` had
      no such collision (nothing else sets `color` for this state), so it
      switched to the intended dark ink on schedule while the background
@@ -375,7 +375,7 @@ const classes = [
      @media (hover: none) .button:active and reopen the invisible dark-on-
      transparent text this rule was created to fix. Replaces that rule rather
      than overriding it: the two would sit at equal specificity (0,3,0) and be
-     settled by source order alone, which is the exact trap bug #2/#14
+     settled by source order alone, which is the exact trap the specificity traps
      describes and which caused the original collision documented above.
 
      Deliberately scoped to [aria-pressed] (either value), not just ="true" —
@@ -426,7 +426,8 @@ const classes = [
        describes anything true about the button — and styles.css's own
        comment reserves it for hero secondary CTAs. Written as
        ".button.button-gold-outline" at (0,2,0) so it beats .button's own
-       (0,1,0) defaults outright rather than on source order (bug #2). */
+       (0,1,0) defaults outright rather than on source order (the same-specificity
+       collision). */
   .button.button-gold-outline {
     --bg: transparent;
     --fg: var(--gold-2);

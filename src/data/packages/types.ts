@@ -5,7 +5,7 @@
 // Content is from docs/bacchus-wedding-catalogue.pdf in the prototype, read
 // from the RENDERED pages: a text extraction of that PDF silently drops
 // accented characters and whole words. Spelling follows the house style
-// described in the prototype's CLAUDE.md ("House style for catalogue copy").
+// in docs/content/catalogue-copy.md.
 //
 // Shaped to move into Sanity in phase 3 (the drafted schemas live in the
 // prototype's sanity/ folder); until then the pages import these directly.

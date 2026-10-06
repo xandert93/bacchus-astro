@@ -143,8 +143,8 @@ document.querySelectorAll('[data-reveal="img"]').forEach((wrap) => {
       tryReveal()
     })
   // The sweep marks it SEEN rather than revealing it directly, so the
-  // image-load gate and the double requestAnimationFrame (CLAUDE.md bug
-  // #1 — without both, the transition can be skipped entirely) still
+  // image-load gate and the double requestAnimationFrame (the reveal
+  // frame-gap bug — without both, the transition can be skipped entirely) still
   // decide when it actually appears.
   const entry = trackReveal(wrap, () => {
     seen = true

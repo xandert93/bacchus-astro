@@ -63,9 +63,9 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
        .menu .mobile-nav-group-trigger in the whole-site nav section at the foot
        of this file. Restaurant/Events are buttons and Gallery/About are links,
        so they can only read as one list while those two agree, and as two equal
-       literals they had every opportunity to drift (bug #24's lesson, same fix).
-       Declared on .menu rather than :root since it is this component's concern;
-       custom properties inherit, so the far rule picks it up.
+       literals they had every opportunity to drift (the drifting-grid-gaps lesson,
+       same fix). Declared on .menu rather than :root since it is this component's
+       concern; custom properties inherit, so the far rule picks it up.
        Reduced twice on 2026-10-02, both on the user's call: from the original
        clamp(26px, 7.5vw, 42px) to clamp(25px, 6.8vw, 36px), then to the value
        below. Cumulatively ~16% off at phone widths and ~21% off the ceiling.
@@ -210,7 +210,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     }
   }
   /* GATED (2026-10-02). This rule and the sub-link one below used to carry an
-     explicit bug #19 exemption, on the grounds that these are real page links
+     explicit sticky-touch-hover exemption, on the grounds that these are real page links
      and navigating away on tap makes a lingering hover moot. That premise is
      false here, twice over:
        • ELEVEN of the drawer's seventeen links are href="#" — every unbuilt row
@@ -274,7 +274,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     animation: none !important;
   }
   /* By class, not "span": a bare span selector also caught the row's
-     Proposed badge and turned it into a 0.38em gold numeral (bug #14's
+     Proposed badge and turned it into a 0.38em gold numeral (the weaker-override trap's
      shape), which then needed its own override to undo. */
   .menu .mobile-nav-link .mobile-nav-number {
     color: var(--gold);

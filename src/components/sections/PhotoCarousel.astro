@@ -138,7 +138,7 @@ const { slides } = Astro.props
       transform: scale(var(--image-hover-zoom-ambient));
     }
   }
-  /* Gated per CLAUDE.md bug #19 — same root cause already fixed on this
+  /* Gated per the sticky touch hover — same root cause already fixed on this
      carousel's own .carousel-button arrows (touch has no real "pointer
      leaves" event, so an unguarded :hover here reads as a permanently
      zoomed/full-color slide sitting amid its still-muted siblings after a

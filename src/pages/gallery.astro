@@ -56,7 +56,7 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "@data/gallery"
       {/* is:inline tells Astro to leave this script EXACTLY here, as written:
            not bundled, not turned into a deferred module, not moved. Every
            other <script> on the site is processed, which makes it deferred —
-           and that is precisely wrong here (prototype bug #25). The mini
+           and that is precisely wrong here (the late filter seed). The mini
            galleries link in with ?filter=weddings etc.; if the radio were set
            any later than this point, the browser would already have painted
            the whole unfiltered grid below and the visitor would see every
@@ -197,8 +197,8 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "@data/gallery"
        selected state keeps the slower crossfade and only the chip the
        visitor is waiting on snaps. Duration-only, so the property list
        above stays the single source of truth for WHICH properties animate
-       (bug #2). Note this rule is (0,2,0) and so outranks the base-level
-       (0,1,0) duration override in the @media (hover: none) block below —
+       (the same-specificity collision). Note this rule is (0,2,0) and so outranks
+       the base-level (0,1,0) duration override in the @media (hover: none) block below —
        deliberately the same 0.1s, so touch is unchanged either way rather
        than silently governed by whichever rule wins. */
     transition-duration: 0.1s;
@@ -215,7 +215,7 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "@data/gallery"
        whole chip goes fast here, both directions, not just the entering one.
        Duration-only override rather than a fresh `transition` shorthand, so
        the property list above stays the single source of truth for WHICH
-       properties animate (bug #2). */
+       properties animate (the same-specificity collision). */
   @media (--no-hover) {
     .gallery-filter-label {
       transition-duration: 0.1s;

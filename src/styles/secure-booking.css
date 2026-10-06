@@ -19,8 +19,8 @@
    Deliberately its own namespace (`sb-*`), not reusing site-wide component
    classes, since this section mirrors a specific outside layout as closely
    as possible rather than extending our own design-system components.
-   See CLAUDE.md "Deposit collection preview" for what was substituted
-   (real logo/photo/footer facts) vs. ported as-is.
+   The prototype's archived CLAUDE.md ("Deposit collection preview") records
+   what was substituted (real logo/photo/footer facts) vs. ported as-is.
    ========================================================================== */
 .secure-booking-nav {
   display: inline-flex;

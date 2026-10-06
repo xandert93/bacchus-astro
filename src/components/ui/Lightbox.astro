@@ -128,8 +128,8 @@
        list and a short browser window, so this still catches the genuine
        edge cases rather than silently hiding content again. */
     margin-block: auto;
-    /* Same reasoning as the homepage carousel (.carousel-view, bug #12 in
-       CLAUDE.md): without this, touch devices can't tell a horizontal swipe
+    /* Same reasoning as the homepage carousel (.carousel-view, the
+       touch-action drag bug): without this, touch devices can't tell a horizontal swipe
        (meant for prev/next here) from a vertical scroll and default to
        treating it as the latter. */
     touch-action: pan-y;

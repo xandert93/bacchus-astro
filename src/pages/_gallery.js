@@ -5,7 +5,7 @@
 //
 // The INCOMING ?filter= is applied by the is:inline script in gallery.astro,
 // not here: this module runs after the grid has painted, which is one paint
-// too late (prototype bug #25). The filtering itself is pure CSS.
+// too late (the late filter seed). The filtering itself is pure CSS.
 const gfilter = document.getElementById("gfilter")
 
 gfilter?.addEventListener("change", (e) => {

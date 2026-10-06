@@ -37,7 +37,7 @@
 /* A wine is a name, a grape, a producer and a tasting note — four facts,
    not one line of text, so each <li> stacks them instead of running them
    together. The meta line is Inter (UI chrome, per the 3-font split in
-   CLAUDE.md) and the note stays Newsreader, since it's prose. */
+   docs/design/design-system.md) and the note stays Newsreader, since it's prose. */
 .package-wine-name,
 .package-wine-meta,
 .package-wine-note {

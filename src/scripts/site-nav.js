@@ -114,7 +114,7 @@ const closeMenu = () => {
 }
 // Closes the drawer with NO transition at all, synchronously, inside the
 // click that is about to navigate. This is the actual fix for the back-
-// gesture artefact (CLAUDE.md bug #34); the pagehide/pageshow handlers below
+// gesture artefact (the bfcache fade); the pagehide/pageshow handlers below
 // were aimed at the restore and that was the wrong end of the problem.
 //
 // .menu's close is a 0.5s VISIBLE fade — visibility: hidden is delayed the
@@ -186,9 +186,9 @@ if (burger) {
 // would outlive it.
 // matchMedia's change event, NOT a resize listener: it fires once, on the
 // crossing itself, so there is no work at all during the drag and nothing to
-// throttle. 980 rather than 979.98 — this is the min-width side of bug #22's
-// pair, so the two ranges meet exactly with no fractional gap between them.
-// Closing via burger.click() rather than closeMenu() is deliberate. Three
+// throttle. 980 rather than 979.98 — this is the min-width side of the .98
+// breakpoint pairing's pair, so the two ranges meet exactly with no fractional gap
+// between them. Closing via burger.click() rather than closeMenu() is deliberate. Three
 // separate listeners are bound to that click — the toggle here, the bar's
 // .stuck handoff, and the accordion's deferred reset — and only the first of
 // them is inside closeMenu(). Going through the button runs the whole close
@@ -233,8 +233,8 @@ if (navCutover.addEventListener) {
 // Two nested rAFs before releasing the kill switch, not one: a single frame
 // can be coalesced with the style change that preceded it, which would let
 // the transition start after all — the same frame-boundary problem as
-// CLAUDE.md bugs #1 and #7, used here in reverse to guarantee a boundary
-// rather than to cross one.
+// the reveal frame-gap and same-tick class-swap bugs, used here in reverse to
+// guarantee a boundary rather than to cross one.
 const forceDrawerClosedWithoutAnimating = () => {
   document.documentElement.classList.add("nav-no-anim")
   closeMenu()
@@ -263,7 +263,7 @@ document.addEventListener("keydown", (e) => {
 // ---------- Whole-site nav: dropdowns, split triggers, drawer accordion ----------
 // Merged from sandboxes/site-nav.html on 2026-10-02. Live on index.html
 // only for now; every other page still carries the flat nav, so each block
-// below no-ops cleanly when its markup is absent (CLAUDE.md bug #4).
+// below no-ops cleanly when its markup is absent (the missing-markup guard).
 //
 // Placed immediately after the mobile-menu block on purpose, for three
 // reasons that would break if it moved: pageKey()/curPage and `burger` are
@@ -613,7 +613,7 @@ document.addEventListener("keydown", (e) => {
     if (!e.persisted) return
     onScroll()
     if (groups.length && !DRAWER_GROUPS_PINNED_OPEN) applyDefaultGroupState()
-    // The desktop half of the same bfcache bug (CLAUDE.md bug #34), reported
+    // The desktop half of the same bfcache bug (the bfcache fade), reported
     // 2026-10-02: open the Events panel, click Weddings, press Back, and the
     // homepage returns with the panel still standing open.
     // Not a transition this time — restored STATE. Two things hold it open

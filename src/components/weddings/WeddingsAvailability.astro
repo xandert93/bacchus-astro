@@ -89,7 +89,7 @@ import Button from "@components/ui/Button.astro"
 
          `auto` is stated explicitly rather than just omitted — it has to beat the
          base .package-dining-card-figure rule's own 1/1. It also cancels the
-         CLAUDE.md bug #21 mechanism, which needs an aspect-ratio to compute a
+         the backwards aspect-ratio mechanism, which needs an aspect-ratio to compute a
          width from; the width caps below are kept anyway as cheap insurance, the
          grid track already being what sets the width. */
   /* The numeral and the figure's bottom scrim both stay at this width. They
@@ -112,7 +112,7 @@ import Button from "@components/ui/Button.astro"
          running away if the copy is ever rewritten longer, not a crop applied to
          today's copy.
 
-         Native -webkit-line-clamp is fine here: CLAUDE.md bug #18 only rules it
+         Native -webkit-line-clamp is fine here: the centred line-clamp bug only rules it
          out for *centered* text (where it can silently fail to truncate at all,
          hence the JS-measured approach used for the testimonials quote). This
          copy is left-aligned. */
@@ -128,8 +128,9 @@ import Button from "@components/ui/Button.astro"
   /* Sized down to .button-small's own dimensions (the --button-compact-*
          tokens, reused rather than inventing a new size) so the label fits the
          narrow text column comfortably — the shared full-size .button is what
-         CLAUDE.md bug #20 catches here — but stretched edge to edge across that column
-         rather than shrink-wrapped, so it lines up with the copy above it. */
+         the non-shrinking button overflow catches here — but stretched edge to
+         edge across that column rather than shrink-wrapped, so it lines up with
+         the copy above it. */
   /* Beverage never got the thumbnail-left/text-column split above — it
          stays single-column at this width (its own two-column layout only
          starts at 621px+), so the unscoped rule above sees a full-card-width
@@ -178,7 +179,7 @@ import Button from "@components/ui/Button.astro"
          Safe to use a plain aspect-ratio here, unlike the dining figure above:
          this card is single-column at mobile, so the figure sits in its own grid
          row rather than sharing one with the copy. Its width is definite and the
-         height derives from it — the normal direction. CLAUDE.md bug #21 needs
+         height derives from it — the normal direction. the backwards aspect-ratio needs
          the opposite and can't arise. Note the banner still scales with width,
          so it is tallest at the top of this range (~249px at 620px, vs ~362px
          before); worth a max-height if that end ever looks heavy, left off for
@@ -188,7 +189,7 @@ import Button from "@components/ui/Button.astro"
          where the band is trimmed back to a strip anyway, it reads as an extra
          line of chrome above a heading that already says Beverage.
 
-         Specificity checked rather than assumed (CLAUDE.md bug #14): the element
+         Specificity checked rather than assumed (the weaker-override trap): the element
          carries both .eyebrow and .package-beverage-card-eyebrow, and the only
          `display` in play is .eyebrow's own `flex` at the same 0,1,0 weight, so
          this wins on source order — .eyebrow is declared near the top of this
@@ -256,8 +257,9 @@ import Button from "@components/ui/Button.astro"
     /* transition intentionally not re-declared here — the base .availability-picked
          rule already lists border-left-color alongside opacity/transform, and two
          same-property transition declarations at different specificities have the
-         more specific one win wholesale, not per-property (bug #2 in CLAUDE.md),
-         which would silently drop the transform entrance animation on this card. */
+         more specific one win wholesale, not per-property (the same-specificity
+         collision), which would silently drop the transform entrance animation on
+         this card. */
     margin-top: 0;
     padding: 18px 20px;
     border-radius: var(--radius-card);

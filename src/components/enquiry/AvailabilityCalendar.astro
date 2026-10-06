@@ -184,15 +184,15 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
   :global(.availability-cell) {
     user-select: none;
   }
-  /* .98 below the min-width the base rule resumes at, per bug #22 — a plain
-     980/981 pair leaves 980.01-980.99 matching neither.
+  /* .98 below the min-width the base rule resumes at, per the .98 breakpoint
+     pairing — a plain 980/981 pair leaves 980.01-980.99 matching neither.
 
      Both declarations here are two halves of one fact: this is the width at
      which .package-menu-groups stops being three columns, and therefore the
      width below which the dish tiles have nothing left to line up with. Above
      it the tiles take the wide text gutter so the two grids read as one column
-     structure (bug #24); below it that gutter buys nothing and only costs tile
-     width — it took a 400px phone's tiles from ~113px square down to ~99px.
+     structure (the drifting grid gaps); below it that gutter buys nothing and only
+     costs tile width — it took a 400px phone's tiles from ~113px square down to ~99px.
 
      Done by redefining the token on the element rather than re-declaring
      column-gap: .package-dishes-grid already resolves its gap through
@@ -206,7 +206,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
      and the three of them together dominated the page's scroll length.
 
      Markup is identical at every breakpoint — this is CSS only. 620.98 pairs
-     with the 2-up tier's own `min-width: 621px` above; see CLAUDE.md bug #22
+     with the 2-up tier's own `min-width: 621px` above; see the .98 breakpoint pairing
      for why the max side is fractional. Everything from 621px up (the 2-up
      tablet tier and the 980px+ triptych) is untouched by this block. */
   /* ---------- Mock availability calendar (Weddings — concept demo) ---------- */
@@ -429,8 +429,8 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
      same pseudo-element at equal specificity — without explicit bottom/left
      here, those leftover 0 values over-constrain this dot's box (left:0 +
      right:5px + width:5px) and the browser drops 'right', snapping the dot to
-     the cell's left edge. Same lesson as bug #2: don't let one same-
-     specificity rule's shorthand bleed into another's longhands. */
+     the cell's left edge. Same lesson as the same-specificity collision: don't let
+     one same- specificity rule's shorthand bleed into another's longhands. */
   .availability.compact :global(.availability-cell.interest.picked)::after {
     background: var(--paper);
   }

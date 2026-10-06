@@ -108,7 +108,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
      row starts only 22px below the bar, so at 0.6s a fast flick put "Restaurant"
      behind the lockup before the dark had arrived — reported 2026-10-02.
      transition-duration only, not a fresh shorthand, so the property list stays
-     the single source of truth for what animates (bug #2). */
+     the single source of truth for what animates (the same-specificity collision). */
   :global(body.menu-open) .nav::before,
   :global(body.menu-open) .nav::after {
     transition-duration: 0.18s;
@@ -475,9 +475,9 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
      about 21px over the whole band, where this needs 120 or more. Getting
      there with clamp() means the calc-interpolation form on six separate
      properties, which is both less legible and harder to reason about
-     than one band. This is also bug #20's situation exactly — fixed-size
-     controls inside a fluid bar, where "the breakpoint floor is set by
-     the control, not by the layout" — and the fix there was a media band
+     than one band. This is also the non-shrinking button overflow's situation
+     exactly — fixed-size controls inside a fluid bar, where "the breakpoint floor
+     is set by the control, not by the layout" — and the fix there was a media band
      swapping to existing smaller token values, which is what this does.
 
      Bounded on BOTH sides on purpose: above 1180px .wrap stops growing
@@ -548,8 +548,8 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
      940px. The real site's 820px cutover is sized for four plain text
      links and ONE pill. 979.98px is the site's own established tablet
      cutover (the copy+image reorder, .nav-dd-panel-media's own hide)
-     rather than a number invented here, and the .98 follows CLAUDE.md
-     bug #22's house rule so the handover to 980px leaves no fractional
+     rather than a number invented here, and the .98 follows the house rule
+     for breakpoint pairs, so the handover to 980px leaves no fractional
      gap. */
   @media (--below-desktop) {
     .nav-links {
@@ -672,7 +672,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
      (0,1,0) to (0,3,0) — .menu, .menu-bg, the rows, the triggers, the sub-links,
      the accordion itself, the chevrons, the CTA row, the social row — and
      out-specifying every one of them would be a list to keep in sync forever,
-     which is bugs #2/#14/#15 waiting to happen. A blunt one-frame kill switch
+     which is the specificity traps waiting to happen. A blunt one-frame kill switch
      cannot drift. It is scoped to .menu and its descendants, so nothing outside
      the drawer is affected. */
   :global(html.nav-no-anim) .nav :global(*) {

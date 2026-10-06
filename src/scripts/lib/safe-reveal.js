@@ -53,7 +53,7 @@ const reveal = (entry) => {
     // Hand the element back once its entrance has finished. The armed
     // classes replace the element's own transition list (and carry a
     // delay), so leaving them on would slow every later transition on it —
-    // a tile's hover, say — which is CLAUDE.md bug #2 by another route.
+    // a tile's hover, say — which is the same-specificity collision by another route.
     // Removing them at rest changes nothing visible: both states are
     // opacity 1, no transform.
     const delay = parseFloat(item.style.getPropertyValue("--reveal-delay")) || 0

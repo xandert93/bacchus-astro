@@ -348,8 +348,8 @@ const { menu } = Astro.props
       border-color 0.18s var(--ease);
   }
   /* Ungated, unlike .nav-dd-trigger above — this is a real page link (like its
-       .nav-links a siblings), so a lingering :hover on tap is moot (bug #19's
-       documented exemption for controls that navigate away). */
+       .nav-links a siblings), so a lingering :hover on tap is moot (the sticky
+       touch hover's documented exemption for controls that navigate away). */
   .nav-dd-item:hover {
     background: rgba(var(--gold-rgb), 0.12);
   }
@@ -497,7 +497,7 @@ const { menu } = Astro.props
       color: #fff;
     }
   }
-  /* Same-page toggle, not a page link, so it needs bug #19's touch
+  /* Same-page toggle, not a page link, so it needs the sticky touch hover's touch
        hover-gate: a tap would otherwise leave it looking permanently
        hovered instead of clearing on release. Identical reasoning to
        .nav-dd-trigger's own gate in styles.css. */
@@ -538,7 +538,7 @@ const { menu } = Astro.props
        scrim behind an open panel is already rgba(--muted-ink, 0.5), and
        0.86 on top of that puts the card at roughly 93% opaque against the
        actual page. About 7% of a blur(14px) was reaching the eye, while
-       paying for the one declaration CLAUDE.md records as a dominant scroll
+       paying for the one declaration measured as a dominant scroll
        cost on .package-sticky-switch. Measured against that, the blur was
        buying nothing. The flat alpha alone still carries the "extension of
        the nav bar" read, because what does that work is the colour matching
@@ -862,7 +862,7 @@ const { menu } = Astro.props
     text-decoration: none;
     transition: color 0.35s;
   }
-  /* Ungated :hover — a real page link, so bug #19's touch exemption
+  /* Ungated :hover — a real page link, so the sticky touch hover's touch exemption
        applies: tapping navigates away and a lingering hover is moot. */
   .nav-dd-hub-link:hover {
     color: var(--gold-2);
@@ -943,9 +943,9 @@ const { menu } = Astro.props
     /* The other half of the asymmetry above: no delay leaving, so landing
          on a row swaps the photo at once. Written as the full shorthand
          rather than a lone transition-delay — a bare delay here would have
-         to win against a shorthand on the same element, which is bug #2's
-         trap in miniature (the shorthand resets delay to 0, and whichever
-         loads later takes the property wholesale). */
+         to win against a shorthand on the same element, which is the
+         same-specificity collision's trap in miniature (the shorthand resets delay
+         to 0, and whichever loads later takes the property wholesale). */
     transition: opacity 0.28s var(--ease) 0s;
   }
   .nav-dd-panel-card:has(.nav-dd-item[data-target="menus"]:is(:hover, :focus))
@@ -1083,9 +1083,9 @@ const { menu } = Astro.props
     /* The other half of the asymmetry above: no delay leaving, so landing
          on a row swaps the photo at once. Written as the full shorthand
          rather than a lone transition-delay — a bare delay here would have
-         to win against a shorthand on the same element, which is bug #2's
-         trap in miniature (the shorthand resets delay to 0, and whichever
-         loads later takes the property wholesale). */
+         to win against a shorthand on the same element, which is the
+         same-specificity collision's trap in miniature (the shorthand resets delay
+         to 0, and whichever loads later takes the property wholesale). */
     transition: opacity 0.28s var(--ease) 0s;
   }
   .nav-dd-panel-card:has(.nav-dd-item[data-target="menus"]:is(:hover, :focus))

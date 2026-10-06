@@ -151,7 +151,7 @@ const isWedding = eventType === "Wedding"
     }
   }
   /* Fades + lifts in when switching to Wedding from another event type
-       (opacity+lift, not clip-path — see CLAUDE.md's known-bugs list). .is-revealed is
+       (opacity+lift, not clip-path, which once broke the mobile menu). .is-revealed is
        added on a double-rAF in main.js's syncDateMode(), one real painted
        frame after display switches from none, since toggling display and
        opacity/transform in the same tick can get coalesced into a single
