@@ -53,7 +53,8 @@ or border can need a 1–2px nudge. That's the font, not the CSS.
 - **Content must never depend on an animation to become visible.** If the
   animation fails, the content must still be there. No entrance effect is
   worth losing information.
-- **Respect `prefers-reduced-motion`** everywhere.
+- **Respect `prefers-reduced-motion`** everywhere: `@media (--reduced-motion)`
+  in CSS, `reducedMotion` from `media-queries.js` in scripts.
 
 ---
 
@@ -62,12 +63,18 @@ or border can need a 1–2px nudge. That's the font, not the CSS.
 - **Check every change at every breakpoint**: mobile, tablet, laptop,
   desktop. Not just the one it was built at.
 - **Prefer `clamp()`** over fixed sizes plus a breakpoint override.
-- **Breakpoint pairs never leave a gap**: write `max-width` .02 below the
-  `min-width` it hands over to (`979.98px` / `980px`). Whole numbers
-  (`980px` / `981px`) miss 980.01–980.99px, which zoom and fractional pixel
-  ratios produce.
-- **Tablet cut-over is 980px.** Below it, the burger menu takes over and
-  two-column blocks stack.
+- **Every breakpoint is named, and defined once** in
+  `src/lib/media-queries.js`. CSS writes `@media (--below-desktop)` or
+  `@media (--from-tablet) and (--below-desktop)`, never a pixel value;
+  scripts and `<img sizes>` import `from` / `below` from the same file. Add
+  a new breakpoint there, with a comment saying what changes at it, rather
+  than writing a number in a component.
+- **Breakpoint pairs never leave a gap**: the named queries use range syntax
+  (`width < 980px` / `width >= 980px`), so a pair always meets exactly. The
+  old `980px` / `981px` style missed 980.01–980.99px, which zoom and
+  fractional pixel ratios produce; `979.98px` was the workaround.
+- **Tablet starts at 621px; desktop at 980px.** Below 980px, the burger
+  menu takes over and two-column blocks stack.
 - **On mobile, the image comes first.** Any two-column copy + image block puts
   the image above the text once it stacks.
 
@@ -105,7 +112,7 @@ or border can need a 1–2px nudge. That's the font, not the CSS.
 ## Interaction
 
 - **Hover effects are for mice only.** Wrap `:hover` in
-  `@media (hover: hover)` and give touch its own `:active` feedback.
+  `@media (--hover)` and give touch its own `:active` feedback.
   Otherwise a tapped control stays in its hover style until something else
   is tapped. Gate on pointer type, never on viewport width.
 - **Not-currently-available isn't an error.** A booked date or a disabled step

@@ -4,6 +4,7 @@
 import GalleryTile from "@components/ui/GalleryTile.astro"
 import "@styles/gallery-grid.css"
 import Button from "@components/ui/Button.astro"
+import { below } from "@lib/media-queries.js"
 
 interface Props {
   // Kept from the prototype because global.css targets these ids
@@ -54,7 +55,7 @@ const tag = category[0].toUpperCase() + category.slice(1)
           photo={{
             src: photo.src,
             alt: photo.alt,
-            sizes: "(max-width: 620px) 50vw, (max-width: 980px) 50vw, 25vw",
+            sizes: `${below.tablet} 50vw, ${below.desktop} 50vw, 25vw`,
             maxWidth: 1280,
           }}
         />
@@ -66,7 +67,7 @@ const tag = category[0].toUpperCase() + category.slice(1)
 <style>
   /* Scoped to this component (moved from global.css by
      scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
-  @media (min-width: 981px) {
+  @media (--from-desktop) {
     .gallery-grid.gallery-grid-four-col {
       grid-template-columns: repeat(4, 1fr);
     }
@@ -98,13 +99,13 @@ const tag = category[0].toUpperCase() + category.slice(1)
        .head-row's box is removed so its children become direct items of .wrap,
        letting the button be pushed after .gallery-grid (a sibling, not a
        descendant, so plain order on .head-row alone couldn't reach past it). */
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .gallery .wrap {
       display: flex;
       flex-direction: column;
     }
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .gallery .head-row {
       display: contents;
     }
@@ -115,12 +116,12 @@ const tag = category[0].toUpperCase() + category.slice(1)
        a margin on. That was the gap between the heading block and .gallery-grid;
        replacing it here on the text div directly (order:0, so it still
        lands right before .gallery-grid) so the spacing survives the collapse. */
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .gallery .head-row > :global(div) {
       margin-bottom: clamp(30px, 4vw, 48px);
     }
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .gallery .head-row :global(.button) {
       order: 2;
       align-self: flex-start;
@@ -130,7 +131,7 @@ const tag = category[0].toUpperCase() + category.slice(1)
       margin-top: 40px;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .gallery .head-row :global(.button) {
       width: 100%;
       max-width: 300px;
@@ -142,7 +143,7 @@ const tag = category[0].toUpperCase() + category.slice(1)
        since it also holds .gallery-grid, and centering that would break its 2-col
        grid. align-self on the button alone gets the same centered look
        without touching .gallery-grid. */
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .gallery .head-row :global(.button) {
       align-self: center;
     }

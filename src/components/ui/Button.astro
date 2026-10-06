@@ -148,7 +148,7 @@ const classes = [
     pointer-events: none;
     z-index: 1;
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .button:hover {
       background-color: var(--bg-h);
       color: var(--fg-h);
@@ -156,12 +156,12 @@ const classes = [
       transform: translateY(-1px);
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .button:hover::after {
       left: 130%;
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .button:hover :global(svg) {
       transform: translateX(4px);
     }
@@ -177,19 +177,19 @@ const classes = [
   .button :global(svg) {
     transition: transform 0.45s var(--ease);
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .button:active {
       background-color: var(--bg-h);
       color: var(--fg-h);
       box-shadow: 0 14px 30px -16px rgba(var(--muted-ink-rgb), 0.4);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .button:active::after {
       left: 130%;
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .button:active :global(svg) {
       transform: translateX(4px);
     }
@@ -224,12 +224,12 @@ const classes = [
       transform 0.3s var(--ease),
       filter 0.45s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .button-gradient:hover {
       filter: brightness(1.07);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .button-gradient:active {
       filter: brightness(1.07);
     }
@@ -256,7 +256,7 @@ const classes = [
     animation-delay: 3.5s;
     animation-iteration-count: 3;
   }
-  @media (prefers-reduced-motion: reduce) {
+  @media (--reduced-motion) {
     .button-shimmer::before {
       animation: none;
     }
@@ -301,18 +301,18 @@ const classes = [
     background: transparent;
     filter: none;
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .button-gradient[aria-pressed="true"]:hover {
       background-color: var(--bg-h);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .button-gradient[aria-pressed]:active {
       background-color: var(--bg);
       color: var(--fg);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .button-gradient[aria-pressed]:active::after {
       left: -60%;
       transition: none;
@@ -448,12 +448,12 @@ const classes = [
   .button-gold-outline :global(svg) {
     transition: none;
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .button.button-gold-outline:hover :global(svg) {
       transform: none;
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .button.button-gold-outline:active :global(svg) {
       transform: none;
     }

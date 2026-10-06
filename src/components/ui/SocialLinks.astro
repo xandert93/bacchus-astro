@@ -41,12 +41,12 @@ const { class: extraClass } = Astro.props
     color: var(--muted);
     transition: color 0.3s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .social-links a:hover {
       color: var(--gold);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .social-links a:active {
       color: var(--gold);
     }

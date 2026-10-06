@@ -12,6 +12,7 @@ import { RECEPTION_TIERS } from "@data/packages/reception"
 import { BANQUET_TIERS } from "@data/packages/banquet"
 import { HIGH_TEA_TIERS } from "@data/packages/high-tea"
 import Button from "@components/ui/Button.astro"
+import { below } from "@lib/media-queries.js"
 
 const DINING = [
   {
@@ -97,7 +98,7 @@ const DINING = [
             <div class="package-dining-card-figure">
               <Photo
                 src={card.photo.src}
-                sizes="(max-width: 699.98px) 100vw, (max-width: 979.98px) 50vw, 33vw"
+                sizes={`${below.wideTablet} 100vw, ${below.desktop} 50vw, 33vw`}
                 alt={card.photo.alt}
                 loading="lazy"
               />
@@ -155,7 +156,7 @@ const DINING = [
       <div class="package-beverage-card-figure">
         <Photo
           src="food-and-drink/champagne"
-          sizes="(max-width: 980px) 100vw, 50vw"
+          sizes={`${below.desktop} 100vw, 50vw`}
           alt="Champagne poured for a wedding toast"
           loading="lazy"
         />
@@ -219,19 +220,19 @@ const DINING = [
     flex-direction: column;
     gap: clamp(18px, 2.2vw, 30px);
   }
-  @media (min-width: 621px) and (max-width: 979.98px) {
+  @media (--from-tablet) and (--below-desktop) {
     .package-dining-card-list {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
     }
   }
-  @media (min-width: 621px) and (max-width: 979.98px) {
+  @media (--from-tablet) and (--below-desktop) {
     .package-dining-card-item {
       flex: 0 1 calc(50% - clamp(18px, 2.2vw, 30px) / 2);
     }
   }
-  @media (min-width: 621px) and (max-width: 979.98px) {
+  @media (--from-tablet) and (--below-desktop) {
     .package-dining-card-item:nth-child(2) .package-dining-card-or {
       position: absolute;
       top: 50%;
@@ -240,7 +241,7 @@ const DINING = [
       z-index: 2;
     }
   }
-  @media (min-width: 621px) and (max-width: 979.98px) {
+  @media (--from-tablet) and (--below-desktop) {
     .package-dining-card-item:nth-child(3) .package-dining-card-or {
       position: absolute;
       top: calc(clamp(18px, 2.2vw, 30px) / -2 - 23px);
@@ -249,30 +250,30 @@ const DINING = [
       z-index: 2;
     }
   }
-  @media (min-width: 621px) and (max-width: 699.98px) {
+  @media (--from-tablet) and (--below-wide-tablet) {
     .package-card-link {
       height: var(--button-compact-height);
       padding: 0 var(--button-compact-padding-x);
       font-size: var(--button-compact-font-size);
     }
   }
-  @media (min-width: 980px) {
+  @media (--from-desktop) {
     .package-dining-card-list {
       grid-template-columns: repeat(3, 1fr);
       align-items: start;
     }
   }
-  @media (min-width: 980px) {
+  @media (--from-desktop) {
     .package-dining-card-item {
       display: block;
     }
   }
-  @media (min-width: 980px) {
+  @media (--from-desktop) {
     .package-dining-card-item:nth-child(2) {
       margin-top: clamp(20px, 3vw, 46px);
     }
   }
-  @media (min-width: 980px) {
+  @media (--from-desktop) {
     .package-dining-card-item .package-dining-card {
       transition:
         opacity 1.1s var(--ease) var(--d, 0ms),
@@ -280,12 +281,12 @@ const DINING = [
         border-color 0.5s var(--ease);
     }
   }
-  @media (min-width: 980px) {
+  @media (--from-desktop) {
     .package-dining-card-item:nth-child(2) .package-dining-card {
       --d: 600ms;
     }
   }
-  @media (min-width: 980px) {
+  @media (--from-desktop) {
     .package-dining-card-item:nth-child(3) .package-dining-card {
       --d: 1200ms;
     }
@@ -407,7 +408,7 @@ const DINING = [
     text-transform: uppercase;
     flex: none;
   }
-  @media (min-width: 980px) {
+  @media (--from-desktop) {
     .package-dining-card-or {
       position: absolute;
       top: clamp(90px, 11vw, 150px);
@@ -415,7 +416,7 @@ const DINING = [
       z-index: 2;
     }
   }
-  @media (min-width: 980px) {
+  @media (--from-desktop) {
     .package-dining-card-item:nth-child(2) .package-dining-card-or {
       top: clamp(70px, 8vw, 104px);
     }
@@ -487,7 +488,7 @@ const DINING = [
     outline: 2px solid var(--gold);
     outline-offset: 3px;
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .package-dining-card {
       border-color: transparent;
       background:
@@ -495,12 +496,12 @@ const DINING = [
         var(--gold-gradient-soft) border-box;
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .package-dining-card:hover {
       border-color: rgba(var(--gold-rgb), 0.38);
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .package-dining-card:hover .package-card-link {
       background-color: var(--bg-h);
       color: var(--fg-h);
@@ -509,7 +510,7 @@ const DINING = [
       transform: translateY(-1px);
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .package-dining-card:hover .package-card-link::after {
       left: 130%;
     }
@@ -626,7 +627,7 @@ const DINING = [
   .package-beverage-card-body .package-card-link {
     margin-top: 0;
   }
-  @media (min-width: 621px) {
+  @media (--from-tablet) {
     .package-beverage-card-body .package-card-link {
       align-self: flex-start;
     }
@@ -701,7 +702,7 @@ const DINING = [
       transform 1s var(--ease),
       border-color 0.5s var(--ease);
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .package-beverage-card {
       border-color: transparent;
       background:
@@ -709,12 +710,12 @@ const DINING = [
         var(--gold-gradient-soft) border-box;
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .package-beverage-card:hover {
       border-color: rgba(var(--gold-rgb), 0.38);
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .package-beverage-card:hover .package-card-link {
       background-color: var(--bg-h);
       color: var(--fg-h);
@@ -723,12 +724,12 @@ const DINING = [
       transform: translateY(-1px);
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .package-beverage-card:hover .package-card-link::after {
       left: 130%;
     }
   }
-  @media (min-width: 621px) {
+  @media (--from-tablet) {
     .package-beverage-card {
       grid-template-columns: 0.95fr 1.05fr;
       align-items: stretch;
@@ -753,7 +754,7 @@ const DINING = [
          what was actually overflowing here. */
     min-width: 0;
   }
-  @media (min-width: 621px) {
+  @media (--from-tablet) {
     .package-beverage-card-figure {
       aspect-ratio: 16 / 11;
     }
@@ -776,7 +777,7 @@ const DINING = [
     color: var(--muted);
     max-width: 44ch;
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-dining-card-item {
       /* The +4px is bought from .package-dining-card-body's right padding
            below, not from the copy: the body is a 1fr track, so widening this
@@ -792,7 +793,7 @@ const DINING = [
       --package-thumbnail-width: calc(clamp(110px, 34vw, 160px) + 4px);
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-dining-card {
       display: grid;
       grid-template-columns: var(--package-thumbnail-width) 1fr;
@@ -800,7 +801,7 @@ const DINING = [
       column-gap: clamp(18px, 4.5vw, 24px);
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-dining-card-figure {
       align-self: stretch;
       aspect-ratio: auto;
@@ -809,14 +810,14 @@ const DINING = [
       min-width: 0;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-dining-card-numeral {
       font-size: clamp(24px, 6.5vw, 30px);
       bottom: 10px;
       left: 12px;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-dining-card-body {
       /* Matches .package-beverage-card-body's own min-width:0 — stops the 1fr
            track's automatic `auto` minimum letting this column's least-shrinkable
@@ -836,7 +837,7 @@ const DINING = [
       gap: 12px;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-dining-card-body p {
       display: -webkit-box;
       -webkit-line-clamp: 5;
@@ -845,12 +846,12 @@ const DINING = [
       overflow: hidden;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-dining-card-tiers {
       display: none;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-card-link {
       height: var(--button-compact-height);
       padding: 0 var(--button-compact-padding-x);
@@ -861,13 +862,13 @@ const DINING = [
       margin-top: 6px;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-beverage-card-body .package-card-link {
       max-width: 300px;
       align-self: center;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-dining-card-item:nth-child(2) .package-dining-card-or,
     .package-dining-card-item:nth-child(3) .package-dining-card-or {
       position: absolute;
@@ -877,17 +878,17 @@ const DINING = [
       z-index: 4;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-beverage-card-figure {
       aspect-ratio: 21 / 9;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-beverage-card-eyebrow {
       display: none;
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .package-dining-card:hover .package-card-link :global(svg) {
       transform: translateX(4px);
     }
@@ -957,7 +958,7 @@ const DINING = [
       transform 1.2s var(--ease),
       filter 0.45s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .package-dining-card:hover .package-dining-card-figure :global(img) {
       transform: scale(var(--image-hover-zoom-card));
       filter: var(--image-hover-filter-boost);
@@ -1006,13 +1007,13 @@ const DINING = [
     width: 1px;
     background: linear-gradient(180deg, var(--gold-2), var(--gold) 55%, #b8902c);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .package-beverage-card:hover .package-beverage-card-figure :global(img) {
       transform: scale(var(--image-hover-zoom-card));
       filter: var(--image-hover-filter-boost);
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .package-beverage-card:hover .package-card-link :global(svg) {
       transform: translateX(4px);
     }
@@ -1048,13 +1049,13 @@ const DINING = [
     font-size: clamp(26px, 3.4vw, 40px);
     font-weight: 400;
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-dining-card-figure :global(img) {
       position: absolute;
       inset: 0;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .package-dining-card-body :global(h4) {
       font-size: clamp(18px, 4.6vw, 21px);
     }

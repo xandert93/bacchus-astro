@@ -124,14 +124,14 @@ const isWedding = eventType === "Wedding"
     place-items: center;
     transition: all 0.3s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .guest-count-button:hover {
       background: var(--ink);
       color: var(--limestone);
       border-color: var(--ink);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .guest-count-button:active {
       background: var(--ink);
       color: var(--limestone);

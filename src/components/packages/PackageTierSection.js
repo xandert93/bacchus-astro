@@ -13,6 +13,7 @@
 // evaluate their imports first, and a module imported by several scripts
 // on a page still runs once — no reliance on <script> order.
 import "@scripts/tabs.js"
+import { from } from "@lib/media-queries.js"
 
 // Page-specific tier controller. Drives every way of changing tier —
 // the tab bar, the tier cards, the sticky switcher and touch swipe —
@@ -472,7 +473,7 @@ import "@scripts/tabs.js"
     const tabBarEl = document.querySelector(".package-tabs-tabbar")
     const cardsEl = document.querySelector(".package-tier-cards")
     const nextEyebrowEl = document.getElementById("closerLookEyebrow")
-    const desktopMQ = window.matchMedia("(min-width: 841px)")
+    const desktopMQ = window.matchMedia(from.packageTiersDesktop)
     let pastTabBar = false,
       pastCards = false,
       pastBottom = false

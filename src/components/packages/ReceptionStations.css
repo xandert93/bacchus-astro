@@ -397,7 +397,7 @@
    Non-overlapping ranges mean neither rule has to out-specify the
    other (bug #10's lesson), and the max side is written .98 below
    the min it hands over to (bug #22). */
-@media (max-width: 979.98px) {
+@media (--below-desktop) {
   .package-stations-browser.is-enhanced
     .package-stations-category-tabs:has([data-label-full]) {
     display: grid;
@@ -442,18 +442,18 @@
   background: var(--gold-gradient);
   color: var(--ink);
 }
-@media (hover: hover) {
+@media (--hover) {
   .package-stations-category-tab:not([aria-current="true"]):hover {
     color: var(--limestone-2);
   }
 }
-@media (hover: none) {
+@media (--no-hover) {
   .package-stations-category-tab:not([aria-current="true"]):active {
     color: var(--limestone-2);
   }
 }
 
-@media (max-width: 620.98px) {
+@media (--below-tablet) {
   /* Full-bleed and faded at the right edge, so a cut-off tab
      reads as "scroll for more" instead of as a layout bug — the
      affordance .tab-bar itself is missing (bug #13). */
@@ -522,7 +522,7 @@
    below made both the mobile-only "false" fill and the "true"
    state's flat background moot at every width, not just this one,
    so there was nothing left worth resetting here specifically. */
-@media (max-width: 620.98px) {
+@media (--below-tablet) {
   .package-stations-hybrid-mobtab
     .package-stations-browser.is-enhanced
     .package-stations-category-tabs {
@@ -553,7 +553,7 @@
    neither — moving only one of them would have opened a band with
    no category navigation at all. Paired .98 below the index's own
    min-width per bug #22. */
-@media (min-width: 980px) {
+@media (--from-desktop) {
   .package-stations-browser.is-enhanced .package-stations-category-tabs {
     display: none;
   }
@@ -736,7 +736,7 @@
    beside (bug #22). The <svg>'s own width/height attributes are
    presentation attributes — the weakest thing in the cascade — so
    this resizes the glyph without touching sixteen bits of markup. */
-@media (max-width: 620.98px) {
+@media (--below-tablet) {
   .package-station-card-expand-badge {
     top: 5px;
     right: 5px;
@@ -750,7 +750,7 @@
 }
 /* Hidden until hover on a mouse; ALWAYS visible on touch, where
    cursor: zoom-in communicates nothing (bug #19). */
-@media (hover: hover) {
+@media (--hover) {
   .package-station-card-expand-badge {
     opacity: 0;
     transition: opacity 0.3s var(--ease);
@@ -852,7 +852,7 @@
 .package-station-card-body p.eyebrow.eyebrow-static::before {
   width: 22px;
 }
-@media (min-width: 860px) {
+@media (--from-stations-desktop) {
   .package-station-card-body p.eyebrow.eyebrow-static {
     /* 4px, up 8px from the -4px base (2026-09-30, bumped a second
        time on request — was +4px/0, now +8px/4px) — this tier is
@@ -934,7 +934,7 @@
    already work via the scroll-snap rule above). Gated to
    (hover: hover) so touch never shows a cursor it can't use,
    matching this file's other hover/touch splits (CLAUDE.md bug #19). */
-@media (hover: hover) {
+@media (--hover) {
   .package-stations-browser.is-enhanced .package-stations-card-list {
     cursor: grab;
   }
@@ -1018,7 +1018,7 @@
   scroll-snap-type: none;
 }
 
-@media (max-width: 620.98px) {
+@media (--below-tablet) {
   /* Full-bleed, so a card can sit flush to the screen edge and the
      next one peeks in past it. */
   .package-stations-browser.is-enhanced .package-stations-card-list {
@@ -1037,7 +1037,7 @@
   }
 }
 
-@media (min-width: 621px) and (max-width: 699.98px) {
+@media (--from-tablet) and (--below-wide-tablet) {
   /* TWO UP, EXACTLY, in this band only — see the peek tier below
      for why it starts at 700 rather than here.
 
@@ -1105,7 +1105,7 @@
    With it the step at 980 is 400 -> 298: still a step, but the
    honest kind, a layout changing shape rather than proportions
    drifting. */
-@media (min-width: 700px) {
+@media (--from-wide-tablet) {
   .package-stations-browser.is-enhanced .package-station-card {
     flex: 0 0 min(calc((100% - 2 * var(--station-carousel-gap)) / 2.2), 400px);
   }
@@ -1294,14 +1294,14 @@
    (the circle is already unmistakable against the dark section
    around it), so matching it is visually equivalent to no border
    without a separate transition-none special case. */
-@media (hover: hover) {
+@media (--hover) {
   .package-stations-carousel-arrow:not(:disabled):hover {
     background: var(--gold);
     color: var(--ink);
     border-color: var(--gold);
   }
 }
-@media (hover: none) {
+@media (--no-hover) {
   .package-stations-carousel-arrow:not(:disabled):active {
     background: var(--gold);
     color: var(--ink);
@@ -1386,7 +1386,7 @@
 .package-stations-index {
   display: none;
 }
-@media (min-width: 980px) {
+@media (--from-desktop) {
   .package-stations-browser.is-enhanced .package-stations-browser-body {
     display: grid;
     /* clamp(225px, 22.5vw, 300px), narrowed from clamp(240px, 24vw,
@@ -1756,7 +1756,7 @@
    visible card when current, and sliding a card sideways under the
    pointer reads as drag. 3px, down from 6px: with a surface behind
    it the movement is legible at half the distance. */
-@media (hover: hover) {
+@media (--hover) {
   .package-stations-index-row:not([aria-current="true"]):hover {
     background: rgba(var(--limestone-rgb), 0.025);
   }
@@ -1795,7 +1795,7 @@
    same reason: a colour change with nothing else moving is easy
    to miss on a transient press with no pointer to notice it
    happening under. */
-@media (hover: none) {
+@media (--no-hover) {
   .package-stations-index-row:not([aria-current="true"]):active {
     background: rgba(var(--limestone-rgb), 0.025);
   }
@@ -1860,7 +1860,7 @@
   transition: opacity 0.22s var(--ease);
 }
 
-@media (min-width: 621px) {
+@media (--from-tablet) {
   .package-stations-browser.is-enhanced .package-stations-stage {
     display: grid;
     grid-template-columns: 44% minmax(0, 1fr);
@@ -1923,12 +1923,12 @@
     cursor: zoom-in;
     transition: background 0.4s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .package-stations-stage-expand-button:hover {
       background: rgba(var(--ink-rgb), 0.75);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .package-stations-stage-expand-button:active {
       background: rgba(var(--ink-rgb), 0.75);
     }
@@ -2023,7 +2023,7 @@
      that rule's own comment, up near section 3. */
 }
 
-@media (min-width: 860px) {
+@media (--from-stations-desktop) {
   .package-stations-browser.is-enhanced .package-stations-stage {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto;
@@ -2184,7 +2184,7 @@
 .package-stations-thumbnails {
   display: none;
 }
-@media (min-width: 621px) and (max-width: 859.98px) {
+@media (--from-tablet) and (--below-stations-desktop) {
   .package-stations-browser.is-enhanced .package-stations-thumbnails {
     list-style: none;
     display: grid;
@@ -2367,7 +2367,7 @@
    using .section-head, a far bigger change than asked for. 32px
    chosen to match that existing sitewide precedent rather than
    inventing a third value. */
-@media (max-width: 620.98px) {
+@media (--below-tablet) {
   .package-stations-hybrid .section-head {
     margin-bottom: 32px;
   }
@@ -2376,7 +2376,7 @@
 .package-stations-hybrid-desktop {
   display: none;
 }
-@media (min-width: 860px) {
+@media (--from-stations-desktop) {
   .package-stations-hybrid-mobtab {
     display: none;
   }
@@ -2395,7 +2395,7 @@
    takes over at 860, not section A's own earlier one. Each is
    (0,3,0), same reasoning as the original: wins inside this
    fixture at every width without depending on source order. */
-@media (min-width: 621px) {
+@media (--from-tablet) {
   .package-stations-hybrid-mobtab
     .package-stations-browser.is-enhanced
     .package-stations-carousel {
@@ -2447,7 +2447,7 @@
    once the wrap itself was reverted back to one scrolling row: both
    widths want the same var(--radius-pill) again, so there's nothing
    left for a phone-specific rule to disagree with. */
-@media (max-width: 859.98px) {
+@media (--below-stations-desktop) {
   .package-stations-hybrid-mobtab
     .package-stations-browser.is-enhanced
     .package-stations-category-tabs {
@@ -2468,7 +2468,7 @@
    below only has real leftover space to distribute into its 1fr
    portion once the container is genuinely wider than the buttons'
    own combined content — which is exactly what this rule creates. */
-@media (min-width: 621px) and (max-width: 859.98px) {
+@media (--from-tablet) and (--below-stations-desktop) {
   .package-stations-hybrid-mobtab
     .package-stations-browser.is-enhanced
     .package-stations-category-tabs {
@@ -2510,7 +2510,7 @@
 .package-stations-hybrid-mobtab .package-stations-category-tab[aria-selected="true"] {
   color: var(--ink);
 }
-@media (min-width: 621px) {
+@media (--from-tablet) {
   .package-stations-hybrid-mobtab
     .package-stations-browser.is-enhanced
     .package-stations-carousel-nav {
@@ -2617,7 +2617,7 @@
    280px is not a new number — the clamp's own ceiling, reused
    rather than invented. Change the one value below if a
    different width is wanted. */
-@media (min-width: 860px) {
+@media (--from-stations-desktop) {
   .package-stations-hybrid-desktop
     .package-stations-browser.is-enhanced
     .package-stations-browser-body {
@@ -2739,7 +2739,7 @@
    was wanted just below it. See the paired rule immediately
    below for the range that actually needed a different
    mechanism, not just a wider one. */
-@media (min-width: 980px) and (max-width: 1121.98px) {
+@media (--from-desktop) and (--below-stations-hybrid-wide) {
   .package-stations-hybrid-desktop
     .package-stations-browser.is-enhanced
     .package-station-card {
@@ -2780,7 +2780,7 @@
    and 100% of the narrowing comes out of the peek — checked
    numerically: peek runs from 244.1px at 980px down to 129.4px
    at 860px, while the card never moves. */
-@media (min-width: 860px) and (max-width: 979.98px) {
+@media (--from-stations-desktop) and (--below-desktop) {
   .package-stations-hybrid-desktop
     .package-stations-browser.is-enhanced
     .package-station-card {
@@ -2830,7 +2830,7 @@
    the wrapper on top, (0,4,0), the same margin every other
    override in this fixture already keeps over what it
    overrides. */
-@media (min-width: 860px) {
+@media (--from-stations-desktop) {
   .package-stations-hybrid-desktop
     .package-stations-browser.is-enhanced
     .package-stations-category-tabs {
@@ -2879,7 +2879,7 @@
   line-height: 1.5;
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (--reduced-motion) {
   .package-stations-index-row,
   .package-stations-index-row-name,
   .package-stations-category-tab,
@@ -2918,7 +2918,7 @@
   }
 }
 
-@media (hover: hover) {
+@media (--hover) {
   .package-station-card-figure:hover img,
   .package-stations-stage-figure:hover img,
   .package-stations-thumbnail:hover img {

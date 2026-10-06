@@ -241,7 +241,7 @@ const { menu } = Astro.props
     grid-template-columns: repeat(3, 1fr);
     gap: 4px 24px;
   }
-  @media (max-width: 700px) {
+  @media (--below-wide-tablet) {
     .nav-dd-items {
       grid-template-columns: 1fr;
     }
@@ -254,7 +254,7 @@ const { menu } = Astro.props
     border-radius: calc(var(--radius-card) - 2px);
     overflow: hidden;
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .nav-dd-panel-media {
       display: none;
     }
@@ -487,12 +487,12 @@ const { menu } = Astro.props
     cursor: pointer;
     transition: color 0.35s;
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .nav-dd-split-chevron-button:hover {
       color: #fff;
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .nav-dd-split-chevron-button:active {
       color: #fff;
     }
@@ -644,23 +644,23 @@ const { menu } = Astro.props
     color: rgba(var(--limestone-rgb), 0.74);
     transition: color 0.18s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .nav-dd-panel-card-dark .nav-dd-item:hover {
       background: rgba(var(--limestone-rgb), 0.07);
       border-left-color: var(--gold);
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .nav-dd-panel-card-dark .nav-dd-item:hover .nav-dd-label {
       color: var(--limestone-2);
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .nav-dd-panel-card-dark .nav-dd-item:hover .nav-dd-desc {
       color: rgba(var(--limestone-rgb), 0.78);
     }
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .nav-dd-panel-card-dark .nav-dd-item:hover .nav-dd-icon {
       color: var(--gold-2);
     }
@@ -698,7 +698,7 @@ const { menu } = Astro.props
     background: transparent;
     border-left-color: var(--gold);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .nav-dd-panel-card-dark .nav-dd-item.active:hover {
       background: rgba(var(--limestone-rgb), 0.07);
     }
@@ -932,7 +932,7 @@ const { menu } = Astro.props
     opacity: 1;
     transition: opacity 0.28s var(--ease) 0.15s;
   }
-  @media (prefers-reduced-motion: reduce) {
+  @media (--reduced-motion) {
     .nav-dd-panel-card .nav-dd-panel-caption[data-state] {
       transition: none;
     }
@@ -968,27 +968,27 @@ const { menu } = Astro.props
     .nav-dd-panel-caption[data-state="spaces"] {
     opacity: 1;
   }
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     .nav-dd-split-chevron-button {
       padding-right: 8px;
     }
   }
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     :global(.nav-links) > li.nav-dd-split > a {
       --nav-link-padding-end: 4px;
     }
   }
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     .nav-dd-panel-media {
       flex-basis: 240px;
     }
   }
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     .nav-dd-items {
       column-gap: 16px;
     }
   }
-  @media (min-width: 980px) and (max-width: 1179.98px) {
+  @media (--from-desktop) and (--below-nav-full) {
     .nav-dd-item {
       padding-left: 8px;
       padding-right: 8px;
@@ -1047,12 +1047,12 @@ const { menu } = Astro.props
     opacity: 1;
     transition: opacity 0.28s var(--ease) 0.15s;
   }
-  @media (prefers-reduced-motion: reduce) {
+  @media (--reduced-motion) {
     .nav-dd-panel-card .nav-dd-panel-media :global(img[data-state]) {
       transition: none;
     }
   }
-  @media (prefers-reduced-motion: reduce) {
+  @media (--reduced-motion) {
     .nav-dd-hub-link:hover :global(svg) {
       transform: none;
     }

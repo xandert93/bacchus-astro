@@ -62,17 +62,17 @@ const { steps } = Astro.props
     font-size: 13.5px;
     color: var(--muted);
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .process-steps {
       grid-template-columns: 1fr 1fr;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .process-steps {
       grid-template-columns: 1fr;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .process-step:first-child {
       border-top: none;
     }

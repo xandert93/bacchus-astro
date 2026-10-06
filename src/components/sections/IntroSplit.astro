@@ -9,6 +9,7 @@
 // list (the weddings page's link down to its packages).
 import CheckList from "@components/ui/CheckList.astro"
 import Photo from "@components/ui/Photo.astro"
+import { below } from "@lib/media-queries.js"
 
 interface Props {
   eyebrow: string
@@ -34,7 +35,7 @@ const { eyebrow, included, photo } = Astro.props
       <slot name="after" />
     </div>
     <div class="ph-wrap" data-reveal="img">
-      <Photo src={photo.src} sizes="(max-width: 980px) 100vw, 50vw" alt={photo.alt} />
+      <Photo src={photo.src} sizes={`${below.desktop} 100vw, 50vw`} alt={photo.alt} />
     </div>
   </div>
 </section>

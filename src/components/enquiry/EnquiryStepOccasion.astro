@@ -139,13 +139,13 @@ const isWedding = eventType === "Wedding"
     color: var(--avail-amber-fg);
   }
   /* A smaller status dot on phones, for this summary row only. */
-  @media (max-width: 480px) {
+  @media (--below-large-phone) {
     .availability-foot-label .availability-picked-status:not(:empty)::before {
       width: 4px;
       height: 4px;
     }
   }
-  @media (max-width: 480px) {
+  @media (--below-large-phone) {
     .availability-foot-label {
       align-items: center;
     }

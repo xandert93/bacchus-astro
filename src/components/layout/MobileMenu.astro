@@ -199,12 +199,12 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
   .menu .mobile-nav-link[aria-current="page"] {
     color: var(--gold-2);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .menu .mobile-nav-link:hover {
       color: var(--gold-2);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .menu .mobile-nav-link:active {
       color: var(--gold-2);
     }

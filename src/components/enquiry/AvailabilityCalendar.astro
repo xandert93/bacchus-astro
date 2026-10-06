@@ -273,7 +273,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     color: var(--avail-green-fg);
     cursor: pointer;
   }
-  @media (hover: hover) {
+  @media (--hover) {
     :global(.availability-cell.open:hover) {
       box-shadow: inset 0 0 0 1px var(--avail-green-fg);
     }
@@ -283,7 +283,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     color: var(--avail-amber-fg);
     cursor: pointer;
   }
-  @media (hover: hover) {
+  @media (--hover) {
     :global(.availability-cell.interest:hover) {
       box-shadow: inset 0 0 0 1px var(--avail-amber-fg);
     }
@@ -439,7 +439,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
        compact calendar might, so its cells stay desktop-sized down to true
        mobile, matching .availability.diary's own 480px breakpoint below rather than
        shrinking early. */
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .availability.compact :global(.availability-cell.interest)::after {
       top: 4px;
       right: 4px;
@@ -447,7 +447,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       height: 4px;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .availability.compact :global(.availability-cell.today)::before {
       bottom: 4px;
       width: 4px;
@@ -497,14 +497,14 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       background 0.3s var(--ease),
       border-color 0.3s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     #availForm .availability-prev:hover:not(:disabled),
     #availForm .availability-next:hover:not(:disabled) {
       background: var(--paper);
       border-color: rgba(var(--muted-ink-rgb), 0.3);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     #availForm .availability-prev:active:not(:disabled),
     #availForm .availability-next:active:not(:disabled) {
       background: var(--paper);
@@ -583,14 +583,14 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       background 0.3s var(--ease),
       border-color 0.3s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .availability.diary .availability-prev:hover:not(:disabled),
     .availability.diary .availability-next:hover:not(:disabled) {
       background: var(--paper);
       border-color: rgba(var(--muted-ink-rgb), 0.3);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .availability.diary .availability-prev:active:not(:disabled),
     .availability.diary .availability-next:active:not(:disabled) {
       background: var(--paper);
@@ -635,7 +635,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
   .availability.diary :global(.availability-cell.interest.picked)::after {
     background: var(--paper);
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .availability.diary :global(.availability-cell.interest)::after {
       top: 4px;
       right: 4px;
@@ -643,7 +643,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       height: 4px;
     }
   }
-  @media (max-width: 480px) {
+  @media (--below-large-phone) {
     :global(.availability-cell.today)::before {
       bottom: 4px;
       width: 4px;
@@ -678,18 +678,18 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
   /* Scoped to this specific instance of .availability-picked-status, not the shared class in
        general (it's also reused by .availability-picked elsewhere, where no one's
        asked for a smaller dot). */
-  @media (max-width: 480px) {
+  @media (--below-large-phone) {
     .availability-foot-label .availability-picked-status:not(:empty)::before {
       width: 4px;
       height: 4px;
     }
   }
-  @media (max-width: 480px) {
+  @media (--below-large-phone) {
     .availability-foot-label {
       align-items: center;
     }
   }
-  @media (max-width: 480px) {
+  @media (--below-large-phone) {
     .availability-foot :global(.button) {
       width: 100%;
       max-width: 300px;
@@ -722,7 +722,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
   .availability.compact :global(.availability-cell.taken) {
     cursor: pointer;
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .availability.diary :global(.availability-cell.taken:hover),
     .availability.compact :global(.availability-cell.taken:hover) {
       box-shadow: inset 0 0 0 1px var(--avail-grey-fg);
@@ -744,12 +744,12 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
   .wl-hint-touch {
     display: none;
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .wl-hint-hover {
       display: none;
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .wl-hint-touch {
       display: contents;
     }
@@ -769,7 +769,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     border-radius: calc(var(--radius-card) * 2);
     box-shadow: 0 24px 60px -30px rgba(var(--muted-ink-rgb), 0.32);
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .availability.diary {
       max-width: 480px;
     }
@@ -804,12 +804,12 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     + .availability-foot-note {
     display: block;
   }
-  @media (min-width: 981px) {
+  @media (--from-desktop) {
     :global(#availability) .availability-foot-note {
       display: none;
     }
   }
-  @media (max-width: 480px) {
+  @media (--below-large-phone) {
     .availability-foot {
       flex-direction: column;
       align-items: center;
@@ -817,7 +817,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       gap: 20px;
     }
   }
-  @media (max-width: 480px) {
+  @media (--below-large-phone) {
     .availability-foot-note {
       margin-top: 20px;
     }

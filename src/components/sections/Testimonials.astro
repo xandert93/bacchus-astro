@@ -217,7 +217,7 @@ const { backgroundImage } = Astro.props
        specificity ID selector) has been added yet — stars must never be stuck
        at their hidden opacity:0 base state for reduced-motion users waiting on
        a class toggle that's tied to a transition they won't otherwise see. */
-  @media (prefers-reduced-motion: reduce) {
+  @media (--reduced-motion) {
     .stars .star {
       opacity: 1;
       transform: none;
@@ -271,13 +271,13 @@ const { backgroundImage } = Astro.props
       color 0.3s var(--ease);
     flex: none;
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .testimonial-arrow:hover {
       background-color: var(--gold);
       color: var(--ink);
     }
   }
-  @media (hover: none) {
+  @media (--no-hover) {
     .testimonial-arrow:active {
       background-color: var(--gold);
       color: var(--ink);
@@ -295,7 +295,7 @@ const { backgroundImage } = Astro.props
     margin-top: 34px;
     text-align: left;
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .testimonial-cards {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -395,7 +395,7 @@ const { backgroundImage } = Astro.props
   }
   /* Same gap on the picker cards below: tappable, never navigate, and
        had a hover state only. Mirrors their hover exactly. */
-  @media (hover: none) {
+  @media (--no-hover) {
     .testimonial-card:active {
       border-color: rgba(var(--gold-rgb), 0.5);
       background: rgba(var(--gold-rgb), 0.06);
@@ -444,7 +444,7 @@ const { backgroundImage } = Astro.props
       background 0.3s var(--ease),
       border-color 0.3s var(--ease);
   }
-  @media (hover: hover) {
+  @media (--hover) {
     .testimonial-card:hover {
       border-color: rgba(var(--gold-rgb), 0.5);
       background: rgba(var(--gold-rgb), 0.06);

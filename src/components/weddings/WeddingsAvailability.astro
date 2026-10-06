@@ -55,7 +55,7 @@ import Button from "@components/ui/Button.astro"
 <style>
   /* Scoped to this file (moved from global.css by
      scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
-  @media (max-width: 920.98px) {
+  @media (--below-enquiry-two-column) {
     #availability :global(.availability.diary) {
       margin-inline: auto;
     }
@@ -280,7 +280,7 @@ import Button from "@components/ui/Button.astro"
     border-top: 1px solid rgba(var(--muted-ink-rgb), 0.1);
     padding-top: 16px;
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .availability-intro .availability-picked {
       display: none;
     }
@@ -303,7 +303,7 @@ import Button from "@components/ui/Button.astro"
          close on its own. Left column takes whatever's left. */
     grid-template-columns: 1fr 500px;
   }
-  @media (max-width: 920.98px) {
+  @media (--below-enquiry-two-column) {
     #availability .split {
       grid-template-columns: 1fr;
     }
@@ -353,7 +353,7 @@ import Button from "@components/ui/Button.astro"
   .availability-intro .eyebrow {
     margin-bottom: 0;
   }
-  @media (min-width: 981px) {
+  @media (--from-desktop) {
     #availability :global(.availability-foot-label .availability-picked-status) {
       display: none;
     }

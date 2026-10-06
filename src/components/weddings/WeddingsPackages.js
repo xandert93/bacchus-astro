@@ -1,6 +1,7 @@
 // Weddings-only: the dining-card triptych's row-level reveal.
 
 import { REVEAL_ROOT_MARGIN } from "@scripts/lib/motion.js"
+import { from } from "@lib/media-queries.js"
 
 // ---------- Weddings: package dining-card triptych reveal ----------
 // Triptych only (980px+). There, the three dining-format cards
@@ -34,7 +35,7 @@ import { REVEAL_ROOT_MARGIN } from "@scripts/lib/motion.js"
   if (!list) return
   const cards = list.querySelectorAll(".package-dining-card")
   if (!cards.length) return
-  const triptych = window.matchMedia("(min-width: 980px)")
+  const triptych = window.matchMedia(from.desktop)
   const obs = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {

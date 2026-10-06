@@ -7,6 +7,7 @@
 import Photo from "@components/ui/Photo.astro"
 import "@styles/tabs.css"
 import Button from "@components/ui/Button.astro"
+import { below } from "@lib/media-queries.js"
 
 const OCCASIONS = [
   {
@@ -116,7 +117,7 @@ const OCCASIONS = [
           <div class="arch arch-tab">
             <Photo
               src={occasion.photo.src}
-              sizes="(max-width: 980px) 100vw, 50vw"
+              sizes={`${below.desktop} 100vw, 50vw`}
               alt={occasion.photo.alt}
             />
           </div>
@@ -164,13 +165,13 @@ const OCCASIONS = [
          here, so this is effectively an #events-specific value already. */
     margin-bottom: 32px;
   }
-  @media (max-width: 760.98px) {
+  @media (--below-home-two-column) {
     #events .tabs-bar {
       display: flex;
       width: 100%;
     }
   }
-  @media (max-width: 760.98px) {
+  @media (--below-home-two-column) {
     #events .arch-tab {
       order: -1;
       margin-top: clamp(18px, 5vw, 32px);
@@ -218,7 +219,7 @@ const OCCASIONS = [
     gap: 14px;
     align-items: center;
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .tab-panel .actions {
       flex-direction: column;
       align-items: center;
@@ -231,7 +232,7 @@ const OCCASIONS = [
   #events .section-head {
     margin-bottom: 32px;
   }
-  @media (max-width: 900px) {
+  @media (--below-home-lead-measure) {
     #events .lead {
       max-width: none;
     }
@@ -244,32 +245,32 @@ const OCCASIONS = [
     border-radius: var(--radius-pill);
     text-align: center;
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .tabs-bar :global(button) {
       padding: 13px 6px;
     }
   }
-  @media (min-width: 761px) {
+  @media (--from-home-two-column) {
     #events .tabs-bar :global(button) {
       width: 160px;
     }
   }
-  @media (max-width: 760.98px) {
+  @media (--below-home-two-column) {
     #events .tabs-bar :global(button) {
       flex: 1;
     }
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     #events .tab-panel.active {
       grid-template-columns: 1fr 1fr;
     }
   }
-  @media (max-width: 760.98px) {
+  @media (--below-home-two-column) {
     #events .tab-panel.active {
       grid-template-columns: 1fr;
     }
   }
-  @media (max-width: 620.98px) {
+  @media (--below-tablet) {
     .tab-panel .actions :global(.button) {
       width: 100%;
       max-width: 300px;

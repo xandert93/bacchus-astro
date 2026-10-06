@@ -7,6 +7,7 @@
 
 import { reduce } from "./lib/motion.js"
 import { isScrollLocked, lockScroll, unlockScroll } from "./lib/scroll-lock.js"
+import { from, hover } from "@lib/media-queries.js"
 
 // ---------- Nav: scroll state, progress bar, section spy, parallax ----------
 const nav = document.getElementById("nav"),
@@ -195,7 +196,7 @@ if (burger) {
 // here and leaving the copies to drift. HTMLElement.click() dispatches
 // regardless of the button being display: none, and nothing in those
 // handlers inspects event.isTrusted.
-const navCutover = window.matchMedia("(min-width: 980px)")
+const navCutover = window.matchMedia(from.desktop)
 const onNavCutoverChange = (e) => {
   if (!e.matches || !burger) return
   if (!document.body.classList.contains("menu-open")) return
@@ -308,7 +309,7 @@ document.addEventListener("keydown", (e) => {
   // the trigger's box before reaching the panel. A short close-delay
   // tolerates being briefly "outside" while still moving. See the long
   // comment above .nav-dd.is-hovering in styles.css.
-  const ddHoverCapable = window.matchMedia("(hover: hover)").matches
+  const ddHoverCapable = window.matchMedia(hover).matches
   const ddInstances = []
   dds.forEach((dd) => {
     const ddChevronButton = dd.querySelector(".nav-dd-split-chevron-button")

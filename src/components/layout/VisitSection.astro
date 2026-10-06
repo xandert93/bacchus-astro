@@ -1,6 +1,7 @@
 ---
 // "Come and see it for yourself" - identical on every page in the prototype.
 import Photo from "@components/ui/Photo.astro"
+import { below } from "@lib/media-queries.js"
 ---
 
 <section class="section-padding on-dark visit">
@@ -8,7 +9,7 @@ import Photo from "@components/ui/Photo.astro"
     <div class="arch" data-reveal="img">
       <Photo
         src="food-and-drink/champagne"
-        sizes="(max-width: 980px) 100vw, 50vw"
+        sizes={`${below.desktop} 100vw, 50vw`}
         alt="A guest raising a glass of sparkling wine at a dressed table"
       />
     </div>
@@ -178,7 +179,7 @@ import Photo from "@components/ui/Photo.astro"
   .visit-list > :global(*:last-child) {
     border-bottom: none;
   }
-  @media (max-width: 980.98px) {
+  @media (--below-desktop) {
     .visit .arch {
       order: -1;
       max-width: 440px;

@@ -35,7 +35,7 @@
   text-transform: uppercase;
   color: rgba(var(--oxblood-on-dark-rgb), 0.85);
 }
-@media (max-width: 620.98px) {
+@media (--below-tablet) {
   .package-dish-placeholder-note {
     display: none;
   }
