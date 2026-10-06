@@ -5,6 +5,7 @@
 // form's date can be filled without scrolling back up to #availability.
 // Only for pages whose EnquirySection uses datePicker="modal".
 import AvailabilityCalendar from "./AvailabilityCalendar.astro"
+import Button from "@components/ui/Button.astro"
 ---
 
 <div class="availability-modal" id="availModal">
@@ -30,24 +31,17 @@ import AvailabilityCalendar from "./AvailabilityCalendar.astro"
       id="availModalGrid"
       dialogLabel="Choose your wedding date"
     >
-      <button
+      <Button
+        variant="gradient"
+        small
+        class="availability-modal-done"
+        arrow
         slot="foot-action"
-        type="button"
-        class="button button-gradient button-small availability-modal-done"
         id="availModalDone"
         disabled
       >
         <span>Use this date</span>
-        <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-          <path
-            d="M1 5h11M8.5 1.5 12 5 8.5 8.5"
-            stroke="currentColor"
-            stroke-width="1.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button>
+      </Button>
     </AvailabilityCalendar>
   </div>
 </div>

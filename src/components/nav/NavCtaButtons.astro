@@ -1,0 +1,31 @@
+---
+// The two calls to action, in the desktop bar and at the foot of the mobile
+// drawer. Book a table leads (the filled gold pill): it has no other home
+// on the site, while Enquire already appears on every events page. Enquire
+// is the gold outline beside it rather than the grey ghost button, which
+// read as unavailable rather than secondary next to gold. Its icon is an
+// envelope, not a second arrow: "Enquire" is the vaguer label, so the icon
+// says what the action is. Both go nowhere yet (data-unbuilt).
+import Button from "@components/ui/Button.astro"
+---
+
+<Button href="#" variant="gradient" small arrow data-unbuilt>
+  <span>Book a table</span>
+</Button>
+<Button href="#" small variant="gold-outline" data-unbuilt>
+  <span>Enquire</span>
+  <svg width="14" height="10" viewBox="1.5 4.5 21 15" fill="none" aria-hidden="true">
+    <path
+      d="M3 7.5A1.5 1.5 0 0 1 4.5 6h15A1.5 1.5 0 0 1 21 7.5v9A1.5 1.5 0 0 1 19.5 18h-15A1.5 1.5 0 0 1 3 16.5z"
+      stroke="currentColor"
+      stroke-width="1.95"
+    ></path>
+    <path
+      d="m3.6 7 8.4 6 8.4-6"
+      stroke="currentColor"
+      stroke-width="1.95"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    ></path>
+  </svg>
+</Button>

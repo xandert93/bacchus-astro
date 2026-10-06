@@ -8,13 +8,13 @@ import WeddingsAvailability from "@components/weddings/WeddingsAvailability.astr
 import AvailabilityModal from "@components/enquiry/AvailabilityModal.astro"
 import EnquirySection from "@components/enquiry/EnquirySection.astro"
 import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
-import ArrowIcon from "@components/ui/ArrowIcon.astro"
 import FaqSection from "@components/sections/FaqSection.astro"
 import GalleryPreview from "@components/sections/GalleryPreview.astro"
 import Lightbox from "@components/ui/Lightbox.astro"
 import PageHero from "@components/sections/PageHero.astro"
 import ProcessSteps from "@components/sections/ProcessSteps.astro"
 import Testimonials from "@components/sections/Testimonials.astro"
+import Button from "@components/ui/Button.astro"
 ---
 
 <BaseLayout
@@ -37,18 +37,17 @@ import Testimonials from "@components/sections/Testimonials.astro"
       17th-century estate as the restaurant, held exclusively for one wedding a day.
     </Fragment>
     <Fragment slot="ctas">
-      <a href="#availability" class="button button-gradient button-shimmer">
+      <Button href="#availability" variant="gradient" shimmer arrow>
         <span>Find Your Date</span>
-        <ArrowIcon />
-      </a>
-      <a
+      </Button>
+      <Button
         href="/docs/bacchus-wedding-catalogue.pdf"
+        variant="ghost"
         target="_blank"
         rel="noopener"
-        class="button button-ghost"
       >
         <span>View the catalogue</span>
-      </a>
+      </Button>
     </Fragment>
   </PageHero>
 

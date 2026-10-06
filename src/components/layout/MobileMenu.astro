@@ -21,6 +21,7 @@ const background = await getImage({
   format: "webp",
   quality: 75,
 })
+import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
 ---
 
 <div class="menu" id="mobmenu">
@@ -45,41 +46,7 @@ const background = await getImage({
         <span>4</span>About<span class="mobile-nav-proposed-badge">Proposed</span>
       </a>
       <div class="mobile-nav-cta-row">
-        <a href="#" class="button button-gradient button-small" data-unbuilt>
-          <span>Book a table</span>
-          <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
-            <path
-              d="M1 5h11M8.5 1.5L12 5l-3.5 3.5"
-              stroke="currentColor"
-              stroke-width="1.3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </a>
-        <a href="#" class="button button-small nav-cta-enquire-button" data-unbuilt>
-          <span>Enquire</span>
-          <svg
-            width="14"
-            height="10"
-            viewBox="1.5 4.5 21 15"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M3 7.5A1.5 1.5 0 0 1 4.5 6h15A1.5 1.5 0 0 1 21 7.5v9A1.5 1.5 0 0 1 19.5 18h-15A1.5 1.5 0 0 1 3 16.5z"
-              stroke="currentColor"
-              stroke-width="1.95"
-            />
-            <path
-              d="m3.6 7 8.4 6 8.4-6"
-              stroke="currentColor"
-              stroke-width="1.95"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </a>
+        <NavCtaButtons />
       </div>
     </div>
     <SocialLinks class="menu-social" />
@@ -331,62 +298,6 @@ const background = await getImage({
   :global(body.menu-open) .mobile-nav-cta-row {
     opacity: 1;
     transform: none;
-  }
-  /* ============================================================
-     (i) THE ENQUIRE BUTTON — .nav-cta-enquire-button
-     ============================================================
-     .button-ghost next to .button-gradient read as the disabled sibling
-     rather than the secondary action, and three things were doing that at
-     once: it was GREY where the other was gold, its border sat at 0.42
-     alpha so the outline barely existed, and it had no icon so it carried
-     noticeably less visual mass.
-
-     Hue was the main one. Two buttons in the same colour, one filled and
-     one outlined, read as a deliberate primary/secondary pair; a gold
-     pill beside a grey pill reads as "one action and one thing that isn't
-     available". So this keeps the outline — the hierarchy is still
-     correct, Book a table should lead — and moves it into the same family
-     by tinting the border and the label gold, then fills solid gold on
-     hover, which is a more confident resolution than .button-ghost's fade
-     to limestone.
-
-     .button-ghost is DROPPED from the element rather than overridden.
-     Overriding it would have meant silently redefining all five of its
-     custom properties, leaving a class on the markup that no longer
-     describes anything true about the button — and styles.css's own
-     comment reserves it for hero secondary CTAs. Written as
-     ".button.nav-cta-enquire-button" at (0,2,0) so it beats .button's own
-     (0,1,0) defaults outright rather than on source order (bug #2). */
-  .button.nav-cta-enquire-button {
-    --bg: transparent;
-    --fg: var(--gold-2);
-    --bd: rgba(var(--gold-rgb), 0.55);
-    --bg-h: var(--gold);
-    --fg-h: var(--ink);
-    /* 2px, up from .button's 1px (2026-10-04), so the outline carries
-       visual mass closer to Book a table's solid fill beside it. */
-    border-width: 2px;
-  }
-  /* The envelope is a LABEL, not a "proceed" chevron, so it must not
-     inherit .button:hover svg's 4px forward nudge — that motion only
-     reads correctly on a trailing arrow. Exactly the precedent
-     #availChangeBtn's calendar icon already set in styles.css, and the
-     reason the icon here is an envelope rather than a second copy of
-     Book a table's arrow: "Enquire" is the vaguer of the two labels, so
-     the icon is doing real work saying what the action is, instead of
-     repeating what its neighbour already says. */
-  .nav-cta-enquire-button :global(svg) {
-    transition: none;
-  }
-  @media (hover: hover) {
-    .button.nav-cta-enquire-button:hover :global(svg) {
-      transform: none;
-    }
-  }
-  @media (hover: none) {
-    .button.nav-cta-enquire-button:active :global(svg) {
-      transform: none;
-    }
   }
   :global(html.nav-no-anim) .menu :global(*) {
     transition: none !important;

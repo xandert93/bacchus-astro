@@ -3,7 +3,6 @@
 import BaseLayout from "@layouts/BaseLayout.astro"
 import IntroSplit from "@components/sections/IntroSplit.astro"
 import PageHero from "@components/sections/PageHero.astro"
-import ArrowIcon from "@components/ui/ArrowIcon.astro"
 import OccasionCards from "@components/sections/OccasionCards.astro"
 import GalleryPreview from "@components/sections/GalleryPreview.astro"
 import Lightbox from "@components/ui/Lightbox.astro"
@@ -11,6 +10,7 @@ import ProcessSteps from "@components/sections/ProcessSteps.astro"
 import FaqSection from "@components/sections/FaqSection.astro"
 import EnquirySection from "@components/enquiry/EnquirySection.astro"
 import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
+import Button from "@components/ui/Button.astro"
 ---
 
 <BaseLayout
@@ -31,13 +31,12 @@ import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
       Mdina's walls.
     </Fragment>
     <Fragment slot="ctas">
-      <a href="#enquire" class="button button-gradient button-shimmer">
+      <Button href="#enquire" variant="gradient" shimmer arrow>
         <span>Request a proposal</span>
-        <ArrowIcon />
-      </a>
-      <a href="/gallery" class="button button-ghost">
+      </Button>
+      <Button href="/gallery" variant="ghost">
         <span>See the room</span>
-      </a>
+      </Button>
     </Fragment>
   </PageHero>
 

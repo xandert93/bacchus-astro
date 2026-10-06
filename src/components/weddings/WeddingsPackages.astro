@@ -11,6 +11,7 @@ import Photo from "@components/ui/Photo.astro"
 import { RECEPTION_TIERS } from "@data/packages/reception"
 import { BANQUET_TIERS } from "@data/packages/banquet"
 import { HIGH_TEA_TIERS } from "@data/packages/high-tea"
+import Button from "@components/ui/Button.astro"
 
 const DINING = [
   {
@@ -47,8 +48,6 @@ const DINING = [
     photo: { src: "weddings/high-tea", alt: "The High Tea spread, laid out for guests" },
   },
 ]
-
-const forwardArrow = "M1 5h11M8.5 1.5 12 5 8.5 8.5"
 ---
 
 <section class="section-padding on-dark" id="packages">
@@ -117,18 +116,15 @@ const forwardArrow = "M1 5h11M8.5 1.5 12 5 8.5 8.5"
                   ))}
                 </ol>
               </div>
-              <span class="button button-gradient package-card-link" aria-hidden="true">
+              <Button
+                as="span"
+                variant="gradient"
+                class="package-card-link"
+                aria-hidden="true"
+                arrow
+              >
                 <span>View menu</span>
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-                  <path
-                    d={forwardArrow}
-                    stroke="currentColor"
-                    stroke-width="1.4"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </span>
+              </Button>
             </div>
           </article>
         </li>
@@ -171,18 +167,15 @@ const forwardArrow = "M1 5h11M8.5 1.5 12 5 8.5 8.5"
           Local or foreign wine by the bottle, a full open bar for the night, or a themed
           bar built around the two of you.
         </p>
-        <span class="button button-gradient package-card-link" aria-hidden="true">
+        <Button
+          as="span"
+          variant="gradient"
+          class="package-card-link"
+          aria-hidden="true"
+          arrow
+        >
           <span>View menu</span>
-          <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
-            <path
-              d={forwardArrow}
-              stroke="currentColor"
-              stroke-width="1.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </span>
+        </Button>
       </div>
     </article>
   </div>

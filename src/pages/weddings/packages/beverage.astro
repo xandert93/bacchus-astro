@@ -23,10 +23,10 @@ import PackageMenuNote from "@components/packages/PackageMenuNote.astro"
 import PageHero from "@components/sections/PageHero.astro"
 import EnquirySection from "@components/enquiry/EnquirySection.astro"
 import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
-import ArrowIcon from "@components/ui/ArrowIcon.astro"
 import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
 // After the components, so it overrides the shared package styles.
 import "./_beverage.css"
+import Button from "@components/ui/Button.astro"
 
 // The "closer look" photo strip.
 const carouselSlides = [
@@ -72,18 +72,17 @@ const carouselSlides = [
       Four categories, each explored in full below.
     </Fragment>
     <Fragment slot="ctas">
-      <a href="#enquire" class="button button-gradient button-shimmer">
+      <Button href="#enquire" variant="gradient" shimmer arrow>
         <span>Book a tasting</span>
-        <ArrowIcon />
-      </a>
-      <a
+      </Button>
+      <Button
         href="/docs/bacchus-wedding-catalogue.pdf"
+        variant="ghost"
         target="_blank"
         rel="noopener"
-        class="button button-ghost"
       >
         <span>View the catalogue</span>
-      </a>
+      </Button>
     </Fragment>
   </PageHero>
 
