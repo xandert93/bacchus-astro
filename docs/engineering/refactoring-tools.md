@@ -2,6 +2,10 @@
 
 Scripts in `scripts/` for proving a refactor changed nothing it shouldn't.
 
+`scripts/` also holds `sanity-migrate.mjs`, which is not one of these: it
+turns `src/data/` into a Sanity import file. See
+`docs/planning/sanity-rollout.md`, step 2.
+
 ---
 
 ## Moving styles

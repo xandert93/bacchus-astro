@@ -15,6 +15,7 @@
     "lint": "eslint . --cache && stylelint \"src/**/*.{css,astro}\"",
     "lint:fix": "eslint . --cache --fix && stylelint \"src/**/*.{css,astro}\" --fix",
     "test:e2e": "playwright test",
+    "sanity:migrate": "node scripts/sanity-migrate.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
