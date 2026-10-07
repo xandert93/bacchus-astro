@@ -6,8 +6,8 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev",
-    "dev:host": "astro dev --host 0.0.0.0",
+    "dev": "astro dev --port 3000",
+    "dev:host": "astro dev --port 3000 --host 0.0.0.0",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
