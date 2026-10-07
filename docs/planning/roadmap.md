@@ -9,9 +9,10 @@ itself (what we chose, why, and how payments work) is in
 ## Contents
 
 1. [Migration phases](#migration-phases)
-2. [Events features, in priority order](#events-features-in-priority-order)
-3. [Other planned features](#other-planned-features)
-4. [Backlog](#backlog)
+2. [Launch checklist](#launch-checklist)
+3. [Events features, in priority order](#events-features-in-priority-order)
+4. [Other planned features](#other-planned-features)
+5. [Backlog](#backlog)
 
 ---
 
@@ -31,6 +32,17 @@ itself (what we chose, why, and how payments work) is in
 3. **Sanity.** Schemas are drafted in `sanity/`.
 4. **Forms and payments.** Hosting is done: Cloudflare builds and deploys
    `main` on every push (`docs/architecture/tech-stack.md`, "Hosting").
+
+---
+
+## Launch checklist
+
+Things that are right before launch and wrong after it. Undo each one on the
+day the site goes live on Bacchus's own domain.
+
+- **Remove the `noindex` header.** `public/_headers` tells search engines not
+  to list any page, because the `workers.dev` address is public. Left in
+  place after launch, it would keep the real site out of Google.
 
 ---
 
