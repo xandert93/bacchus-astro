@@ -9,7 +9,7 @@ import { defineField, defineType } from "sanity"
  * is not built yet.
  *
  * The intended pipeline, for context on why the fields are shaped this way: a
- * Vercel Cron job (scheduled and polling daily — not a webhook, because this
+ * Cloudflare Cron Trigger (a Worker run on a schedule, polling daily — not a webhook, because this
  * is a time-based trigger rather than a reaction to an event) moves a booking
  * Confirmed -> Completed some days after the event date, which triggers a
  * review-request email carrying an explicit opt-in for name and photo use.

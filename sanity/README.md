@@ -1,6 +1,6 @@
 # Bacchus — Sanity schemas
 
-Content model for the Bacchus production stack (Astro + Sanity + Vercel),
+Content model for the Bacchus production stack (Astro + Sanity + Cloudflare),
 designed ahead of that stack being opened. **Nothing here is connected to a
 live Sanity project yet** — there is no project ID, no dataset, and no
 `package.json`. These are the schema definitions, written to be dropped into a

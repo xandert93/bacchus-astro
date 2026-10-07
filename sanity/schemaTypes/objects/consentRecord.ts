@@ -18,7 +18,7 @@ import { defineField, defineType } from "sanity"
  *    (`#consent` on every enquiry form) — this is where it lands.
  *
  * 3. Personal data needs a retention horizon. `retentionReviewAt` is the hook
- *    for the scheduled purge: a Vercel Cron job (the same mechanism roadmap
+ *    for the scheduled purge: a Cloudflare Cron Trigger (the same mechanism roadmap
  *    step 5 uses to transition Confirmed -> Completed) queries records past
  *    their review date. Without a date on the record there is nothing to
  *    query, and "we will delete it eventually" is not a retention policy.
