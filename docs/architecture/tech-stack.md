@@ -13,21 +13,22 @@ the client.
 
 1. [What we chose](#what-we-chose)
 2. [Options weighed](#options-weighed)
-3. [The live site today](#the-live-site-today)
-4. [Payments](#payments)
+3. [Hosting](#hosting)
+4. [The live site today](#the-live-site-today)
+5. [Payments](#payments)
 
 ---
 
 ## What we chose
 
-**Astro + Sanity + Stripe, hosted on Vercel.** One tool per job.
+**Astro + Sanity + Stripe, hosted on Cloudflare.** One tool per job.
 
 - **Astro** (this repo): the site. Ships almost no JavaScript by default, and
   the prototype's vanilla JS carried over without a framework rewrite.
 
 - **Sanity**: the CMS for anything staff should edit. Schemas are drafted in
-  `../bacchus-prototype/sanity/` (34 types, Studio structure, GROQ queries)
-  but not connected to a project yet. **Read its `README.md` before touching
+  `sanity/` at the repo root (34 types, Studio structure, GROQ queries) but
+  not connected to a project yet. **Read its `README.md` before touching
   it.** Three decisions to know:
   - **Every unconfirmed fact carries a `provenance`** (confirmed, unconfirmed,
     contested, placeholder). The bronze and oxblood notes then come from the
@@ -39,10 +40,11 @@ the client.
     is an easy way to break the grid. `venueClosure` is the one type added
     beyond what was agreed; it isn't wired in yet.
 
-- **Vercel**: hosting, plus server functions (forms, quotes, payments) through
-  Astro's API routes. No need for Next.js.
-  - **Analytics**: Vercel Web Analytics (no cookies, so no consent banner)
-    and Speed Insights (real visitors' page speed). See
+- **Cloudflare Workers**: hosting, plus server functions (forms, quotes,
+  payments) through Astro's API routes and the Cloudflare adapter. No need
+  for Next.js. See [Hosting](#hosting).
+  - **Analytics**: Cloudflare Web Analytics (no cookies, so no consent
+    banner), which also reports real visitors' page speed. See
     `docs/operations/analytics-and-measurement.md`.
 
 - **Stripe** for card deposits, alongside bank transfer. See
@@ -76,6 +78,49 @@ step backwards.
 
 **Why not keep Shopify for payments**: Shopify is built around products,
 stock and shipping. A deposit would need a fake "product" as a workaround.
+
+---
+
+## Hosting
+
+**Cloudflare Workers, deployed by Workers Builds.** Every push to `main`
+builds the site on Cloudflare and puts it live on its `workers.dev` address;
+the result shows as a "Workers Builds" check on the commit in GitHub. This is
+Workers with static assets, not the older Cloudflare Pages product.
+
+**Why not Vercel**, the original plan: Vercel's free (Hobby) plan is for
+personal, non-commercial use only, so a restaurant's site would need the Pro
+plan from day one. Cloudflare's free plan has no such rule.
+
+**What the free plan covers**, from Cloudflare's pricing page (2026-10-07;
+check it again before quoting the client):
+
+- **Static pages, images and scripts**: free and unlimited. Today that's the
+  whole site.
+- **Server code** (forms, quotes, payments, once built): 100,000 requests a
+  day, and **10 ms of CPU time per request**. CPU time counts only work the
+  code does, not time spent waiting on Sanity or Stripe, so a form handler
+  fits easily.
+- **Workers Paid** ($5 a month minimum): 10 million requests and 30 million
+  CPU milliseconds a month included, and up to 30 seconds of CPU per request
+  by default. Needed only if something outgrows the 10 ms.
+
+**What the Workers runtime can't do.** Server code runs in Cloudflare's own
+JavaScript runtime, not full Node.js: no file system and no long-running
+processes, and some npm packages that rely on Node won't run (a compatibility
+flag covers most of the common ones). Check each server-side dependency
+before choosing it.
+
+**PDF quotes are the case to watch.** The usual way to turn a page into a
+PDF, a headless Chrome (Puppeteer), can't run inside a Worker. Two options:
+
+- **Cloudflare Browser Rendering**: a headless Chrome Cloudflare runs for
+  you. The free plan allows 10 minutes a day; Workers Paid includes 10 hours
+  a month. Best if a quote should look exactly like a web page.
+- **A PDF library that runs on Workers** (`pdf-lib`, for example): draws the
+  PDF in code, with no browser. Free, but the layout is built by hand.
+
+Decide when quotes are built (step 4 of the roadmap).
 
 ---
 

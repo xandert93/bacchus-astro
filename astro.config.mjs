@@ -17,8 +17,9 @@ export default defineConfig({
     // The package pages live under /weddings/packages/<leaf>, but there is no
     // packages overview page: Weddings' own packages section already is one.
     // So the bare parent path (typed, or a trimmed URL) goes there instead of
-    // 404ing. In this static build Astro writes a small meta-refresh page;
-    // on Vercel it becomes a real HTTP redirect.
+    // 404ing. In this static build Astro writes a small meta-refresh page,
+    // which is what Cloudflare serves; a real HTTP redirect would need the
+    // Cloudflare adapter or a public/_redirects file.
     "/weddings/packages": "/weddings#packages",
   },
 })

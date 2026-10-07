@@ -10,8 +10,8 @@ import path from "node:path"
 import BareLayout from "@layouts/BareLayout.astro"
 import { DRAFT_PAGES, PROTOTYPE_ARCHIVES, SANDBOX_STAGES, type Sandbox } from "./registry"
 
-// The prototype copies are Git-ignored, so on another machine (or a Vercel
-// preview) they aren't there. List only the ones that are.
+// The prototype copies are Git-ignored, so on another machine (or a
+// Cloudflare preview build) they aren't there. List only the ones that are.
 const isOnThisMachine = (archive: Sandbox) =>
   existsSync(path.join(process.cwd(), "public", archive.href))
 

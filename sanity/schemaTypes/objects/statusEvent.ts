@@ -18,7 +18,7 @@ import { defineField, defineType } from "sanity"
  *    A record of the transition is what lets a mis-fired notification batch be
  *    traced instead of guessed at.
  *
- * 3. Completion is automated. A Vercel Cron job moves Confirmed -> Completed
+ * 3. Completion is automated. A Cloudflare Cron Trigger moves Confirmed -> Completed
  *    some days after the event and that triggers a review-request email. If
  *    that job runs twice, the history is what shows it.
  *

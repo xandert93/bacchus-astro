@@ -29,7 +29,8 @@ itself (what we chose, why, and how payments work) is in
    Bacchus). Every photo is built from its original where one exists; see
    `docs/engineering/images.md`.
 3. **Sanity.** Schemas are drafted in `sanity/`.
-4. **Vercel deploy, forms, payments.**
+4. **Forms and payments.** Hosting is done: Cloudflare builds and deploys
+   `main` on every push (`docs/architecture/tech-stack.md`, "Hosting").
 
 ---
 

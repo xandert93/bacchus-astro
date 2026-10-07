@@ -11,48 +11,56 @@ Nothing here is built. The current prototype has no analytics of any kind.
 
 ## What the planned stack gives us
 
-Vercel is already the hosting plan, and it carries two separate products.
+The site is hosted on Cloudflare (`docs/architecture/tech-stack.md`), and
+Cloudflare has one free product that covers both questions we care about.
+This replaced the original plan of Vercel Web Analytics and Speed Insights
+when hosting moved from Vercel to Cloudflare on 2026-10-07.
 
-### Vercel Web Analytics
+### Cloudflare Web Analytics
 
-One package, one component in the root layout. Reports visitors, page views,
-top pages, referrers, countries, and **device type** — which is the number we
-wanted when the mobile-versus-desktop split came up during the nav work and
-nobody could answer it.
+One small script tag in the root layout, plus a site entry in the Cloudflare
+dashboard. Reports visitors, page views, top pages, referrers, countries, and
+**device type** — which is the number we wanted when the mobile-versus-desktop
+split came up during the nav work and nobody could answer it.
 
 The important property: **it sets no cookies.** Under GDPR that means **no
 consent banner**, which matters because Bacchus is an EU business and a cookie
 banner is both a legal obligation and a conversion tax on a site whose job is
 to produce enquiries.
 
-### Vercel Speed Insights
+### Real visitors' page speed
 
-Separate product, same one-line setup. Reports **Core Web Vitals from real
-visitors** — actual load and interaction timings on the devices and connections
-people really have, rather than a throttled simulation in DevTools.
+The same product reports **Core Web Vitals from real visitors** (LCP, INP,
+CLS) — actual load and interaction timings on the devices and connections
+people really have, rather than a throttled simulation in DevTools. On Vercel
+this was a separate product, Speed Insights; here it comes with the
+analytics.
 
 This is the one that would properly diagnose the "site failed on a weak
 underground signal" problem in the backlog. A lab test tells you what a
 simulated slow connection does; this tells you what Bacchus's actual visitors
 in Malta experienced.
 
-### Cost
+### Cost and caveats
 
-Both have free tiers. **Check Vercel's live pricing page before quoting any
-figure to the client** — same caution already applied to the Stripe fee and
-Mapbox load figures elsewhere in these docs.
+Free. **Check Cloudflare's current documentation before quoting anything to
+the client** — same caution already applied to the Stripe fee and Mapbox load
+figures elsewhere in these docs. Two things to confirm when it's set up:
+exactly which breakdowns it offers, and whether figures are sampled (some
+Cloudflare analytics report a sample of visits, scaled up, rather than every
+one).
 
 ---
 
-## Alternatives, if the Vercel pair is ever outgrown
+## Alternatives, if Cloudflare's analytics is ever outgrown
 
-| Tool                                      | Cost      | Cookie banner? | Notes                                                                   |
-| ----------------------------------------- | --------- | -------------- | ----------------------------------------------------------------------- |
-| **Vercel Web Analytics + Speed Insights** | free tier | No             | Already on the platform. Start here.                                    |
-| **Plausible** or **Fathom**               | ~€9–14/mo | No             | Privacy-first, EU-hosted options, more detail than Vercel's.            |
-| **Google Analytics 4**                    | free      | **Yes**        | Far more detailed, much heavier, and the consent banner is unavoidable. |
+| Tool                         | Cost      | Cookie banner? | Notes                                                                   |
+| ---------------------------- | --------- | -------------- | ----------------------------------------------------------------------- |
+| **Cloudflare Web Analytics** | free      | No             | Already on the platform. Start here.                                    |
+| **Plausible** or **Fathom**  | ~€9–14/mo | No             | Privacy-first, EU-hosted options, more detail than Cloudflare's.        |
+| **Google Analytics 4**       | free      | **Yes**        | Far more detailed, much heavier, and the consent banner is unavoidable. |
 
-The honest ranking for this project: start with the Vercel pair, move to
+The honest ranking for this project: start with Cloudflare's, move to
 Plausible only if a specific question comes up that it cannot answer. GA4 is
 hard to justify for a single-venue site given the banner.
 
@@ -106,8 +114,8 @@ Three reasons it is still worth raising with them:
    "should the Secret Garden get its own page" or "is anyone reading the
    package pages" stop being matters of taste.
 
-3. **It is nearly free.** Two lines of setup on hosting that is already
-   planned, with no cookie banner and no monthly fee at this traffic level.
+3. **It is free.** One script tag on hosting that is already in place, with
+   no cookie banner and no monthly fee.
    The cost of mentioning it is zero and the downside is nil.
 
 **How to pitch it without over-promising:** offer it as visibility, not as
@@ -121,7 +129,7 @@ against a number nobody controls.
 ## Related open items elsewhere
 
 - The slow-connection failure in `CLAUDE.md`'s backlog is the clearest case
-  for Speed Insights — it is currently unreproduced, and field data would
+  for real-visitor page speed — it is currently unreproduced, and field data would
   settle it.
 - The device split would also inform the image-weight work, since the
   `srcset` gap hurts mobile far more than desktop.
