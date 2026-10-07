@@ -71,6 +71,9 @@ The full map is `docs/architecture/structure.md`. The rules that decide it:
 
 - Comments in markup use `{/* */}`, not `<!-- -->`: JSX-style comments are
   stripped at build, HTML comments ship to every visitor.
+- Never write a tag name with its angle bracket (a script tag, say) in a
+  comment in an `.astro` file: the dev server's dependency scan reads it as a
+  real one and fails (`known-bugs.md`, 2).
 - Links use extensionless routes (`/weddings`), not `weddings.html`. Pages not
   yet ported 404 in dev, as expected.
 - **Whitespace is JSX-style (Astro 7's default `compressHTML: "jsx"`).** A
