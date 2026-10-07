@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config"
+import { draftPages } from "./src/integrations/draft-pages"
 
 // https://astro.build/config
 export default defineConfig({
@@ -10,6 +11,8 @@ export default defineConfig({
   // (the nav's .active colour was the first casualty). This keeps the
   // cascade exactly as it was in one big stylesheet.
   scopedStyleStrategy: "where",
+  // Unfinished pages: built in dev and draft builds, never on the live site.
+  integrations: [draftPages()],
   redirects: {
     // The package pages live under /weddings/packages/<leaf>, but there is no
     // packages overview page: Weddings' own packages section already is one.
