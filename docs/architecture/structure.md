@@ -44,11 +44,10 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   (route, page file, stage, description, dates), alongside the prototype's
   sandboxes.
 - **Who builds them**: `src/integrations/draft-pages.ts` adds their routes
-  in `astro dev`, in any build run with `INCLUDE_DRAFTS=true` (the
-  Playwright build), and in Cloudflare's preview builds of any branch but
-  `main` (told apart by the `WORKERS_CI_BRANCH` variable Cloudflare sets). A
-  plain `astro build`, and Cloudflare's build of `main` (the live site), leave
-  them out, and fail if a draft got in anyway.
+  in `astro dev`, and in any build run with `INCLUDE_DRAFTS=true`: the
+  Playwright build, and Cloudflare's branch previews, which set it as a build
+  variable under "Previews Base" in the dashboard. A plain `astro build`, the
+  live site, leaves them out, and fails if a draft got in anyway.
 - **`/sandboxes`** (`src/drafts/sandboxes.astro`, on `BareLayout`) lists
   every draft and prototype sandbox by stage. The footer links to it only
   when drafts are built (`import.meta.env.DRAFTS_INCLUDED`). Prototype copies

@@ -3,30 +3,15 @@
 // build or the dev server; this one adds the drafts' routes only when drafts
 // are wanted:
 //   - always in `astro dev`;
-//   - in a build with INCLUDE_DRAFTS=true (the Playwright test build);
-//   - in Cloudflare's preview builds, for any branch but main;
-//   - never in a plain `astro build`, or Cloudflare's build of main, which is
-//     what the live site runs.
+//   - in a build with INCLUDE_DRAFTS=true (the Playwright test build, and
+//     Cloudflare's branch previews, which set it under "Previews Base");
+//   - never in a plain `astro build`, which is what the live site runs.
 // The pages themselves sit in src/drafts/, outside src/pages/, so nothing
 // else can build them. See docs/architecture/structure.md, "Draft pages".
 import type { AstroIntegration } from "astro"
 import { DRAFT_PAGES, SANDBOXES_INDEX } from "../drafts/registry"
 
 const DRAFT_ROUTES = [SANDBOXES_INDEX, ...DRAFT_PAGES]
-
-// The branch Cloudflare puts live. Every other branch it builds is a preview.
-const PRODUCTION_BRANCH = "main"
-
-// Cloudflare's Workers Builds sets WORKERS_CI_BRANCH on every build it runs.
-// Its dashboard has one set of build variables for every branch (its Preview
-// settings are runtime variables for the Worker, which a static build never
-// reads), so INCLUDE_DRAFTS can't be set there for previews alone; the branch
-// name is what tells them apart.
-const isCloudflarePreviewBuild = () => {
-  const branch = process.env.WORKERS_CI_BRANCH
-
-  return Boolean(branch) && branch !== PRODUCTION_BRANCH
-}
 
 // "/secure-booking" and the build's "secure-booking/" name the same page.
 const trimSlashes = (path: string) => path.replace(/^\/+|\/+$/g, "")
@@ -38,10 +23,7 @@ export const draftPages = (): AstroIntegration => {
     name: "bacchus:draft-pages",
     hooks: {
       "astro:config:setup": ({ command, injectRoute, updateConfig, logger }) => {
-        includeDrafts =
-          command === "dev" ||
-          process.env.INCLUDE_DRAFTS === "true" ||
-          isCloudflarePreviewBuild()
+        includeDrafts = command === "dev" || process.env.INCLUDE_DRAFTS === "true"
 
         // Lets components ask whether drafts are in this build, through
         // import.meta.env.DRAFTS_INCLUDED (the footer's Sandboxes link).
