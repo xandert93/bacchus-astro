@@ -58,7 +58,7 @@ const { items, ...passedAttributes } = Astro.props
 
   /* A custom property rather than a parent override, so a page can match the
      items to its own section background (the deposit page's limestone)
-     without having to out-rank this file's scoped selector. */
+     without reaching into this component's class names. */
   .faq-item {
     background: var(--faq-item-background, var(--paper));
   }

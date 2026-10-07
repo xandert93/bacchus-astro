@@ -1,4 +1,4 @@
-/* The deposit page's own styles (/secure-booking), imported by the page.
+/* The deposit page's own styles (/secure-booking, a draft), imported by the page.
    Its own namespace (secure-booking-*), deliberately apart from the site's
    shared component classes: the page is a close port of an outside (Lovable)
    design, so it mirrors that layout rather than extending ours
@@ -546,16 +546,13 @@
   color: var(--muted-ink);
 }
 
-/* Three classes, not two: <Button>'s own scoped .button rule is two
-   (.button plus Astro's scoping attribute), and which of two equal rules wins
-   would otherwise depend on the order the stylesheets load in. */
-.secure-booking-pay-card .button.secure-booking-pay-button {
+.secure-booking-pay-card .secure-booking-pay-button {
   margin-top: 24px;
   font-size: 12px;
 }
 
 @media (--below-secure-booking-small) {
-  .secure-booking-pay-card .button.secure-booking-pay-button {
+  .secure-booking-pay-card .secure-booking-pay-button {
     width: 100%;
     justify-content: center;
   }
