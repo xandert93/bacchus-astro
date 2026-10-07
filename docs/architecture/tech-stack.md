@@ -122,6 +122,11 @@ PDF, a headless Chrome (Puppeteer), can't run inside a Worker. Two options:
 
 Decide when quotes are built (step 4 of the roadmap).
 
+**Until launch, nothing is indexed.** The `workers.dev` address is public, so
+`public/_headers` sends `X-Robots-Tag: noindex` with every page, telling
+search engines not to list it. Removing it is on the roadmap's launch
+checklist.
+
 ---
 
 ## The live site today
