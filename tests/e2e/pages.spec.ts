@@ -14,6 +14,7 @@ const PAGES = [
   { path: "/weddings/packages/banquet", title: /Banquet/ },
   { path: "/weddings/packages/high-tea", title: /High Tea/ },
   { path: "/weddings/packages/beverage", title: /Beverage/ },
+  { path: "/secure-booking", title: /Secure Your Booking/ },
 ]
 
 for (const { path, title } of PAGES) {

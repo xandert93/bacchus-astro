@@ -1,0 +1,36 @@
+---
+// /secure-booking: the deposit page, front end only (roadmap step 4). A draft
+// (src/drafts/registry.ts): built in dev and draft builds, not yet for the
+// live site. In real
+// use a couple reaches it from a unique link emailed once staff approve their
+// enquiry, so it's never linked from the site and stays out of search
+// results. Until bookings exist it shows the placeholder booking in
+// src/data/demo-booking.ts.
+import BaseLayout from "@layouts/BaseLayout.astro"
+import SecureCheckoutBadge from "@components/secure-booking/SecureCheckoutBadge.astro"
+import SecureBookingHero from "@components/secure-booking/SecureBookingHero.astro"
+import BookingSummary from "@components/secure-booking/BookingSummary.astro"
+import DepositPaymentOptions from "@components/secure-booking/DepositPaymentOptions.astro"
+import PaymentSupport from "@components/secure-booking/PaymentSupport.astro"
+import PaymentFaq from "@components/secure-booking/PaymentFaq.astro"
+import PaymentHelpButton from "@components/secure-booking/PaymentHelpButton.astro"
+import BookingAssurances from "@components/secure-booking/BookingAssurances.astro"
+import "./_secure-booking.css"
+---
+
+<BaseLayout
+  title="Secure Your Booking — Bacchus, Mdina"
+  checkout
+  noIndex
+  showVisitSection={false}
+>
+  <SecureCheckoutBadge slot="header" />
+
+  <SecureBookingHero />
+  <BookingSummary />
+  <DepositPaymentOptions />
+  <PaymentSupport />
+  <PaymentFaq />
+  <PaymentHelpButton />
+  <BookingAssurances />
+</BaseLayout>

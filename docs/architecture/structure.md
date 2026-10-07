@@ -12,7 +12,12 @@ version is in `CLAUDE.md`; this is the full map.
   `components/layout/SiteHead.astro`.
 - `src/layouts/BaseLayout.astro`: `<head>`, grain, nav, drawer, Visit
   section, footer, the sitewide script. Props: `title`, `showEnquireLink`,
-  `menuBackgroundImage`. Has a named slot `after-footer` for page overlays.
+  `menuBackgroundImage`, `showVisitSection`, `checkout` (SiteHeader's
+  checkout bar, filled from the `header` slot, and no drawer) and `noIndex`.
+  Has a named slot `after-footer` for page overlays.
+- `/secure-booking`, the deposit page (a draft), is a checkout: brand-only bar, no
+  drawer, kept out of search results, never linked from the site. It reads
+  the placeholder booking in `src/data/demo-booking.ts`.
 - **Pages compose; components hold the markup.** A page file is frontmatter
   plus a list of sections (the homepage is about 45 lines). Content that
   repeats or will come from Sanity lives in `src/data/` and is rendered with
@@ -46,8 +51,10 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   every draft and prototype sandbox by stage. The footer links to it only
   when drafts are built (`import.meta.env.DRAFTS_INCLUDED`). Prototype copies
   show only on a machine that has `public/prototype/`.
-- **Finishing a draft**: move its page into `src/pages/`, remove its
-  registry entry, and add it to `tests/e2e/pages.spec.ts`.
+- **Tests**: the Playwright build includes drafts, so a draft goes in
+  `tests/e2e/pages.spec.ts` like any page.
+- **Finishing a draft**: move its page into `src/pages/` and remove its
+  registry entry.
 
 ---
 
@@ -57,7 +64,9 @@ there is no long-lived branch to keep rebasing (trunk-based development).
 
 - `ui/`: small reusable parts. `Button`, `Photo`, `HeroImage`,
   `GalleryTile`, `Lightbox`, `CheckList`, `SocialLinks`, `ArrowIcon`,
-  `Particles`, `ProposedBadge` (the pill on every link to an unbuilt page).
+  `Particles`, `ProposedBadge` (the pill on every link to an unbuilt page),
+  `FaqAccordion` (the questions and answers inside `FaqSection`, also used
+  on its own).
 - `forms/`: form controls. `FormField` (label, error, notes), `TextInput`
   (every input and the textarea), `ChipGroup`, `OptionCardGroup`. Used by the
   enquiry wizard and the waitlist popover.
@@ -80,6 +89,11 @@ there is no long-lived branch to keep rebasing (trunk-based development).
 - `home/`, `weddings/`: sections only one page uses (`HomeHero`,
   `HomeStory`, `HomeEventsSection`, `WeddingsPackages`,
   `WeddingsAvailability`, …).
+- `secure-booking/`: the deposit page's sections (`SecureBookingHero`,
+  `BookingSummary`, `DepositPaymentOptions` with its `BankDetailRow`s,
+  `PaymentSupport`, `PaymentFaq`, `BookingAssurances`, `PaymentHelpButton`),
+  the `SecureBookingIntro` heading block they share, `SecureCheckoutBadge`
+  for the bar, and `SecureBookingIcon`, the page's line icons.
 
 ### `<Button>`
 
@@ -115,6 +129,10 @@ Every button is `<Button>` (`ui/Button.astro`).
 - `src/data/packages/`: the four packages' tiers and menus (`types.ts` has
   the shape, modelled on the drafted Sanity schemas) and Reception's sixteen
   stations. Catalogue house-style notes are at the top of each file.
+- `src/data/contact.ts`: the venue's phone and email, for the Visit section
+  and the deposit page's support cards.
+- `src/data/demo-booking.ts`: the deposit page's placeholder booking, in
+  the shape a real one will take.
 - `src/data/testimonials.ts`: the four testimonials. `Testimonials.astro`
   renders the picker cards and dots from it at build time; `Testimonials.js`
   renders the active quote (it has to measure it to cap it at five lines).
@@ -142,11 +160,12 @@ Every button is `<Button>` (`ui/Button.astro`).
   owner sits beside that owner and is named after it
   (`packages/PackageTierSection.css` beside `PackageTierSection.astro`). A
   page's own file sits beside the page with a leading underscore
-  (`_beverage.css`, `_gallery.js`), which Astro never treats as a route.
-  `src/styles/` holds only files with no single owner: `global.css`, the
-  shared `tabs.css` and `gallery-grid.css`, and the parked
-  `secure-booking.css` (nothing imports it until the deposit page is ported,
-  roadmap step 4).
+  (`_beverage.css`, `_gallery.js`; a draft's `_secure-booking.css`), which Astro never
+  treats as a route. `src/styles/` holds only files with no single owner:
+  `global.css` and the shared `tabs.css` and `gallery-grid.css`.
+- **`_secure-booking.css` is one page-level stylesheet**, not a `<style>` per
+  component: it was ported whole, in its own `secure-booking-*` namespace.
+  Splitting it into the components is a later pass.
 - **Elements without the file's scoping attribute need `:global()`.** That
   means elements a script creates (calendar cells, particles, the
   testimonial quote's `<em>`) and elements rendered through a slot or by a
@@ -166,7 +185,7 @@ Every button is `<Button>` (`ui/Button.astro`).
 - Component scripts: `EnquiryForm.js` (imports `AvailabilityCalendar.js` so
   the calendar runs first), `AvailabilityCalendar.js` (every calendar, the
   quick-pick modal and the waitlist popover), `Testimonials.js`,
-  `FaqSection.js`, `Lightbox.js`, `PhotoCarousel.js`,
+  `FaqAccordion.js`, `Lightbox.js`, `PhotoCarousel.js`,
   `PackageTierSection.js` (the one tier controller for all four package
   pages), `ReceptionStations.js` (Reception's Stations only), `HomeStory.js`
   (the counters), `HomeMarquee.js`, `WeddingsPackages.js` (the triptych's

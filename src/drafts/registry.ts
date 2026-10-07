@@ -40,7 +40,18 @@ export const SANDBOXES_INDEX = {
   entrypoint: "./src/drafts/sandboxes.astro",
 }
 
-export const DRAFT_PAGES: DraftPage[] = []
+export const DRAFT_PAGES: DraftPage[] = [
+  {
+    name: "Secure a Booking",
+    stage: "accepted",
+    type: "Page",
+    description:
+      "The deposit page: booking summary, card or bank transfer, help and payment questions. Front end only, with a placeholder booking, and not wired to Stripe or real bookings yet (roadmap step 4). In real use it's reached only from the link emailed once staff approve an enquiry.",
+    href: "/secure-booking",
+    entrypoint: "./src/drafts/secure-booking.astro",
+    lastWorkedOn: "7 Oct 2026",
+  },
+]
 
 // The prototype's sandboxes, copied as they were into public/prototype/,
 // which Git ignores: they exist only on the machine they were copied to. The

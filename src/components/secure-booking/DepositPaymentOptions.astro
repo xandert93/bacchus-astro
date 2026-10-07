@@ -1,0 +1,98 @@
+---
+// "Complete your deposit": the two ways to pay, side by side from laptop
+// width. Card is a preview button until Stripe is connected (roadmap step 4);
+// pressing it reveals a note saying so (DepositPaymentOptions.js). Bank
+// transfer lists the details with copy buttons, and a warning that they're
+// fake.
+import Button from "@components/ui/Button.astro"
+import BankDetailRow from "./BankDetailRow.astro"
+import SecureBookingIcon from "./SecureBookingIcon.astro"
+import SecureBookingIntro from "./SecureBookingIntro.astro"
+import { DEMO_BOOKING } from "@data/demo-booking"
+
+const { deposit, bankTransfer } = DEMO_BOOKING
+---
+
+<section class="secure-booking-pay-section">
+  <div class="secure-booking-container-large">
+    <SecureBookingIntro eyebrow="Choose how to pay">
+      Complete your <em>deposit</em>
+      <Fragment slot="lead">
+        Pay securely by card for instant confirmation, or transfer directly to our
+        account. Your date is held for 7 days while the deposit is processed.
+      </Fragment>
+    </SecureBookingIntro>
+
+    <div class="secure-booking-pay-grid">
+      <div class="secure-booking-hover-card secure-booking-pay-card">
+        <div class="secure-booking-card-head">
+          <span class="secure-booking-icon-badge secure-booking-pay-icon-gold">
+            <SecureBookingIcon name="credit-card" size={24} />
+          </span>
+          <h3>Pay by card</h3>
+        </div>
+        <p>
+          Secure card payment, confirmed instantly. A processing fee (around 1.5–2% for EU
+          cards) applies.
+        </p>
+        <Button
+          variant="gradient"
+          arrow
+          class="secure-booking-pay-button"
+          id="payCardButton"
+        >
+          <span>Pay {deposit.display} by card</span>
+        </Button>
+        <p class="secure-booking-pay-caption" id="cardNote">
+          Card checkout will connect to Stripe in the live build — this button is a
+          preview.
+        </p>
+      </div>
+
+      <div class="secure-booking-hover-card secure-booking-pay-card">
+        <div class="secure-booking-card-head">
+          <span class="secure-booking-icon-badge secure-booking-pay-icon-cream">
+            <SecureBookingIcon name="bank" size={24} />
+          </span>
+          <h3>Pay by bank transfer</h3>
+        </div>
+        <p>
+          Transfer your deposit directly. We'll confirm your booking once it's received
+          and matched — usually within 2 business days.
+        </p>
+
+        <div class="secure-booking-bank-details">
+          <BankDetailRow
+            label="Account name"
+            value={bankTransfer.accountName}
+            copyLabel="Copy account name"
+          />
+          <BankDetailRow label="IBAN" value={bankTransfer.iban} copyLabel="Copy IBAN" />
+          <BankDetailRow
+            label="Amount to transfer"
+            value={deposit.display}
+            copyText={deposit.plain}
+            copyLabel="Copy amount"
+          />
+          <BankDetailRow
+            label="Reference"
+            value={bankTransfer.reference}
+            copyLabel="Copy reference number"
+          />
+        </div>
+
+        <div class="secure-booking-warning-box">
+          <SecureBookingIcon name="warning" />
+          <span>
+            Demo bank details, shown for preview only — please don't send funds to this
+            account.
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import "./DepositPaymentOptions.js"
+</script>

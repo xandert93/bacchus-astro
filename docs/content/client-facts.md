@@ -247,7 +247,8 @@ Everything below is illustrative and is labelled as such on the page.
 
 - **The deposit page** (`secure-booking`): the whole booking summary (quote
   reference, couple's name, date, time, guests, package, line items, deposit)
-  is fictional and flagged. The IBAN, account name and reference are fake, with
+  is fictional and flagged. The flag names the deposit terms too, since the
+  30/70 split shown is the contested one. The IBAN, account name and reference are fake, with
   a "do not send funds to this account" warning. "Held for 7 days" is also
   illustrative: kept as a specific number on the user's call, but it is not a
   real policy.

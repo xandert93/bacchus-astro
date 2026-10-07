@@ -1,6 +1,7 @@
 ---
 // "Come and see it for yourself" - identical on every page in the prototype.
 import Photo from "@components/ui/Photo.astro"
+import { CONTACT } from "@data/contact"
 import { below } from "@lib/media-queries.js"
 ---
 
@@ -69,7 +70,7 @@ import { below } from "@lib/media-queries.js"
             Mon–Fri, <em>by appointment</em>
           </span>
         </div>
-        <a href="mailto:events@bacchus.com.mt">
+        <a href={CONTACT.email.href}>
           <span class="visit-label">
             <span class="visit-item-icon">
               <svg
@@ -88,9 +89,9 @@ import { below } from "@lib/media-queries.js"
             </span>
             Email
           </span>
-          <span class="visit-value">events@bacchus.com.mt</span>
+          <span class="visit-value">{CONTACT.email.display}</span>
         </a>
-        <a href="tel:+35621454981">
+        <a href={CONTACT.phone.href}>
           <span class="visit-label">
             <span class="visit-item-icon">
               <svg
@@ -108,7 +109,7 @@ import { below } from "@lib/media-queries.js"
             </span>
             Phone
           </span>
-          <span class="visit-value">+356 2145 4981</span>
+          <span class="visit-value">{CONTACT.phone.display}</span>
         </a>
       </div>
       <p class="visit-note" data-reveal style="--d: 280ms">
@@ -120,7 +121,7 @@ import { below } from "@lib/media-queries.js"
 
 <style>
   /* Scoped to this component (moved from global.css by
-       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+       scripts/scope-styles.mjs). See FaqAccordion.astro for how scoping works.
   */
   .visit {
     border-bottom: 1px solid rgba(var(--limestone-rgb), 0.12);

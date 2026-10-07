@@ -1,0 +1,19 @@
+---
+// "Need help paying?": fixed to the bottom corner, it scrolls to the support
+// section (PaymentHelpButton.js). Icon only on phones.
+import SecureBookingIcon from "./SecureBookingIcon.astro"
+---
+
+<button
+  type="button"
+  class="secure-booking-float-help"
+  id="paymentHelpButton"
+  aria-label="Get help with payment"
+>
+  <SecureBookingIcon name="help" />
+  <span class="secure-booking-hide-mobile">Need help paying?</span>
+</button>
+
+<script>
+  import "./PaymentHelpButton.js"
+</script>

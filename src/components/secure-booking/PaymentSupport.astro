@@ -1,0 +1,99 @@
+---
+// "Having trouble paying?": three ways to reach the events team, each card a
+// link. The floating help button scrolls here (#payment-support).
+import SecureBookingIcon from "./SecureBookingIcon.astro"
+import type { SecureBookingIconName } from "./SecureBookingIcon.astro"
+import SecureBookingIntro from "./SecureBookingIntro.astro"
+import { CONTACT } from "@data/contact"
+import { DEMO_BOOKING } from "@data/demo-booking"
+
+interface SupportChannel {
+  icon: SecureBookingIconName
+  title: string
+  body: string
+  value: string
+  action: string
+  href: string
+  opensNewTab?: boolean
+}
+
+const emailSubject = encodeURIComponent(
+  `Help with payment reference ${DEMO_BOOKING.bankTransfer.reference}`,
+)
+
+const CHANNELS: SupportChannel[] = [
+  {
+    icon: "phone",
+    title: "Call us",
+    body: "Speak directly with your Events Manager.",
+    value: CONTACT.phone.display,
+    action: "Call now",
+    href: CONTACT.phone.href,
+  },
+  {
+    icon: "mail",
+    title: "Email us",
+    body: "Send your question and we'll reply within the hour.",
+    value: CONTACT.email.display,
+    action: "Send email",
+    href: `${CONTACT.email.href}?subject=${emailSubject}`,
+  },
+  // NOT a confirmed client contact: this WhatsApp number was ported from the
+  // outside design as-is, on the user's direction, unlike the phone and email
+  // above, which are the venue's real published details. Check it with the
+  // client before this goes anywhere near production.
+  {
+    icon: "message",
+    title: "Message us",
+    body: "WhatsApp or text for a quick response.",
+    value: "+356 7942 1167",
+    action: "Open WhatsApp",
+    href: "https://wa.me/35679421167",
+    opensNewTab: true,
+  },
+]
+---
+
+<section class="secure-booking-support-section" id="payment-support">
+  <div class="secure-booking-container-large">
+    <SecureBookingIntro eyebrow="Here to help">
+      Having trouble <em>paying?</em>
+      <Fragment slot="lead">
+        Don't worry — your date is held for 7 days. Reach out any way you prefer and we'll
+        sort it out together.
+      </Fragment>
+    </SecureBookingIntro>
+
+    <div class="secure-booking-support-grid">
+      {CHANNELS.map((channel) => (
+        <a
+          href={channel.href}
+          class="secure-booking-hover-card secure-booking-support-card"
+          target={channel.opensNewTab ? "_blank" : undefined}
+          rel={channel.opensNewTab ? "noopener" : undefined}
+        >
+          <div class="secure-booking-card-head">
+            <span class="secure-booking-icon-badge secure-booking-support-icon">
+              <SecureBookingIcon name={channel.icon} size={20} />
+            </span>
+            <h3>{channel.title}</h3>
+          </div>
+          <p>{channel.body}</p>
+          <div class="secure-booking-support-action">
+            <span class="secure-booking-support-value">{channel.value}</span>
+            <span class="secure-booking-support-cta">
+              {channel.action}
+              <SecureBookingIcon
+                name="arrow-right"
+                class="secure-booking-button-arrow"
+                width={14}
+                height={10}
+                strokeWidth={2}
+              />
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

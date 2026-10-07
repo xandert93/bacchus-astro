@@ -1,0 +1,24 @@
+---
+// The heading block that opens each section below the summary: a bronze
+// eyebrow with its rule, the heading, and a paragraph.
+//
+// Slots: default = the heading (rich text, so <em> works), "lead" = the
+// paragraph.
+interface Props {
+  eyebrow: string
+}
+const { eyebrow } = Astro.props
+---
+
+<div class="secure-booking-pay-intro">
+  <div class="secure-booking-eyebrow secure-booking-eyebrow-bronze">
+    <span class="secure-booking-rule"></span>
+    {eyebrow}
+  </div>
+  <h2>
+    <slot />
+  </h2>
+  <p>
+    <slot name="lead" />
+  </p>
+</div>

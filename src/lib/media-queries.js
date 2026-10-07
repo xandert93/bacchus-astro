@@ -63,6 +63,19 @@ export const breakpoints = {
   // SiteHeader and NavDropdown: full nav spacing from here; tighter spacing
   // from 980px up to this, so the bar still fits.
   navFull: 1180,
+
+  // ---- The deposit page ----
+  // Carried over from the outside (Lovable) design the page ports, whose
+  // breakpoints were Tailwind's sm, md and lg. Kept to that page only.
+  // From here: the header badge and the help button show their labels, the
+  // booking summary sits in its card, and the support cards go to two
+  // columns.
+  secureBookingSmall: 640,
+  // From here: the three assurances at the foot of the page sit in a row.
+  secureBookingMedium: 768,
+  // From here: the booking summary and the two ways to pay go side by side,
+  // and the support cards go to three columns.
+  secureBookingLarge: 1024,
 }
 
 // Pointer and preference queries, named so their intent reads in place.

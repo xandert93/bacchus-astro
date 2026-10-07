@@ -1,0 +1,92 @@
+---
+// The booking summary: who it's for and the quote reference, the event's
+// details beside the price breakdown, and the deposit due now. The oxblood
+// bar at the foot says the whole booking is placeholder data.
+import SecureBookingIcon from "./SecureBookingIcon.astro"
+import { DEMO_BOOKING } from "@data/demo-booking"
+---
+
+<section class="secure-booking-summary-section">
+  <div class="secure-booking-container-large">
+    <div class="secure-booking-summary-card">
+      <div class="secure-booking-summary-topbar">
+        <div>
+          <p class="secure-booking-eyebrow-plain">Booking summary for</p>
+          <h2>{DEMO_BOOKING.couple}</h2>
+        </div>
+        <div class="secure-booking-quote-badge">
+          <SecureBookingIcon name="tag" size={14} strokeWidth={1.4} />
+          Quote Ref: {DEMO_BOOKING.quoteReference}
+        </div>
+      </div>
+
+      <div class="secure-booking-summary-grid">
+        <div class="secure-booking-summary-col">
+          <h3>Your event</h3>
+          <dl class="secure-booking-field-list">
+            {DEMO_BOOKING.details.map((detail) => (
+              <div class="secure-booking-field">
+                <span class="secure-booking-field-icon">
+                  <SecureBookingIcon name={detail.icon} />
+                </span>
+                <div>
+                  <dt>{detail.label}</dt>
+                  <dd>{detail.value}</dd>
+                </div>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <div class="secure-booking-summary-col secure-booking-summary-col-right">
+          <h3>Price breakdown</h3>
+          <div class="secure-booking-items">
+            {DEMO_BOOKING.lineItems.map((item) => (
+              <div class="secure-booking-item">
+                <span>{item.label}</span>
+                <span class="secure-booking-item-amount">{item.amount}</span>
+              </div>
+            ))}
+          </div>
+
+          <div class="secure-booking-totals">
+            <div class="secure-booking-totals-row">
+              <span>Subtotal</span>
+              <span>{DEMO_BOOKING.subtotal}</span>
+            </div>
+            <div class="secure-booking-totals-row secure-booking-totals-discount">
+              <span>Discount</span>
+              <span>{DEMO_BOOKING.discount}</span>
+            </div>
+            <div class="secure-booking-totals-row">
+              <span>{DEMO_BOOKING.vat.label}</span>
+              <span>{DEMO_BOOKING.vat.amount}</span>
+            </div>
+            <div class="secure-booking-totals-row secure-booking-totals-total">
+              <span>Total</span>
+              <span>{DEMO_BOOKING.total}</span>
+            </div>
+            <p class="secure-booking-per-person">{DEMO_BOOKING.perPerson}</p>
+          </div>
+
+          <p class="secure-booking-deposit-terms">{DEMO_BOOKING.depositTerms}</p>
+
+          <div class="secure-booking-deposit-box">
+            <p class="secure-booking-deposit-label">Deposit due now</p>
+            <p class="secure-booking-deposit-amount">{DEMO_BOOKING.deposit.display}</p>
+            <p class="secure-booking-deposit-note">{DEMO_BOOKING.balanceNote}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="secure-booking-summary-footbar">
+        <SecureBookingIcon name="warning" />
+        <span>
+          This is an illustrative preview — the quote reference, names, package, figures
+          and deposit terms shown are placeholder data, which we'll replace with your real
+          booking details before we go live.
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
