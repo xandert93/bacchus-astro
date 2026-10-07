@@ -10,6 +10,11 @@ const PORT = 4322
 export default defineConfig({
   testDir: "tests/e2e",
   fullyParallel: true,
+  // Two browsers at a time. Playwright's default is one per two CPU cores,
+  // which on this laptop, beside a dev server and the editor, slowed the
+  // whole machine and made tests fail from load alone. Slower per run, but
+  // the laptop stays usable and a failure means something.
+  workers: 2,
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
     baseURL: `http://localhost:${PORT}`,
