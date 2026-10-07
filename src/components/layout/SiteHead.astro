@@ -1,0 +1,26 @@
+---
+// What every page's head holds: character set, viewport, title, favicon and
+// the three web fonts. BaseLayout (every site page) and BareLayout (pages
+// without the site's chrome, like /sandboxes) both render it, so a new font
+// or meta tag is added once. Each layout keeps the head element itself, as
+// Astro's own starters do, so Astro still finds it to add the page's styles.
+interface Props {
+  title: string
+  // Keeps the page out of search results, for pages that aren't meant to be
+  // found (the drafts index, or a page reached only from a private link).
+  noIndex?: boolean
+}
+const { title, noIndex = false } = Astro.props
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{title}</title>
+{noIndex && <meta name="robots" content="noindex" />}
+<link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Newsreader:ital,opsz,wght@0,6..72,350;0,6..72,400;0,6..72,500;1,6..72,350;1,6..72,400&family=Inter:wght@300;400;500;600&display=swap"
+  rel="stylesheet"
+/>
