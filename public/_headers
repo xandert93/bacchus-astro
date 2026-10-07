@@ -1,0 +1,8 @@
+# Response headers for Cloudflare, which reads this file at deploy time and
+# never serves it. Astro copies it from public/ into the build unchanged.
+
+# Keep search engines from listing the site until it launches: the
+# workers.dev address is public. Remove this rule at launch (the roadmap's
+# launch checklist).
+/*
+  X-Robots-Tag: noindex
