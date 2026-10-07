@@ -29,6 +29,8 @@ code they cover.
 - `docs/engineering/known-bugs.md`: bugs found in the Astro build, each with
   its cause, fix and the test that guards it. Started fresh on 2026-10-06.
 - `docs/engineering/images.md`: photo keys, originals, formats and `sizes`.
+- `docs/engineering/ci.md`: the checks GitHub runs on every push, and how to
+  read them.
 - `docs/engineering/refactoring-tools.md`: the scripts that prove a style or
   markup refactor changed nothing.
 - `docs/planning/roadmap.md`: migration phases, feature order and backlog.
@@ -105,17 +107,24 @@ Repo: `github.com/xandert93/bacchus-astro` (private), default branch `main`.
   which branches were created when reporting back.
 - Commit on the branch in `type(scope): description` form, as small logical
   commits.
-- Before merging: `npm run check` at 0 errors, `npm run lint` clean,
-  `npm run build` clean, and `npm run test:e2e` green when the change touches
-  anything tested.
+- **Before pushing**, run only the quick checks locally: `npm run
+format:check`, `npm run lint` and `npm run check`, plus the one spec file
+  for what changed, if there is one. Not the full suite.
+- **Push the branch; GitHub runs everything** (`.github/workflows/checks.yml`:
+  the quick checks, the live build and the full Playwright suite). **Merge
+  only once that run is green.** How to read it: `docs/engineering/ci.md`.
+- **Fast lane**: a change only to comments, docs or copy needs just
+  `format:check` and `lint` before pushing. CI still runs on it.
+- The proof scripts in `docs/engineering/refactoring-tools.md` are for moving
+  existing code between files, not for every change.
 - Merge back with `git merge --no-ff <branch>` and git's default message
   (`Merge branch '<branch>'`), so the history shows each change as one
   group; then delete the branch. Merge commits are the one exception to the
   `type(scope)` format.
 - `main` should always build and pass. Tiny docs-only edits to this file may
   go straight to `main`.
-- **Push `main` to GitHub after every merge** (`git push origin main`).
-  Feature branches stay local unless one wants review as a pull request.
+- **Push `main` to GitHub after every merge** (`git push origin main`), and
+  delete the merged branch there too (`git push origin --delete <branch>`).
 
 ## Checks and tests
 

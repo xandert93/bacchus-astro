@@ -1,0 +1,70 @@
+# Runs the project's checks on GitHub's machines every time a branch is
+# pushed, so they don't have to run on the laptop. A green tick next to the
+# commit on GitHub means all of them passed; a red cross links to what failed.
+name: Checks
+
+on:
+  push:
+  pull_request:
+
+# A newer push to the same branch cancels the run still going for the old one.
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # The quick ones: formatting, lint and types. A few minutes at most.
+  static:
+    name: Format, lint and types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run check
+
+  # The live build, then the Playwright suite against the draft build.
+  build-and-test:
+    name: Build and end-to-end tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+
+      # Astro keeps every resized photo in node_modules/.astro, so a build only
+      # encodes the ones that changed. Without this, each run would re-encode
+      # every photo from its full-size original. After npm ci, which empties
+      # node_modules.
+      - uses: actions/cache@v4
+        with:
+          path: node_modules/.astro
+          key: astro-images-${{ hashFiles('src/assets/**', 'package-lock.json') }}
+          restore-keys: astro-images-
+
+      # The live site's build: no drafts, and it fails if one gets in.
+      - run: npm run build
+
+      # Playwright's own Chrome, plus the system libraries it needs on Linux.
+      - run: npx playwright install --with-deps chromium
+
+      # Builds again with drafts included (see playwright.config.ts) and runs
+      # every test.
+      - run: npm run test:e2e
+
+      # On a failure, the HTML report (screenshots, traces) is attached to the
+      # run on GitHub to download.
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
