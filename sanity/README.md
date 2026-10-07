@@ -1,14 +1,13 @@
 # Bacchus — Sanity schemas
 
-Content model for the Bacchus production stack (Astro + Sanity + Cloudflare),
-designed ahead of that stack being opened. **Nothing here is connected to a
-live Sanity project yet** — there is no project ID, no dataset, and no
-`package.json`. These are the schema definitions, written to be dropped into a
-Sanity Studio when one is created.
+How the content model works, and why it is shaped the way it is.
 
-Authored for Sanity v4 (`defineType` / `defineField`, TypeScript). The files
-will not typecheck until `sanity` is installed, because every import resolves
-against that package.
+**Nothing here is connected to a live Sanity project yet** — no project ID, no
+dataset, and `sanity` is not installed, so none of it has been typechecked or
+loaded into a Studio. The steps to change that, in order, are
+`docs/planning/sanity-rollout.md`; this file is only the model itself.
+
+Authored for Sanity v4 (`defineType` / `defineField`, TypeScript).
 
 ---
 
@@ -21,28 +20,26 @@ sanity/
   lib/constants.ts          Shared option lists, matched to the existing markup
   schemaTypes/
     index.ts                Registry, and the list of what is deliberately absent
-    objects/                16 reusable types
-    documents/              16 document types
-    singletons/             2 edited-in-place documents
+    shared/                 provenance, price, seasons, SEO, catalogue variance
+    bookings/               enquiries, the waitlist, consent, status history
+    quotes/                 quotes, their line items, payments
+    packages/               the four packages, tiers, dishes, stations
+    venue/                  spaces, closures, add-ons, capacity
+    editorial/              gallery, testimonials, articles, FAQs, suppliers
+    restaurant/             parked until the events side is finished
+    settings/               site settings and wedding policy
   queries/
     availability.ts         The calendar, derived — replaces seededStatus()
+    pricing.ts              Resolving a price for a date, through seasons
     content.ts              Page queries, plus the open-questions working list
 ```
 
-## Dropping it in
-
-```bash
-npm create sanity@latest -- --template clean --typescript
-```
-
-Then copy `schemaTypes/`, `structure.ts`, `lib/` and `queries/` across, point
-`sanity.config.ts` at the real project, and seed the two singletons with the
-document IDs `siteSettings` and `weddingPolicy` (the structure file addresses
-them by those exact IDs).
-
-**Create the dataset in the EU region.** The default is US, and bookings,
-waitlist entries and testimonials all hold personal data belonging largely to
-EU residents. Moving a dataset afterwards means an export and re-import.
+Files are grouped by feature, because that is how they are navigated when
+maintaining them. The `.document.ts` and `.object.ts` suffixes keep the
+distinction the old `objects/` and `documents/` folders carried, and it
+matters: a **document** is a top-level thing staff create and edit in the
+sidebar, an **object** only ever exists nested inside one and never appears on
+its own.
 
 ---
 
@@ -108,6 +105,30 @@ Not hypothetical ones. Each of these is a real bug or a real near-miss:
 | Two separate consent booleans       | A reviewer may agree to their name being used and not their photograph.                                                                                                                                                                                               |
 | `addOn.isIncludedAtNoCharge`        | Catering furniture, basic decoration and the in-house coordinator are included free. Modelling them as €0 items risks them acquiring a priced quote line.                                                                                                             |
 
+### 4. Normalised where it pays, snapshotted where it must not change
+
+A dish is its own document, referenced from every menu it appears on. The
+measurement behind that: across the proofed Reception, Banquet and High Tea
+pages, 187 menu lines resolve to 130 distinct dishes — 57 duplicates, nearly a
+third — and "Brie & Candied Walnuts Leaves" appears six times across two
+packages. Inline, a spelling correction has to be made once per occurrence and
+a missed one is invisible, which is exactly the failure already on record from
+the stations page. It also makes the list of copy changes awaiting the
+client's approval one flat query instead of a traversal through every tier.
+
+Station items stay inline, on the same evidence read the other way: they are
+ingredients rather than dishes, and only four recur across all sixteen
+stations. Wines stay inline too — each appears in exactly one category.
+
+Seasons are documents for the same reason: a season's dates are defined once
+and every rate referencing it follows, rather than the same two dates being
+copied onto twelve tiers and then shortened in some of them.
+
+The deliberate exception is a quote, which stores its own labels and figures
+rather than referencing the tiers it was priced from. That is not redundancy —
+it is a point-in-time record of a document that has left the building, and the
+reasoning is in section 2 above.
+
 ---
 
 ## What is deliberately **not** modelled
@@ -128,41 +149,51 @@ to guess whether something was forgotten.
   that's a measurement, and a CMS toggle invites someone to undo it.
 - **Image variants / `srcset`.** `astro:assets` generates these from the
   original at build time.
-- **A seasonal rate engine.** Pricing varies by month and we have one quote as
-  a single data point. `price.isIndicative` says "from" and stops there.
 - **A tasting booking flow.** Whether a tasting needs its own scheduling step,
   and whether the full menu is tastable on a given day, are both unanswered.
 
-### One addition that needs a decision
+---
 
-`documents/venueClosure.ts` is **not** something the project asked for. The
-calendar derives purely from bookings, which assumes every unavailable date is
-unavailable _because someone booked it_ — and the hall repairs expected in 2027
-are a counterexample already on record. Without it, the only way to close a
-date is a fake booking, which corrupts the data that quotes, testimonials and
-reporting all read.
+## Two things that are built but empty
 
-It's written, and the availability query has the merge **commented out**.
-Nothing consults it until someone opts in.
+Both are structure waiting on the client, not gaps.
+
+**Seasonal rates.** A tier's `price` is its base and applies all year; a
+`seasonalRate` overrides it for dates inside a `season`, with the higher
+`priority` winning where seasons overlap. Every tier is on its base price
+today, because all we have is the remark that April runs dearer than March —
+no rate card. Adding one later is data entry rather than a schema change. The
+resolver is `queries/pricing.ts`, kept out of the schema because it is
+ordinary logic that wants unit tests.
+
+**Venue closures.** `venue/venueClosure.document.ts` blocks dates for reasons
+that are not bookings — the hall repairs expected in 2027 being the case on
+record. It feeds the availability calendar and outranks everything, including
+a confirmed booking: if the venue is shut, the booking is a problem for staff
+rather than a reason to show the date as free. The alternative was closing
+dates with fake bookings, which would corrupt the records quotes, testimonials
+and reporting all read.
 
 ---
 
 ## Open questions this surfaced
 
-Things the schema work raised that need an answer from the client or a call
-from us, beyond those already tracked in `CLAUDE.md`:
+Things the schema work raised that still need an answer. What the client owes
+us more broadly is in `docs/planning/sanity-rollout.md`.
 
-1. **Dataset region and staff roles.** EU region, and least-privilege roles
-   rather than everyone-an-administrator. Both are one-time decisions.
+1. **Staff roles.** Least-privilege rather than everyone-an-administrator.
+   Reading an enquiry means processing personal data. (The dataset region is
+   settled: EU, set at creation.)
 2. **Personal-data retention.** `weddingPolicy.retentionMonths` defaults to 36
    and feeds the review date on every consent record. The number is the
    client's call; the scheduled purge needs _a_ number to work from.
 3. **Waitlist double opt-in.** `verifiedAt` must gate every notification. This
    was asked for as anti-spam; it's also the only thing stopping an email
    reaching an address a stranger typed in.
-4. **`partnerName` on bookings.** Quotes and the deposit page address a couple
-   ("Bertha & Alex") but the wizard only collects one name. Either the form
-   grows a field or quotes keep being addressed to one person.
+4. **`partnerName` on the enquiry form.** The field exists on a booking and is
+   optional, and a quote composes its name from it when present. The wizard
+   does not yet ask for it, so weddings are the obvious place to add the
+   question.
 5. **Two businesses, one address.** `siteSettings.structuredData.businessType`
    has to pick one schema.org type for a restaurant and an events venue
    sharing a building. Worth revisiting once the About page exists.

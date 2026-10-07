@@ -4,27 +4,22 @@ import { defineArrayMember, defineField, defineType } from "sanity"
  * A date or range the venue cannot take a wedding, for a reason that is not a
  * booking.
  *
- * THIS TYPE IS AN ADDITION, not something the project asked for — flagged here
- * rather than slipped in. It needs a decision before it is used.
- *
- * The case for it: the availability calendar derives its states purely from
- * bookings, which assumes every unavailable date is unavailable because
- * someone booked it. That is not true in general, and there is at least one
- * concrete counterexample already on record — the vandalism damage to the
- * ceiling staining and curtains in the main hall is under insurance claim with
- * repairs expected in 2027. If a space is out of action for a fortnight, the
- * public calendar has no way to say so, and the only workaround is a fake
- * booking, which is exactly the hand-maintained parallel calendar the
+ * Without this, the calendar assumes every unavailable date is unavailable
+ * because someone booked it. That is not true in general, and there is a
+ * counterexample already on record: the vandalism damage to the main hall is
+ * under insurance claim with repairs expected in 2027. If a space is out of
+ * action for a fortnight, the only way to say so would be a fake booking —
+ * which corrupts the records that quotes, testimonials and reporting all
+ * read, and recreates exactly the hand-maintained parallel calendar the
  * single-source-of-truth rule exists to prevent.
  *
- * The case against: it is a second thing that can make a date unavailable, so
- * every availability query has to consult both, and an empty one is a trap —
- * if staff never use it, a date closed in real life still shows as Available.
+ * A closure outranks everything, a confirmed booking included. If the venue
+ * is shut, that booking is a problem for staff to resolve rather than a
+ * reason to show the date as free.
  *
- * My read is that it is worth having precisely because the alternative is
- * encoding closures as fake bookings, which corrupts the booking data that
- * quotes, testimonials and reporting all read. But it is the user's call, and
- * nothing references this type until the availability query opts in.
+ * The one trap to know about: an empty closure list is indistinguishable from
+ * "nothing is closed". If staff never use this, a date closed in real life
+ * still shows as Available, and nothing in the system can tell.
  *
  * `showPublicly` is the compromise for the awkward middle case: staff holidays
  * and maintenance are nobody's business, but a date genuinely unavailable
