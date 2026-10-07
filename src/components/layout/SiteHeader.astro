@@ -39,12 +39,14 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       </ul>
     </nav>
     <div class="nav-cta">
-      {/* The two CTAs: why Book a table leads, see NavCtaButtons. */}
+      {/* The two CTAs: why Book a table leads, see NavCtaButtons.
+       */}
       <NavCtaButtons />
       {/* Inside .nav-cta, matching every other page's header — the
            @media rule that swaps the pills for the burger is scoped
            ".nav-cta .button", so the burger has to be its sibling to be
-           the thing left standing at mobile widths. */}
+           the thing left standing at mobile widths. 
+*/}
       <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
         <i></i>
         <i></i>
@@ -54,14 +56,16 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
   </div>
   {/* Dims the page below the nav while any panel is open. Toggled
        purely by :has() off the same states that open the panel, so
-       there is no second piece of JS state to keep in sync. */}
+       there is no second piece of JS state to keep in sync. 
+*/}
   <div class="nav-dd-scrim" aria-hidden="true"></div>
   <div class="progress" id="progress"></div>
 </header>
 
 <style>
   /* Scoped to this component (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .nav {
     position: fixed;
     top: 0;
@@ -74,6 +78,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     border-bottom: 1px solid transparent;
     transition: border-color 0.6s var(--ease);
   }
+
   .nav::before,
   .nav::after {
     content: "";
@@ -83,67 +88,80 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     pointer-events: none;
     transition: opacity 0.6s var(--ease);
   }
+
   .nav::before {
     background: linear-gradient(180deg, rgba(10, 9, 6, 0.72), transparent);
     opacity: 1;
   }
+
   .nav::after {
     background: rgba(var(--muted-ink-rgb), 0.86);
     backdrop-filter: blur(14px) saturate(1.2);
     -webkit-backdrop-filter: blur(14px) saturate(1.2);
     opacity: 0;
   }
+
   .nav.stuck {
     border-bottom-color: rgba(var(--gold-rgb), 0.22);
   }
+
   .nav.stuck::before {
     opacity: 0;
   }
+
   .nav.stuck::after {
     opacity: 1;
   }
+
   /* While the overlay is open the bar's fade is QUICK. Its own 0.6s is tuned
-     for page scroll, where the bar is pinned above content that is already
-     moving past it and a gentle fade reads well. Inside the overlay the first
-     row starts only 22px below the bar, so at 0.6s a fast flick put "Restaurant"
-     behind the lockup before the dark had arrived — reported 2026-10-02.
-     transition-duration only, not a fresh shorthand, so the property list stays
-     the single source of truth for what animates (the same-specificity collision). */
+       for page scroll, where the bar is pinned above content that is already
+       moving past it and a gentle fade reads well. Inside the overlay the first
+       row starts only 22px below the bar, so at 0.6s a fast flick put "Restaurant"
+       behind the lockup before the dark had arrived — reported 2026-10-02.
+       transition-duration only, not a fresh shorthand, so the property list stays
+       the single source of truth for what animates (the same-specificity collision).
+  */
   :global(body.menu-open) .nav::before,
   :global(body.menu-open) .nav::after {
     transition-duration: 0.18s;
   }
+
   /* No frost while the overlay is open. .stuck flips more often in here than it
-     does on a page: collapsing a group shrinks .menu-scroll's scrollHeight, the
-     browser clamps scrollTop, that fires the overlay's own scroll handler, and
-     the bar un-sticks — so ::after crossfades from opacity 0, and a
-     backdrop-filter layer initialising from nothing is a known source of a
-     one-frame flash.
-     Nothing is lost by dropping it: the only thing behind the bar while the
-     overlay is open is the overlay itself, which is --ink with a photograph at
-     0.16 over it, so there is essentially nothing for a 14px blur to pick up.
-     The fill and the border stay, so the dark state still reads as dark — same
-     treatment, and the same reasoning, as .package-sticky-switch under
-     body.is-scrolling. */
+       does on a page: collapsing a group shrinks .menu-scroll's scrollHeight, the
+       browser clamps scrollTop, that fires the overlay's own scroll handler, and
+       the bar un-sticks — so ::after crossfades from opacity 0, and a
+       backdrop-filter layer initialising from nothing is a known source of a
+       one-frame flash.
+       Nothing is lost by dropping it: the only thing behind the bar while the
+       overlay is open is the overlay itself, which is --ink with a photograph at
+       0.16 over it, so there is essentially nothing for a 14px blur to pick up.
+       The fill and the border stay, so the dark state still reads as dark — same
+       treatment, and the same reasoning, as .package-sticky-switch under
+       body.is-scrolling.
+  */
   :global(body.menu-open) .nav::after {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     /* Fully opaque while the drawer is open (2026-10-05). The page bar's fill
-       is 0.86 alpha and relies on the blur above to hide what passes behind
-       it; with the blur off, the drawer's own links stayed legible through
-       the bar as they scrolled under it. Same colour, no transparency. */
+         is 0.86 alpha and relies on the blur above to hide what passes behind
+         it; with the blur off, the drawer's own links stayed legible through
+         the bar as they scrolled under it. Same colour, no transparency.
+  */
     background: rgb(var(--muted-ink-rgb));
   }
+
   .brand {
     display: flex;
     align-items: center;
     gap: 13px;
   }
+
   .brand .brand-text {
     display: flex;
     flex-direction: column;
     line-height: 1;
   }
+
   .brand .name {
     font-family: "Fraunces", serif;
     font-size: 19px;
@@ -152,45 +170,53 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     text-transform: uppercase;
     padding-left: 2px;
   }
+
   .nav-links {
     display: flex;
     align-items: center;
     /* 2px, not 6px (changed 2026-10-02). Each link already carries 16px of
-       padding a side, so adjacent labels have 32px between them before the gap
-       counts at all — 6px was adding a seventh of that again for no structural
-       reason, and the links now sit against the CTAs where a tight cluster reads
-       as one group. The compact band in the nav section at the foot of this file
-       takes it to 0 between 980px and 1180px. The hover underline is unaffected:
-       ::after is inset 16px from each link's own edges. */
+         padding a side, so adjacent labels have 32px between them before the gap
+         counts at all — 6px was adding a seventh of that again for no structural
+         reason, and the links now sit against the CTAs where a tight cluster reads
+         as one group. The compact band in the nav section at the foot of this file
+         takes it to 0 between 980px and 1180px. The hover underline is unaffected:
+         ::after is inset 16px from each link's own edges.
+  */
     gap: 2px;
     list-style: none;
   }
+
   /* Pairs with .nav .wrap's flex-start above — this is what pushes the links and
-     the CTAs to the right edge together. */
+       the CTAs to the right edge together.
+  */
   .nav .wrap nav {
     margin-left: auto;
   }
+
   .nav-links > :global(li) > :global(a) {
     font-size: 11.5px;
     font-weight: 500;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     /* 0.82, up from 0.7 (2026-10-02). 0.7 measures 8.12:1 against the dark bar,
-       which is objectively fine — but uppercase Inter at 11.5px with 0.16em
-       tracking covers very little of its own area, so it reads considerably
-       lighter than the ratio implies. This is a sitewide change: it reaches the
-       nine pages still on the flat nav as well. */
+         which is objectively fine — but uppercase Inter at 11.5px with 0.16em
+         tracking covers very little of its own area, so it reads considerably
+         lighter than the ratio implies. This is a sitewide change: it reaches the
+         nine pages still on the flat nav as well.
+  */
     color: rgba(var(--limestone-rgb), 0.82);
     transition: color 0.35s;
   }
+
   /* The link's horizontal padding lives in two custom properties, and the
-     underline below reads the same two. Before 2026-10-04 they were separate
-     literals set by separate rules, and they drifted: the compact band set the
-     underline's left to 10px while the split trigger's own (0,2,2) padding rule
-     kept the text at 16px, so between 980px and 1180px the Restaurant/Events
-     underline started 6px before the first letter. Variants now change the
-     VARIABLE only, never padding or left/right directly, so the two cannot
-     disagree again however many variants or bands get added. */
+       underline below reads the same two. Before 2026-10-04 they were separate
+       literals set by separate rules, and they drifted: the compact band set the
+       underline's left to 10px while the split trigger's own (0,2,2) padding rule
+       kept the text at 16px, so between 980px and 1180px the Restaurant/Events
+       underline started 6px before the first letter. Variants now change the
+       VARIABLE only, never padding or left/right directly, so the two cannot
+       disagree again however many variants or bands get added.
+  */
   .nav-links > :global(li) > :global(a) {
     --nav-link-padding-start: 16px;
     --nav-link-padding-end: 16px;
@@ -198,14 +224,16 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     display: block;
     padding: 10px var(--nav-link-padding-end) 10px var(--nav-link-padding-start);
   }
+
   /* right is 16px PLUS the trailing letter-space, not a flat 16px. CSS applies
-     letter-spacing after every character including the last, so this element's
-     inline box ends 0.16em (1.84px at 11.5px) beyond the final glyph, and an
-     underline inset to the padding edge runs to the box rather than to the
-     letter. Reported 2026-10-02 as the bar "extending a bit too far" past the
-     last letter. left needs no equivalent, since nothing is added before the
-     first character. Any future change to .nav-links' letter-spacing has to
-     come with the one calc() below. */
+       letter-spacing after every character including the last, so this element's
+       inline box ends 0.16em (1.84px at 11.5px) beyond the final glyph, and an
+       underline inset to the padding edge runs to the box rather than to the
+       letter. Reported 2026-10-02 as the bar "extending a bit too far" past the
+       last letter. left needs no equivalent, since nothing is added before the
+       first character. Any future change to .nav-links' letter-spacing has to
+       come with the one calc() below.
+  */
   .nav-links > :global(li) > :global(a)::after {
     content: "";
     position: absolute;
@@ -218,26 +246,30 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     transform-origin: right;
     transition: transform 0.4s var(--ease);
   }
+
   .nav-links > :global(li:hover) > :global(a) {
     color: #fff;
   }
+
   .nav-links > :global(li:hover) > :global(a)::after {
     transform: scaleX(1);
     transform-origin: left;
   }
+
   /* An unbuilt link's Proposed badge sits ABOVE its label, not beside it:
-     the bar's width budget (see the compact band below) has no room for
-     ~70px more, and out of flow it costs none. Centred over the text by the
-     same two insets the underline uses, so it stays centred in the compact
-     band too. bottom: 100% less the link's 10px top padding, plus a 4px gap
-     to the cap height. line-height 1.2 keeps the pill short enough to clear
-     the top of the 74px bar.
-     Hidden until the item is hovered (the same li:hover the underline
-     uses, so anywhere in the 74px band shows it) or keyboard-focused: the
-     moment it matters is the moment someone reaches for the link. On a
-     touch tablet the first tap latches :hover, so the tap that goes nowhere
-     is also the one that shows why. Rises 3px as it fades in; reduced
-     motion keeps the fade and drops the rise. */
+       the bar's width budget (see the compact band below) has no room for
+       ~70px more, and out of flow it costs none. Centred over the text by the
+       same two insets the underline uses, so it stays centred in the compact
+       band too. bottom: 100% less the link's 10px top padding, plus a 4px gap
+       to the cap height. line-height 1.2 keeps the pill short enough to clear
+       the top of the 74px bar.
+       Hidden until the item is hovered (the same li:hover the underline
+       uses, so anywhere in the 74px band shows it) or keyboard-focused: the
+       moment it matters is the moment someone reaches for the link. On a
+       touch tablet the first tap latches :hover, so the tap that goes nowhere
+       is also the one that shows why. Rises 3px as it fades in; reduced
+       motion keeps the fade and drops the rise.
+  */
   .nav-links > :global(li) > :global(a) > :global(.proposed-badge) {
     position: absolute;
     bottom: calc(100% - 6px);
@@ -252,26 +284,30 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       opacity 0.35s var(--ease),
       transform 0.35s var(--ease);
   }
+
   .nav-links > :global(li:hover) > :global(a) > :global(.proposed-badge),
   .nav-links > :global(li) > :global(a:focus-visible) > :global(.proposed-badge) {
     opacity: 1;
     transform: none;
   }
+
   @media (--reduced-motion) {
     .nav-links > :global(li) > :global(a) > :global(.proposed-badge) {
       transform: none;
     }
   }
+
   /* Scrim: dims the page below the nav while the dropdown is open, same trick
-     as the BNY reference — puts the panel's own content in relief instead of
-     competing with whatever's in the hero behind it. Sits as a direct child of
-     .nav (not inside .wrap), so it relies on .wrap's own explicit z-index: 2
-     to paint above it without needing a z-index of its own — giving the scrim
-     one risks it painting above the dropdown panel too, since both would then
-     have explicit stacking levels and DOM order (scrim comes last) would
-     decide, the wrong way. Toggled with :has() off the same .is-open,
-     .is-hovering and :focus-within states that already open the panel
-     itself, so there's no separate JS state to keep in sync. */
+       as the BNY reference — puts the panel's own content in relief instead of
+       competing with whatever's in the hero behind it. Sits as a direct child of
+       .nav (not inside .wrap), so it relies on .wrap's own explicit z-index: 2
+       to paint above it without needing a z-index of its own — giving the scrim
+       one risks it painting above the dropdown panel too, since both would then
+       have explicit stacking levels and DOM order (scrim comes last) would
+       decide, the wrong way. Toggled with :has() off the same .is-open,
+       .is-hovering and :focus-within states that already open the panel
+       itself, so there's no separate JS state to keep in sync.
+  */
   .nav-dd-scrim {
     position: fixed;
     top: var(--nav-h);
@@ -279,20 +315,21 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     right: 0;
     bottom: 0;
     /* 0.6 and blur(10px), up from 0.5 and blur(3px) (2026-10-02). The panel was
-       reading differently depending on which section happened to be behind it —
-       fine over a light section, muddy over a dark one. The variable that
-       actually controls that is not which section it is, it is how much of the
-       ground comes through at all, which is this layer's whole job and it was
-       set too gently to do it.
-       The blur is doing most of the work here, not the alpha: at 10px nothing
-       behind the panel resolves into legible text or a hard edge, so every
-       section presents the same TEXTURE regardless of its content, while the
-       panel keeps its relief against a ground that is still clearly there. More
-       alpha alone would have flattened that relief instead. The alternative
-       considered and rejected was switching the panel's own colour per section,
-       which needs every section tagged, fails silently when one is missed, and
-       cannot be followed by the bar — which is always dark while a panel is
-       open. */
+         reading differently depending on which section happened to be behind it —
+         fine over a light section, muddy over a dark one. The variable that
+         actually controls that is not which section it is, it is how much of the
+         ground comes through at all, which is this layer's whole job and it was
+         set too gently to do it.
+         The blur is doing most of the work here, not the alpha: at 10px nothing
+         behind the panel resolves into legible text or a hard edge, so every
+         section presents the same TEXTURE regardless of its content, while the
+         panel keeps its relief against a ground that is still clearly there. More
+         alpha alone would have flattened that relief instead. The alternative
+         considered and rejected was switching the panel's own colour per section,
+         which needs every section tagged, fails silently when one is missed, and
+         cannot be followed by the bar — which is always dark while a panel is
+         open.
+  */
     background: rgba(var(--muted-ink-rgb), 0.6);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -303,9 +340,11 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       opacity 0.3s var(--ease),
       visibility 0s linear 0.3s;
   }
+
   /* The scrim samples into each panel's frosted backdrop like anything else
-     behind it, which is intended. :global() inside :has() because the
-     dropdowns are NavDropdown's elements, not this file's. */
+       behind it, which is intended. :global() inside :has() because the
+       dropdowns are NavDropdown's elements, not this file's.
+  */
   .nav:has(:global(.nav-dd.is-open)) .nav-dd-scrim,
   .nav:has(:global(.nav-dd.is-hovering)) .nav-dd-scrim,
   .nav:has(:global(.nav-dd:focus-within)) .nav-dd-scrim {
@@ -314,35 +353,40 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     pointer-events: auto;
     transition: opacity 0.3s var(--ease);
   }
+
   /* While a panel is open the BAR takes its scrolled appearance too, whatever
-     the scroll position. Without this the scrim dims everything from 74px down
-     and the bar keeps its near-transparent top-of-page gradient, leaving a hard
-     horizontal seam where the two meet and the hero still bright behind the
-     links while the panel hangs off a dimmed page.
-     Reuses .nav.stuck's own two declarations rather than inventing a treatment:
-     ::before's gradient out, ::after's frost in. So the bar, the panel and the
-     scrim read as one surface, and when the page IS scrolled this is already
-     the state, so nothing moves.
-     (0,3,0) via :has()'s own argument specificity, which beats both .nav::after
-     (0,1,0) and .nav.stuck::after (0,2,0) outright - it has to win over stuck
-     as well as over the base, since at the top of the page stuck is absent and
-     partway down it is present. The 0.6s transition on ::before/::after is
-     inherited, so the bar darkens rather than snapping. */
+       the scroll position. Without this the scrim dims everything from 74px down
+       and the bar keeps its near-transparent top-of-page gradient, leaving a hard
+       horizontal seam where the two meet and the hero still bright behind the
+       links while the panel hangs off a dimmed page.
+       Reuses .nav.stuck's own two declarations rather than inventing a treatment:
+       ::before's gradient out, ::after's frost in. So the bar, the panel and the
+       scrim read as one surface, and when the page IS scrolled this is already
+       the state, so nothing moves.
+       (0,3,0) via :has()'s own argument specificity, which beats both .nav::after
+       (0,1,0) and .nav.stuck::after (0,2,0) outright - it has to win over stuck
+       as well as over the base, since at the top of the page stuck is absent and
+       partway down it is present. The 0.6s transition on ::before/::after is
+       inherited, so the bar darkens rather than snapping.
+  */
   .nav:has(:global(.nav-dd.is-open))::before,
   .nav:has(:global(.nav-dd.is-hovering))::before,
   .nav:has(:global(.nav-dd:focus-within))::before {
     opacity: 0;
   }
+
   .nav:has(:global(.nav-dd.is-open))::after,
   .nav:has(:global(.nav-dd.is-hovering))::after,
   .nav:has(:global(.nav-dd:focus-within))::after {
     opacity: 1;
   }
+
   .nav-cta {
     display: flex;
     align-items: center;
     gap: 18px;
   }
+
   .burger {
     display: none;
     width: 46px;
@@ -357,6 +401,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       background 0.3s var(--ease),
       transform 0.2s var(--ease);
   }
+
   .burger::before {
     content: "";
     position: absolute;
@@ -369,21 +414,25 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       transform 0.3s var(--ease),
       opacity 0.3s var(--ease);
   }
+
   @media (--hover) {
     .burger:hover::before {
       transform: scale(1);
       opacity: 1;
     }
   }
+
   .burger:active {
     transform: scale(0.94);
   }
+
   @media (--no-hover) {
     .burger:active::before {
       transform: scale(1);
       opacity: 1;
     }
   }
+
   .burger i {
     position: absolute;
     left: 14px;
@@ -394,25 +443,32 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       transform 0.45s var(--ease),
       opacity 0.3s;
   }
+
   .burger i:nth-child(1) {
     top: 17px;
   }
+
   .burger i:nth-child(2) {
     top: 22.5px;
   }
+
   .burger i:nth-child(3) {
     top: 28px;
   }
+
   :global(body.menu-open) .burger i:nth-child(1) {
     transform: translateY(5.5px) rotate(45deg);
   }
+
   :global(body.menu-open) .burger i:nth-child(2) {
     opacity: 0;
     transform: scaleX(0.4);
   }
+
   :global(body.menu-open) .burger i:nth-child(3) {
     transform: translateY(-5.5px) rotate(-45deg);
   }
+
   .progress {
     position: absolute;
     left: 0;
@@ -423,210 +479,236 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     transform-origin: left;
     background: linear-gradient(90deg, var(--bronze), var(--gold), var(--gold-2));
   }
+
   :global(html.nav-no-anim) .nav {
     transition: none !important;
     animation: none !important;
   }
+
   @media (--below-hero-full) {
     .nav-links {
       display: none;
     }
   }
+
   @media (--below-hero-full) {
     .burger {
       display: block;
     }
   }
+
   @media (--below-tablet) {
     .brand .name {
       font-size: 16px;
       letter-spacing: 0.24em;
     }
   }
+
   /* ============================================================
-     (j) COMPACT NAV BAND — 980px to 1179.98px
-     ============================================================
-     REAL BUG, reported from the demo 2026-10-01: the Enquire button runs
-     off screen at 1015px, and the bar already looks overfull at 1092px.
-     Confirmed by adding the content up from the CSS rather than
-     eyeballing it, which is where an earlier estimate of ~890px went
-     wrong — it forgot that each dropdown label now has a 29px chevron
-     button beside it:
+       (j) COMPACT NAV BAND — 980px to 1179.98px
+       ============================================================
+       REAL BUG, reported from the demo 2026-10-01: the Enquire button runs
+       off screen at 1015px, and the bar already looks overfull at 1092px.
+       Confirmed by adding the content up from the CSS rather than
+       eyeballing it, which is where an earlier estimate of ~890px went
+       wrong — it forgot that each dropdown label now has a 29px chevron
+       button beside it:
 
-       brand          34px mark + 13px gap + ~154px lockup   ~201px
-                      (the "MDINA · EST. 1660" sub-line is WIDER than
-                      "BACCHUS" itself — 0.42em tracking over 17
-                      characters — so it, not the name, sets this width)
-       nav links      Restaurant 130 + chevron 29, Events 91 + 29,
-                      Gallery 101, About 81, three 6px gaps      ~479px
-       CTAs           Book a table 174, Enquire 129, 18px gap    ~321px
-       wrap gaps      2 x 24px                                     48px
-                                                               --------
-                                                               ~1049px
+         brand          34px mark + 13px gap + ~154px lockup   ~201px
+                        (the "MDINA · EST. 1660" sub-line is WIDER than
+                        "BACCHUS" itself — 0.42em tracking over 17
+                        characters — so it, not the name, sets this width)
+         nav links      Restaurant 130 + chevron 29, Events 91 + 29,
+                        Gallery 101, About 81, three 6px gaps      ~479px
+         CTAs           Book a table 174, Enquire 129, 18px gap    ~321px
+         wrap gaps      2 x 24px                                     48px
+                                                                 --------
+                                                                 ~1049px
 
-     Against that, .wrap offers (viewport - 88px) of room, capped at
-     1092px once the viewport passes 1180. So the bar needs ~1137px before
-     it sits comfortably, and it has been overflowing below that — not
-     only near the 980px cutover.
+       Against that, .wrap offers (viewport - 88px) of room, capped at
+       1092px once the viewport passes 1180. So the bar needs ~1137px before
+       it sits comfortably, and it has been overflowing below that — not
+       only near the 980px cutover.
 
-     A MEDIA BAND, NOT clamp(), deliberately. The house preference is
-     clamp() for anything that should scale, but across a 200px-wide range
-     a vw-based clamp barely moves: 1.36vw on the link padding recovers
-     about 21px over the whole band, where this needs 120 or more. Getting
-     there with clamp() means the calc-interpolation form on six separate
-     properties, which is both less legible and harder to reason about
-     than one band. This is also the non-shrinking button overflow's situation
-     exactly — fixed-size controls inside a fluid bar, where "the breakpoint floor
-     is set by the control, not by the layout" — and the fix there was a media band
-     swapping to existing smaller token values, which is what this does.
+       A MEDIA BAND, NOT clamp(), deliberately. The house preference is
+       clamp() for anything that should scale, but across a 200px-wide range
+       a vw-based clamp barely moves: 1.36vw on the link padding recovers
+       about 21px over the whole band, where this needs 120 or more. Getting
+       there with clamp() means the calc-interpolation form on six separate
+       properties, which is both less legible and harder to reason about
+       than one band. This is also the non-shrinking button overflow's situation
+       exactly — fixed-size controls inside a fluid bar, where "the breakpoint floor
+       is set by the control, not by the layout" — and the fix there was a media band
+       swapping to existing smaller token values, which is what this does.
 
-     Bounded on BOTH sides on purpose: above 1180px .wrap stops growing
-     and there is ~43px of slack, so the designed spacing is untouched
-     there; below 980px the burger takes over. The .98 pairing follows bug
-     #22 so the handover to 1180px leaves no fractional gap.
+       Bounded on BOTH sides on purpose: above 1180px .wrap stops growing
+       and there is ~43px of slack, so the designed spacing is untouched
+       there; below 980px the burger takes over. The .98 pairing follows bug
+       #22 so the handover to 1180px leaves no fractional gap.
 
-     Nothing here changes a font size, the 74px bar height, or any
-     colour — every line is spacing or a decorative glyph, so the bar
-     compresses rather than restyling. Running total of what it recovers
-     is noted per block. */
+       Nothing here changes a font size, the 74px bar height, or any
+       colour — every line is spacing or a decorative glyph, so the bar
+       compresses rather than restyling. Running total of what it recovers
+       is noted per block.
+  */
   /* -48px. 16px to 10px each side; the links keep 20px of total
-       horizontal padding, which is still comfortably above their 11.5px
-       type. */
+         horizontal padding, which is still comfortably above their 11.5px
+         type.
+  */
   @media (--from-desktop) and (--below-nav-full) {
     .nav-links > :global(li) > :global(a) {
       --nav-link-padding-start: 10px;
       --nav-link-padding-end: 10px;
     }
   }
+
   /* -18px. The links' own padding already separates them; the gap was
-       additional breathing room, not structure. */
+         additional breathing room, not structure.
+  */
   @media (--from-desktop) and (--below-nav-full) {
     .nav-links {
       gap: 0;
     }
   }
+
   /* -12px. Keeps the 4px seam between label and chevron so the pair
-       still reads as one target. */
+         still reads as one target.
+  */
   /* The underline follows these automatically (see the custom properties
-       on .nav-links > li > a). Same (0,2,2) as the base split rule, so this
-       wins on source order — it sits ~9,000 lines later inside the band. */
+         on .nav-links > li > a). Same (0,2,2) as the base split rule, so this
+         wins on source order — it sits ~9,000 lines later inside the band.
+  */
   @media (--from-desktop) and (--below-nav-full) {
     .nav-cta {
       gap: 10px;
     }
   }
+
   /* ---------- The PANEL is squashed in this band too ----------
-       Reported with a screenshot: descriptions wrapping to four and five
-       lines, and on "Preferred suppliers" the PROPOSED badge pushed down
-       to a third line before the description even started.
-       The cause is the photo column, not the grid. .nav-dd-panel-media is
-       a fixed "flex: 0 0 340px" while the panel itself is
-       min(1376px, 100vw - 32px) — so the photo is a constant while
-       everything else shrinks, and it takes a steadily larger share. At a
-       1024px viewport the panel is 992px, the card's padding takes 56 and
-       the photo and its gap take 372, leaving 564px for three columns:
-       about 172px each, and after the item's own padding, icon and gutter
-       roughly 118px of actual text. At 14px Newsreader that is around
-       seventeen characters a line, which is what produced the screenshot.
-       styles.css already hides this column below 981px for exactly this
-       reason ("a fixed 340px image column would crowd the three-column
-       item grid") — that reasoning simply did not stop being true at
-       981px, because the PANEL is wider than .wrap and keeps growing
-       after the breakpoint it was judged at.
-       Shrinking the photo rather than hiding it, on purpose: hiding it
-       would widen the columns more, but the per-row crossfade is the best
-       thing about this panel and losing it on every laptop to win a line
-       of text is the wrong trade. 240px is still a real photograph. */
+         Reported with a screenshot: descriptions wrapping to four and five
+         lines, and on "Preferred suppliers" the PROPOSED badge pushed down
+         to a third line before the description even started.
+         The cause is the photo column, not the grid. .nav-dd-panel-media is
+         a fixed "flex: 0 0 340px" while the panel itself is
+         min(1376px, 100vw - 32px) — so the photo is a constant while
+         everything else shrinks, and it takes a steadily larger share. At a
+         1024px viewport the panel is 992px, the card's padding takes 56 and
+         the photo and its gap take 372, leaving 564px for three columns:
+         about 172px each, and after the item's own padding, icon and gutter
+         roughly 118px of actual text. At 14px Newsreader that is around
+         seventeen characters a line, which is what produced the screenshot.
+         styles.css already hides this column below 981px for exactly this
+         reason ("a fixed 340px image column would crowd the three-column
+         item grid") — that reasoning simply did not stop being true at
+         981px, because the PANEL is wider than .wrap and keeps growing
+         after the breakpoint it was judged at.
+         Shrinking the photo rather than hiding it, on purpose: hiding it
+         would widen the columns more, but the per-row crossfade is the best
+         thing about this panel and losing it on every laptop to win a line
+         of text is the wrong trade. 240px is still a real photograph.
+  */
   /* The remaining width comes from the gutters rather than the type:
-       column gap 24 → 16, item padding 12 → 8 a side, icon gutter 12 →
-       10. Roughly 50px back across the three columns, on top of the 100px
-       the photo gives up. */
+         column gap 24 → 16, item padding 12 → 8 a side, icon gutter 12 →
+         10. Roughly 50px back across the three columns, on top of the 100px
+         the photo gives up.
+  */
   /* ---------- (c) Burger cutover at 980px, not 820px ----------
-     Measured, not guessed: brand lockup ~200px + four nav items ~400px
-     + two compact pills ~250px + gaps lands around 890px of content,
-     which overflows .wrap's available width anywhere below roughly
-     940px. The real site's 820px cutover is sized for four plain text
-     links and ONE pill. 979.98px is the site's own established tablet
-     cutover (the copy+image reorder, .nav-dd-panel-media's own hide)
-     rather than a number invented here, and the .98 follows the house rule
-     for breakpoint pairs, so the handover to 980px leaves no fractional
-     gap. */
+       Measured, not guessed: brand lockup ~200px + four nav items ~400px
+       + two compact pills ~250px + gaps lands around 890px of content,
+       which overflows .wrap's available width anywhere below roughly
+       940px. The real site's 820px cutover is sized for four plain text
+       links and ONE pill. 979.98px is the site's own established tablet
+       cutover (the copy+image reorder, .nav-dd-panel-media's own hide)
+       rather than a number invented here, and the .98 follows the house rule
+       for breakpoint pairs, so the handover to 980px leaves no fractional
+       gap.
+  */
   @media (--below-desktop) {
     .nav-links {
       display: none;
     }
   }
+
   @media (--below-desktop) {
     .burger {
       display: block;
     }
   }
+
   /* ============================================================
-     NAV ENTRANCE (2026-10-05)
-     ============================================================
-     The bar used to be the one thing on the page with no entrance: fully
-     formed from the first frame, and on the homepage sitting on top of the
-     still-closed portcullis, ahead of the gate it's meant to arrive behind.
-     It now fades down into place: with the bars lifting on the homepage,
-     and alongside the hero copy everywhere else.
+       NAV ENTRANCE (2026-10-05)
+       ============================================================
+       The bar used to be the one thing on the page with no entrance: fully
+       formed from the first frame, and on the homepage sitting on top of the
+       still-closed portcullis, ahead of the gate it's meant to arrive behind.
+       It now fades down into place: with the bars lifting on the homepage,
+       and alongside the hero copy everywhere else.
 
-     Pure CSS on purpose. A script-triggered entrance would leave the nav
-     invisible until the script arrived, which on a slow connection means a
-     site with no navigation for seconds; a CSS animation runs from the
-     first paint regardless.
+       Pure CSS on purpose. A script-triggered entrance would leave the nav
+       invisible until the script arrived, which on a slow connection means a
+       site with no navigation for seconds; a CSS animation runs from the
+       first paint regardless.
 
-     `backwards` fill, never `both`/`forwards`: the from-state applies during
-     the delay, and once the animation ends the element is handed back to its
-     normal styles entirely. A held end-state would keep overriding things
-     the bar does later — `.nav.stuck::before` fading its gradient out, for
-     one — since animations beat ordinary declarations. It also means no
-     transform lingers on the bar's contents, which matters: a transform on
-     an ancestor of the dropdown panels makes it their containing block and
-     kills their backdrop blur (see the dark-card notes further up). During
-     the brief entrance itself, no panel can be open yet.
+       `backwards` fill, never `both`/`forwards`: the from-state applies during
+       the delay, and once the animation ends the element is handed back to its
+       normal styles entirely. A held end-state would keep overriding things
+       the bar does later — `.nav.stuck::before` fading its gradient out, for
+       one — since animations beat ordinary declarations. It also means no
+       transform lingers on the bar's contents, which matters: a transform on
+       an ancestor of the dropdown panels makes it their containing block and
+       kills their backdrop blur (see the dark-card notes further up). During
+       the brief entrance itself, no panel can be open yet.
 
-     The contents (.wrap) and the top gradient (::before) are animated, not
-     .nav itself, for the same transform reason. */
+       The contents (.wrap) and the top gradient (::before) are animated, not
+       .nav itself, for the same transform reason.
+  */
   .nav::before {
     animation: nav-backdrop-enter 0.6s var(--ease) 0.05s backwards;
   }
+
   :global(body:has(.portcullis)) .nav::before {
     animation-delay: 0.35s;
     animation-duration: 0.7s;
   }
+
   @media (--reduced-motion) {
     .nav::before {
       animation: none;
     }
   }
+
   /* NO unconditional darkening while the overlay is open — that was tried on
-     2026-10-02 and replaced the same day. The bar should behave inside the
-     overlay exactly as it does on the page: transparent at the top, darkening
-     once you scroll. It is .stuck that does that, and main.js now drives .stuck
-     from the OVERLAY's own scrollTop while it is open rather than from
-     window.scrollY, which is frozen then anyway (body gets overflow: hidden).
-     See the whole-site nav block in main.js. */
+       2026-10-02 and replaced the same day. The bar should behave inside the
+       overlay exactly as it does on the page: transparent at the top, darkening
+       once you scroll. It is .stuck that does that, and main.js now drives .stuck
+       from the OVERLAY's own scrollTop while it is open rather than from
+       window.scrollY, which is frozen then anyway (body gets overflow: hidden).
+       See the whole-site nav block in main.js.
+  */
   .nav .wrap {
     display: flex;
     align-items: center;
     /* flex-start + "margin-left: auto" on the <nav> below, NOT space-between:
-       the links group against the CTAs at the right edge rather than sitting
-       centred. Changed 2026-10-02 with the whole-site nav merge — with two CTAs
-       the right side is the heaviest thing in the bar, and a compact link
-       cluster beside them reads as one group where a centred one blurs into
-       the gap. This is the one part of that merge that alters the existing nav's
-       layout rather than only adding to it, so it reaches the nine pages still
-       on the flat nav too — which is fine, they look correct right-aligned. */
+         the links group against the CTAs at the right edge rather than sitting
+         centred. Changed 2026-10-02 with the whole-site nav merge — with two CTAs
+         the right side is the heaviest thing in the bar, and a compact link
+         cluster beside them reads as one group where a centred one blurs into
+         the gap. This is the one part of that merge that alters the existing nav's
+         layout rather than only adding to it, so it reaches the nine pages still
+         on the flat nav too — which is fine, they look correct right-aligned.
+  */
     justify-content: flex-start;
     gap: 24px;
     position: relative;
     z-index: 2;
   }
+
   .brand :global(img) {
     width: 34px;
     height: auto;
     filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.5));
   }
+
   .brand .sub {
     font-size: 8.5px;
     letter-spacing: 0.42em;
@@ -635,102 +717,122 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     margin-top: 5px;
     padding-left: 3px;
   }
+
   /* Every <li> is the full height of the bar, not just the .nav-dd ones.
-     .nav-dd has carried "height: var(--nav-h)" on its own since the dropdown was
-     built, to close the dead strip between the trigger's bottom edge and the
-     panel's top edge — without it, moving the cursor straight down from the
-     label crossed ~22px belonging to neither element and dropped the hover.
-     The side effect, reported 2026-10-02: Restaurant and Events had a 74px-tall
-     hit area while Gallery had only its link's ~31px, so the two dropdowns felt
-     hair-trigger next to a Gallery link you had to aim at. That reads as the bar
-     being erratic rather than as one item being generous.
-     Giving every <li> the same height makes the whole bar behave identically —
-     anywhere in the 74px band over a label activates it, which is ordinary nav
-     behaviour and better than a thin strip in the middle. The hover underline
-     moves to "li:hover > a::after" to follow, since the <a> itself is no longer
-     what the pointer has to be inside. */
+       .nav-dd has carried "height: var(--nav-h)" on its own since the dropdown was
+       built, to close the dead strip between the trigger's bottom edge and the
+       panel's top edge — without it, moving the cursor straight down from the
+       label crossed ~22px belonging to neither element and dropped the hover.
+       The side effect, reported 2026-10-02: Restaurant and Events had a 74px-tall
+       hit area while Gallery had only its link's ~31px, so the two dropdowns felt
+       hair-trigger next to a Gallery link you had to aim at. That reads as the bar
+       being erratic rather than as one item being generous.
+       Giving every <li> the same height makes the whole bar behave identically —
+       anywhere in the 74px band over a label activates it, which is ordinary nav
+       behaviour and better than a thin strip in the middle. The hover underline
+       moves to "li:hover > a::after" to follow, since the <a> itself is no longer
+       what the pointer has to be inside.
+  */
   .nav-links > :global(li) {
     height: var(--nav-h);
     display: flex;
     align-items: center;
   }
+
   .nav-links > :global(li) > :global(a.active)::after {
     transform: scaleX(1);
     transform-origin: left;
   }
+
   .nav-links > :global(li) > :global(a.active) {
     color: var(--gold-2);
   }
+
   /* Suppresses every transition and animation inside the drawer, for the frame
-     or two it takes to force it closed without anything visibly moving. Used on
-     pagehide (so the snapshot the back/forward cache freezes has no transition
-     in flight) and on a bfcache pageshow (so a snapshot taken before this
-     existed still resolves instantly). See the pageshow/pagehide block in
-     main.js.
-     !important, and a deliberate exception rather than an oversight. The drawer
-     declares transitions on roughly a dozen selectors at specificities from
-     (0,1,0) to (0,3,0) — .menu, .menu-bg, the rows, the triggers, the sub-links,
-     the accordion itself, the chevrons, the CTA row, the social row — and
-     out-specifying every one of them would be a list to keep in sync forever,
-     which is the specificity traps waiting to happen. A blunt one-frame kill switch
-     cannot drift. It is scoped to .menu and its descendants, so nothing outside
-     the drawer is affected. */
+       or two it takes to force it closed without anything visibly moving. Used on
+       pagehide (so the snapshot the back/forward cache freezes has no transition
+       in flight) and on a bfcache pageshow (so a snapshot taken before this
+       existed still resolves instantly). See the pageshow/pagehide block in
+       main.js.
+       !important, and a deliberate exception rather than an oversight. The drawer
+       declares transitions on roughly a dozen selectors at specificities from
+       (0,1,0) to (0,3,0) — .menu, .menu-bg, the rows, the triggers, the sub-links,
+       the accordion itself, the chevrons, the CTA row, the social row — and
+       out-specifying every one of them would be a list to keep in sync forever,
+       which is the specificity traps waiting to happen. A blunt one-frame kill switch
+       cannot drift. It is scoped to .menu and its descendants, so nothing outside
+       the drawer is affected.
+  */
   :global(html.nav-no-anim) .nav :global(*) {
     transition: none !important;
     animation: none !important;
   }
+
   @media (--below-hero-full) {
     .nav-cta :global(.button) {
       display: none;
     }
   }
+
   /* -20px. The sub-line is the widest part of the lockup and the mark
-       plus "BACCHUS" still identify the site unambiguously. */
+         plus "BACCHUS" still identify the site unambiguously.
+  */
   @media (--from-desktop) and (--below-nav-full) {
     .brand .sub {
       display: none;
     }
   }
-  /* -20px and -8px. */
+
+  /* -20px and -8px.
+  */
   @media (--from-desktop) and (--below-nav-full) {
     .nav .wrap {
       gap: 14px;
     }
   }
+
   /* -24px. Reuses the existing compact token's own relationship rather
-       than inventing a size: 22px to 16px each side, still a pill. */
+         than inventing a size: 22px to 16px each side, still a pill.
+  */
   @media (--from-desktop) and (--below-nav-full) {
     .nav-cta :global(.button) {
       padding-left: 16px;
       padding-right: 16px;
     }
   }
+
   /* -44px. Both CTAs drop their icon together in this band, so the pair
-       always matches: either both carry one (above 1180px, and in the
-       mobile drawer) or neither does. Until 2026-10-04 only Book a table's
-       arrow went, on the argument that Enquire's envelope said more than
-       the arrow did — but a matched pair reads as one deliberate group,
-       and one icon on one pill read as an inconsistency. The labels carry
-       the meaning on their own. */
+         always matches: either both carry one (above 1180px, and in the
+         mobile drawer) or neither does. Until 2026-10-04 only Book a table's
+         arrow went, on the argument that Enquire's envelope said more than
+         the arrow did — but a matched pair reads as one deliberate group,
+         and one icon on one pill read as an inconsistency. The labels carry
+         the meaning on their own.
+  */
   @media (--from-desktop) and (--below-nav-full) {
     .nav-cta :global(.button) :global(svg) {
       display: none;
     }
   }
+
   @media (--below-desktop) {
     .nav-cta :global(.button) {
       display: none;
     }
   }
+
   .nav > .wrap {
     animation: nav-enter 0.6s var(--ease) 0.05s backwards;
   }
+
   /* Homepage: in step with the portcullis, whose bars start rising at 0.1s.
-     Arriving at ~0.35s lands the bar just as the gate is visibly opening. */
+       Arriving at ~0.35s lands the bar just as the gate is visibly opening.
+  */
   :global(body:has(.portcullis)) .nav > .wrap {
     animation-delay: 0.35s;
     animation-duration: 0.7s;
   }
+
   @media (--reduced-motion) {
     .nav > .wrap {
       animation: none;

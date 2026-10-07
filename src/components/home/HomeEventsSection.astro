@@ -137,46 +137,53 @@ const OCCASIONS = [
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   /* Previously overhung past the image's own edge (right:-6px;
-         bottom:-20px) — fine while .story-visual was capped at 440px, well
-         clear of the wrap's own edge, but now that the image is full-width
-         here, that same overhang tracks the image's edge straight out to the
-         wrap padding, landing within a few px of the actual screen edge on a
-         narrow phone. Inset instead, so it sits inside the image regardless of
-         how much wrap padding there is. */
+           bottom:-20px) — fine while .story-visual was capped at 440px, well
+           clear of the wrap's own edge, but now that the image is full-width
+           here, that same overhang tracks the image's edge straight out to the
+           wrap padding, landing within a few px of the actual screen edge on a
+           narrow phone. Inset instead, so it sits inside the image regardless of
+           how much wrap padding there is.
+  */
   /* Fully-rounds a .tab-bar (bar, buttons, active pill) instead of the
-       plain 3px-radius default — actually brings it in line with the design
-       system's own pill-shaped-buttons rule better than that default did.
-       Originally built for the Reception Menus sandbox
-       (sandboxes/reception-package.html, née reception-menus.html before it was
-       split into reception-package.html/reception-stations.html) alongside
-       repositioning it inline with
-       its heading — that inline placement didn't generalize here (this
-       section's heading is long enough to wrap 2–3 lines on its own, and
-       bottom-aligning a tab-bar to a line count that shifts with viewport
-       width never looked stable), so on this page it's kept stacked below the
-       full eyebrow/h2/lead block like before — just with this shape/color
-       treatment layered on. */
+         plain 3px-radius default — actually brings it in line with the design
+         system's own pill-shaped-buttons rule better than that default did.
+         Originally built for the Reception Menus sandbox
+         (sandboxes/reception-package.html, née reception-menus.html before it was
+         split into reception-package.html/reception-stations.html) alongside
+         repositioning it inline with
+         its heading — that inline placement didn't generalize here (this
+         section's heading is long enough to wrap 2–3 lines on its own, and
+         bottom-aligning a tab-bar to a line count that shifts with viewport
+         width never looked stable), so on this page it's kept stacked below the
+         full eyebrow/h2/lead block like before — just with this shape/color
+         treatment layered on.
+  */
   .tabs-bar {
     border-radius: var(--radius-pill);
     /* Matches #events .section-head's own margin-bottom (32px) rather than
-         the shared .tab-bar clamp(18-24px) above — .tabs-bar is only ever used
-         here, so this is effectively an #events-specific value already. */
+           the shared .tab-bar clamp(18-24px) above — .tabs-bar is only ever used
+           here, so this is effectively an #events-specific value already.
+  */
     margin-bottom: 32px;
   }
+
   @media (--below-home-two-column) {
     #events .tabs-bar {
       display: flex;
       width: 100%;
     }
   }
+
   @media (--below-home-two-column) {
     #events .arch-tab {
       order: -1;
       margin-top: clamp(18px, 5vw, 32px);
     }
   }
+
   .tab-panel .capacity {
     display: inline-flex;
     align-items: baseline;
@@ -187,24 +194,28 @@ const OCCASIONS = [
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
+
   /* .arch-tab/.arch-dish are modifiers, not ancestor-scoped rules — menu.html
-       nests .dish inside its own (unrelated) .tab-panel tab system, so a
-       .tab-panel .arch / .dish .arch pair would both match the same element
-       there, silently resolving by CSS source order alone (the same-specificity
-       collision). Applying the modifier directly to the element sidesteps that. */
+         nests .dish inside its own (unrelated) .tab-panel tab system, so a
+         .tab-panel .arch / .dish .arch pair would both match the same element
+         there, silently resolving by CSS source order alone (the same-specificity
+         collision). Applying the modifier directly to the element sidesteps that.
+  */
   .arch-tab {
     position: relative;
     aspect-ratio: 4/5;
     border-radius: 260px 260px 6px 6px;
     overflow: hidden;
     /* .tab-panel no longer sets align-items: center (removed so the text
-         column isn't force-stretched/centered against a taller image row) —
-         but that leaves .arch-tab's own height subject to stretch too, which
-         wins over aspect-ratio in a grid row taller than the image (e.g. a
-         longer bullet list), distorting it. align-self keeps it centered at
-         its own true aspect-ratio height regardless of the row's height. */
+           column isn't force-stretched/centered against a taller image row) —
+           but that leaves .arch-tab's own height subject to stretch too, which
+           wins over aspect-ratio in a grid row taller than the image (e.g. a
+           longer bullet list), distorting it. align-self keeps it centered at
+           its own true aspect-ratio height regardless of the row's height.
+  */
     align-self: center;
   }
+
   .arch-tab::after {
     content: "";
     position: absolute;
@@ -212,6 +223,7 @@ const OCCASIONS = [
     background: linear-gradient(180deg, transparent 55%, rgba(10, 9, 6, 0.55));
     pointer-events: none;
   }
+
   .tab-panel .actions {
     margin-top: 32px;
     display: flex;
@@ -219,57 +231,69 @@ const OCCASIONS = [
     gap: 14px;
     align-items: center;
   }
+
   @media (--below-tablet) {
     .tab-panel .actions {
       flex-direction: column;
       align-items: center;
     }
   }
+
   /* Same over-sized-gap issue as .section-padding-small above, but on the
-       homepage's #events section: the shared clamp(44-72px) was tuned for heavy
-       content below (a 4-card grid) and reads as oversized in front of the
-       compact .tabs-bar pill switcher here instead. */
+         homepage's #events section: the shared clamp(44-72px) was tuned for heavy
+         content below (a 4-card grid) and reads as oversized in front of the
+         compact .tabs-bar pill switcher here instead.
+  */
   #events .section-head {
     margin-bottom: 32px;
   }
+
   @media (--below-home-lead-measure) {
     #events .lead {
       max-width: none;
     }
   }
+
   .tabs-bar .pill {
     border-radius: var(--radius-pill);
   }
+
   .tabs-bar :global(button) {
     padding: 10px 18px;
     border-radius: var(--radius-pill);
     text-align: center;
   }
+
   @media (--below-tablet) {
     .tabs-bar :global(button) {
       padding: 13px 6px;
     }
   }
+
   @media (--from-home-two-column) {
     #events .tabs-bar :global(button) {
       width: 160px;
     }
   }
+
   @media (--below-home-two-column) {
     #events .tabs-bar :global(button) {
       flex: 1;
     }
   }
+
   @media (--below-desktop) {
     #events .tab-panel.active {
       grid-template-columns: 1fr 1fr;
     }
   }
+
   @media (--below-home-two-column) {
     #events .tab-panel.active {
       grid-template-columns: 1fr;
     }
   }
+
   @media (--below-tablet) {
     .tab-panel .actions :global(.button) {
       width: 100%;

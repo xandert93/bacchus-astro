@@ -53,12 +53,14 @@
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   /* ---------- Sent state ---------- */
   /* The confirmation shown in place of the form once it's sent. It used to
-       borrow the calendar's card styling by carrying the .availability class
-       itself; it has its own copy of that card now (the white card below),
-       since the calendar's styles live in AvailabilityCalendar.astro. */
+         borrow the calendar's card styling by carrying the .availability class
+         itself; it has its own copy of that card now (the white card below),
+         since the calendar's styles live in AvailabilityCalendar.astro.
+  */
   .enquiry-sent-panel {
     background: #fff;
     border: 1px solid rgba(var(--muted-ink-rgb), 0.1);
@@ -66,15 +68,18 @@
     padding: clamp(22px, 4vw, 44px);
     box-shadow: 0 40px 90px -60px rgba(var(--muted-ink-rgb), 0.4);
   }
+
   .enquiry-sent-panel {
     display: none;
     text-align: center;
     padding: clamp(30px, 5vw, 56px) clamp(18px, 3vw, 34px);
   }
+
   .enquiry-sent-panel.show {
     display: block;
     animation: sentIn 0.7s var(--ease) both;
   }
+
   .enquiry-sent-panel .seal {
     width: 74px;
     height: 74px;
@@ -86,11 +91,13 @@
     background: rgba(var(--gold-rgb), 0.14);
     box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.5);
   }
+
   .enquiry-sent-panel h3 {
     font-family: "Fraunces", Georgia, serif;
     font-weight: 400;
     font-size: clamp(26px, 3.2vw, 36px);
   }
+
   .enquiry-sent-panel > p {
     font-family: "Newsreader", Georgia, serif;
     font-size: 16px;
@@ -98,6 +105,7 @@
     max-width: 46ch;
     margin: 12px auto 0;
   }
+
   .next-steps {
     margin: 28px auto 0;
     max-width: 420px;
@@ -105,6 +113,7 @@
     display: grid;
     gap: 18px;
   }
+
   .next-steps .next-step-number {
     width: 26px;
     height: 26px;
@@ -116,20 +125,24 @@
     background: var(--ink);
     color: var(--limestone-2);
   }
+
   .next-steps p {
     font-family: "Newsreader", Georgia, serif;
     font-size: 14px;
     color: var(--muted-ink);
     margin-top: 2px;
   }
+
   .enquiry-sent-panel .seal :global(svg) {
     animation: sealTick 0.7s 0.25s var(--ease) both;
   }
+
   .enquiry-sent-panel h3 :global(em) {
     font-family: "Newsreader", Georgia, serif;
     font-style: italic;
     color: var(--bronze);
   }
+
   .next-steps li {
     list-style: none;
     display: grid;
@@ -139,15 +152,19 @@
     opacity: 0;
     animation: revealUp 0.5s var(--ease) both;
   }
+
   .next-steps li:nth-child(1) {
     animation-delay: 0.3s;
   }
+
   .next-steps li:nth-child(2) {
     animation-delay: 0.45s;
   }
+
   .next-steps li:nth-child(3) {
     animation-delay: 0.6s;
   }
+
   .next-steps :global(b) {
     font-family: "Newsreader", Georgia, serif;
     font-weight: 500;

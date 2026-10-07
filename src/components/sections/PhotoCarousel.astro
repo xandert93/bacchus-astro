@@ -74,13 +74,16 @@ const { slides } = Astro.props
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .carousel-view {
     user-select: none;
   }
+
   .carousel-section {
     position: relative;
   }
+
   .carousel-view {
     overflow: hidden;
     cursor: grab;
@@ -88,20 +91,24 @@ const { slides } = Astro.props
     user-select: none;
     touch-action: pan-y;
   }
+
   .carousel-view.drag {
     cursor: grabbing;
   }
+
   .carousel-track {
     display: flex;
     gap: clamp(14px, 2vw, 26px);
     transition: transform 0.8s var(--ease);
     will-change: transform;
   }
+
   .slide {
     flex: 0 0 auto;
     width: clamp(250px, 32vw, 420px);
     position: relative;
   }
+
   .slide .ph {
     position: relative;
     overflow: hidden;
@@ -109,6 +116,7 @@ const { slides } = Astro.props
     aspect-ratio: 4/5;
     background: #e2dbca;
   }
+
   .slide :global(img) {
     width: 100%;
     height: 100%;
@@ -117,51 +125,58 @@ const { slides } = Astro.props
       transform 1.2s var(--ease),
       filter 0.8s var(--ease);
     /* Lightened from grayscale(0.35) brightness(0.94) on 2026-10-01 — the
-       original read as too heavy a mute for a resting state. Still enough to
-       read as a deliberately muted mood frame (see the CONTEXT vs PRODUCT
-       note below), just not as washed-out as the original figure. */
+         original read as too heavy a mute for a resting state. Still enough to
+         read as a deliberately muted mood frame (see the CONTEXT vs PRODUCT
+         note below), just not as washed-out as the original figure.
+  */
     filter: grayscale(0.18) brightness(0.97);
   }
+
   @media (--hover) {
     .slide:hover :global(img) {
       transform: scale(var(--image-hover-zoom-ambient));
       filter: grayscale(0) brightness(1);
     }
   }
+
   @media (--no-hover) {
     .slide :global(img) {
       filter: grayscale(0) brightness(1);
     }
   }
+
   @media (--no-hover) {
     .slide:active :global(img) {
       transform: scale(var(--image-hover-zoom-ambient));
     }
   }
-  /* Gated per the sticky touch hover — same root cause already fixed on this
-     carousel's own .carousel-button arrows (touch has no real "pointer
-     leaves" event, so an unguarded :hover here reads as a permanently
-     zoomed/full-color slide sitting amid its still-muted siblings after a
-     tap or drag-release), just missed on the slides themselves at the time. */
-  /* Touch has no lingering :hover, only a momentary :active while a finger
-     is actually down — so gating this the same way as every other
-     hover-reveal on the site left touch seeing the dimmed resting filter
-     almost all the time (:active is too brief to register as "revealed").
-     Dropping the muted-at-rest filter entirely for hover:none, on request,
-     rather than only revealing it during that brief press. Zoom stays as a
-     nice :active touch flourish; only the filter is unconditional now.
 
-     .slide is now the ONLY component muted at rest (2026-09-24). This
-     comment used to name two siblings and both are gone: .pkg-station-photo
-     no longer exists as a class at all, and .gallery-item deliberately
-     stopped muting — see its own note, which carries the full reasoning.
-     The short version is that .gallery-item and the Reception stations show
-     the PRODUCT (photographs someone is there to look at, each opening a
-     lightbox), whereas these slides are CONTEXT — mood frames behind a
-     section lead, where a muted bed reads as deliberate rather than as
-     washed out. That is the line to test against before muting anything new
-     at rest, and the reason this block survives while the matching one under
-     .gallery-item was deleted as redundant. */
+  /* Gated per the sticky touch hover — same root cause already fixed on this
+       carousel's own .carousel-button arrows (touch has no real "pointer
+       leaves" event, so an unguarded :hover here reads as a permanently
+       zoomed/full-color slide sitting amid its still-muted siblings after a
+       tap or drag-release), just missed on the slides themselves at the time.
+  */
+  /* Touch has no lingering :hover, only a momentary :active while a finger
+       is actually down — so gating this the same way as every other
+       hover-reveal on the site left touch seeing the dimmed resting filter
+       almost all the time (:active is too brief to register as "revealed").
+       Dropping the muted-at-rest filter entirely for hover:none, on request,
+       rather than only revealing it during that brief press. Zoom stays as a
+       nice :active touch flourish; only the filter is unconditional now.
+
+       .slide is now the ONLY component muted at rest (2026-09-24). This
+       comment used to name two siblings and both are gone: .pkg-station-photo
+       no longer exists as a class at all, and .gallery-item deliberately
+       stopped muting — see its own note, which carries the full reasoning.
+       The short version is that .gallery-item and the Reception stations show
+       the PRODUCT (photographs someone is there to look at, each opening a
+       lightbox), whereas these slides are CONTEXT — mood frames behind a
+       section lead, where a muted bed reads as deliberate rather than as
+       washed out. That is the line to test against before muting anything new
+       at rest, and the reason this block survives while the matching one under
+       .gallery-item was deleted as redundant.
+  */
   .slide .carousel-caption {
     display: flex;
     justify-content: space-between;
@@ -170,11 +185,13 @@ const { slides } = Astro.props
     border-top: 1px solid rgba(var(--muted-ink-rgb), 0.14);
     margin-top: 16px;
   }
+
   .slide .carousel-caption :global(b) {
     font-family: "Fraunces", serif;
     font-weight: 400;
     font-size: 18px;
   }
+
   .slide .carousel-caption i {
     font-style: normal;
     font-size: 10.5px;
@@ -182,6 +199,7 @@ const { slides } = Astro.props
     text-transform: uppercase;
     color: var(--bronze);
   }
+
   .slide .ph::after {
     content: "";
     position: absolute;
@@ -190,15 +208,18 @@ const { slides } = Astro.props
     opacity: 0;
     transition: opacity 0.6s var(--ease);
   }
+
   .slide:hover .ph::after {
     opacity: 1;
   }
+
   .carousel-controls {
     display: flex;
     align-items: center;
     gap: 18px;
     margin-top: 34px;
   }
+
   .carousel-button {
     width: 52px;
     height: 52px;
@@ -211,6 +232,7 @@ const { slides } = Astro.props
     transition: all 0.4s var(--ease);
     flex: none;
   }
+
   @media (--hover) {
     .carousel-button:hover:not(:disabled) {
       background: var(--ink);
@@ -219,6 +241,7 @@ const { slides } = Astro.props
       transform: scale(1.06);
     }
   }
+
   @media (--no-hover) {
     .carousel-button:active:not(:disabled) {
       background: var(--ink);
@@ -227,14 +250,17 @@ const { slides } = Astro.props
       transform: scale(1.06);
     }
   }
+
   /* Touch has no real :hover to leave, so tapping this button would otherwise
-     leave the hover state stuck until the visitor tapped elsewhere (same root
-     cause noted for .button above) — gate :hover to real hover-capable pointers
-     and give touch its own :active feedback instead. */
+       leave the hover state stuck until the visitor tapped elsewhere (same root
+       cause noted for .button above) — gate :hover to real hover-capable pointers
+       and give touch its own :active feedback instead.
+  */
   .carousel-button:disabled {
     opacity: 0.28;
     cursor: not-allowed;
   }
+
   .carousel-progress-bar {
     flex: 1;
     height: 1px;
@@ -242,6 +268,7 @@ const { slides } = Astro.props
     position: relative;
     overflow: hidden;
   }
+
   .carousel-progress-bar i {
     position: absolute;
     inset: 0;
@@ -250,12 +277,14 @@ const { slides } = Astro.props
     transform: scaleX(0.3);
     transition: transform 0.8s var(--ease);
   }
+
   .carousel-count {
     font-size: 11px;
     letter-spacing: 0.2em;
     color: var(--bronze);
     font-variant-numeric: tabular-nums;
   }
+
   @media (--below-tablet) {
     .slide {
       width: 76vw;

@@ -90,7 +90,8 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
        date without knowing anything happens is the same discoverability gap,
        just solved by a different affordance. Each icon travels with its own
        text as one toggled group (display: contents), so a touch visitor
-       never sees a mouse-pointer glyph next to "Tap it...". */}
+       never sees a mouse-pointer glyph next to "Tap it...". 
+*/}
   <div class="availability-note">
     <span class="wl-hint-hover">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -180,63 +181,72 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   :global(.availability-cell) {
     user-select: none;
   }
+
   /* .98 below the min-width the base rule resumes at, per the .98 breakpoint
-     pairing — a plain 980/981 pair leaves 980.01-980.99 matching neither.
+       pairing — a plain 980/981 pair leaves 980.01-980.99 matching neither.
 
-     Both declarations here are two halves of one fact: this is the width at
-     which .package-menu-groups stops being three columns, and therefore the
-     width below which the dish tiles have nothing left to line up with. Above
-     it the tiles take the wide text gutter so the two grids read as one column
-     structure (the drifting grid gaps); below it that gutter buys nothing and only
-     costs tile width — it took a 400px phone's tiles from ~113px square down to ~99px.
+       Both declarations here are two halves of one fact: this is the width at
+       which .package-menu-groups stops being three columns, and therefore the
+       width below which the dish tiles have nothing left to line up with. Above
+       it the tiles take the wide text gutter so the two grids read as one column
+       structure (the drifting grid gaps); below it that gutter buys nothing and only
+       costs tile width — it took a 400px phone's tiles from ~113px square down to ~99px.
 
-     Done by redefining the token on the element rather than re-declaring
-     column-gap: .package-dishes-grid already resolves its gap through
-     var(--package-grid-column-gap), so there stays exactly one column-gap
-     declaration in the component and this just changes what it reads. */
+       Done by redefining the token on the element rather than re-declaring
+       column-gap: .package-dishes-grid already resolves its gap through
+       var(--package-grid-column-gap), so there stays exactly one column-gap
+       declaration in the component and this just changes what it reads.
+  */
   /* ---------- Packages: horizontal cards (mobile only, ≤620px) ----------
-     Thumbnail left, everything else (title, copy, button) stacked in the text
-     column beside it — the way .package-beverage-card already lays itself out
-     at 621px+, borrowed down to phone widths. Replaces the old single-column
-     treatment, where each format card ran image-on-top-of-content full-bleed
-     and the three of them together dominated the page's scroll length.
+       Thumbnail left, everything else (title, copy, button) stacked in the text
+       column beside it — the way .package-beverage-card already lays itself out
+       at 621px+, borrowed down to phone widths. Replaces the old single-column
+       treatment, where each format card ran image-on-top-of-content full-bleed
+       and the three of them together dominated the page's scroll length.
 
-     Markup is identical at every breakpoint — this is CSS only. 620.98 pairs
-     with the 2-up tier's own `min-width: 621px` above; see the .98 breakpoint pairing
-     for why the max side is fractional. Everything from 621px up (the 2-up
-     tablet tier and the 980px+ triptych) is untouched by this block. */
+       Markup is identical at every breakpoint — this is CSS only. 620.98 pairs
+       with the 2-up tier's own `min-width: 621px` above; see the .98 breakpoint pairing
+       for why the max side is fractional. Everything from 621px up (the 2-up
+       tablet tier and the 980px+ triptych) is untouched by this block.
+  */
   /* ---------- Mock availability calendar (Weddings — concept demo) ---------- */
   .availability {
     background: #fff;
     border: 1px solid rgba(var(--muted-ink-rgb), 0.1);
     border-radius: var(--radius-card);
     /* min unchanged (still 22px) so true mobile (≤620px) keeps its existing
-       padding — 4vw only exceeds 22px above ~550px, so this only actually
-       grows anything above that. max raised from 34px to 44px. */
+         padding — 4vw only exceeds 22px above ~550px, so this only actually
+         grows anything above that. max raised from 34px to 44px.
+  */
     padding: clamp(22px, 4vw, 44px);
     box-shadow: 0 40px 90px -60px rgba(var(--muted-ink-rgb), 0.4);
   }
+
   .availability-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
   }
+
   .availability-head .availability-month {
     font-family: "Fraunces", serif;
     font-size: 20px;
     font-weight: 400;
   }
+
   .availability-day-of-week {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px;
     margin-bottom: 6px;
   }
+
   .availability-day-of-week span {
     text-align: center;
     font-size: 9.5px;
@@ -245,11 +255,13 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     color: var(--bronze);
     padding-bottom: 6px;
   }
+
   .availability-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px;
   }
+
   :global(.availability-cell) {
     height: clamp(32px, 4.6vw, 46px);
     border-radius: var(--radius-card);
@@ -265,35 +277,42 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       color 0.25s var(--ease),
       box-shadow 0.25s var(--ease);
   }
+
   :global(.availability-cell.blank) {
     visibility: hidden;
   }
+
   :global(.availability-cell.open) {
     background: var(--avail-green-bg);
     color: var(--avail-green-fg);
     cursor: pointer;
   }
+
   @media (--hover) {
     :global(.availability-cell.open:hover) {
       box-shadow: inset 0 0 0 1px var(--avail-green-fg);
     }
   }
+
   :global(.availability-cell.interest) {
     background: var(--avail-amber-bg);
     color: var(--avail-amber-fg);
     cursor: pointer;
   }
+
   @media (--hover) {
     :global(.availability-cell.interest:hover) {
       box-shadow: inset 0 0 0 1px var(--avail-amber-fg);
     }
   }
+
   :global(.availability-cell.taken) {
     background: var(--avail-grey-bg);
     color: var(--avail-grey-fg);
     cursor: auto;
     text-decoration: line-through;
   }
+
   :global(.availability-cell.today)::before {
     content: "";
     position: absolute;
@@ -305,24 +324,29 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     background: var(--oxblood);
     transform: translateX(-50%);
   }
+
   :global(.availability-cell.open.picked) {
     background: var(--avail-green-fg);
     color: #fff;
     font-weight: 600;
     box-shadow: none;
   }
+
   :global(.availability-cell.interest.picked) {
     background: var(--avail-amber-fg);
     color: #fff;
     font-weight: 600;
     box-shadow: none;
   }
+
   :global(.availability-cell.picked.today)::before {
     background: #fff;
   }
+
   /* Gold pulse on pick — every calendar on the site (the diary showcase, its
-     quick-pick modal, and the wizard's own inline compact calendar) is meant
-     to read as the same component, so this isn't scoped further than that. */
+       quick-pick modal, and the wizard's own inline compact calendar) is meant
+       to read as the same component, so this isn't scoped further than that.
+  */
   .availability.diary :global(.availability-cell.picked)::after,
   .availability.compact :global(.availability-cell.picked)::after {
     content: "";
@@ -332,6 +356,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     box-shadow: 0 0 0 0 rgba(var(--gold-rgb), 0.45);
     animation: selPulse 0.5s var(--ease);
   }
+
   .availability-note {
     margin-top: 18px;
     padding-top: 16px;
@@ -343,26 +368,31 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     align-items: flex-start;
     font-family: "Newsreader", Georgia, serif;
   }
+
   .availability-note :global(svg) {
     flex: none;
     margin-top: 2px;
     color: var(--bronze);
   }
+
   .availability-legend {
     display: flex;
     flex-direction: column;
     gap: 4px;
     /* Matches the shared .availability-head's own margin-bottom and .availability-picked's
-       own margin-top just below — the established rhythm around this
-       widget's own sub-sections. */
+         own margin-top just below — the established rhythm around this
+         widget's own sub-sections.
+  */
     margin-top: 20px;
     font-size: 11.5px;
     color: var(--muted-ink);
   }
+
   .availability-legend > span {
     display: flex;
     align-items: center;
   }
+
   .availability-legend i {
     width: 10px;
     height: 10px;
@@ -370,18 +400,22 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     display: inline-block;
     margin-right: 6px;
   }
+
   .availability-legend-open i {
     background: var(--avail-green-bg-h);
     box-shadow: inset 0 0 0 1px var(--avail-green-fg);
   }
+
   .availability-legend-interest i {
     background: var(--avail-amber-bg-h);
     box-shadow: inset 0 0 0 1px var(--avail-amber-fg);
   }
+
   .availability-legend-taken i {
     background: var(--avail-grey-bg);
     box-shadow: inset 0 0 0 1px var(--avail-grey-fg);
   }
+
   .availability-picked-status {
     display: inline-flex;
     align-items: center;
@@ -391,6 +425,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     text-transform: uppercase;
     font-weight: 600;
   }
+
   .availability-picked-status:not(:empty)::before {
     content: "";
     width: 6px;
@@ -399,20 +434,25 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     background: currentColor;
     flex: none;
   }
+
   .availability.compact .availability-head {
     margin-bottom: 14px;
   }
+
   .availability.compact .availability-head .availability-month {
     font-size: 17px;
   }
+
   .availability.compact .availability-grid {
     gap: 7px;
   }
+
   .availability.compact :global(.availability-cell) {
     height: auto;
     aspect-ratio: 1;
     font-size: clamp(12px, 1.5vw, 14px);
   }
+
   .availability.compact :global(.availability-cell.interest)::after {
     content: "";
     position: absolute;
@@ -425,20 +465,24 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     border-radius: 50%;
     background: var(--avail-amber-fg);
   }
+
   /* .availability-cell.picked::after (the gold pulse box, above) sets inset:0 on the
-     same pseudo-element at equal specificity — without explicit bottom/left
-     here, those leftover 0 values over-constrain this dot's box (left:0 +
-     right:5px + width:5px) and the browser drops 'right', snapping the dot to
-     the cell's left edge. Same lesson as the same-specificity collision: don't let
-     one same- specificity rule's shorthand bleed into another's longhands. */
+       same pseudo-element at equal specificity — without explicit bottom/left
+       here, those leftover 0 values over-constrain this dot's box (left:0 +
+       right:5px + width:5px) and the browser drops 'right', snapping the dot to
+       the cell's left edge. Same lesson as the same-specificity collision: don't let
+       one same- specificity rule's shorthand bleed into another's longhands.
+  */
   .availability.compact :global(.availability-cell.interest.picked)::after {
     background: var(--paper);
   }
+
   /* The widget's card (form{}, above) stays capped to ~480-500px at every
-       width — it never stretches to fill a wider field the way a full-bleed
-       compact calendar might, so its cells stay desktop-sized down to true
-       mobile, matching .availability.diary's own 480px breakpoint below rather than
-       shrinking early. */
+         width — it never stretches to fill a wider field the way a full-bleed
+         compact calendar might, so its cells stay desktop-sized down to true
+         mobile, matching .availability.diary's own 480px breakpoint below rather than
+         shrinking early.
+  */
   @media (--below-tablet) {
     .availability.compact :global(.availability-cell.interest)::after {
       top: 4px;
@@ -447,6 +491,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       height: 4px;
     }
   }
+
   @media (--below-tablet) {
     .availability.compact :global(.availability-cell.today)::before {
       bottom: 4px;
@@ -454,10 +499,12 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       height: 4px;
     }
   }
+
   /* index/corporate/celebrations/gallery's inline wizard calendar (#availForm)
-     — matches the diary showcase's own header exactly (centered title +
-     subtitle, prev/next flanking on either side) so every calendar on the site
-     reads as the same component; restyled directly here. */
+       — matches the diary showcase's own header exactly (centered title +
+       subtitle, prev/next flanking on either side) so every calendar on the site
+       reads as the same component; restyled directly here.
+  */
   #availForm :global(.availability-cell) {
     font-family: "Inter", sans-serif;
   }
@@ -497,6 +544,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       background 0.3s var(--ease),
       border-color 0.3s var(--ease);
   }
+
   @media (--hover) {
     #availForm .availability-prev:hover:not(:disabled),
     #availForm .availability-next:hover:not(:disabled) {
@@ -504,6 +552,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       border-color: rgba(var(--muted-ink-rgb), 0.3);
     }
   }
+
   @media (--no-hover) {
     #availForm .availability-prev:active:not(:disabled),
     #availForm .availability-next:active:not(:disabled) {
@@ -516,13 +565,15 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     opacity: 0.3;
     cursor: auto;
   }
+
   /* Matches the AC showcase's own .availability-foot-label bar (styles.css, scoped
-     to .availability.diary there) — same markup/format, just repeated here since
-     this calendar sits inside .availability.compact instead. Unlike the showcase's
-     version, this one starts hidden and only appears once a date is picked
-     (.show, toggled in main.js's updatePickedPanels()) — there's no
-     "No date selected" placeholder row sitting above the Continue button
-     before then. */
+       to .availability.diary there) — same markup/format, just repeated here since
+       this calendar sits inside .availability.compact instead. Unlike the showcase's
+       version, this one starts hidden and only appears once a date is picked
+       (.show, toggled in main.js's updatePickedPanels()) — there's no
+       "No date selected" placeholder row sitting above the Continue button
+       before then.
+  */
   #availPicked {
     margin-top: 24px;
     padding-top: 22px;
@@ -540,32 +591,39 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
   #availPicked.status-interest .availability-picked-status {
     color: var(--avail-amber-fg);
   }
+
   /* Same markup/format as the AC showcase's own #availPicked (.availability-foot-label,
-     below) — this one just sits inline in the .availability-form-row instead of below
-     a divider, so no margin-top/padding-top/border-top here. */
+       below) — this one just sits inline in the .availability-form-row instead of below
+       a divider, so no margin-top/padding-top/border-top here.
+  */
   :global(#availFormPicked) {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
+
   .availability.diary .availability-head {
     margin-bottom: 26px;
   }
+
   .availability.diary .availability-title {
     text-align: center;
     display: flex;
     flex-direction: column;
     gap: 6px;
   }
+
   .availability.diary .availability-head .availability-month {
     font-size: clamp(21px, 2.2vw, 27px);
   }
+
   .availability.diary .availability-sub {
     font-size: 9.5px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--muted-ink);
   }
+
   .availability.diary .availability-prev,
   .availability.diary .availability-next {
     width: 40px;
@@ -583,6 +641,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       background 0.3s var(--ease),
       border-color 0.3s var(--ease);
   }
+
   @media (--hover) {
     .availability.diary .availability-prev:hover:not(:disabled),
     .availability.diary .availability-next:hover:not(:disabled) {
@@ -590,6 +649,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       border-color: rgba(var(--muted-ink-rgb), 0.3);
     }
   }
+
   @media (--no-hover) {
     .availability.diary .availability-prev:active:not(:disabled),
     .availability.diary .availability-next:active:not(:disabled) {
@@ -597,27 +657,33 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       border-color: rgba(var(--muted-ink-rgb), 0.3);
     }
   }
+
   .availability.diary .availability-prev:disabled,
   .availability.diary .availability-next:disabled {
     opacity: 0.3;
     cursor: auto;
   }
+
   .availability.diary .availability-grid {
     gap: 7px;
   }
+
   .availability.diary :global(.availability-cell) {
     height: auto;
     aspect-ratio: 1;
     /* Scales with cell size instead of a fixed value, since both this and
-       .availability.compact's cells resize with viewport/container width (aspect-
-       ratio:1 on a 7-column grid) while the old fixed 14px/13px numbers
-       didn't track that — shared with .availability.compact below so both read
-       as the same calendar. */
+         .availability.compact's cells resize with viewport/container width (aspect-
+         ratio:1 on a 7-column grid) while the old fixed 14px/13px numbers
+         didn't track that — shared with .availability.compact below so both read
+         as the same calendar.
+  */
     font-size: clamp(12px, 1.5vw, 14px);
   }
+
   /* Matches .availability.compact's interest-dot exactly (top/right/size), including
-     its 980px mobile step below — the two calendars are meant to read as
-     identical, so this no longer carries its own separate phone-only value. */
+       its 980px mobile step below — the two calendars are meant to read as
+       identical, so this no longer carries its own separate phone-only value.
+  */
   .availability.diary :global(.availability-cell.interest)::after {
     content: "";
     position: absolute;
@@ -630,11 +696,14 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     border-radius: 50%;
     background: var(--avail-amber-fg);
   }
+
   /* Same inset:0-vs-longhand collision as .availability.compact's version above —
-     see the comment there. */
+       see the comment there.
+  */
   .availability.diary :global(.availability-cell.interest.picked)::after {
     background: var(--paper);
   }
+
   @media (--below-desktop) {
     .availability.diary :global(.availability-cell.interest)::after {
       top: 4px;
@@ -643,6 +712,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       height: 4px;
     }
   }
+
   @media (--below-large-phone) {
     :global(.availability-cell.today)::before {
       bottom: 4px;
@@ -650,133 +720,160 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       height: 4px;
     }
   }
+
   /* Two deliberate lines (date, then status) instead of one flowing string —
-     a single "Selected · 16 Sep 2026 · Enquiries received" line wraps at
-     whatever point the device's actual width/font metrics happen to land on,
-     which sometimes split it mid-phrase and looked broken. A fixed two-line
-     layout is a controlled break every time, on every device, matching the
-     desktop callout's own .availability-picked-date/.availability-picked-status stack. Reuses .availability-picked-status
-     (already styled/dotted below) for the status line rather than duplicating
-     that styling here. */
+       a single "Selected · 16 Sep 2026 · Enquiries received" line wraps at
+       whatever point the device's actual width/font metrics happen to land on,
+       which sometimes split it mid-phrase and looked broken. A fixed two-line
+       layout is a controlled break every time, on every device, matching the
+       desktop callout's own .availability-picked-date/.availability-picked-status stack. Reuses .availability-picked-status
+       (already styled/dotted below) for the status line rather than duplicating
+       that styling here.
+  */
   .availability.diary .availability-foot-label {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
+
   .availability-foot-label-date {
     font-size: 10.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--muted-ink);
   }
+
   .availability-foot-label.status-open .availability-picked-status {
     color: var(--avail-green-fg);
   }
+
   .availability-foot-label.status-interest .availability-picked-status {
     color: var(--avail-amber-fg);
   }
+
   /* Scoped to this specific instance of .availability-picked-status, not the shared class in
-       general (it's also reused by .availability-picked elsewhere, where no one's
-       asked for a smaller dot). */
+         general (it's also reused by .availability-picked elsewhere, where no one's
+         asked for a smaller dot).
+  */
   @media (--below-large-phone) {
     .availability-foot-label .availability-picked-status:not(:empty)::before {
       width: 4px;
       height: 4px;
     }
   }
+
   @media (--below-large-phone) {
     .availability-foot-label {
       align-items: center;
     }
   }
+
   @media (--below-large-phone) {
     .availability-foot :global(.button) {
       width: 100%;
       max-width: 300px;
       justify-content: center;
       /* Scaled up from .button-small's own size — that sizing made sense sitting
-         tight next to the label on desktop, but on a full-width mobile pill
-         there's no reason to keep it cramped. Matches the base .button size
-         via the same --button-* tokens .button itself reads. */
+           tight next to the label on desktop, but on a full-width mobile pill
+           there's no reason to keep it cramped. Matches the base .button size
+           via the same --button-* tokens .button itself reads.
+  */
       height: var(--button-height);
       padding: 0 var(--button-padding-x);
       font-size: var(--button-font-size);
     }
   }
+
   /* The quick-pick modal has no separate callout at any width, so its copy of
-     this note always shows once picked — but the section's own callout (with
-     this exact same text) is only hidden below 980px (see .availability-intro
-     .availability-picked's mobile rule), so above that width the section's copy here
-     would just repeat it a second time on the same page. */
+       this note always shows once picked — but the section's own callout (with
+       this exact same text) is only hidden below 980px (see .availability-intro
+       .availability-picked's mobile rule), so above that width the section's copy here
+       would just repeat it a second time on the same page.
+  */
   /* Applies to both .availability-foot instances that exist — the section's and the
-     quick-pick modal's, since both share this exact markup/classes. */
+       quick-pick modal's, since both share this exact markup/classes.
+  */
   /* ---------- Waitlist prompt on a Booked date ----------
-     Adopted for real on .availability.diary (weddings.html's showcase calendar
-     and its quick-pick modal) and .availability.compact (the enquiry-form
-     date-pickers on index/corporate/celebrations/gallery.html) — main.js wires
-     .wl-popover on both. Compared against an inline-panel-below-the-grid
-     alternative before picking the popover; that alternative survives only
-     as a live reference in the prototype's sandboxes/waitlist-prompt.html.
-     .wl-form/.wl-success hold the email/name fields and confirmation state. */
+       Adopted for real on .availability.diary (weddings.html's showcase calendar
+       and its quick-pick modal) and .availability.compact (the enquiry-form
+       date-pickers on index/corporate/celebrations/gallery.html) — main.js wires
+       .wl-popover on both. Compared against an inline-panel-below-the-grid
+       alternative before picking the popover; that alternative survives only
+       as a live reference in the prototype's sandboxes/waitlist-prompt.html.
+       .wl-form/.wl-success hold the email/name fields and confirmation state.
+  */
   .availability.diary :global(.availability-cell.taken),
   .availability.compact :global(.availability-cell.taken) {
     cursor: pointer;
   }
+
   @media (--hover) {
     .availability.diary :global(.availability-cell.taken:hover),
     .availability.compact :global(.availability-cell.taken:hover) {
       box-shadow: inset 0 0 0 1px var(--avail-grey-fg);
     }
   }
+
   /* Pure-CSS "Click"/"Tap" (icon + wording, as one group each) swap for the
-     discoverability hint next to the legend (sandboxes/waitlist-prompt.html) —
-     matches the same @media(hover) split the popover's own open-trigger uses
-     (hover vs. tap), so the hint never shows the wrong icon or wording for how
-     the popover actually opens on that device. display:contents rather than
-     flex/inline-flex on the wrapper — .availability-note is already the flex
-     row (icon+text gap etc.); this just lets each wrapper's own icon+text
-     children join that row directly instead of nesting a second flex context
-     inside it. */
+       discoverability hint next to the legend (sandboxes/waitlist-prompt.html) —
+       matches the same @media(hover) split the popover's own open-trigger uses
+       (hover vs. tap), so the hint never shows the wrong icon or wording for how
+       the popover actually opens on that device. display:contents rather than
+       flex/inline-flex on the wrapper — .availability-note is already the flex
+       row (icon+text gap etc.); this just lets each wrapper's own icon+text
+       children join that row directly instead of nesting a second flex context
+       inside it.
+  */
   .wl-hint-hover,
   .wl-hint-touch {
     display: contents;
   }
+
   .wl-hint-touch {
     display: none;
   }
+
   @media (--no-hover) {
     .wl-hint-hover {
       display: none;
     }
   }
+
   @media (--no-hover) {
     .wl-hint-touch {
       display: contents;
     }
   }
+
   /* Marks whichever Booked cell the open popover/panel currently refers to —
-     distinct from .picked (reserved for an actually-selectable open/enquiries
-     date) since a waitlisted date was never selectable to begin with. */
+       distinct from .picked (reserved for an actually-selectable open/enquiries
+       date) since a waitlisted date was never selectable to begin with.
+  */
   :global(.availability-cell.taken.wl-active) {
     background: rgba(var(--muted-ink-rgb), 0.14);
     box-shadow: inset 0 0 0 1.5px var(--avail-grey-fg);
   }
+
   .availability.diary {
     /* 480px + 20px, matching .availability's own padding increase above (max raised
-         10px per side) — keeps the same inner content width the day-grid had
-         before, rather than the extra padding eating into it. */
+           10px per side) — keeps the same inner content width the day-grid had
+           before, rather than the extra padding eating into it.
+  */
     max-width: 500px;
     border-radius: calc(var(--radius-card) * 2);
     box-shadow: 0 24px 60px -30px rgba(var(--muted-ink-rgb), 0.32);
   }
+
   @media (--below-tablet) {
     .availability.diary {
       max-width: 480px;
     }
   }
+
   /* Reverts to the original 480px at true mobile — the padding increase
-         above is already excluded there (unchanged clamp min), so there's no
-         extra padding to account for at this width either. */
+           above is already excluded there (unchanged clamp min), so there's no
+           extra padding to account for at this width either.
+  */
   .availability.diary .availability-foot {
     margin-top: 24px;
     padding-top: 22px;
@@ -787,6 +884,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     gap: 16px;
     flex-wrap: wrap;
   }
+
   .availability-foot-note {
     display: none;
     margin-top: 14px;
@@ -795,20 +893,24 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     color: var(--muted-ink);
     font-family: "Newsreader", Georgia, serif;
   }
+
   /* Shown once a date's picked — mirrors .availability-select-note's copy, which used to
-       be the only place this reassurance text lived (inside the section's own
-       .availability-intro callout). :has() keys off the same status class the dot above
-       uses, so no extra JS is needed just to toggle this line. */
+         be the only place this reassurance text lived (inside the section's own
+         .availability-intro callout). :has() keys off the same status class the dot above
+         uses, so no extra JS is needed just to toggle this line.
+  */
   .availability-foot:has(.availability-foot-label.status-open) + .availability-foot-note,
   .availability-foot:has(.availability-foot-label.status-interest)
     + .availability-foot-note {
     display: block;
   }
+
   @media (--from-desktop) {
     :global(#availability) .availability-foot-note {
       display: none;
     }
   }
+
   @media (--below-large-phone) {
     .availability-foot {
       flex-direction: column;
@@ -817,19 +919,22 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       gap: 20px;
     }
   }
+
   @media (--below-large-phone) {
     .availability-foot-note {
       margin-top: 20px;
     }
   }
+
   .availability.compact {
     background: none;
     border: none;
     box-shadow: none;
     /* Explicit 0 (not just "no override"), since without this it silently falls
-         back to plain .availability's own padding: clamp(22px,3vw,34px) on all four
-         sides — the wizard's own form card (see form{} above) already provides
-         its own padding, so this widget shouldn't add a second layer inside it. */
+           back to plain .availability's own padding: clamp(22px,3vw,34px) on all four
+           sides — the wizard's own form card (see form{} above) already provides
+           its own padding, so this widget shouldn't add a second layer inside it.
+  */
     padding: 0;
   }
   @keyframes selPulse {

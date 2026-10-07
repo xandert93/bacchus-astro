@@ -124,12 +124,14 @@ const { backgroundImage } = Astro.props
 
 <style>
   /* Scoped to this component (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .quote {
     background: var(--ink);
     position: relative;
     overflow: hidden;
   }
+
   .quote .bgimg {
     position: absolute;
     inset: 0;
@@ -139,6 +141,7 @@ const { backgroundImage } = Astro.props
     height: 100%;
     filter: grayscale(0.4);
   }
+
   .quote blockquote {
     font-family: "Fraunces", serif;
     font-weight: 300;
@@ -147,6 +150,7 @@ const { backgroundImage } = Astro.props
     color: var(--limestone-2);
     letter-spacing: -0.02em;
   }
+
   .quote .who {
     margin-top: 30px;
     font-size: 11px;
@@ -154,13 +158,16 @@ const { backgroundImage } = Astro.props
     text-transform: uppercase;
     color: var(--muted);
   }
+
   /* Swipeable on touch (Testimonials.js). Same reasoning as the lightbox and
-     the photo carousel: without pan-y the browser treats every touch drag as
-     a possible scroll and cancels the pointer before a horizontal swipe can
-     register. Vertical page scrolling over the quote still works. */
+       the photo carousel: without pan-y the browser treats every touch drag as
+       a possible scroll and cancels the pointer before a horizontal swipe can
+       register. Vertical page scrolling over the quote still works.
+  */
   .testimonial-quote-box {
     touch-action: pan-y;
   }
+
   .stars {
     display: flex;
     justify-content: center;
@@ -168,14 +175,16 @@ const { backgroundImage } = Astro.props
     margin-bottom: 28px;
     color: var(--gold);
   }
+
   /* Per-star entrance, staggered by nth-child (fixed at 5 stars, so a static
-     CSS stagger works without JS needing to manage per-element delays — unlike
-     the hidden-scrollbar overflow's mobile-drawer case, .star has no other
-     transition for a shared transition-delay to bleed into). #tStars.is-in-view is
-     toggled from tRender() in main.js on every testimonial change, not just once
-     on page load, since the rating is per-review data and the whole point is to
-     replay this each time a new review comes in — separate from the one-time
-     [data-reveal] fade already on the outer #tStars container itself. */
+       CSS stagger works without JS needing to manage per-element delays — unlike
+       the hidden-scrollbar overflow's mobile-drawer case, .star has no other
+       transition for a shared transition-delay to bleed into). #tStars.is-in-view is
+       toggled from tRender() in main.js on every testimonial change, not just once
+       on page load, since the rating is per-review data and the whole point is to
+       replay this each time a new review comes in — separate from the one-time
+       [data-reveal] fade already on the outer #tStars container itself.
+  */
   .stars .star {
     opacity: 0;
     transform: scale(0.4);
@@ -187,13 +196,15 @@ const { backgroundImage } = Astro.props
     opacity: 1;
     transform: scale(1);
   }
+
   /* Scoped to the entering direction only (#tStars.is-in-view), not the bare
-     .stars .star base state — the delay must not also apply when leaving
-     (is-in removed). tShow() only waits 250ms (220ms fade + 30ms) between
-     removing and re-adding is-in, shorter than the 5th star's 280ms delay, so
-     an unconditional delay left its leaving transition never even starting in
-     that window — it just sat unchanged, with nothing to visibly animate back
-     from on re-entry. Leaving now happens uniformly with no delay instead. */
+       .stars .star base state — the delay must not also apply when leaving
+       (is-in removed). tShow() only waits 250ms (220ms fade + 30ms) between
+       removing and re-adding is-in, shorter than the 5th star's 280ms delay, so
+       an unconditional delay left its leaving transition never even starting in
+       that window — it just sat unchanged, with nothing to visibly animate back
+       from on re-entry. Leaving now happens uniformly with no delay instead.
+  */
   #tStars.is-in-view .star:nth-child(1) {
     transition-delay: 0ms;
   }
@@ -209,14 +220,17 @@ const { backgroundImage } = Astro.props
   #tStars.is-in-view .star:nth-child(5) {
     transition-delay: 280ms;
   }
+
   .stars .star.is-empty {
     color: rgba(var(--limestone-rgb), 0.25);
   }
+
   /* Same specificity as the base .stars .star rule above and placed after it,
-       so it wins outright regardless of whether #tStars.is-in-view (a higher-
-       specificity ID selector) has been added yet — stars must never be stuck
-       at their hidden opacity:0 base state for reduced-motion users waiting on
-       a class toggle that's tied to a transition they won't otherwise see. */
+         so it wins outright regardless of whether #tStars.is-in-view (a higher-
+         specificity ID selector) has been added yet — stars must never be stuck
+         at their hidden opacity:0 base state for reduced-motion users waiting on
+         a class toggle that's tied to a transition they won't otherwise see.
+  */
   @media (--reduced-motion) {
     .stars .star {
       opacity: 1;
@@ -224,23 +238,27 @@ const { backgroundImage } = Astro.props
       transition: none;
     }
   }
+
   /* Selector matches `.quote blockquote`'s specificity (class+type) and beats
-     it on source order, instead of losing to it — a plain `.testimonial-quote` class
-     selector is less specific than `.quote blockquote` and silently lost the
-     font-size override entirely (the weaker-override trap: a losing
-     override, not a dropped property, but the same root cause). Truncation
-     past 5 lines is done in JS (see tRender in main.js) rather than
-     `-webkit-line-clamp`, which doesn't reliably clamp centered text
-     (`.quote .wrap` is `text-align: center`) across engines. */
+       it on source order, instead of losing to it — a plain `.testimonial-quote` class
+       selector is less specific than `.quote blockquote` and silently lost the
+       font-size override entirely (the weaker-override trap: a losing
+       override, not a dropped property, but the same root cause). Truncation
+       past 5 lines is done in JS (see tRender in main.js) rather than
+       `-webkit-line-clamp`, which doesn't reliably clamp centered text
+       (`.quote .wrap` is `text-align: center`) across engines.
+  */
   .quote blockquote.testimonial-quote {
     font-size: clamp(18px, 2.4vw, 36px);
   }
+
   .testimonial-quote,
   .testimonial-meta {
     transition:
       opacity 0.3s var(--ease),
       transform 0.3s var(--ease);
   }
+
   .testimonial-controls {
     display: flex;
     align-items: center;
@@ -248,10 +266,12 @@ const { backgroundImage } = Astro.props
     gap: 22px;
     margin-top: 34px;
   }
+
   /* Resting state matches .lightbox-prev/.lightbox-next (gallery lightbox) — the
-     site's one other "arrow button on a dark background" pattern: frosted dark
-     chip, gold-2 icon, no border. Hover/press inverts to gold, which the
-     lightbox doesn't (yet). */
+       site's one other "arrow button on a dark background" pattern: frosted dark
+       chip, gold-2 icon, no border. Hover/press inverts to gold, which the
+       lightbox doesn't (yet).
+  */
   .testimonial-arrow {
     position: relative;
     width: 48px;
@@ -265,29 +285,34 @@ const { backgroundImage } = Astro.props
     display: grid;
     place-items: center;
     /* Named properties rather than "all", so nothing else on this element
-       can pick up the timing by accident (the same-specificity collision). */
+         can pick up the timing by accident (the same-specificity collision).
+  */
     transition:
       background-color 0.3s var(--ease),
       color 0.3s var(--ease);
     flex: none;
   }
+
   @media (--hover) {
     .testimonial-arrow:hover {
       background-color: var(--gold);
       color: var(--ink);
     }
   }
+
   @media (--no-hover) {
     .testimonial-arrow:active {
       background-color: var(--gold);
       color: var(--ink);
     }
   }
+
   .testimonial-dots {
     display: flex;
     align-items: center;
     gap: 10px;
   }
+
   .testimonial-cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -295,51 +320,61 @@ const { backgroundImage } = Astro.props
     margin-top: 34px;
     text-align: left;
   }
+
   @media (--below-desktop) {
     .testimonial-cards {
       grid-template-columns: repeat(2, 1fr);
     }
   }
+
   /* An SVG ring (stroke-dashoffset animated from JS), not a conic-gradient
-     redrawn via a JS-updated custom property every animation frame — that
-     approach produced inconsistent fills and seam artifacts at the gold/grey
-     boundary in testing. stroke-dashoffset is the standard, artifact-free
-     technique for an animated circular progress indicator. Only the next
-     button has this ring — giving the prev button a matching static track
-     (an earlier attempt at equalizing their visual weight) made it read as if
-     it had a timer too; both are the same 48x48px box regardless, so the
-     ring isn't needed there for actual size parity. */
+       redrawn via a JS-updated custom property every animation frame — that
+       approach produced inconsistent fills and seam artifacts at the gold/grey
+       boundary in testing. stroke-dashoffset is the standard, artifact-free
+       technique for an animated circular progress indicator. Only the next
+       button has this ring — giving the prev button a matching static track
+       (an earlier attempt at equalizing their visual weight) made it read as if
+       it had a timer too; both are the same 48x48px box regardless, so the
+       ring isn't needed there for actual size parity.
+  */
   .testimonial-ring {
     position: absolute;
     inset: 0;
     transform: rotate(-90deg);
     pointer-events: none;
   }
+
   .testimonial-ring-track,
   .testimonial-ring-fill {
     fill: none;
     stroke-width: 1.5;
   }
+
   .testimonial-ring-track {
     stroke: rgba(var(--limestone-rgb), 0.28);
   }
+
   .testimonial-ring-fill {
     stroke: var(--gold);
     stroke-linecap: round;
   }
+
   .testimonial-arrow svg:last-child {
     position: relative;
     z-index: 1;
   }
+
   .quote .wrap {
     position: relative;
     z-index: 2;
     text-align: center;
     max-width: 940px;
   }
+
   .quote blockquote :global(em) {
     color: var(--gold-2);
   }
+
   /* ---- Testimonials rotator (extends .quote) ---- */
   .testimonials .eyebrow {
     justify-content: center;
@@ -349,18 +384,22 @@ const { backgroundImage } = Astro.props
     -webkit-text-fill-color: transparent;
     color: transparent;
   }
+
   /* .quote's own dark (--ink) background, not .on-dark — so the general
-     .on-dark .eyebrow::before fix doesn't reach this one; needs its own
-     explicit line color for the same currentColor reason. */
+       .on-dark .eyebrow::before fix doesn't reach this one; needs its own
+       explicit line color for the same currentColor reason.
+  */
   .testimonials .eyebrow::before {
     background: var(--gold-2);
   }
+
   /* Two-line meta: the name is what actually matters ("who said this") and
-     gets its own prominent line; .testimonial-meta-sub inherits the .who wrapper's small
-     uppercase/muted treatment as-is (font-size/letter-spacing/text-transform/
-     color are all inheritable, so no separate rule is needed for it) rather
-     than putting name and category/location/date on equal visual footing in
-     one string that wraps wherever it runs out of room. */
+       gets its own prominent line; .testimonial-meta-sub inherits the .who wrapper's small
+       uppercase/muted treatment as-is (font-size/letter-spacing/text-transform/
+       color are all inheritable, so no separate rule is needed for it) rather
+       than putting name and category/location/date on equal visual footing in
+       one string that wraps wherever it runs out of room.
+  */
   :global(.testimonial-meta-name) {
     display: block;
     font-family: "Fraunces", serif;
@@ -371,11 +410,13 @@ const { backgroundImage } = Astro.props
     color: var(--limestone-2);
     margin-bottom: 6px;
   }
+
   /* The shared .eyebrow only has a line before the text (::before) — fine
-     left-aligned, but centering that as a block leaves the line unbalanced on
-     one side. Scoped to .testimonials only: a matching ::after mirrors
-     .eyebrow::before exactly, just growing from the right instead of the left,
-     so the centered line+text+line reads symmetrically. */
+       left-aligned, but centering that as a block leaves the line unbalanced on
+       one side. Scoped to .testimonials only: a matching ::after mirrors
+       .eyebrow::before exactly, just growing from the right instead of the left,
+       so the centered line+text+line reads symmetrically.
+  */
   .testimonials .eyebrow::after {
     content: "";
     height: 1px;
@@ -387,28 +428,34 @@ const { backgroundImage } = Astro.props
     transform-origin: right;
     transition: transform 0.8s var(--ease) 0.1s;
   }
+
   .testimonials .eyebrow.is-revealed::after {
     transform: scaleX(1);
   }
+
   :global(.testimonial-quote-mark) {
     color: var(--gold-2);
   }
+
   /* Same gap on the picker cards below: tappable, never navigate, and
-       had a hover state only. Mirrors their hover exactly. */
+         had a hover state only. Mirrors their hover exactly.
+  */
   @media (--no-hover) {
     .testimonial-card:active {
       border-color: rgba(var(--gold-rgb), 0.5);
       background: rgba(var(--gold-rgb), 0.06);
     }
   }
+
   /* Hover (and press, on touch) inverts the chip: gold fill, ink icon. The
-     original state (0.65 alpha ink to solid ink, gold-2 to gold) barely moved
-     over the dark photo behind this section, and on touch there was no state
-     at all — the sticky touch hover's missing (hover: none) fallback, on a control
-     that never navigates away. The next arrow's timer ring is deliberately left gold
-     (tried inverting it to ink; it read worse). While hovered, its progress
-     stroke sits on the gold fill and is hard to see — which is also when
-     autoplay is paused, so nothing is lost. */
+       original state (0.65 alpha ink to solid ink, gold-2 to gold) barely moved
+       over the dark photo behind this section, and on touch there was no state
+       at all — the sticky touch hover's missing (hover: none) fallback, on a control
+       that never navigates away. The next arrow's timer ring is deliberately left gold
+       (tried inverting it to ink; it read worse). While hovered, its progress
+       stroke sits on the gold fill and is hard to see — which is also when
+       autoplay is paused, so nothing is lost.
+  */
   .testimonial-dot {
     width: 5px;
     height: 5px;
@@ -420,10 +467,12 @@ const { backgroundImage } = Astro.props
       width 0.35s var(--ease),
       background 0.35s var(--ease);
   }
+
   .testimonial-dot.is-active {
     width: 16px;
     background: var(--gold);
   }
+
   .testimonial-card {
     position: relative;
     display: flex;
@@ -431,10 +480,11 @@ const { backgroundImage } = Astro.props
     gap: 6px;
     padding: 14px 16px;
     /* Grid items default to min-width: auto, so a track can still be forced
-       wider than its 1fr share by its content's natural minimum size (a long
-       name) even with repeat(4, 1fr) — zeroing it here is what actually makes
-       the four columns equal width and lets .testimonial-card-name's ellipsis (rather
-       than the grid track) be what handles an overlong name. */
+         wider than its 1fr share by its content's natural minimum size (a long
+         name) even with repeat(4, 1fr) — zeroing it here is what actually makes
+         the four columns equal width and lets .testimonial-card-name's ellipsis (rather
+         than the grid track) be what handles an overlong name.
+  */
     min-width: 0;
     border: 1px solid rgba(var(--limestone-rgb), 0.18);
     border-radius: 6px;
@@ -444,19 +494,23 @@ const { backgroundImage } = Astro.props
       background 0.3s var(--ease),
       border-color 0.3s var(--ease);
   }
+
   @media (--hover) {
     .testimonial-card:hover {
       border-color: rgba(var(--gold-rgb), 0.5);
       background: rgba(var(--gold-rgb), 0.06);
     }
   }
+
   /* Hover sits between resting and .is-active (0.05 -> 0.06 -> 0.12) rather than
-     matching .is-active outright — keeping a lower intensity than the selected
-     state avoids the two being visually ambiguous with each other. */
+       matching .is-active outright — keeping a lower intensity than the selected
+       state avoids the two being visually ambiguous with each other.
+  */
   .testimonial-card.is-active {
     border-color: var(--gold);
     background: rgba(var(--gold-rgb), 0.12);
   }
+
   .testimonial-card-name {
     font-family: "Fraunces", serif;
     font-size: 15px;
@@ -466,6 +520,7 @@ const { backgroundImage } = Astro.props
     text-overflow: ellipsis;
     min-width: 0;
   }
+
   .testimonial-card-category {
     font-size: 10px;
     letter-spacing: 0.14em;

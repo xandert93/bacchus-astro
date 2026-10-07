@@ -44,8 +44,9 @@ const { small = false, id, mediaClass } = Astro.props
 
 <style>
   /* The content column arrives through slots, so its elements carry the
-     caller's scoping attribute rather than this file's: hence :global()
-     around the h1, the paragraph, the CTA row and .fade-up. */
+       caller's scoping attribute rather than this file's: hence :global()
+       around the h1, the paragraph, the CTA row and .fade-up.
+  */
   .hero :global(.eyebrow) {
     background: var(--gold-gradient);
     -webkit-background-clip: text;
@@ -53,12 +54,15 @@ const { small = false, id, mediaClass } = Astro.props
     -webkit-text-fill-color: transparent;
     color: transparent;
   }
+
   .hero :global(.eyebrow)::before {
     background: var(--gold-2);
   }
+
   .hero :global(.sub) {
     font-family: "Newsreader", Georgia, serif;
   }
+
   .hero {
     position: relative;
     min-height: 100vh;
@@ -68,28 +72,32 @@ const { small = false, id, mediaClass } = Astro.props
     overflow: hidden;
     background: var(--ink);
   }
+
   .hero-media {
     position: absolute;
     inset: 0;
     overflow: hidden;
     /* Entrance "settle" (2026-10-04): the photo arrives slightly enlarged and
-       eases back to its resting size as the hero copy animates in, so the
-       image is part of the entrance rather than sitting static under it.
-       On the WRAPPER, not the <img>: the img already carries the endless
-       Ken Burns drift below and, on the homepage, a scroll parallax — a
-       transform here composes with both instead of replacing either.
-       Transform only, no opacity: the hero photo is usually the page's
-       Largest Contentful Paint, which is timed from when it first becomes
-       visible, so fading it in would make every page measure slower. Scale
-       costs nothing there. On the homepage it runs behind the portcullis
-       bars, finishing as the last bar clears. */
+         eases back to its resting size as the hero copy animates in, so the
+         image is part of the entrance rather than sitting static under it.
+         On the WRAPPER, not the <img>: the img already carries the endless
+         Ken Burns drift below and, on the homepage, a scroll parallax — a
+         transform here composes with both instead of replacing either.
+         Transform only, no opacity: the hero photo is usually the page's
+         Largest Contentful Paint, which is timed from when it first becomes
+         visible, so fading it in would make every page measure slower. Scale
+         costs nothing there. On the homepage it runs behind the portcullis
+         bars, finishing as the last bar clears.
+  */
     animation: hero-settle 1.8s var(--ease) both;
   }
+
   @media (--reduced-motion) {
     .hero-media {
       animation: none;
     }
   }
+
   .hero-media :global(img) {
     width: 100%;
     height: 118%;
@@ -99,6 +107,7 @@ const { small = false, id, mediaClass } = Astro.props
     animation: kenburns 26s var(--ease-io) infinite alternate;
     will-change: transform;
   }
+
   .hero-scrim {
     position: absolute;
     inset: 0;
@@ -116,6 +125,7 @@ const { small = false, id, mediaClass } = Astro.props
         transparent 60%
       );
   }
+
   .hero-content {
     position: relative;
     z-index: 3;
@@ -123,18 +133,21 @@ const { small = false, id, mediaClass } = Astro.props
     padding-bottom: clamp(50px, 8vh, 90px);
     padding-top: 140px;
   }
+
   .hero :global(h1) {
     color: var(--limestone-2);
     font-size: clamp(34px, 6.9vw, 99px);
     font-weight: 300;
     max-width: 15ch;
   }
+
   .hero :global(h1) :global(em) {
     /* Gold gradient text, same recipe as .on-dark h2 em — replaces the flat
-       --gold-2. Padding/negative-margin trick matches h2 em above: em is
-       italic by default (UA stylesheet), and the slant can lean a glyph's
-       tip past the element's own content box, which background-clip:text
-       has no gradient painted past. */
+         --gold-2. Padding/negative-margin trick matches h2 em above: em is
+         italic by default (UA stylesheet), and the slant can lean a glyph's
+         tip past the element's own content box, which background-clip:text
+         has no gradient painted past.
+  */
     background: var(--gold-gradient);
     -webkit-background-clip: text;
     background-clip: text;
@@ -143,6 +156,7 @@ const { small = false, id, mediaClass } = Astro.props
     padding: 0 0.16em;
     margin: 0 -0.16em;
   }
+
   .hero :global(.sub) {
     max-width: 46ch;
     color: rgba(var(--limestone-rgb), 0.74);
@@ -150,12 +164,14 @@ const { small = false, id, mediaClass } = Astro.props
     font-size: clamp(14px, 1.3vw, 16px);
     font-weight: 300;
   }
+
   :global(.hero-ctas) {
     display: flex;
     flex-wrap: wrap;
     gap: 14px;
     margin-top: 24px;
   }
+
   :global(.fade-up) {
     opacity: 0;
     transform: translateY(26px);
@@ -163,30 +179,36 @@ const { small = false, id, mediaClass } = Astro.props
       opacity 0.9s var(--ease),
       transform 1s var(--ease);
   }
+
   :global(.loaded) :global(.fade-up) {
     opacity: 1;
     transform: none;
   }
+
   .hero-sm .hero-content {
     padding-top: 160px;
     padding-bottom: clamp(46px, 7vh, 76px);
   }
+
   @media (--below-hero-full) {
     .hero-content {
       padding-top: 120px;
     }
   }
+
   @media (--below-hero-full) {
     .hero-sm .hero-content {
       padding-top: 128px;
     }
   }
+
   @media (--below-tablet) {
     :global(.hero-ctas) {
       flex-direction: column;
       align-items: center;
     }
   }
+
   @media (--below-tablet) {
     :global(.hero-ctas) :global(.button) {
       width: 100%;
@@ -194,12 +216,14 @@ const { small = false, id, mediaClass } = Astro.props
       justify-content: center;
     }
   }
+
   /* Compact sub-page hero (shorter than the homepage hero). Last, so it
-     wins over the .hero rules above at equal specificity */
+       wins over the .hero rules above at equal specificity */
   .hero-sm {
     min-height: 62vh;
     min-height: 62svh;
   }
+
   .hero-sm :global(h1) {
     font-size: clamp(32px, 6vw, 74px);
   }

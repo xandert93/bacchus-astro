@@ -31,14 +31,15 @@ const [width, height] = size === "bar" ? [12, 8] : [18, 12]
 
 <style>
   /* Promoted to its own compositing layer so the browser rasterises the
-     1.4px stroke once and composites the rotation, rather than
-     re-antialiasing it at every angle (which reads as shimmering rather than
-     turning). An attempted fix for the chevron shimmer, which it didn't
-     cure; a thicker stroke or a filled triangle are the untested options.
-     will-change keeps a standing layer, which is the right trade for two
-     small visible interactive glyphs; transform-origin is stated so it
-     can't drift if the box size changes. Who rotates it, and when, is the
-     parent's business (NavDropdown, MobileNavGroup). */
+       1.4px stroke once and composites the rotation, rather than
+       re-antialiasing it at every angle (which reads as shimmering rather than
+       turning). An attempted fix for the chevron shimmer, which it didn't
+       cure; a thicker stroke or a filled triangle are the untested options.
+       will-change keeps a standing layer, which is the right trade for two
+       small visible interactive glyphs; transform-origin is stated so it
+       can't drift if the box size changes. Who rotates it, and when, is the
+       parent's business (NavDropdown, MobileNavGroup).
+  */
   .nav-dd-chevron {
     flex: none;
     transition: transform 0.35s var(--ease);

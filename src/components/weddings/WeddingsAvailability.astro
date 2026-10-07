@@ -54,158 +54,173 @@ import Button from "@components/ui/Button.astro"
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   @media (--below-enquiry-two-column) {
     #availability :global(.availability.diary) {
       margin-inline: auto;
     }
   }
+
   /* Moved here from the shared 980px block below — .availability.diary should
-         only re-center once this section has actually collapsed to one column
-         (now 920px, not 980px); center-ing it while it's still sharing a
-         two-column row with the intro text (the 921-980px gap) would be wrong. */
+           only re-center once this section has actually collapsed to one column
+           (now 920px, not 980px); center-ing it while it's still sharing a
+           two-column row with the intro text (the 921-980px gap) would be wrong.
+  */
   /* One source of truth for the thumbnail column: the grid track below and
-         the "or" badge's own horizontal centering (further down) both read this,
-         so the badge can't drift off the image's centre line if the width is
-         ever retuned. Declared on the <li> rather than the card, since the badge
-         is the card's sibling, not its child. */
+           the "or" badge's own horizontal centering (further down) both read this,
+           so the badge can't drift off the image's centre line if the width is
+           ever retuned. Declared on the <li> rather than the card, since the badge
+           is the card's sibling, not its child.
+  */
   /* Image sits flush against the card like .package-beverage-card's own
-         figure does — no card-level padding inset around it, corners left
-         unrounded on the figure and clipped by the card's own overflow:hidden +
-         border-radius. Padding lives on the text column only (below), so the gap
-         between image and copy is real column-gap rather than competing with an
-         equally-sized outer inset that made it read as barely-there. */
+           figure does — no card-level padding inset around it, corners left
+           unrounded on the figure and clipped by the card's own overflow:hidden +
+           border-radius. Padding lives on the text column only (below), so the gap
+           between image and copy is real column-gap rather than competing with an
+           equally-sized outer inset that made it read as barely-there.
+  */
   /* No declared ratio here, deliberately: the card's height is the copy
-         column's height, full stop, and the image takes whatever that turns out
-         to be.
+           column's height, full stop, and the image takes whatever that turns out
+           to be.
 
-         Any aspect-ratio on this figure acts as a minimum height on the whole
-         row, because the figure is a grid item in the same row as the copy — so
-         the card could never get shorter than the ratio demanded even when the
-         content didn't need the space. That showed as dead space in the copy
-         column, and it got worse as the viewport widened: at 620px the track
-         hits its 160px cap, and a 2:3 ratio forced a ~240px floor while the
-         copy, wrapping to roughly two lines by then, needed about 175px.
+           Any aspect-ratio on this figure acts as a minimum height on the whole
+           row, because the figure is a grid item in the same row as the copy — so
+           the card could never get shorter than the ratio demanded even when the
+           content didn't need the space. That showed as dead space in the copy
+           column, and it got worse as the viewport widened: at 620px the track
+           hits its 160px cap, and a 2:3 ratio forced a ~240px floor while the
+           copy, wrapping to roughly two lines by then, needed about 175px.
 
-         `auto` is stated explicitly rather than just omitted — it has to beat the
-         base .package-dining-card-figure rule's own 1/1. It also cancels the
-         the backwards aspect-ratio mechanism, which needs an aspect-ratio to compute a
-         width from; the width caps below are kept anyway as cheap insurance, the
-         grid track already being what sets the width. */
+           `auto` is stated explicitly rather than just omitted — it has to beat the
+           base .package-dining-card-figure rule's own 1/1. It also cancels the
+           the backwards aspect-ratio mechanism, which needs an aspect-ratio to compute a
+           width from; the width caps below are kept anyway as cheap insurance, the
+           grid track already being what sets the width.
+  */
   /* The numeral and the figure's bottom scrim both stay at this width. They
-         travel together rather than being separable: the numeral is
-         gold-gradient text sitting directly on photography, and the dark bottom
-         fade is what keeps it legible over a bright plate of food. The shared
-         180deg fade works unchanged on a tall, narrow thumbnail.
+           travel together rather than being separable: the numeral is
+           gold-gradient text sitting directly on photography, and the dark bottom
+           fade is what keeps it legible over a bright plate of food. The shared
+           180deg fade works unchanged on a tall, narrow thumbnail.
 
-         Only the numeral's own scale and inset are retuned — the shared rule's
-         clamp(30px, 3.4vw, 44px) and clamp(20px, 2vw, 26px) inset were sized
-         against a full-width card image and read oversized, pushed too far in,
-         on a ~133px thumbnail. */
+           Only the numeral's own scale and inset are retuned — the shared rule's
+           clamp(30px, 3.4vw, 44px) and clamp(20px, 2vw, 26px) inset were sized
+           against a full-width card image and read oversized, pushed too far in,
+           on a ~133px thumbnail.
+  */
   /* A ceiling, not a target: line-clamp only truncates once the text actually
-         exceeds the limit, so anything up to five lines renders in full with no
-         ellipsis and the descriptions read complete at normal phone widths (the
-         current three are ~91-100 characters, landing around four lines at
-         ~390px). It only starts biting at the narrow end — around 320px the text
-         column is down to ~144px, roughly 22 characters a line, which is where
-         the longest description reaches five. So this is a guard against a card
-         running away if the copy is ever rewritten longer, not a crop applied to
-         today's copy.
+           exceeds the limit, so anything up to five lines renders in full with no
+           ellipsis and the descriptions read complete at normal phone widths (the
+           current three are ~91-100 characters, landing around four lines at
+           ~390px). It only starts biting at the narrow end — around 320px the text
+           column is down to ~144px, roughly 22 characters a line, which is where
+           the longest description reaches five. So this is a guard against a card
+           running away if the copy is ever rewritten longer, not a crop applied to
+           today's copy.
 
-         Native -webkit-line-clamp is fine here: the centred line-clamp bug only rules it
-         out for *centered* text (where it can silently fail to truncate at all,
-         hence the JS-measured approach used for the testimonials quote). This
-         copy is left-aligned. */
+           Native -webkit-line-clamp is fine here: the centred line-clamp bug only rules it
+           out for *centered* text (where it can silently fail to truncate at all,
+           hence the JS-measured approach used for the testimonials quote). This
+           copy is left-aligned.
+  */
   /* Tiers hidden on mobile for now. Kept in the markup rather than removed
-         from the HTML so this is one line to reverse and every larger breakpoint
-         is untouched — but note display:none drops them from the accessibility
-         tree too, so the tier names genuinely aren't available to a screen reader
-         at this width, not merely hidden visually. That's fine while it's a
-         deliberate content call (the card's own accessible name comes from
-         .package-card-hit's aria-label regardless); it would need revisiting if
-         the tiers ever became load-bearing information. The body's flex gap
-         closes up on its own — a display:none child consumes no gap. */
+           from the HTML so this is one line to reverse and every larger breakpoint
+           is untouched — but note display:none drops them from the accessibility
+           tree too, so the tier names genuinely aren't available to a screen reader
+           at this width, not merely hidden visually. That's fine while it's a
+           deliberate content call (the card's own accessible name comes from
+           .package-card-hit's aria-label regardless); it would need revisiting if
+           the tiers ever became load-bearing information. The body's flex gap
+           closes up on its own — a display:none child consumes no gap.
+  */
   /* Sized down to .button-small's own dimensions (the --button-compact-*
-         tokens, reused rather than inventing a new size) so the label fits the
-         narrow text column comfortably — the shared full-size .button is what
-         the non-shrinking button overflow catches here — but stretched edge to
-         edge across that column rather than shrink-wrapped, so it lines up with
-         the copy above it. */
+           tokens, reused rather than inventing a new size) so the label fits the
+           narrow text column comfortably — the shared full-size .button is what
+           the non-shrinking button overflow catches here — but stretched edge to
+           edge across that column rather than shrink-wrapped, so it lines up with
+           the copy above it.
+  */
   /* Beverage never got the thumbnail-left/text-column split above — it
-         stays single-column at this width (its own two-column layout only
-         starts at 621px+), so the unscoped rule above sees a full-card-width
-         parent instead of a narrow text column and stretches edge to edge
-         across the whole card, wider than the three dining buttons beside it.
-         300px matches the sitewide capped-CTA convention (.package-card-link's
-         own base rule, .hero-ctas .button, etc.); centered per request, same
-         as the base rule's own default align-self:center — the 621px+ rule
-         below switches this to flex-start once the dining triptych above it
-         is also left-aligned, but at this single-column mobile width centered
-         is what's wanted. Higher specificity than the bare .package-card-link
-         above (0,2,0 vs 0,1,0) wins regardless of declaration order. */
+           stays single-column at this width (its own two-column layout only
+           starts at 621px+), so the unscoped rule above sees a full-card-width
+           parent instead of a narrow text column and stretches edge to edge
+           across the whole card, wider than the three dining buttons beside it.
+           300px matches the sitewide capped-CTA convention (.package-card-link's
+           own base rule, .hero-ctas .button, etc.); centered per request, same
+           as the base rule's own default align-self:center — the 621px+ rule
+           below switches this to flex-start once the dining triptych above it
+           is also left-aligned, but at this single-column mobile width centered
+           is what's wanted. Higher specificity than the bare .package-card-link
+           above (0,2,0 vs 0,1,0) wins regardless of declaration order.
+  */
   /* The two "or" badges interlock with the images at this width rather than
-         dividing whole cards: each straddles the seam between the card above and
-         the card below, centred on the thumbnail column so it overlaps the
-         bottom of one image and the top of the next.
+           dividing whole cards: each straddles the seam between the card above and
+           the card below, centred on the thumbnail column so it overlaps the
+           bottom of one image and the top of the next.
 
-         Taken out of flow entirely (the <li> is already position:relative
-         above), so the list's own grid gap alone sets the distance between cards
-         and the badge just sits on top of it — nothing here changes spacing.
+           Taken out of flow entirely (the <li> is already position:relative
+           above), so the list's own grid gap alone sets the distance between cards
+           and the badge just sits on top of it — nothing here changes spacing.
 
-         top: half the list's row gap, minus half the badge's 46px height, puts
-         the badge's centre exactly on the seam. The gap literal has to match
-         .package-dining-card-list's own gap above; the horizontal centring reads
-         --package-thumbnail-width (set on the <li>) so it stays locked to the
-         real track width.
+           top: half the list's row gap, minus half the badge's 46px height, puts
+           the badge's centre exactly on the seam. The gap literal has to match
+           .package-dining-card-list's own gap above; the horizontal centring reads
+           --package-thumbnail-width (set on the <li>) so it stays locked to the
+           real track width.
 
-         z-index 4, not the 2 the other breakpoints use: those sit in the empty
-         gap between cards, but this one overlaps the cards themselves, and
-         .package-card-hit (the stretched whole-card link) is z-index 3. Neither
-         the card nor the <li> opens a stacking context (both position:relative,
-         z-index auto), so without this the hit target would take pointer events
-         over the badge. */
+           z-index 4, not the 2 the other breakpoints use: those sit in the empty
+           gap between cards, but this one overlaps the cards themselves, and
+           .package-card-hit (the stretched whole-card link) is z-index 3. Neither
+           the card nor the <li> opens a stacking context (both position:relative,
+           z-index auto), so without this the hit target would take pointer events
+           over the badge.
+  */
   /* Beverage deliberately stays a different shape from the triptych — that
-         contrast is existing design intent (a wide band, not a fourth card) and
-         it marks the change of domain from choosing a format to choosing a bar.
-         The problem was the direction of the contrast, not the contrast itself.
+           contrast is existing design intent (a wide band, not a fourth card) and
+           it marks the change of domain from choosing a format to choosing a bar.
+           The problem was the direction of the contrast, not the contrast itself.
 
-         On desktop Beverage is distinct by being wide and SHORT — a secondary
-         strip under the triptych. On mobile it goes single-column, so at 16/10
-         the image alone came out ~219px at a ~350px card and the whole band ran
-         ~410px: roughly twice a dining card, making the add-on the most dominant
-         thing in the section and inverting the hierarchy desktop establishes.
-         21/9 brings the image back to ~150px so it reads as a strip again.
+           On desktop Beverage is distinct by being wide and SHORT — a secondary
+           strip under the triptych. On mobile it goes single-column, so at 16/10
+           the image alone came out ~219px at a ~350px card and the whole band ran
+           ~410px: roughly twice a dining card, making the add-on the most dominant
+           thing in the section and inverting the hierarchy desktop establishes.
+           21/9 brings the image back to ~150px so it reads as a strip again.
 
-         Safe to use a plain aspect-ratio here, unlike the dining figure above:
-         this card is single-column at mobile, so the figure sits in its own grid
-         row rather than sharing one with the copy. Its width is definite and the
-         height derives from it — the normal direction. the backwards aspect-ratio needs
-         the opposite and can't arise. Note the banner still scales with width,
-         so it is tallest at the top of this range (~249px at 620px, vs ~362px
-         before); worth a max-height if that end ever looks heavy, left off for
-         now rather than adding a second lever to reason about. */
+           Safe to use a plain aspect-ratio here, unlike the dining figure above:
+           this card is single-column at mobile, so the figure sits in its own grid
+           row rather than sharing one with the copy. Its width is definite and the
+           height derives from it — the normal direction. the backwards aspect-ratio needs
+           the opposite and can't arise. Note the banner still scales with width,
+           so it is tallest at the top of this range (~249px at 620px, vs ~362px
+           before); worth a max-height if that end ever looks heavy, left off for
+           now rather than adding a second lever to reason about.
+  */
   /* "Your bar, your way" hidden at this width. It's the only eyebrow on a
-         card in this section — the dining cards don't carry one — so on mobile,
-         where the band is trimmed back to a strip anyway, it reads as an extra
-         line of chrome above a heading that already says Beverage.
+           card in this section — the dining cards don't carry one — so on mobile,
+           where the band is trimmed back to a strip anyway, it reads as an extra
+           line of chrome above a heading that already says Beverage.
 
-         Specificity checked rather than assumed (the weaker-override trap): the element
-         carries both .eyebrow and .package-beverage-card-eyebrow, and the only
-         `display` in play is .eyebrow's own `flex` at the same 0,1,0 weight, so
-         this wins on source order — .eyebrow is declared near the top of this
-         file, this block near the end. `.on-dark .eyebrow` is higher (0,2,0) but
-         only sets the gold gradient, no display, so it doesn't interfere. */
+           Specificity checked rather than assumed (the weaker-override trap): the element
+           carries both .eyebrow and .package-beverage-card-eyebrow, and the only
+           `display` in play is .eyebrow's own `flex` at the same 0,1,0 weight, so
+           this wins on source order — .eyebrow is declared near the top of this
+           file, this block near the end. `.on-dark .eyebrow` is higher (0,2,0) but
+           only sets the gold gradient, no display, so it doesn't interfere.
+  */
   /* The compact/pointer instances are plain text, not a boxed callout — the
-       status color/dot on .availability-picked-status below already carries the same information
-       a card's border-left accent used to (the showcase's own card is restored
-       separately via .availability-intro .availability-picked above).
-       Show/hide is a hard display:none/flex cut, not animated — an entrance/exit
-       fade was attempted and pulled back out after repeated attempts at getting
-       it smooth on the showcase's #availSelection instance didn't pan out (it
-       also carries data-reveal for its own one-time scroll-in fade, which kept
-       conflicting with any opacity-based show/hide state). The transition below
-       is only for .swapping (switching between two already-visible picks), which
-       never touches display and was never part of the problem. */
+         status color/dot on .availability-picked-status below already carries the same information
+         a card's border-left accent used to (the showcase's own card is restored
+         separately via .availability-intro .availability-picked above).
+         Show/hide is a hard display:none/flex cut, not animated — an entrance/exit
+         fade was attempted and pulled back out after repeated attempts at getting
+         it smooth on the showcase's #availSelection instance didn't pan out (it
+         also carries data-reveal for its own one-time scroll-in fade, which kept
+         conflicting with any opacity-based show/hide state). The transition below
+         is only for .swapping (switching between two already-visible picks), which
+         never touches display and was never part of the problem.
+  */
   .availability-picked {
     margin-top: 20px;
     display: none;
@@ -214,17 +229,21 @@ import Button from "@components/ui/Button.astro"
     gap: 16px;
     transition: opacity 0.2s var(--ease);
   }
+
   .availability-picked.show {
     display: flex;
   }
+
   .availability-picked.swapping {
     opacity: 0.35;
   }
+
   .availability-picked-info {
     display: flex;
     flex-direction: column;
     gap: 5px;
   }
+
   .availability-picked-label {
     font-size: 10px;
     letter-spacing: 0.14em;
@@ -232,34 +251,40 @@ import Button from "@components/ui/Button.astro"
     color: var(--bronze);
     font-weight: 500;
   }
+
   .availability-picked-date {
     font-family: "Fraunces", serif;
     font-size: 19px;
     font-weight: 400;
     color: var(--ink);
   }
+
   /* ---------- Availability calendar: premium "Venue Diary" treatment ----------
-       #availability on weddings.html. Reuses the shared .availability widget in main.js
-       completely unchanged (same class hooks it always looked for: .availability-month,
-       .availability-prev/.availability-next, .availability-grid, .availability-picked) — this only restyles the
-       wrapper via a .diary modifier and adds the always-visible intro column (a plain
-       hint before a date is picked, the real .availability-picked panel once one is). */
+         #availability on weddings.html. Reuses the shared .availability widget in main.js
+         completely unchanged (same class hooks it always looked for: .availability-month,
+         .availability-prev/.availability-next, .availability-grid, .availability-picked) — this only restyles the
+         wrapper via a .diary modifier and adds the always-visible intro column (a plain
+         hint before a date is picked, the real .availability-picked panel once one is).
+  */
   .availability-intro {
     display: flex;
     flex-direction: column;
     gap: 22px;
   }
+
   /* The showcase's "Your selection" panel keeps the boxed-card treatment: background, border, status-colored left
-       accent, shadow. Only shown once a date's picked (.show — see main.js),
-       same as every other .availability-picked instance — no longer forced visible via
-       .always with a placeholder. */
+         accent, shadow. Only shown once a date's picked (.show — see main.js),
+         same as every other .availability-picked instance — no longer forced visible via
+         .always with a placeholder.
+  */
   .availability-intro .availability-picked {
     /* transition intentionally not re-declared here — the base .availability-picked
-         rule already lists border-left-color alongside opacity/transform, and two
-         same-property transition declarations at different specificities have the
-         more specific one win wholesale, not per-property (the same-specificity
-         collision), which would silently drop the transform entrance animation on
-         this card. */
+           rule already lists border-left-color alongside opacity/transform, and two
+           same-property transition declarations at different specificities have the
+           more specific one win wholesale, not per-property (the same-specificity
+           collision), which would silently drop the transform entrance animation on
+           this card.
+  */
     margin-top: 0;
     padding: 18px 20px;
     border-radius: var(--radius-card);
@@ -268,12 +293,15 @@ import Button from "@components/ui/Button.astro"
     border-left: 3px solid rgba(var(--muted-ink-rgb), 0.18);
     box-shadow: 0 10px 24px -18px rgba(var(--muted-ink-rgb), 0.22);
   }
+
   .availability-intro .availability-picked.status-open {
     border-left-color: var(--avail-green-fg);
   }
+
   .availability-intro .availability-picked.status-interest {
     border-left-color: var(--avail-amber-fg);
   }
+
   .availability-select-note {
     font-size: 13px;
     line-height: 1.6;
@@ -282,53 +310,62 @@ import Button from "@components/ui/Button.astro"
     border-top: 1px solid rgba(var(--muted-ink-rgb), 0.1);
     padding-top: 16px;
   }
+
   @media (--below-desktop) {
     .availability-intro .availability-picked {
       display: none;
     }
   }
+
   /* The SAC's "Your selection" callout duplicated the calendar's own
-         .availability-foot bar (which also shows "SELECTED · date" + a status dot, see
-         above) once the two columns stack — dropped in favor of the foot bar
-         alone rather than showing the same "you picked X" twice down the page. */
+           .availability-foot bar (which also shows "SELECTED · date" + a status dot, see
+           above) once the two columns stack — dropped in favor of the foot bar
+           alone rather than showing the same "you picked X" twice down the page.
+  */
   /* .split is shared by several two-column sections; scoped here rather than
-       changed globally, since #availability's intro column (heading + one short
-       paragraph) is much shorter than the calendar beside it — centering left it
-       floating in the middle of a much taller neighbor, same issue as the
-       enquiry section's grid-solo fix. */
+         changed globally, since #availability's intro column (heading + one short
+         paragraph) is much shorter than the calendar beside it — centering left it
+         floating in the middle of a much taller neighbor, same issue as the
+         enquiry section's grid-solo fix.
+  */
   #availability .split {
     align-items: start;
     /* Right column is a fixed 500px track (not 1fr) so it matches
-         .availability.diary's own max-width exactly, rather than just being wide
-         enough to contain it — 1fr 1fr left an unused gap to the right of the
-         calendar at typical desktop widths that its own max-width couldn't
-         close on its own. Left column takes whatever's left. */
+           .availability.diary's own max-width exactly, rather than just being wide
+           enough to contain it — 1fr 1fr left an unused gap to the right of the
+           calendar at typical desktop widths that its own max-width couldn't
+           close on its own. Left column takes whatever's left.
+  */
     grid-template-columns: 1fr 500px;
   }
+
   @media (--below-enquiry-two-column) {
     #availability .split {
       grid-template-columns: 1fr;
     }
   }
+
   /* Collapse point moved down from the shared 980px below: with the right
-         column now a fixed 480px (not 1fr), the left column is what shrinks as
-         the viewport narrows, and stays reasonably readable (~300px+) all the
-         way down to ~920px — only below that does it get genuinely cramped, so
-         there's no reason to collapse to one column any earlier than
-         necessary. #availability gives this enough specificity to win over the
-         shared .split collapse (980px) below, so this section alone collapses
-         later than the others still sharing that rule. */
+           column now a fixed 480px (not 1fr), the left column is what shrinks as
+           the viewport narrows, and stays reasonably readable (~300px+) all the
+           way down to ~920px — only below that does it get genuinely cramped, so
+           there's no reason to collapse to one column any earlier than
+           necessary. #availability gives this enough specificity to win over the
+           shared .split collapse (980px) below, so this section alone collapses
+           later than the others still sharing that rule.
+  */
   /* Taking the image out of flow is the other half of "height comes from the
-         copy". Left in flow, the <img> still contributes an intrinsic height of
-         its own to the row — height:100% against an as-yet-undetermined row
-         height resolves to auto, so the image falls back to its natural
-         proportions (these photos are 1024x1280, so ~166px at a 133px track) and
-         quietly props the row open again, exactly like the aspect-ratio did. Out
-         of flow it contributes nothing, leaving the figure with no height of its
-         own; align-self:stretch above then sizes it to the row the copy defined,
-         and object-fit:cover (shared rule) crops to fill whatever shape that is.
-         The figure is already position:relative and overflow:hidden above, so
-         this needs no other scaffolding. */
+           copy". Left in flow, the <img> still contributes an intrinsic height of
+           its own to the row — height:100% against an as-yet-undetermined row
+           height resolves to auto, so the image falls back to its natural
+           proportions (these photos are 1024x1280, so ~166px at a 133px track) and
+           quietly props the row open again, exactly like the aspect-ratio did. Out
+           of flow it contributes nothing, leaving the figure with no height of its
+           own; align-self:stretch above then sizes it to the row the copy defined,
+           and object-fit:cover (shared rule) crops to fill whatever shape that is.
+           The figure is already position:relative and overflow:hidden above, so
+           this needs no other scaffolding.
+  */
   .availability-picked-status {
     display: inline-flex;
     align-items: center;
@@ -338,6 +375,7 @@ import Button from "@components/ui/Button.astro"
     text-transform: uppercase;
     font-weight: 600;
   }
+
   .availability-picked-status:not(:empty)::before {
     content: "";
     width: 6px;
@@ -346,15 +384,19 @@ import Button from "@components/ui/Button.astro"
     background: currentColor;
     flex: none;
   }
+
   .availability-picked.status-open .availability-picked-status {
     color: var(--avail-green-fg);
   }
+
   .availability-picked.status-interest .availability-picked-status {
     color: var(--avail-amber-fg);
   }
+
   .availability-intro .eyebrow {
     margin-bottom: 0;
   }
+
   @media (--from-desktop) {
     #availability :global(.availability-foot-label .availability-picked-status) {
       display: none;

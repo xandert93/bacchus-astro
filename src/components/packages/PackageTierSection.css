@@ -183,6 +183,7 @@
     grid-template-columns: 1fr;
     grid-template-areas: "heading" "lead" "tabbar";
   }
+
   /* Once wrapped, switch to the same full-width/flex:1 pattern the
      sitewide mobile tab-bar already uses (the hidden-scrollbar overflow) instead of the
      fixed 120px buttons — those are sized for sitting compactly next
@@ -191,6 +192,7 @@
   .package-tabs-tabbar {
     width: 100%;
   }
+
   .package-tabs-tabbar button {
     width: auto;
     flex: 1;
@@ -335,9 +337,11 @@
   .package-tier-cards {
     grid-template-columns: 1fr;
   }
+
   .package-tier-card:not(.active) {
     display: none;
   }
+
   /* The only card left visible here is always the selected one, so a
      selection indicator has nothing left to distinguish — there's no
      unselected sibling beside it to compare against. */
@@ -488,9 +492,11 @@
     left: 50%;
     transform: translateX(-50%) translateY(-10px);
   }
+
   .package-sticky-switch.is-visible {
     transform: translateX(-50%) translateY(0);
   }
+
   /* Explicit fixed width rather than flex's own content-based
      sizing (which would otherwise leave "Lavender €57" visibly
      wider than "Daisy €53"/"Rose €64") — same fix, same reason, as
@@ -516,9 +522,11 @@
     bottom: max(16px, env(safe-area-inset-bottom));
     transform: translateY(14px);
   }
+
   .package-sticky-switch.is-visible {
     transform: translateY(0);
   }
+
   /* flex:1 (not a fixed width, unlike the desktop block above) is
      safe here specifically because each button stacks name/price on
      two lines instead of one — checked against the narrowest

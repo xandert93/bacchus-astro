@@ -41,14 +41,17 @@ import IntroSplit from "@components/sections/IntroSplit.astro"
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   /* Scoped to this page (moved from global.css by
-       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+         scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   /* a.link-underline (not just .link-underline) so this beats [data-reveal]'s
-       own transition list on specificity — the "View Gallery" links also carry
-       data-reveal, and two same-specificity rules both setting `transition` on
-       one element means the later rule (here, [data-reveal] below) wins
-       wholesale and silently drops color from the list otherwise. */
+         own transition list on specificity — the "View Gallery" links also carry
+         data-reveal, and two same-specificity rules both setting `transition` on
+         one element means the later rule (here, [data-reveal] below) wins
+         wholesale and silently drops color from the list otherwise.
+  */
   a.link-underline {
     position: relative;
     font-size: 12px;
@@ -63,6 +66,7 @@ import IntroSplit from "@components/sections/IntroSplit.astro"
     border-bottom: 1px solid rgba(var(--muted-ink-rgb), 0.22);
     transition: color 0.35s var(--ease);
   }
+
   .link-underline::after {
     content: "";
     position: absolute;
@@ -75,29 +79,36 @@ import IntroSplit from "@components/sections/IntroSplit.astro"
     transform-origin: left;
     transition: transform 0.45s var(--ease);
   }
+
   .link-underline:hover {
     color: var(--gold);
   }
+
   .link-underline:hover::after {
     transform: scaleX(1);
   }
+
   .link-underline .arrow {
     display: inline-block;
     transition: transform 0.35s var(--ease);
   }
+
   .link-underline:hover .arrow {
     transform: translateX(4px);
   }
+
   @media (--no-hover) {
     .link-underline:active {
       color: var(--gold);
     }
   }
+
   @media (--no-hover) {
     .link-underline:active::after {
       transform: scaleX(1);
     }
   }
+
   @media (--no-hover) {
     .link-underline:active .arrow {
       transform: translateX(4px);

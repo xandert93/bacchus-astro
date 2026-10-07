@@ -127,28 +127,34 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   @media (--below-enquiry-two-column) {
     .enquiry-form {
       margin-top: clamp(32px, 5vw, 72px);
     }
   }
+
   /* ---------- Enquiry form wizard ---------- */
   .wizard-step {
     display: none;
   }
+
   .wizard-step.active {
     display: contents;
   }
+
   .wizard-progress {
     flex: 1 1 100%;
     margin-bottom: 0;
     position: relative;
     /* 8px is the default (matches the section's own 1-column collapse below
-         920px); 4px above that, once the rail sits beside the form as a
-         genuine 2-column layout — see the min-width:921px override below. */
+           920px); 4px above that, once the rail sits beside the form as a
+           genuine 2-column layout — see the min-width:921px override below.
+  */
     padding-top: 8px;
   }
+
   .wizard-count {
     flex: 1 1 100%;
     display: flex;
@@ -157,17 +163,20 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
     gap: 12px;
     margin-bottom: -6px;
   }
+
   .wizard-count .wizard-count-title {
     font-family: "Fraunces", Georgia, serif;
     font-size: clamp(21px, 2.4vw, 27px);
     line-height: 1.15;
   }
+
   .wizard-steps {
     display: flex;
     gap: 10px;
     position: relative;
     z-index: 1;
   }
+
   .wizard-step-tab {
     flex: 1;
     background: none;
@@ -182,13 +191,16 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
     opacity: 0.4;
     transition: opacity 0.3s var(--ease);
   }
+
   .wizard-step-tab:disabled {
     cursor: auto;
   }
+
   .wizard-step-tab.active,
   .wizard-step-tab.done {
     opacity: 1;
   }
+
   .wizard-step-tab .wizard-step-number {
     width: 22px;
     height: 22px;
@@ -206,16 +218,19 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
       border-color 0.3s var(--ease),
       color 0.3s var(--ease);
   }
+
   .wizard-step-tab.active .wizard-step-number {
     background: var(--ink);
     border-color: var(--ink);
     color: var(--limestone-2);
   }
+
   .wizard-step-tab.done .wizard-step-number {
     background: var(--gold);
     border-color: var(--gold);
     color: var(--ink);
   }
+
   .wizard-step-tab .wizard-step-label {
     font-size: 10px;
     letter-spacing: 0.12em;
@@ -223,16 +238,18 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
     font-weight: 500;
     color: var(--muted-ink);
   }
+
   /* --wiz-tab-count (set inline on .wizard-progress, default 3 for pages not yet
-       migrated to the 4-step wizard) keeps this insets formula correct
-       regardless of how many .wizard-step-tabs actually exist: each tab's center
-       sits at 50%/N in from its edge, plus 11px to reach the tab circle's own
-       center (half its 22px width). .wizard-progress-line is absolutely positioned, so its
-       top is measured from .wizard-progress's own padding edge — a fixed origin
-       that doesn't shift just because padding-top grows, unlike the step
-       circles (real, in-flow content), which do — so top needs the same
-       padding-top added on top of its own 11px to stay centered on them, at
-       each of .wizard-progress's own two padding-top breakpoints below. */
+         migrated to the 4-step wizard) keeps this insets formula correct
+         regardless of how many .wizard-step-tabs actually exist: each tab's center
+         sits at 50%/N in from its edge, plus 11px to reach the tab circle's own
+         center (half its 22px width). .wizard-progress-line is absolutely positioned, so its
+         top is measured from .wizard-progress's own padding edge — a fixed origin
+         that doesn't shift just because padding-top grows, unlike the step
+         circles (real, in-flow content), which do — so top needs the same
+         padding-top added on top of its own 11px to stay centered on them, at
+         each of .wizard-progress's own two padding-top breakpoints below.
+  */
   .wizard-progress-line {
     position: absolute;
     top: 19px;
@@ -242,16 +259,19 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
     gap: 22px;
     z-index: 0;
   }
+
   @media (--from-enquiry-two-column) {
     .wizard-progress {
       padding-top: 4px;
     }
   }
+
   @media (--from-enquiry-two-column) {
     .wizard-progress-line {
       top: 15px;
     }
   }
+
   .wizard-progress-line .wizard-progress-segment {
     flex: 1;
     border-top: 2px dotted rgba(var(--muted-ink-rgb), 0.2);
@@ -259,21 +279,25 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
       border-color 0.3s var(--ease),
       border-top-style 0.3s var(--ease);
   }
+
   .wizard-progress-line .wizard-progress-segment.done {
     border-top-style: solid;
     border-top-color: var(--gold);
   }
+
   @media (--below-wizard-step-labels) {
     .wizard-step-tab .wizard-step-label {
       display: none;
     }
   }
+
   @media (--below-wizard-step-labels) {
     .wizard-progress-line {
       left: calc(50% / var(--wiz-tab-count, 3) + 9px);
       right: calc(50% / var(--wiz-tab-count, 3) + 9px);
     }
   }
+
   .wizard-nav {
     flex: 1 1 100%;
     display: flex;
@@ -281,32 +305,38 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
     gap: 16px;
     flex-wrap: wrap;
     /* No margin-top of its own — the form's own flex gap (22px, see form{})
-         already spaces every row consistently, this one included; a bespoke
-         extra nudge here just meant the gap above the buttons didn't match
-         every other inter-field gap. */
+           already spaces every row consistently, this one included; a bespoke
+           extra nudge here just meant the gap above the buttons didn't match
+           every other inter-field gap.
+  */
   }
+
   .wizard-nav .wizard-spacer {
     flex: 1;
   }
+
   /* .wizard-back-hidden (toggled by main.js instead of inline style.visibility —
-       see showStep()) keeps Back's layout space via visibility:hidden on step 1,
-       so Continue doesn't shift position once Back becomes visible on later
-       steps. Used to need a sub-480px override dropping this to display:none,
-       because Back's old ~125px text+icon pill plus Continue's own width
-       didn't fit even the narrowest phones — moot now that Back is a 50px
-       icon-only circle (see .wizard-back-circle below); that reserved space is
-       small enough to keep at every width, so the override was removed rather
-       than kept as dead weight. */
+         see showStep()) keeps Back's layout space via visibility:hidden on step 1,
+         so Continue doesn't shift position once Back becomes visible on later
+         steps. Used to need a sub-480px override dropping this to display:none,
+         because Back's old ~125px text+icon pill plus Continue's own width
+         didn't fit even the narrowest phones — moot now that Back is a 50px
+         icon-only circle (see .wizard-back-circle below); that reserved space is
+         small enough to keep at every width, so the override was removed rather
+         than kept as dead weight.
+  */
   /* De-emphasized relative to Continue/Submit on purpose — a back action
-       shouldn't visually compete with the form's forward momentum, but
-       shouldn't be hard to find either. Reuses .availability.diary's own prev/next
-       circle-button treatment (styles.css), just sized up to 50px to match
-       .button's own height, so it reads as an
-       existing pattern on this site, not a one-off. */
+         shouldn't visually compete with the form's forward momentum, but
+         shouldn't be hard to find either. Reuses .availability.diary's own prev/next
+         circle-button treatment (styles.css), just sized up to 50px to match
+         .button's own height, so it reads as an
+         existing pattern on this site, not a one-off.
+  */
   .wizard-back-circle {
     /* Matches .button's own height exactly (--button-height), so Back and
-         Continue/Submit sit at the same height in the row — still a circle
-         (equal width), just a bigger one than the original 40px. */
+           Continue/Submit sit at the same height in the row — still a circle
+           (equal width), just a bigger one than the original 40px.
+  */
     width: var(--button-height);
     height: var(--button-height);
     border-radius: 50%;
@@ -322,18 +352,21 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
       background 0.3s var(--ease),
       border-color 0.3s var(--ease);
   }
+
   @media (--hover) {
     .wizard-back-circle:hover {
       background: var(--paper);
       border-color: rgba(var(--muted-ink-rgb), 0.3);
     }
   }
+
   @media (--no-hover) {
     .wizard-back-circle:active {
       background: var(--paper);
       border-color: rgba(var(--muted-ink-rgb), 0.3);
     }
   }
+
   :global(.review-edit-button) {
     display: inline-flex;
     align-items: center;
@@ -354,6 +387,7 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
       background-color 0.3s var(--ease),
       transform 0.3s var(--ease);
   }
+
   @media (--hover) {
     :global(.review-edit-button:hover) {
       border-color: rgba(var(--gold-rgb), 0.4);
@@ -361,25 +395,30 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
       transform: translateY(-1px);
     }
   }
+
   /* ---------- Sticky mobile reassurance ---------- */
   /* Disabled as soon as the section collapses to one column (920px) — the
-       trust-rail (moved below the form at that same breakpoint) already says
-       the same thing, and a bar pinned to the bottom of the viewport eats
-       permanently into already-limited screen space. */
+         trust-rail (moved below the form at that same breakpoint) already says
+         the same thing, and a bar pinned to the bottom of the viewport eats
+         permanently into already-limited screen space.
+  */
   .trust-sticky {
     display: none;
   }
+
   @media (--below-desktop) {
     .enquiry-form {
       grid-column: 1;
       grid-row: auto;
     }
   }
+
   @media (--below-desktop) {
     .enquiry-form {
       order: 2;
     }
   }
+
   @media (--hover) {
     .wizard-back-link:hover :global(svg) {
       transform: translateX(-4px);
@@ -397,21 +436,26 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
     padding: clamp(22px, 4vw, 44px);
     max-width: 500px;
   }
+
   /* Once the section collapses to one column, a max-width-capped card left
-     without this just sits flush-left in the now much wider column, reading
-     as off-center. Not needed above 920px — there the card still shares its
-     column with the rail, so it stays where the grid puts it. */
+       without this just sits flush-left in the now much wider column, reading
+       as off-center. Not needed above 920px — there the card still shares its
+       column with the rail, so it stays where the grid puts it.
+  */
   @media (--below-enquiry-two-column) {
     .enquiry-form form {
       margin-inline: auto;
     }
   }
-  /* Reverts to the original 480px at true mobile. */
+
+  /* Reverts to the original 480px at true mobile.
+  */
   @media (--below-tablet) {
     form {
       max-width: 480px;
     }
   }
+
   .wizard-step.active > :global(*) {
     opacity: 1;
     transform: translateY(0);
@@ -419,6 +463,7 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
       opacity 0.28s var(--ease),
       transform 0.32s var(--ease);
   }
+
   .wizard-step.leaving > :global(*) {
     opacity: 0;
     transform: translateY(-8px);
@@ -426,38 +471,46 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
       opacity 0.18s var(--ease),
       transform 0.18s var(--ease);
   }
+
   .wizard-step.entering > :global(*) {
     opacity: 0;
     transform: translateY(8px);
     transition: none;
   }
+
   .wizard-count .wizard-count-title :global(em) {
     font-family: "Newsreader", Georgia, serif;
     font-style: italic;
     color: var(--bronze);
   }
+
   .wizard-back-hidden {
     visibility: hidden;
   }
+
   /* Cancels .wizard-back-link:hover svg's inherited translateX(-4px) (this button
-         keeps the .wizard-back-link class for the JS that selects it) — that nudge was
-         built for a wide text+icon pill with room for the arrow to travel; the
-         circle-button pattern being reused here never animates its icon on
-         hover (the calendar's month arrows behave the same), so this stays consistent with it. */
+           keeps the .wizard-back-link class for the JS that selects it) — that nudge was
+           built for a wide text+icon pill with room for the arrow to travel; the
+           circle-button pattern being reused here never animates its icon on
+           hover (the calendar's month arrows behave the same), so this stays consistent with it.
+  */
 
   @media (--hover) {
     .wizard-back-circle:hover :global(svg) {
       transform: none;
     }
   }
+
   /* Cancels .wizard-back-link:hover svg's inherited translateX(-4px) (this button
-         keeps the .wizard-back-link class for the JS that selects it) — that nudge was
-         built for a wide text+icon pill with room for the arrow to travel; the
-         circle-button pattern being reused here never animates its icon on
-         hover (the calendar's month arrows don't either), so this stays consistent with them. */
+           keeps the .wizard-back-link class for the JS that selects it) — that nudge was
+           built for a wide text+icon pill with room for the arrow to travel; the
+           circle-button pattern being reused here never animates its icon on
+           hover (the calendar's month arrows don't either), so this stays consistent with them.
+  */
   :global(.review-edit-button) :global(svg) {
     flex: none;
   }
+
   @media (--below-tablet) {
     form {
       padding: 22px;

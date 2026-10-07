@@ -32,30 +32,36 @@ const { class: extraClass } = Astro.props
 
 <style>
   /* Scoped to this component (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .social-links {
     display: flex;
     gap: 10px;
   }
+
   .social-links a {
     color: var(--muted);
     transition: color 0.3s var(--ease);
   }
+
   @media (--hover) {
     .social-links a:hover {
       color: var(--gold);
     }
   }
+
   @media (--no-hover) {
     .social-links a:active {
       color: var(--gold);
     }
   }
+
   /* Gated, and given the :active fallback it never had (the sticky touch hover).
-     Reaches the footer on every page as well as the drawer's own copy, deliberately — the
-     footer pair is less obvious about it only because tapping one leaves the
-     site entirely, whereas the drawer's sits on screen through the overlay's
-     0.5s fade. Same latch either way. */
+       Reaches the footer on every page as well as the drawer's own copy, deliberately — the
+       footer pair is less obvious about it only because tapping one leaves the
+       site entirely, whereas the drawer's sits on screen through the overlay's
+       0.5s fade. Same latch either way.
+  */
   .social-links svg {
     width: 32px;
     height: 32px;

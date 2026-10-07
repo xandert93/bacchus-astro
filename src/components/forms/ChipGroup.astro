@@ -38,13 +38,15 @@ const { id, options, selected } = Astro.props
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .chips {
     display: flex;
     flex-wrap: wrap;
     gap: 9px;
     margin-top: 5px;
   }
+
   .chip {
     position: relative;
     display: inline-flex;
@@ -71,59 +73,70 @@ const { id, options, selected } = Astro.props
       transform 0.3s var(--ease),
       box-shadow 0.3s var(--ease);
   }
+
   @media (--hover) {
     .chip:hover {
       background-color: var(--limestone);
     }
   }
+
   .chip.is-selected {
     background: var(--ink);
     color: var(--limestone);
     border-color: var(--ink);
     box-shadow: 0 3px 12px rgba(var(--ink-rgb), 0.12);
   }
+
   @media (--hover) {
     .chip.is-selected:hover {
       background: var(--ink-2);
       border-color: var(--ink-2);
     }
   }
+
   @media (--no-hover) {
     .chip:active {
       background-color: var(--limestone);
     }
   }
+
   @media (--no-hover) {
     .chip.is-selected:active {
       background: var(--ink-2);
       border-color: var(--ink-2);
     }
   }
+
   /* Equal-width chips (event type, and how to reply) above phone width;
-     content-hugging below it. */
+       content-hugging below it.
+  */
   @media (--from-tablet) {
     .chips .chip {
       flex: 1 1 0;
       text-align: center;
     }
   }
+
   /* Content-width chips get too narrow for longer labels to fit on one line
-     once the form itself has gone single-column — same lesson as the tab-bar
-     overflow (the hidden-scrollbar overflow): fit a small fixed item count in equal-width
-     rows rather than letting text wrap inside a pill. */
+       once the form itself has gone single-column — same lesson as the tab-bar
+       overflow (the hidden-scrollbar overflow): fit a small fixed item count in equal-width
+       rows rather than letting text wrap inside a pill.
+  */
   @media (--below-tablet) {
     .chip {
       flex: 1 1 calc(50% - 5px);
       text-align: center;
     }
   }
+
   .chip :global(svg) {
     flex: none;
     /* Optical nudge, not a box-model bug — flex's align-items:center matches
-         the SVG's geometric box to the text's line box, but the Font Awesome
-         glyphs' visible "ink" isn't centered within their own viewBox, reading
-         as sitting slightly below the text otherwise (see Newsreader's line-box bias,
-         same class of fix). */
+           the SVG's geometric box to the text's line box, but the Font Awesome
+           glyphs' visible "ink" isn't centered within their own viewBox, reading
+           as sitting slightly below the text otherwise (see Newsreader's line-box bias,
+           same class of fix).
+  */
     margin-top: -1.5px;
   }
 </style>

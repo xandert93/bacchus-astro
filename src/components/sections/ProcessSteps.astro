@@ -30,7 +30,8 @@ const { steps } = Astro.props
 
 <style>
   /* Scoped to this component (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   /* ---------- FAQ accordion: styles live in FaqSection.astro ---------- */
   /* ---------- Process steps ---------- */
   .process-steps {
@@ -39,11 +40,13 @@ const { steps } = Astro.props
     gap: clamp(20px, 2.4vw, 30px);
     counter-reset: step;
   }
+
   .process-step {
     position: relative;
     padding-top: 22px;
     border-top: 1px solid rgba(var(--gold-rgb), 0.35);
   }
+
   .process-step::before {
     counter-increment: step;
     content: counter(step, decimal-leading-zero);
@@ -53,25 +56,30 @@ const { steps } = Astro.props
     display: block;
     margin-bottom: 16px;
   }
+
   .process-step h4 {
     font-size: 17px;
     font-weight: 400;
     margin-bottom: 8px;
   }
+
   .process-step p {
     font-size: 13.5px;
     color: var(--muted);
   }
+
   @media (--below-desktop) {
     .process-steps {
       grid-template-columns: 1fr 1fr;
     }
   }
+
   @media (--below-tablet) {
     .process-steps {
       grid-template-columns: 1fr;
     }
   }
+
   @media (--below-tablet) {
     .process-step:first-child {
       border-top: none;

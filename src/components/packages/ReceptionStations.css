@@ -470,11 +470,13 @@
     -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
     mask-image: linear-gradient(90deg, #000 85%, transparent);
   }
+
   .package-stations-browser.is-enhanced
     .package-stations-category-tab:not([aria-current="true"]) {
     background: rgba(var(--limestone-rgb), 0.06);
     border-radius: 3px;
   }
+
   /* SECTION C'S MOBTAB IS WRONGLY CAUGHT BY THE RULE JUST ABOVE
      (2026-09-29) — it was written for sections that mark their
      active tab with aria-current (real section B), where :not
@@ -743,6 +745,7 @@
     width: 22px;
     height: 22px;
   }
+
   .package-station-card-expand-badge svg {
     width: 11px;
     height: 11px;
@@ -755,6 +758,7 @@
     opacity: 0;
     transition: opacity 0.3s var(--ease);
   }
+
   /* :focus-visible alongside the hover, and it is not optional now
      that this is a real button: an invisible control that takes a
      tab stop is worse than no control at all, because the focus
@@ -763,6 +767,7 @@
   .package-station-card-expand-badge:focus-visible {
     opacity: 1;
   }
+
   /* The sitewide food-photo hover itself (scale + saturate/contrast/
      brightness lift) now lives in styles.css as one shared rule
      alongside .gallery-item, .package-stations-stage-figure and
@@ -1026,10 +1031,12 @@
     margin: 0 calc(-1 * var(--station-gutter));
     padding: 0 var(--station-gutter);
   }
+
   /* 82% leaves the next card peeking in — the swipe cue. */
   .package-stations-browser.is-enhanced .package-station-card {
     flex: 0 0 min(82%, 320px);
   }
+
   /* Trailing gutter, so the last card can snap flush. */
   .package-stations-browser.is-enhanced .package-stations-card-list::after {
     content: "";
@@ -1496,6 +1503,7 @@
     gap: clamp(24px, 3vw, 40px);
     align-items: start;
   }
+
   .package-stations-browser.is-enhanced .package-stations-index {
     display: flex;
     flex-direction: column;
@@ -1760,11 +1768,13 @@
   .package-stations-index-row:not([aria-current="true"]):hover {
     background: rgba(var(--limestone-rgb), 0.025);
   }
+
   .package-stations-index-row:not([aria-current="true"]):hover
     .package-stations-index-row-name {
     transform: translateX(3px);
     color: rgba(var(--limestone-2-rgb), 0.95);
   }
+
   /* SUPERSEDED 2026-09-28 — same change as the current-state rule
      above, and identical between the two states rather than a
      quieter hover draft of it: gold-gradient doesn't have an
@@ -1781,6 +1791,7 @@
     -webkit-text-fill-color: transparent;
     color: transparent;
   }
+
   /* var(--muted), matching current-state "pp" above and the
      card's own .package-station-price-unit. */
   .package-stations-index-row:not([aria-current="true"]):hover
@@ -1874,6 +1885,7 @@
     border: 1px solid var(--station-card-edge);
     color: var(--limestone-2);
   }
+
   .package-stations-stage-figure {
     grid-area: fig;
     position: relative;
@@ -1888,6 +1900,7 @@
     cursor: zoom-in;
     overflow: hidden;
   }
+
   .package-stations-stage-figure img {
     position: absolute;
     inset: 0;
@@ -1899,6 +1912,7 @@
       transform 0.9s var(--ease),
       filter 0.45s var(--ease);
   }
+
   /* The sitewide food-photo hover itself now lives in styles.css
      (folded into the shared .gallery-item rule, 2026-10-01). Kept on
      the FIGURE, never the card: the card itself links nowhere, and a
@@ -1923,16 +1937,19 @@
     cursor: zoom-in;
     transition: background 0.4s var(--ease);
   }
+
   @media (--hover) {
     .package-stations-stage-expand-button:hover {
       background: rgba(var(--ink-rgb), 0.75);
     }
   }
+
   @media (--no-hover) {
     .package-stations-stage-expand-button:active {
       background: rgba(var(--ink-rgb), 0.75);
     }
   }
+
   .package-stations-stage-caption {
     grid-area: cap;
     display: flex;
@@ -1940,11 +1957,13 @@
     gap: 12px;
     padding: clamp(24px, 3.4vw, 30px) clamp(22px, 3vw, 28px) 0;
   }
+
   .package-stations-stage-title {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
+
   .package-stations-stage-name {
     margin: 0;
     font-weight: 300;
@@ -1952,9 +1971,11 @@
     line-height: 1.04;
     color: var(--limestone-2);
   }
+
   .package-stations-stage-caption .package-station-price-amount {
     font-size: clamp(24px, 2.8vw, 28px);
   }
+
   .package-stations-stage-body {
     grid-area: body;
     display: flex;
@@ -1962,6 +1983,7 @@
     gap: 16px;
     padding: 16px clamp(22px, 3vw, 28px) clamp(24px, 3.2vw, 28px);
   }
+
   /* Flat 15px, not the clamp(16px, 1.7vw, 17px) this used to be
      (2026-09-29) — that clamp's crossover doesn't land until a
      941px viewport, so within the 621-859.98px range this rule
@@ -1989,6 +2011,7 @@
     columns: 2;
     column-gap: 8px;
   }
+
   .package-stations-stage-body .package-station-item-list li {
     position: relative;
     display: block;
@@ -1996,9 +2019,11 @@
     margin-bottom: 8px;
     break-inside: avoid;
   }
+
   .package-stations-stage-body .package-station-item-list li:last-child {
     margin-bottom: 0;
   }
+
   .package-stations-stage-body .package-station-item-list li::before {
     position: absolute;
     left: 0;
@@ -2006,12 +2031,15 @@
     content: "—";
     color: var(--gold);
   }
+
   .package-stations-stage-body .package-station-item-list li:not(:last-child)::after {
     content: none;
   }
+
   .package-stations-stage-body .package-station-serving-note {
     font-size: clamp(15px, 1.6vw, 16px);
   }
+
   /* SUPERSEDED (2026-09-30) — .package-stations-stage-footer, the
      wrapper this rule and the one below styled, is gone: it was
      only ever holding one child (the add button), and once the
@@ -2031,9 +2059,11 @@
       "fig"
       "body";
   }
+
   .package-stations-stage-figure {
     min-height: 0;
   }
+
   .package-stations-stage-figure img {
     position: static;
     display: block;
@@ -2067,6 +2097,7 @@
     aspect-ratio: 5 / 4;
     object-position: 50% 53%;
   }
+
   /* Heavier than the cards' scrim: the eyebrow and name sit lower
      on a wider, often paler photo. */
   .package-stations-stage-figure::after {
@@ -2080,6 +2111,7 @@
     );
     pointer-events: none;
   }
+
   /* Same grid cell as the photo, pinned to its foot, above the
      scrim. */
   .package-stations-stage-caption {
@@ -2089,12 +2121,14 @@
     gap: 10px;
     padding: 0 clamp(22px, 2.6vw, 30px) clamp(20px, 2.1vw, 26px);
   }
+
   .package-stations-stage-title {
     flex-direction: row;
     align-items: baseline;
     justify-content: space-between;
     gap: 24px;
   }
+
   /* 32px max, down from 42px. The section's own h2 is
      clamp(31px, 5.2vw, 62px) and the index rows beside this are
      ~19px, so 42px left the station name reading as a second
@@ -2103,16 +2137,20 @@
     font-size: clamp(25px, 2.4vw, 32px);
     line-height: 1.04;
   }
+
   .package-stations-stage-caption .package-station-price {
     flex: none;
   }
+
   .package-stations-stage-caption .package-station-price-amount {
     font-size: clamp(21px, 1.9vw, 25px);
   }
+
   .package-stations-stage-body {
     gap: 18px;
     padding: clamp(22px, 2.2vw, 26px) clamp(22px, 2.6vw, 30px) clamp(24px, 2.4vw, 28px);
   }
+
   /* Two-column dashed list instead of the dotted run. */
   .package-stations-stage-body .package-station-item-list {
     display: grid;
@@ -2132,6 +2170,7 @@
     font-size: 14.5px;
     line-height: 1.5;
   }
+
   /* A hanging indent, NOT display: flex with a gap — which is what
      this was until the vegetarian badges arrived (2026-09-25). In a
      flex row the dash, the item text and the badge's nowrap wrapper
@@ -2144,6 +2183,7 @@
     padding-left: 1.5em;
     text-indent: -1.5em;
   }
+
   .package-stations-stage-body .package-station-item-list li::before {
     content: "—";
     margin-right: 0.55em;
@@ -2159,9 +2199,11 @@
        what makes gold too much here. Restored to match. */
     color: var(--gold);
   }
+
   .package-stations-stage-body .package-station-item-list li:not(:last-child)::after {
     content: none;
   }
+
   /* Back to 4px here. This list has one item per line with no
      separator behind the badge, so the tighter middot-run spacing
      (see the base rule) reads as cramped rather than as binding —
@@ -2169,6 +2211,7 @@
   .package-stations-stage-body .package-station-item-list li .package-veg-marker {
     margin-inline-start: 4px;
   }
+
   /* Pulled down with the item list above it (2026-09-25). At its
      previous 16px ceiling it was LARGER than the items once those
      went to a flat 14.5px, which inverts the hierarchy — this is
@@ -2380,6 +2423,7 @@
   .package-stations-hybrid-mobtab {
     display: none;
   }
+
   .package-stations-hybrid-desktop {
     display: block;
   }
@@ -2626,6 +2670,7 @@
     gap: clamp(24px, 3vw, 40px);
     align-items: start;
   }
+
   .package-stations-hybrid-desktop
     .package-stations-browser.is-enhanced
     .package-stations-index {
@@ -2899,6 +2944,7 @@
   .package-stations-hybrid-mobtab .package-stations-category-tabs .pill {
     transition: none;
   }
+
   /* Belt and braces: the controller already refuses to add
      .is-cueing under reduced motion, so this should never have
      anything to switch off. Kept because .button-shimmer carries
@@ -2907,6 +2953,7 @@
   .package-stations-carousel-arrow.is-cueing::before {
     animation: none;
   }
+
   /* The one that matters most now that navigation IS scrolling:
      without this, every index row and category button would smooth-
      scroll the carousel. The controller does not need a reduced-

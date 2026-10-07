@@ -42,8 +42,9 @@ const { tone = "on-dark", small = false, class: className, ...rest } = Astro.pro
 
 <style>
   /* nowrap so "PROPOSED" can never break across two lines in a narrow
-     column — it can fall to its own line after a wrapping label, which is
-     fine, but splitting the word itself is not. */
+       column — it can fall to its own line after a wrapping label, which is
+       fine, but splitting the word itself is not.
+  */
   .proposed-badge {
     display: inline-block;
     white-space: nowrap;
@@ -58,10 +59,12 @@ const { tone = "on-dark", small = false, class: className, ...rest } = Astro.pro
     color: var(--bronze-on-dark);
     vertical-align: middle;
   }
+
   .proposed-badge-bronze {
     border-color: rgba(var(--bronze-rgb), 0.55);
     color: var(--bronze);
   }
+
   .proposed-badge-small {
     padding: 1px 6px;
     font-size: 8.5px;

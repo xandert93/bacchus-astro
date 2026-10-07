@@ -95,13 +95,15 @@ const isWedding = eventType === "Wedding"
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   /* weddings.html only: wizard step 1 has no grid of its own, just this
-       picked-date summary + a button back to the real calendar — laid out as one
-       row (summary at the start, button pinned to the far end via space-between).
-       #availFormPicked is always in layout (same as the AC showcase's own
-       .availability-foot-label instances — no .availability-picked-style show/hide here), so
-       space-between always has just two items: the summary text, and the button. */
+         picked-date summary + a button back to the real calendar — laid out as one
+         row (summary at the start, button pinned to the far end via space-between).
+         #availFormPicked is always in layout (same as the AC showcase's own
+         .availability-foot-label instances — no .availability-picked-style show/hide here), so
+         space-between always has just two items: the summary text, and the button.
+  */
   .availability-form-row {
     display: flex;
     align-items: center;
@@ -109,6 +111,7 @@ const isWedding = eventType === "Wedding"
     gap: 16px;
     flex-wrap: wrap;
   }
+
   .availability-picked-status {
     display: inline-flex;
     align-items: center;
@@ -118,6 +121,7 @@ const isWedding = eventType === "Wedding"
     text-transform: uppercase;
     font-weight: 600;
   }
+
   .availability-picked-status:not(:empty)::before {
     content: "";
     width: 6px;
@@ -126,37 +130,45 @@ const isWedding = eventType === "Wedding"
     background: currentColor;
     flex: none;
   }
+
   .availability-foot-label-date {
     font-size: 10.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--muted-ink);
   }
+
   .availability-foot-label.status-open .availability-picked-status {
     color: var(--avail-green-fg);
   }
+
   .availability-foot-label.status-interest .availability-picked-status {
     color: var(--avail-amber-fg);
   }
-  /* A smaller status dot on phones, for this summary row only. */
+
+  /* A smaller status dot on phones, for this summary row only.
+  */
   @media (--below-large-phone) {
     .availability-foot-label .availability-picked-status:not(:empty)::before {
       width: 4px;
       height: 4px;
     }
   }
+
   @media (--below-large-phone) {
     .availability-foot-label {
       align-items: center;
     }
   }
+
   /* Fades + lifts in when switching to Wedding from another event type
-       (opacity+lift, not clip-path, which once broke the mobile menu). .is-revealed is
-       added on a double-rAF in main.js's syncDateMode(), one real painted
-       frame after display switches from none, since toggling display and
-       opacity/transform in the same tick can get coalesced into a single
-       paint with no in-between frame to animate from. Switching away hides
-       instantly — only the reveal needed a transition. */
+         (opacity+lift, not clip-path, which once broke the mobile menu). .is-revealed is
+         added on a double-rAF in main.js's syncDateMode(), one real painted
+         frame after display switches from none, since toggling display and
+         opacity/transform in the same tick can get coalesced into a single
+         paint with no in-between frame to animate from. Switching away hides
+         instantly — only the reveal needed a transition.
+  */
   #dateCalWrap {
     opacity: 0;
     transform: translateY(10px);
@@ -168,21 +180,26 @@ const isWedding = eventType === "Wedding"
     opacity: 1;
     transform: none;
   }
+
   /* Event-type helper line under the chips: crossfades its copy per chip
-       (see main.js CHIP_NOTES). Fade only, same fixed-clock swap pattern as
-       .availability-picked.swapping — not a display toggle, so no reveal race. */
+         (see main.js CHIP_NOTES). Fade only, same fixed-clock swap pattern as
+         .availability-picked.swapping — not a display toggle, so no reveal race.
+  */
   :global(#chipNote) {
     transition: opacity 0.2s var(--ease);
   }
+
   :global(#chipNote.swapping) {
     opacity: 0.35;
   }
   #availChangeBtn {
     flex: none;
   }
+
   /* The calendar icon here is a label, not a "proceed" chevron, so it shouldn't
-       inherit .button:hover svg's forward-nudge translateX — that motion only reads
-       correctly on the trailing arrows it was designed for. */
+         inherit .button:hover svg's forward-nudge translateX — that motion only reads
+         correctly on the trailing arrows it was designed for.
+  */
   #availChangeBtn :global(svg) {
     transition: none;
   }

@@ -29,7 +29,8 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
   <div class="menu-bg" style={`background-image: url('${background.src}')`}></div>
   {/* The SCROLL happens here, not on .menu. .menu-bg has to sit in a box
        that never scrolls and never changes its containing block; see the
-       note on .menu-scroll in styles.css. */}
+       note on .menu-scroll in styles.css. 
+*/}
   <div class="menu-scroll">
     <div class="menu-inner">
       {NAV_MENUS.map((menu, i) => (
@@ -52,35 +53,38 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
 
 <style>
   /* Scoped to this component (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   :global(html.nav-no-anim) .menu {
     transition: none !important;
     animation: none !important;
   }
+
   .menu {
     /* ONE value for the drawer's top-level row type, because it is set on two
-       rules thousands of lines apart — .menu .mobile-nav-link here, and
-       .menu .mobile-nav-group-trigger in the whole-site nav section at the foot
-       of this file. Restaurant/Events are buttons and Gallery/About are links,
-       so they can only read as one list while those two agree, and as two equal
-       literals they had every opportunity to drift (the drifting-grid-gaps lesson,
-       same fix). Declared on .menu rather than :root since it is this component's
-       concern; custom properties inherit, so the far rule picks it up.
-       Reduced twice on 2026-10-02, both on the user's call: from the original
-       clamp(26px, 7.5vw, 42px) to clamp(25px, 6.8vw, 36px), then to the value
-       below. Cumulatively ~16% off at phone widths and ~21% off the ceiling.
-       The ceiling took more at each step because it was the most oversized
-       part: 7.5vw pinned at 42px from 560px up, so the whole 560-980px tablet
-       range sat at the maximum while carrying the most rows.
-       The floor now engages below 381px, so unlike the first pass it IS the
-       size a 360-375px phone gets rather than mere insurance — which is the
-       constraint to know about before reducing again. Going lower means
-       lowering the floor, and the floor is what protects the tap target.
-       Tap targets were checked rather than assumed, since row height here is
-       almost entirely font-derived (only 5px of padding either side): at
-       line-height 1.65 the shortest row is ~52px against the 44px guideline, so
-       no padding compensation was needed. If a further reduction is wanted, the
-       ceiling is the knob to turn first. */
+         rules thousands of lines apart — .menu .mobile-nav-link here, and
+         .menu .mobile-nav-group-trigger in the whole-site nav section at the foot
+         of this file. Restaurant/Events are buttons and Gallery/About are links,
+         so they can only read as one list while those two agree, and as two equal
+         literals they had every opportunity to drift (the drifting-grid-gaps lesson,
+         same fix). Declared on .menu rather than :root since it is this component's
+         concern; custom properties inherit, so the far rule picks it up.
+         Reduced twice on 2026-10-02, both on the user's call: from the original
+         clamp(26px, 7.5vw, 42px) to clamp(25px, 6.8vw, 36px), then to the value
+         below. Cumulatively ~16% off at phone widths and ~21% off the ceiling.
+         The ceiling took more at each step because it was the most oversized
+         part: 7.5vw pinned at 42px from 560px up, so the whole 560-980px tablet
+         range sat at the maximum while carrying the most rows.
+         The floor now engages below 381px, so unlike the first pass it IS the
+         size a 360-375px phone gets rather than mere insurance — which is the
+         constraint to know about before reducing again. Going lower means
+         lowering the floor, and the floor is what protects the tap target.
+         Tap targets were checked rather than assumed, since row height here is
+         almost entirely font-derived (only 5px of padding either side): at
+         line-height 1.65 the shortest row is ~52px against the 44px guideline, so
+         no padding compensation was needed. If a further reduction is wanted, the
+         ceiling is the knob to turn first.
+  */
     --mobile-nav-link-size: clamp(24px, 6.3vw, 33px);
     position: fixed;
     inset: 0;
@@ -91,17 +95,18 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     justify-content: center;
     justify-content: safe center;
     /* .menu does NOT scroll — .menu-scroll inside it does. The padding and
-       the safe-centring moved there with it.
-       Why it matters: .menu carries a transform for its open/close animation,
-       and a transform makes an element the containing block for fixed
-       descendants. While .menu was also the scroll container, .menu-bg had no
-       good option — absolute meant it scrolled away with the content (the black
-       band), and fixed meant its containing block FLIPPED between .menu and the
-       viewport at the two ends of the transform transition, which repaints the
-       layer and produced a black flash on every open and close (reported
-       2026-10-02).
-       Moving the scroll one level in removes the conflict: .menu never scrolls,
-       so .menu-bg can be a plain absolute child of it and simply sits still. */
+         the safe-centring moved there with it.
+         Why it matters: .menu carries a transform for its open/close animation,
+         and a transform makes an element the containing block for fixed
+         descendants. While .menu was also the scroll container, .menu-bg had no
+         good option — absolute meant it scrolled away with the content (the black
+         band), and fixed meant its containing block FLIPPED between .menu and the
+         viewport at the two ends of the transform transition, which repaints the
+         layer and produced a black flash on every open and close (reported
+         2026-10-02).
+         Moving the scroll one level in removes the conflict: .menu never scrolls,
+         so .menu-bg can be a plain absolute child of it and simply sits still.
+  */
     overflow: hidden;
     opacity: 0;
     visibility: hidden;
@@ -112,6 +117,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       visibility 0s linear 0.5s;
     pointer-events: none;
   }
+
   :global(body.menu-open) .menu {
     opacity: 1;
     visibility: visible;
@@ -122,22 +128,25 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       transform 0.5s var(--ease),
       visibility 0s linear 0s;
   }
+
   /* FIXED, not absolute (changed 2026-10-02). An absolutely positioned child
-     of a scroll container is placed in that container's scrollable coordinate
-     space, so once .menu had more content than fits — which it does as soon as
-     a group is expanded on a short phone — the photograph scrolled up with the
-     content and left .menu's own --ink background as a black band at the
-     bottom. Reported as the image shifting with a black bar under it.
-     This only works because body.menu-open .menu sets "transform: none" rather
-     than "scale(1)": ANY transform on an ancestor makes it the containing block
-     for fixed descendants, and a fixed element in that position behaves like an
-     absolute one — i.e. it would scroll again. The scale is still there in the
-     closed state, so the open/close animation is unchanged; it is only released
-     once the overlay has finished opening, which is also the only time it is
-     possible to scroll. */
+       of a scroll container is placed in that container's scrollable coordinate
+       space, so once .menu had more content than fits — which it does as soon as
+       a group is expanded on a short phone — the photograph scrolled up with the
+       content and left .menu's own --ink background as a black band at the
+       bottom. Reported as the image shifting with a black bar under it.
+       This only works because body.menu-open .menu sets "transform: none" rather
+       than "scale(1)": ANY transform on an ancestor makes it the containing block
+       for fixed descendants, and a fixed element in that position behaves like an
+       absolute one — i.e. it would scroll again. The scale is still there in the
+       closed state, so the open/close animation is unchanged; it is only released
+       once the overlay has finished opening, which is also the only time it is
+       possible to scroll.
+  */
   /* Takes .menu's old padding, centring and scrolling. min-height: 0 is the
-     part that is easy to miss — a flex child will not shrink below its content
-     and so will not scroll without it. */
+       part that is easy to miss — a flex child will not shrink below its content
+       and so will not scroll without it.
+  */
   .menu-scroll {
     position: relative;
     z-index: 2;
@@ -150,36 +159,41 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     padding: 96px clamp(24px, 7vw, 60px) 32px;
     overflow-y: auto;
     /* The one real DISCONTINUITY at the moment an expanding group takes the
-       content past the container height: a classic scrollbar appears and takes
-       layout width, so the whole column reflows and the centred rows re-wrap in
-       a single frame. Reserving the space means the crossover changes nothing.
-       Desktop/laptop only — a phone's overlay scrollbar floats and has never
-       taken width — so this is for the <=980px laptop view rather than the
-       device. The centring itself does NOT jump, which was the other suspect
-       and was wrong: free space is H - C, "safe center" offsets by half of it
-       and falls back to start once it goes negative, so the offset approaches
-       zero continuously and simply stays there. Same for .menu-inner's auto
-       margins. */
+         content past the container height: a classic scrollbar appears and takes
+         layout width, so the whole column reflows and the centred rows re-wrap in
+         a single frame. Reserving the space means the crossover changes nothing.
+         Desktop/laptop only — a phone's overlay scrollbar floats and has never
+         taken width — so this is for the <=980px laptop view rather than the
+         device. The centring itself does NOT jump, which was the other suspect
+         and was wrong: free space is H - C, "safe center" offsets by half of it
+         and falls back to start once it goes negative, so the offset approaches
+         zero continuously and simply stays there. Same for .menu-inner's auto
+         margins.
+  */
     scrollbar-gutter: stable;
   }
+
   .menu-bg {
     position: absolute;
     inset: 0;
     /* Absolute against .menu, which is fixed, viewport-sized and — crucially —
-       no longer scrolls. So this fills the overlay and stays put, with no
-       containing-block switching and nothing to lag behind a resizing URL bar.
-       The earlier fixed + 100lvh version solved the URL-bar band but caused the
-       open/close flash; see the note on .menu's overflow. */
+         no longer scrolls. So this fills the overlay and stays put, with no
+         containing-block switching and nothing to lag behind a resizing URL bar.
+         The earlier fixed + 100lvh version solved the URL-bar band but caused the
+         open/close flash; see the note on .menu's overflow.
+  */
     opacity: 0.16;
     background-size: cover;
     background-position: center;
     filter: grayscale(0.3);
   }
+
   .menu-inner {
     position: relative;
     z-index: 2;
     margin: auto 0;
   }
+
   .menu .mobile-nav-link {
     display: block;
     font-family: "Fraunces", serif;
@@ -194,65 +208,76 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       transform 0.7s var(--ease) var(--m-delay, 0s),
       color 0.3s;
   }
+
   /* aria-current stays ungated — it marks which page you are on, and has
-     nothing to do with a pointer. Only :hover moves behind the gate. */
+       nothing to do with a pointer. Only :hover moves behind the gate.
+  */
   .menu .mobile-nav-link[aria-current="page"] {
     color: var(--gold-2);
   }
+
   @media (--hover) {
     .menu .mobile-nav-link:hover {
       color: var(--gold-2);
     }
   }
+
   @media (--no-hover) {
     .menu .mobile-nav-link:active {
       color: var(--gold-2);
     }
   }
+
   /* GATED (2026-10-02). This rule and the sub-link one below used to carry an
-     explicit sticky-touch-hover exemption, on the grounds that these are real page links
-     and navigating away on tap makes a lingering hover moot. That premise is
-     false here, twice over:
-       • ELEVEN of the drawer's seventeen links are href="#" — every unbuilt row
-         behind a Proposed badge. Nothing navigates, and main.js deliberately
-         does NOT close the drawer for those (closing it while going nowhere
-         would be worse), so the row simply stays latched gold until you tap
-         something else. Touch has no "pointer left" event to clear it.
-       • Even the four real page links are visible after the tap: closeMenu()
-         fades the overlay over 0.5s while the browser waits on navigation, and
-         "color 0.3s" animates the row to gold through that fade. You watch it
-         turn gold on the way out.
-     Gated on POINTER CAPABILITY, not viewport, which is the important half: the
-     drawer only appears below 980px, but a laptop window dragged narrow still
-     has a mouse, and hover is right there. A viewport gate would break hover
-     during exactly the kind of desktop-at-mobile-width testing this is built
-     with. (hover: hover) draws that line by itself. */
+       explicit sticky-touch-hover exemption, on the grounds that these are real page links
+       and navigating away on tap makes a lingering hover moot. That premise is
+       false here, twice over:
+         • ELEVEN of the drawer's seventeen links are href="#" — every unbuilt row
+           behind a Proposed badge. Nothing navigates, and main.js deliberately
+           does NOT close the drawer for those (closing it while going nowhere
+           would be worse), so the row simply stays latched gold until you tap
+           something else. Touch has no "pointer left" event to clear it.
+         • Even the four real page links are visible after the tap: closeMenu()
+           fades the overlay over 0.5s while the browser waits on navigation, and
+           "color 0.3s" animates the row to gold through that fade. You watch it
+           turn gold on the way out.
+       Gated on POINTER CAPABILITY, not viewport, which is the important half: the
+       drawer only appears below 980px, but a laptop window dragged narrow still
+       has a mouse, and hover is right there. A viewport gate would break hover
+       during exactly the kind of desktop-at-mobile-width testing this is built
+       with. (hover: hover) draws that line by itself.
+  */
   :global(body.menu-open) .menu .mobile-nav-link {
     opacity: 1;
     transform: translateY(0);
   }
+
   .menu .mobile-nav-link :global(.proposed-badge) {
     margin-left: 10px;
   }
+
   /* The 520px cap for an open .mobile-nav-sub lives on the original
-     .mobile-nav-group.is-open rule earlier in this file, not here. While this
-     was page-local in the sandbox it had to out-specify that rule's 240px via a
-     .menu ancestor; merged in, the right move is to change the source value
-     rather than leave an override sitting under it. */
+       .mobile-nav-group.is-open rule earlier in this file, not here. While this
+       was page-local in the sandbox it had to out-specify that rule's 240px via a
+       .menu ancestor; merged in, the right move is to change the source value
+       rather than leave an override sitting under it.
+  */
   /* The two CTAs as real buttons at the foot of the drawer rather than
-     two more numbered Fraunces rows — keeps the list at four items and
-     mirrors the role they have on desktop. Fixed delay, matching
-     .menu-social's own, since these sit below every numbered row. */
+       two more numbered Fraunces rows — keeps the list at four items and
+       mirrors the role they have on desktop. Fixed delay, matching
+       .menu-social's own, since these sit below every numbered row.
+  */
   /* Stacked and equal-width, not side by side (changed 2026-10-02). Measured
-     at 375px: the two pills came to ~315px against ~335px of available width,
-     so they fitted by twenty pixels — and at 320px they wrapped, producing two
-     LEFT-ALIGNED buttons of different widths, which reads as something that
-     went wrong rather than a decision. Stacking makes it deliberate at every
-     width, gives both a full-width tap target, and keeps the hierarchy legible
-     with the filled pill sitting above the outline one.
-     300px is the site's existing CTA cap, not a new number — the same value
-     already used in four places for buttons that would otherwise run the full
-     width of a narrow column. */
+       at 375px: the two pills came to ~315px against ~335px of available width,
+       so they fitted by twenty pixels — and at 320px they wrapped, producing two
+       LEFT-ALIGNED buttons of different widths, which reads as something that
+       went wrong rather than a decision. Stacking makes it deliberate at every
+       width, gives both a full-width tap target, and keeps the hierarchy legible
+       with the filled pill sitting above the outline one.
+       300px is the site's existing CTA cap, not a new number — the same value
+       already used in four places for buttons that would otherwise run the full
+       width of a narrow column.
+  */
   .mobile-nav-cta-row {
     display: flex;
     flex-direction: column;
@@ -265,38 +290,45 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
       opacity 0.6s var(--ease) 0.42s,
       transform 0.6s var(--ease) 0.42s;
   }
+
   :global(body.menu-open) .mobile-nav-cta-row {
     opacity: 1;
     transform: none;
   }
+
   :global(html.nav-no-anim) .menu :global(*) {
     transition: none !important;
     animation: none !important;
   }
+
   /* By class, not "span": a bare span selector also caught the row's
-     Proposed badge and turned it into a 0.38em gold numeral (the weaker-override trap's
-     shape), which then needed its own override to undo. */
+       Proposed badge and turned it into a 0.38em gold numeral (the weaker-override trap's
+       shape), which then needed its own override to undo.
+  */
   .menu .mobile-nav-link .mobile-nav-number {
     color: var(--gold);
     /* 0.38em, up from the original 0.32em across two passes: em tracks the
-       label, so each reduction shrank the numeral with it. These were already
-       at the small end, and below ~9px Inter numerals go thin on a dark ground,
-       so the ratio is raised to hold the RENDERED size at ~9.3px rather than to
-       keep the proportion. Deliberate trade: the numeral-to-label ratio is now
-       noticeably tighter than it was. If the label shrinks again this should
-       stop being an em and become a fixed px — it is UI chrome, not display
-       type, and at some point tracking the label is the wrong behaviour.
-       Mirrored on .mobile-nav-number in the whole-site nav section. */
+         label, so each reduction shrank the numeral with it. These were already
+         at the small end, and below ~9px Inter numerals go thin on a dark ground,
+         so the ratio is raised to hold the RENDERED size at ~9.3px rather than to
+         keep the proportion. Deliberate trade: the numeral-to-label ratio is now
+         noticeably tighter than it was. If the label shrinks again this should
+         stop being an em and become a fixed px — it is UI chrome, not display
+         type, and at some point tracking the label is the wrong behaviour.
+         Mirrored on .mobile-nav-number in the whole-site nav section.
+  */
     font-size: 0.38em;
     vertical-align: text-top;
     letter-spacing: 0;
     margin-right: 12px;
     font-family: "Inter", sans-serif;
   }
+
   /* Gated for the same reasons as .menu .mobile-nav-link above — see that
-     rule's note. These rows are the worse case of the two: every sub-link in
-     the Restaurant group currently points at "#", so on touch the latch had
-     nothing at all to clear it. */
+       rule's note. These rows are the worse case of the two: every sub-link in
+       the Restaurant group currently points at "#", so on touch the latch had
+       nothing at all to clear it.
+  */
   :global(.menu-social) {
     margin-top: 28px;
     opacity: 0;
@@ -305,25 +337,29 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     position: relative;
     z-index: 2;
   }
+
   :global(body.menu-open) :global(.menu-social) {
     opacity: 1;
     transform: none;
   }
+
   /* .button is inline-flex and flex-shrink: 0, so it sizes to its label
-     unless told otherwise — width + max-width is what gives the two equal
-     widths. justify-content matters because the label and icon would otherwise
-     sit left inside a button that is now wider than its content. */
+       unless told otherwise — width + max-width is what gives the two equal
+       widths. justify-content matters because the label and icon would otherwise
+       sit left inside a button that is now wider than its content.
+  */
   .mobile-nav-cta-row :global(.button) {
     width: 100%;
     max-width: 300px;
     justify-content: center;
     /* Scaled up from .button-small's own size, exactly as
-       .availability-foot .button already does at this same 300px width. That
-       rule's note applies verbatim here: the compact size made sense sitting
-       tight beside other chrome, but on a full-width stacked pill there is no
-       reason to keep it cramped — at 40px tall against 300px wide it reads as
-       a letterbox. Reads the same --button-* tokens .button itself does rather
-       than inventing a size, so the two stay in step. */
+         .availability-foot .button already does at this same 300px width. That
+         rule's note applies verbatim here: the compact size made sense sitting
+         tight beside other chrome, but on a full-width stacked pill there is no
+         reason to keep it cramped — at 40px tall against 300px wide it reads as
+         a letterbox. Reads the same --button-* tokens .button itself does rather
+         than inventing a size, so the two stay in step.
+  */
     height: var(--button-height);
     padding: 0 var(--button-padding-x);
     font-size: var(--button-font-size);
