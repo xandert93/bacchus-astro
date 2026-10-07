@@ -40,6 +40,9 @@ the route from here to a working system.
 - **The decisions.** Why availability is derived, why quotes snapshot their
   figures, why navigation is not in the CMS, and the rest, recorded against
   the types they affect.
+- **The content migration** (step 2 below). `npm run sanity:migrate` turns
+  `src/data/` into an import file and checks itself; it just has no dataset to
+  import into yet.
 
 Nothing has been run. The `sanity` package is not installed and the folder is
 excluded from `tsconfig.json`, so none of it has been typechecked or loaded
@@ -98,19 +101,49 @@ Small, and it blocks everything else.
 
 ## Step 2 — move the content in
 
-A script, not typing. Roughly 400 menu lines, 16 stations, the gallery, the
-venue spaces, four testimonials and the FAQ set.
+**Written: `scripts/sanity-migrate.mjs`, run with `npm run sanity:migrate`.**
 
-**Read it from the ported Astro pages and `src/data/packages/`, never from the
-catalogue PDF.** The site's copy has already been proofed — British English
-applied, accents restored, real misspellings fixed — and the PDF has none of
-that. An automated text pull of the PDF also silently drops accented
-characters and, in places, whole words. Re-reading it would throw the proofing
-away.
+It reads `src/data/` and writes `sanity/import/content.ndjson`, ready for
+`npx sanity dataset import`. Current output is 256 documents: 190 dishes, 13
+tiers, 4 packages, 16 stations, 6 station categories, 23 gallery images and 4
+testimonials.
 
-The script parses the existing content into Sanity's import format and loads
-it. Dishes key on their slug, so a re-run updates rather than duplicating, and
-the script can be run repeatedly while it is being got right.
+It reads the content from `src/data/`, never the catalogue PDF. The port
+already read the rendered catalogue pages and proofed the result — British
+English, accents restored, real misspellings fixed — and a text extraction of
+the PDF silently drops accented characters and sometimes whole words.
+Re-reading it would throw all of that away.
+
+It **imports** those files rather than parsing them as text, which turned out
+to be possible because Node 24 strips TypeScript types natively and every
+import in `src/data/` is type-only. So the data arrives as real objects, and a
+typo in the script fails loudly instead of silently matching nothing — which
+is exactly how the first run found a wrong export name.
+
+Three things it does that are worth knowing:
+
+- **Deduplicates dishes.** 255 dish references across all tiers resolve to 190
+  stored dishes, so 65 duplicate lines disappear. A dish marked vegetarian in
+  any tier is marked everywhere, since the catalogue is inconsistent about
+  repeating the mark.
+- **Sets provenance from what we actually know.** Every price is recorded as
+  coming from the one client quote and left unconfirmed; Banquet is marked
+  contested with the €135 figure and its source attached; the three oxblood
+  page notes are created with the content rather than written by hand.
+- **Checks every reference before writing.** A dangling reference would import
+  without complaint and surface later as a menu with missing lines.
+
+IDs are deterministic (`menuDish-brie-candied-walnuts-leaves`), so re-running
+updates the same documents instead of creating a second copy of everything.
+That matters because the first run will not be the last.
+
+The output is gitignored: it is generated from `src/data/`, and committing it
+would be a second copy of the content, free to drift from the first.
+
+**Still to migrate**, because the content is not in `src/data/` in a
+structured form yet: venue spaces, the FAQ set, suppliers and the two settings
+documents. Those are small, and several are better typed straight into the
+Studio than scripted.
 
 ## Step 3 — read from Sanity
 
