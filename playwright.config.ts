@@ -29,6 +29,9 @@ export default defineConfig({
   ],
   webServer: {
     command: `npm run build && npx astro preview --port ${PORT}`,
+    // Tests cover the draft pages too, so this build includes them. The live
+    // build never sets this (src/integrations/draft-pages.ts).
+    env: { INCLUDE_DRAFTS: "true" },
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

@@ -1,0 +1,368 @@
+---
+// /sandboxes: every draft page and prototype sandbox, grouped by stage, the
+// most active first. Rebuilt from the prototype's sandboxes index, same look.
+// A draft page itself: dev and draft builds only, never the live site.
+//
+// Every stage renders even when it's empty, so it reads as a real slot that
+// nothing is in yet rather than one that doesn't exist.
+import { existsSync } from "node:fs"
+import path from "node:path"
+import BareLayout from "@layouts/BareLayout.astro"
+import { DRAFT_PAGES, PROTOTYPE_ARCHIVES, SANDBOX_STAGES, type Sandbox } from "./registry"
+
+// The prototype copies are Git-ignored, so on another machine (or a Vercel
+// preview) they aren't there. List only the ones that are.
+const isOnThisMachine = (archive: Sandbox) =>
+  existsSync(path.join(process.cwd(), "public", archive.href))
+
+const archivesHere = PROTOTYPE_ARCHIVES.filter(isOnThisMachine)
+const archiveHrefs = new Set(archivesHere.map((archive) => archive.href))
+
+const ALL_SANDBOXES = [...DRAFT_PAGES, ...archivesHere]
+
+const groups = SANDBOX_STAGES.map((stage) => ({
+  ...stage,
+  sandboxes: ALL_SANDBOXES.filter((sandbox) => sandbox.stage === stage.stage),
+}))
+---
+
+<BareLayout title="Sandboxes — Bacchus">
+  <main class="sandboxes-page">
+    <div class="sandboxes-wrap">
+      <div class="eyebrow">Not part of the live site</div>
+      <h1>Sandboxes</h1>
+      <p class="lead">
+        Pages in progress and design proposals: comparisons, prototypes and ideas being
+        tried before deciding whether they belong on the real site. Nothing here is linked
+        from the live navigation, and none of it is built for the live site. Grouped by
+        how far along each one is, the most active first.
+      </p>
+
+      {groups.map((group) => (
+        <section class={`sandboxes-group sandboxes-group-${group.stage}`}>
+          <h2 class="sandboxes-group-head">
+            <span class="sandboxes-group-dot" aria-hidden="true"></span>
+            {group.label}
+            <span class="sandboxes-group-count">{group.sandboxes.length}</span>
+          </h2>
+          <p class="sandboxes-group-blurb">{group.blurb}</p>
+
+          {group.sandboxes.length === 0 ? (
+            <p class="sandboxes-group-empty">Nothing here at the moment.</p>
+          ) : (
+            <div class="sandboxes-list">
+              {group.sandboxes.map((sandbox) => (
+                <a class="sandboxes-item" href={sandbox.href}>
+                  <span class="sandboxes-item-name">{sandbox.name}</span>
+                  <span class="sandboxes-item-tags">
+                    <span class="sandboxes-tag sandboxes-tag-stage">{group.label}</span>
+                    <span class="sandboxes-tag sandboxes-tag-type">{sandbox.type}</span>
+                    {archiveHrefs.has(sandbox.href) && (
+                      <span class="sandboxes-tag sandboxes-tag-type">Prototype copy</span>
+                    )}
+                  </span>
+                  <span class="sandboxes-item-desc">{sandbox.description}</span>
+                  <span class="sandboxes-item-meta">
+                    Started{" "}
+                    {sandbox.started ?? (
+                      <span class="sandboxes-item-meta-gap">not recorded</span>
+                    )}{" "}
+                    · Last worked on {sandbox.lastWorkedOn}
+                  </span>
+                </a>
+              ))}
+            </div>
+          )}
+        </section>
+      ))}
+
+      <a class="sandboxes-home" href="/">
+        ← Back to the site
+      </a>
+    </div>
+  </main>
+</BareLayout>
+
+<style>
+  /* The page is dark to its edges, including past them when it overscrolls. */
+  :global(body:has(.sandboxes-page)) {
+    background: var(--ink);
+  }
+
+  /* Four text levels and one spacing ramp, declared once and used
+     everywhere below, so changing a level is one edit. */
+  .sandboxes-page {
+    --sandboxes-text-1: var(--limestone-2);
+    --sandboxes-text-2: rgba(var(--limestone-rgb), 0.78);
+    --sandboxes-text-3: rgba(var(--limestone-rgb), 0.56);
+    --sandboxes-text-4: rgba(var(--limestone-rgb), 0.34);
+
+    /* Three steps: -1 between lines in a row and between rows, -2 between a
+       group's heading, blurb and list, -3 between whole groups. Rows carry
+       14px of padding of their own (for the hover panel), so -1 reaches the
+       eye as 11px between lines but about 39px between rows. */
+    --sandboxes-space-1: 11px;
+    --sandboxes-space-2: 20px;
+    --sandboxes-space-3: 44px;
+
+    /* A neutral fallback, so a row outside any stage group still gets a
+       sensible hover panel. */
+    --stage-rgb: var(--limestone-rgb);
+
+    display: flex;
+    min-height: 100vh;
+    background: var(--ink);
+    color: var(--limestone);
+  }
+
+  /* margin: auto, not align-items: center on the parent. Centring a flex
+     child taller than its container pushes the overflow out of both ends,
+     and the top half can't be scrolled to. Auto margins centre the same way
+     when there's room and collapse to nothing when there isn't. */
+  .sandboxes-wrap {
+    width: 100%;
+    max-width: 720px;
+    margin: auto;
+    padding: clamp(32px, 8vw, 80px) clamp(20px, 5vw, 44px);
+  }
+
+  .sandboxes-wrap .eyebrow {
+    color: var(--gold-2);
+  }
+
+  .sandboxes-wrap h1 {
+    margin-top: 14px;
+    font-size: clamp(32px, 6vw, 54px);
+    font-weight: 300;
+  }
+
+  .sandboxes-wrap .lead {
+    max-width: 56ch;
+    margin-top: 18px;
+    font-family: "Newsreader", Georgia, serif;
+    font-size: clamp(16px, 2vw, 18px);
+    line-height: 1.6;
+    color: var(--sandboxes-text-2);
+  }
+
+  .sandboxes-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sandboxes-space-1);
+  }
+
+  /* No dividers between rows: the group headings say where one set ends,
+     and spacing does the rest. A row shows it's clickable with a soft panel
+     on hover, tinted with its group's colour and bled past the text with
+     equal negative margins, so the copy stays aligned with everything above
+     it. */
+  .sandboxes-item {
+    display: block;
+    margin: 0 -20px;
+    padding: 14px 20px;
+    border-radius: var(--radius-card);
+    text-decoration: none;
+    transition: background 0.3s var(--ease);
+  }
+
+  @media (--hover) {
+    .sandboxes-item:hover {
+      background: rgba(var(--stage-rgb), 0.07);
+    }
+  }
+
+  /* Touch has no hover, so it gets the same panel on press instead. */
+  @media (--no-hover) {
+    .sandboxes-item:active {
+      background: rgba(var(--stage-rgb), 0.07);
+    }
+  }
+
+  .sandboxes-item-name {
+    display: block;
+    font-family: "Fraunces", serif;
+    font-size: clamp(19px, 2.6vw, 23px);
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--sandboxes-text-1);
+  }
+
+  .sandboxes-item-desc {
+    display: block;
+    max-width: 60ch;
+    margin-top: var(--sandboxes-space-1);
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--sandboxes-text-2);
+  }
+
+  /* The four hairlines on the page, one per boundary between groups. The
+     space either side only frames the rule: nearer the group it introduces
+     than the one it closes, the normal reading of a section rule. */
+  .sandboxes-group {
+    margin-top: 40px;
+  }
+
+  .sandboxes-group + .sandboxes-group {
+    margin-top: 14px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(var(--limestone-rgb), 0.12);
+  }
+
+  /* Colour follows the stage's meaning: gold for work in hand, amber for a
+     pending call, green for approved, oxblood for a decision that went
+     against, and a neutral for history nobody needs to act on. Each clears
+     4.5:1 against the ink background at the chips' small size. */
+  .sandboxes-group-draft {
+    --stage: var(--gold-2);
+    --stage-rgb: var(--gold-rgb);
+  }
+
+  .sandboxes-group-proposed {
+    --stage: var(--avail-amber-fg);
+    --stage-rgb: var(--avail-amber-fg-rgb);
+  }
+
+  .sandboxes-group-accepted {
+    --stage: var(--green-on-dark);
+    --stage-rgb: 47, 144, 96;
+  }
+
+  .sandboxes-group-rejected {
+    --stage: var(--oxblood-on-dark);
+    --stage-rgb: var(--oxblood-on-dark-rgb);
+  }
+
+  .sandboxes-group-superseded {
+    --stage: rgba(var(--limestone-rgb), 0.7);
+    --stage-rgb: var(--limestone-rgb);
+  }
+
+  .sandboxes-group-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stage);
+  }
+
+  .sandboxes-group-dot {
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--stage);
+  }
+
+  .sandboxes-group-count {
+    margin-left: auto;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--sandboxes-text-4);
+  }
+
+  .sandboxes-group-blurb {
+    max-width: 56ch;
+    margin-top: var(--sandboxes-space-2);
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 14px;
+    line-height: 1.2;
+    color: var(--sandboxes-text-2);
+  }
+
+  /* Shown instead of a list when a stage is empty: the same tinted panel as
+     a row's hover, so it reads as the place a row would sit. */
+  .sandboxes-group-empty {
+    margin: var(--sandboxes-space-2) -20px 0;
+    padding: 16px 20px;
+    border-radius: var(--radius-card);
+    background: rgba(var(--stage-rgb), 0.05);
+
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--sandboxes-text-4);
+  }
+
+  /* Takes off the first row's own top padding, so the blurb-to-text gap is
+     exactly --sandboxes-space-2. */
+  .sandboxes-group .sandboxes-list {
+    margin-top: calc(var(--sandboxes-space-2) - 14px);
+  }
+
+  .sandboxes-item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: var(--sandboxes-space-1);
+  }
+
+  .sandboxes-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+
+    font-family: "Inter", sans-serif;
+    font-size: 10.5px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .sandboxes-tag-stage {
+    color: var(--stage);
+    background: rgba(var(--stage-rgb), 0.12);
+    border-color: rgba(var(--stage-rgb), 0.4);
+  }
+
+  .sandboxes-tag-type {
+    color: var(--sandboxes-text-3);
+    border-color: rgba(var(--limestone-rgb), 0.22);
+  }
+
+  /* The dates are the quietest line on a row: useful for "what did I touch
+     last", never the first thing read. */
+  .sandboxes-item-meta {
+    display: block;
+    margin-top: var(--sandboxes-space-1);
+    font-family: "Inter", sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--sandboxes-text-4);
+  }
+
+  /* Dimmer again, so a missing start date reads as a gap on purpose rather
+     than a date that failed to show. */
+  .sandboxes-item-meta-gap {
+    font-style: italic;
+    color: rgba(var(--limestone-rgb), 0.24);
+  }
+
+  .sandboxes-home {
+    display: inline-block;
+    margin-top: var(--sandboxes-space-3);
+
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sandboxes-text-3);
+    text-decoration: none;
+  }
+
+  @media (--hover) {
+    .sandboxes-home:hover {
+      color: var(--gold-2);
+    }
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+// A page without the site's chrome: the shared head and global styles, but
+// no nav, drawer, Visit section, footer or site script. For tooling pages
+// that aren't part of the site itself, like the drafts index (/sandboxes).
+// Always kept out of search results.
+import "@styles/global.css"
+import SiteHead from "@components/layout/SiteHead.astro"
+
+interface Props {
+  title: string
+}
+const { title } = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SiteHead title={title} noIndex />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

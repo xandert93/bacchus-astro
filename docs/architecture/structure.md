@@ -7,6 +7,9 @@ version is in `CLAUDE.md`; this is the full map.
 
 ## Pages and layout
 
+- `src/layouts/BareLayout.astro`: the head and global styles only, for
+  tooling pages like `/sandboxes`. Both layouts share
+  `components/layout/SiteHead.astro`.
 - `src/layouts/BaseLayout.astro`: `<head>`, grain, nav, drawer, Visit
   section, footer, the sitewide script. Props: `title`, `showEnquireLink`,
   `menuBackgroundImage`. Has a named slot `after-footer` for page overlays.
@@ -23,6 +26,28 @@ version is in `CLAUDE.md`; this is the full map.
   strip, enquiry. Only Beverage has page-specific overrides
   (`_beverage.css`, imported by its page).
 - `/weddings/packages` redirects to `/weddings#packages` (`astro.config.mjs`).
+
+---
+
+## Draft pages
+
+Unfinished pages live on `main` but are never built for the live site, so
+there is no long-lived branch to keep rebasing (trunk-based development).
+
+- **Where**: the page in `src/drafts/`, outside `src/pages/`, with its own
+  files beside it. Each draft is one entry in `src/drafts/registry.ts`
+  (route, page file, stage, description, dates), alongside the prototype's
+  sandboxes.
+- **Who builds them**: `src/integrations/draft-pages.ts` adds their routes
+  in `astro dev`, and in any build run with `INCLUDE_DRAFTS=true` (the
+  Playwright build; later, Vercel's preview builds). A plain `astro build`,
+  the live site, leaves them out, and fails if a draft got in anyway.
+- **`/sandboxes`** (`src/drafts/sandboxes.astro`, on `BareLayout`) lists
+  every draft and prototype sandbox by stage. The footer links to it only
+  when drafts are built (`import.meta.env.DRAFTS_INCLUDED`). Prototype copies
+  show only on a machine that has `public/prototype/`.
+- **Finishing a draft**: move its page into `src/pages/`, remove its
+  registry entry, and add it to `tests/e2e/pages.spec.ts`.
 
 ---
 
