@@ -79,8 +79,7 @@ export default defineType({
       type: "string",
       group: "summary",
       description:
-        'As it heads the quote — a couple, usually ("Bertha & Alex"). Stored rather than built from the booking, so a sent quote keeps the name it was sent with.',
-      validation: (Rule) => Rule.required(),
+        'As it heads the quote. Optional: left empty, the generator composes it from the booking — "Bertha & Alex" where a partner name was given, the enquirer\'s name alone where it was not, since a partner name is only ever collected when it makes sense to ask. Once sent, this holds what it was sent with, so a later edit to the booking cannot rewrite a document the client already has.',
     }),
 
     // --- The event, as quoted ----------------------------------------------

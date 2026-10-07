@@ -24,6 +24,13 @@ import { defineArrayMember, defineField, defineType } from "sanity"
  * guess. The corkage figure is the sharpest case: it exists, and it is held
  * back by `provenance.blocksPublication` because its source never said whether
  * it was per bottle or per person.
+ *
+ * Pricing resolves in two layers. `price` is the base and applies all year;
+ * `seasonalRates` override it for dates inside a season, since Bacchus's
+ * pricing is generated internally and varies by month. Every tier is on its
+ * base price today, because no rate card has been supplied — the structure is
+ * in place so adding one later is data entry rather than a schema change. The
+ * resolver is `resolvePriceForDate` in `queries/pricing.ts`.
  */
 export default defineType({
   name: "packageTier",
@@ -79,11 +86,20 @@ export default defineType({
     }),
     defineField({
       name: "price",
-      title: "Price",
+      title: "Base price",
       type: "price",
       group: "content",
       description:
-        "Optional. A tier whose price is not trustworthy has none rather than a guess — see the note on this type.",
+        "Optional. A tier whose price is not trustworthy has none rather than a guess — see the note on this type. Applies all year unless a seasonal rate below covers the date.",
+    }),
+    defineField({
+      name: "seasonalRates",
+      title: "Seasonal rates",
+      type: "array",
+      group: "content",
+      of: [defineArrayMember({ type: "seasonalRate" })],
+      description:
+        "Overrides the base price for dates inside a season. Leave empty and the base price applies all year, which is where every tier stands today — Bacchus has not supplied a rate card.",
     }),
 
     // --- Menu ---------------------------------------------------------------

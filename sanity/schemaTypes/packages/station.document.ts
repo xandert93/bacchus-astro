@@ -75,7 +75,7 @@ export default defineType({
       name: "items",
       title: "Items",
       type: "array",
-      of: [defineArrayMember({ type: "menuItem" })],
+      of: [defineArrayMember({ type: "stationItem" })],
       description:
         "Also composed into the lightbox caption at render time. Do not maintain a second copy of this list anywhere.",
       validation: (Rule) => Rule.required().min(1),

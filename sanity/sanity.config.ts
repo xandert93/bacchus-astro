@@ -10,12 +10,14 @@ import { structure } from "./structure"
  *
  * `projectId` is a placeholder — these schemas are designed ahead of the
  * production stack being opened, so no Sanity project or dataset has been
- * created. Two decisions to make at the point one is:
+ * created yet.
  *
- *   DATASET REGION: choose EU. Every booking, waitlist entry and testimonial
- *   here holds the personal data of (largely) EU residents, and the default
- *   region is US. Moving a dataset afterwards is an export and re-import, so
- *   this is worth getting right once rather than discovering later.
+ *   DATASET REGION: EU, decided. Every booking, waitlist entry and testimonial
+ *   here holds the personal data of (largely) EU residents, and Sanity's
+ *   default region is the US. The region is fixed when the project is created
+ *   and changing it afterwards means exporting the whole dataset and
+ *   re-importing into a new project, so this has to be set at creation and
+ *   not left to the default.
  *
  *   ROLES: staff reading enquiry documents are processing personal data.
  *   Assign least-privilege roles rather than making everyone an administrator.

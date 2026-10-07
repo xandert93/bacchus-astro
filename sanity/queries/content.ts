@@ -45,13 +45,19 @@ export const packagePageQuery = /* groq */ `
         amount, unit, isIndicative, vatIncluded, provenance
       }
     ),
+    seasonalRates[]{
+      price{amount, unit, isIndicative, vatIncluded, provenance},
+      season->{name, startDate, endDate, repeatsAnnually, priority}
+    },
     menuGroups[]{
       title,
       note,
+      // Dishes are referenced rather than inline, so they are dereferenced
+      // here and arrive in the same shape the template had before. Wines stay
+      // inline because they never recur across categories.
       items[]{
-        _type,
-        _type == "menuItem" => {name, isVegetarian, note},
-        _type == "wineEntry" => {name, grapes, producer, tastingNote, style}
+        _type == "reference" => @->{"_type": "menuDish", name, isVegetarian, note},
+        _type == "wineEntry" => {_type, name, grapes, producer, tastingNote, style}
       }
     },
     signatureDishes[]{name, isPlaceholderImage, image{..., "alt": alt}}
@@ -203,9 +209,10 @@ export const venueSpacesQuery = /* groq */ `
  * still need to ask Bacchus" across the entire content set in one request,
  * instead of by re-reading a 49KB context file and hoping nothing was missed.
  *
- * The same shape backs the standing Todo of sending the client the list of
- * copy corrections made to their catalogue text: swap the provenance filter
- * for `defined(catalogueVariance)` and `clientApproved != true`.
+ * It also answers the standing Todo of sending the client the list of copy
+ * corrections made to their catalogue text — see `unapprovedCopyChanges`
+ * below, which became a flat filter once dishes were normalised into
+ * documents of their own.
  */
 export const unresolvedFactsQuery = /* groq */ `
 {
@@ -234,35 +241,34 @@ export const unresolvedFactsQuery = /* groq */ `
   "blockedArticles": *[
     _type == "guideArticle" && status == "blocked"
   ]{title, blockedReason},
-  // Station names carry their variance at the top level of the document, so
-  // these are reachable directly.
-  "unapprovedStationNames": *[
-    _type == "station" &&
+  // Dishes and stations are both documents carrying their variance at the top
+  // level, so this is one flat filter. It used to need a separate traversal
+  // through every tier's nested menu groups to reach the dishes, which is a
+  // concrete second benefit of normalising them: the list of changes to send
+  // the client is now a query anyone can read.
+  "unapprovedCopyChanges": *[
+    _type in ["menuDish", "station"] &&
     defined(catalogueVariance) &&
     catalogueVariance.clientApproved != true
   ]{
+    _type,
     name,
     "wasPrinted": catalogueVariance.asPrinted,
     "kind": catalogueVariance.kind,
     "reason": catalogueVariance.reason
   },
-  // Menu item and group variances are nested two and three levels inside a
-  // tier, so they need their own traversal — a top-level defined() does NOT
-  // reach them, which is worth stating because a query that silently returned
-  // only the station names would look like it was working.
-  "unapprovedMenuCopy": *[_type == "packageTier"]{
-    "package": package->name,
+  // Group titles are the one place a variance is still nested, since a group
+  // is an inline object inside a tier rather than a document of its own.
+  "unapprovedGroupTitles": *[_type == "packageTier"]{
     "tier": name,
     "groups": menuGroups[defined(catalogueVariance) && catalogueVariance.clientApproved != true]{
       title,
       "wasPrinted": catalogueVariance.asPrinted,
       "kind": catalogueVariance.kind
-    },
-    "items": menuGroups[].items[defined(catalogueVariance) && catalogueVariance.clientApproved != true]{
-      name,
-      "wasPrinted": catalogueVariance.asPrinted,
-      "kind": catalogueVariance.kind
     }
-  }[count(groups) > 0 || count(items) > 0]
+  }[count(groups) > 0],
+  "unconfirmedSeasons": *[
+    _type == "season" && provenance.status != "confirmed"
+  ]{name, startDate, endDate, repeatsAnnually, "status": provenance.status}
 }
 `

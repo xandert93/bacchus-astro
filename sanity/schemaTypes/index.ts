@@ -3,6 +3,8 @@ import type { SchemaTypeDefinition } from "sanity"
 // Shared — used across more than one feature.
 import provenance from "./shared/provenance.object"
 import price from "./shared/price.object"
+import season from "./shared/season.document"
+import seasonalRate from "./shared/seasonalRate.object"
 import seo from "./shared/seo.object"
 import catalogueVariance from "./shared/catalogueVariance.object"
 
@@ -22,8 +24,9 @@ import weddingPackage from "./packages/weddingPackage.document"
 import packageTier from "./packages/packageTier.document"
 import station from "./packages/station.document"
 import stationCategory from "./packages/stationCategory.document"
+import menuDish from "./packages/menuDish.document"
 import menuGroup from "./packages/menuGroup.object"
-import menuItem from "./packages/menuItem.object"
+import stationItem from "./packages/stationItem.object"
 import wineEntry from "./packages/wineEntry.object"
 import packageNote from "./packages/packageNote.object"
 import signatureDish from "./packages/signatureDish.object"
@@ -91,6 +94,8 @@ import weddingPolicy from "./settings/weddingPolicy.document"
 export const schemaTypes: SchemaTypeDefinition[] = [
   provenance,
   price,
+  season,
+  seasonalRate,
   seo,
   catalogueVariance,
 
@@ -107,8 +112,9 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   packageTier,
   station,
   stationCategory,
+  menuDish,
   menuGroup,
-  menuItem,
+  stationItem,
   wineEntry,
   packageNote,
   signatureDish,

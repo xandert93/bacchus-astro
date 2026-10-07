@@ -29,7 +29,11 @@ itself (what we chose, why, and how payments work) is in
 2. **Image pipeline** (done, apart from the originals still to come from
    Bacchus). Every photo is built from its original where one exists; see
    `docs/engineering/images.md`.
-3. **Sanity.** Schemas are drafted in `sanity/`.
+3. **Sanity.** Schemas are drafted in `sanity/` and nothing has been run yet.
+   The route from there to a CMS the client edits is `sanity-rollout.md`,
+   which also carries the one decision it needs: the site is static, so the
+   enquiry endpoint and the availability feed need the Cloudflare adapter on
+   those routes alone.
 4. **Forms and payments.** Hosting is done: Cloudflare builds and deploys
    `main` on every push (`docs/architecture/tech-stack.md`, "Hosting").
 
