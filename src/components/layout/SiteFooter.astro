@@ -57,6 +57,13 @@ import Photo from "@components/ui/Photo.astro"
               <a href="#enquire">Enquire</a>
             </li>
           )}
+          {/* Only where drafts are built (dev and preview builds), so the
+               live site never links to a page it doesn't have. */}
+          {import.meta.env.DRAFTS_INCLUDED && (
+            <li>
+              <a href="/sandboxes">🏖️ Sandboxes</a>
+            </li>
+          )}
         </ul>
       </div>
     </div>
