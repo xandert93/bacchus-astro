@@ -23,7 +23,8 @@ const { id, options } = Astro.props
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   /* ---------- Toggle-list (spaces / event style) ---------- */
   .option-grid {
     display: grid;
@@ -31,6 +32,7 @@ const { id, options } = Astro.props
     gap: 10px;
     margin-top: 5px;
   }
+
   .option-card {
     text-align: left;
     border: 1px solid rgba(var(--muted-ink-rgb), 0.16);
@@ -40,22 +42,26 @@ const { id, options } = Astro.props
     cursor: pointer;
     transition: all 0.35s var(--ease);
   }
+
   @media (--hover) {
     .option-card:hover {
       border-color: rgba(var(--gold-rgb), 0.4);
     }
   }
+
   .option-card.is-selected {
     border-color: var(--gold);
     background: var(--limestone-2);
     box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.5);
   }
+
   .option-card :global(b) {
     display: block;
     font-family: "Fraunces", Georgia, serif;
     font-weight: 400;
     font-size: 15.5px;
   }
+
   .option-card :global(span) {
     display: block;
     font-family: "Newsreader", Georgia, serif;

@@ -15,7 +15,8 @@ interface Props {
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .particles {
     position: absolute;
     inset: 0;
@@ -23,6 +24,7 @@ interface Props {
     z-index: 2;
     pointer-events: none;
   }
+
   :global(.particle) {
     position: absolute;
     bottom: -10px;
@@ -32,6 +34,7 @@ interface Props {
     background: rgba(var(--gold-rgb), 0.55);
     animation: drift linear infinite;
   }
+
   @media (--reduced-motion) {
     :global(.particle) {
       display: none;

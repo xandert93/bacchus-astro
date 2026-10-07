@@ -110,12 +110,13 @@ const classes = [
     letter-spacing: 0.16em;
     text-transform: uppercase;
     /* As a flex item inside .wizard-nav (or any other flex row), a button can
-       otherwise shrink below its label's natural width, wrapping the text
-       internally onto two lines — invisible with single-word labels like
-       "Continue", but real with two-word ones like "Review enquiry" on
-       narrow phones. flex-shrink:0 plus the span's own nowrap (below) keep
-       the whole button intact; .wizard-nav's flex-wrap then drops it to its
-       own line if there's truly no room, instead of breaking the label. */
+         otherwise shrink below its label's natural width, wrapping the text
+         internally onto two lines — invisible with single-word labels like
+         "Continue", but real with two-word ones like "Review enquiry" on
+         narrow phones. flex-shrink:0 plus the span's own nowrap (below) keep
+         the whole button intact; .wizard-nav's flex-wrap then drops it to its
+         own line if there's truly no room, instead of breaking the label.
+  */
     flex-shrink: 0;
     transition:
       background-color 0.45s var(--ease),
@@ -124,12 +125,14 @@ const classes = [
       box-shadow 0.4s var(--ease),
       transform 0.3s var(--ease);
   }
+
   .button > :global(span),
   .button > :global(svg) {
     position: relative;
     z-index: 2;
     white-space: nowrap;
   }
+
   .button::after {
     content: "";
     position: absolute;
@@ -148,6 +151,7 @@ const classes = [
     pointer-events: none;
     z-index: 1;
   }
+
   @media (--hover) {
     .button:hover {
       background-color: var(--bg-h);
@@ -156,27 +160,33 @@ const classes = [
       transform: translateY(-1px);
     }
   }
+
   @media (--hover) {
     .button:hover::after {
       left: 130%;
     }
   }
+
   @media (--hover) {
     .button:hover :global(svg) {
       transform: translateX(4px);
     }
   }
+
   /* Gated to real hover-capable pointers — touch has no way to "leave" an
-     element, so an unguarded :hover here would stick after tap on any button
-     that doesn't navigate away (the wizard's Continue/Back/Submit, any
-     same-page #enquire scroll CTA, etc. — same root cause as the photo
-     carousel's arrows). Touch gets the equivalent feedback via :active below instead. */
+       element, so an unguarded :hover here would stick after tap on any button
+       that doesn't navigate away (the wizard's Continue/Back/Submit, any
+       same-page #enquire scroll CTA, etc. — same root cause as the photo
+       carousel's arrows). Touch gets the equivalent feedback via :active below instead.
+  */
   .button:active {
     transform: translateY(0) scale(0.98);
   }
+
   .button :global(svg) {
     transition: transform 0.45s var(--ease);
   }
+
   @media (--no-hover) {
     .button:active {
       background-color: var(--bg-h);
@@ -184,33 +194,38 @@ const classes = [
       box-shadow: 0 14px 30px -16px rgba(var(--muted-ink-rgb), 0.4);
     }
   }
+
   @media (--no-hover) {
     .button:active::after {
       left: 130%;
     }
   }
+
   @media (--no-hover) {
     .button:active :global(svg) {
       transform: translateX(4px);
     }
   }
+
   /* Touch devices never get a real :hover (or only a stuck/inconsistent one
-     on first tap) — give tapping a button the same bg/color/shadow/arrow
-     feedback via :active instead, so it doesn't read as unresponsive. The
-     press-down scale in the unconditional .button:active above already covers
-     the "tactile" part; this adds the part that was hover-only. */
+       on first tap) — give tapping a button the same bg/color/shadow/arrow
+       feedback via :active instead, so it doesn't read as unresponsive. The
+       press-down scale in the unconditional .button:active above already covers
+       the "tactile" part; this adds the part that was hover-only.
+  */
   /* The sitewide solid CTA. Background is --gold-gradient (see :root) — the
-     same two-tone gold fill as .tab-bar .pill, one shared value. Hover is
-     done via `filter: brightness()` rather than swapping --bg-h to a second
-     gradient: background-image (which a gradient is) doesn't interpolate on
-     transition in any browser, so a --bg-h swap would cut instantly instead
-     of fading. filter does transition smoothly, and — just as important —
-     needs no extra pseudo-element, which leaves ::before free for
-     .button-shimmer's sweep (below) and ::after free for .button's own hover
-     sheen, so this composes cleanly with both rather than fighting over the
-     same two pseudo-element slots (the specificity traps are what that
-     fight looks like). Proved out in sandboxes/button-gradient.html before
-     landing here; superseded that sandbox, which is now removed. */
+       same two-tone gold fill as .tab-bar .pill, one shared value. Hover is
+       done via `filter: brightness()` rather than swapping --bg-h to a second
+       gradient: background-image (which a gradient is) doesn't interpolate on
+       transition in any browser, so a --bg-h swap would cut instantly instead
+       of fading. filter does transition smoothly, and — just as important —
+       needs no extra pseudo-element, which leaves ::before free for
+       .button-shimmer's sweep (below) and ::after free for .button's own hover
+       sheen, so this composes cleanly with both rather than fighting over the
+       same two pseudo-element slots (the specificity traps are what that
+       fight looks like). Proved out in sandboxes/button-gradient.html before
+       landing here; superseded that sandbox, which is now removed.
+  */
   .button-gradient {
     --fg: var(--ink);
     --bd: var(--gold);
@@ -224,16 +239,19 @@ const classes = [
       transform 0.3s var(--ease),
       filter 0.45s var(--ease);
   }
+
   @media (--hover) {
     .button-gradient:hover {
       filter: brightness(1.07);
     }
   }
+
   @media (--no-hover) {
     .button-gradient:active {
       filter: brightness(1.07);
     }
   }
+
   .button-shimmer::before {
     content: "";
     position: absolute;
@@ -256,42 +274,49 @@ const classes = [
     animation-delay: 3.5s;
     animation-iteration-count: 3;
   }
+
   @media (--reduced-motion) {
     .button-shimmer::before {
       animation: none;
     }
   }
+
   .button-dark {
-    /* A near-black filled button, for use on light backgrounds. */
+    /* A near-black filled button, for use on light backgrounds.
+  */
     --bg: rgba(var(--ink-rgb), 0.88);
     --fg: var(--limestone-2);
     --bd: rgba(var(--ink-rgb), 0.88);
     --bg-h: var(--ink);
     --fg-h: var(--limestone-2);
   }
+
   .button-ghost {
     /* A genuine ghost/outline button — transparent at rest, fills solid on
-       hover. Reserved for hero secondary CTAs. */
+         hover. Reserved for hero secondary CTAs.
+  */
     --bg: transparent;
     --fg: var(--limestone);
     --bd: rgba(var(--limestone-rgb), 0.42);
     --bg-h: var(--limestone);
     --fg-h: var(--ink);
   }
-  /* A .button-gradient that doubles as an aria-pressed toggle (added/
-     selected/removed, etc.) takes .button-ghost's own values once pressed
-     — reads as the sitewide secondary treatment instead of a new one, so
-     "pressed" just means "already chosen," not "a different kind of
-     button." First used by reception-stations-v2.html's "Add to
-     selection" button (2026-09-30) — written here rather than page-scoped,
-     since this is a general pattern: any future gradient-CTA toggle needs
-     the exact same combo, hover/touch fix included, not something specific
-     to that one page.
 
-     background/filter are cleared explicitly here, unlike plain
-     .button-ghost above (which never needs to): .button-gradient's own
-     background is a gradient IMAGE and its :hover sets a filter, and
-     recoloring custom properties alone doesn't turn either of those off. */
+  /* A .button-gradient that doubles as an aria-pressed toggle (added/
+       selected/removed, etc.) takes .button-ghost's own values once pressed
+       — reads as the sitewide secondary treatment instead of a new one, so
+       "pressed" just means "already chosen," not "a different kind of
+       button." First used by reception-stations-v2.html's "Add to
+       selection" button (2026-09-30) — written here rather than page-scoped,
+       since this is a general pattern: any future gradient-CTA toggle needs
+       the exact same combo, hover/touch fix included, not something specific
+       to that one page.
+
+       background/filter are cleared explicitly here, unlike plain
+       .button-ghost above (which never needs to): .button-gradient's own
+       background is a gradient IMAGE and its :hover sets a filter, and
+       recoloring custom properties alone doesn't turn either of those off.
+  */
   .button-gradient[aria-pressed="true"] {
     --bg: transparent;
     --fg: var(--limestone);
@@ -301,133 +326,144 @@ const classes = [
     background: transparent;
     filter: none;
   }
+
   @media (--hover) {
     .button-gradient[aria-pressed="true"]:hover {
       background-color: var(--bg-h);
     }
   }
+
   @media (--no-hover) {
     .button-gradient[aria-pressed]:active {
       background-color: var(--bg);
       color: var(--fg);
     }
   }
+
   @media (--no-hover) {
     .button-gradient[aria-pressed]:active::after {
       left: -60%;
       transition: none;
     }
   }
+
   /* REAL BUG, found 2026-09-30 (reported on reception-stations-v2.html's
-     "Add to selection" button, the first user of the rule above): hovering
-     — and, on touch, tapping — a PRESSED toggle showed invisible text,
-     dark ink on a background that stayed transparent instead of switching
-     to the intended light fill.
+       "Add to selection" button, the first user of the rule above): hovering
+       — and, on touch, tapping — a PRESSED toggle showed invisible text,
+       dark ink on a background that stayed transparent instead of switching
+       to the intended light fill.
 
-     Root cause: `background: transparent` above and .button:hover's
-     `background-color: var(--bg-h)` are the same effective property at
-     equal specificity (0,2,0 each — one class+attribute, one
-     class+pseudo-class), one declared unconditionally and the other only
-     under :hover, so whichever rule happens to load LATER in the
-     stylesheet wins outright regardless of which one is actually meant to
-     apply live (the specificity traps' exact mechanic — this is that
-     mechanic biting a case neither trap anticipated: an unconditional
-     rule and a conditional one, not two unconditional ones). `color` had
-     no such collision (nothing else sets `color` for this state), so it
-     switched to the intended dark ink on schedule while the background
-     silently didn't follow — dark text on a permanently transparent (i.e.
-     whatever's behind it, always dark here) background. Touch hits the
-     identical collision one step later, against .button:active's own
-     @media(hover:none) equivalent instead of :hover.
+       Root cause: `background: transparent` above and .button:hover's
+       `background-color: var(--bg-h)` are the same effective property at
+       equal specificity (0,2,0 each — one class+attribute, one
+       class+pseudo-class), one declared unconditionally and the other only
+       under :hover, so whichever rule happens to load LATER in the
+       stylesheet wins outright regardless of which one is actually meant to
+       apply live (the specificity traps' exact mechanic — this is that
+       mechanic biting a case neither trap anticipated: an unconditional
+       rule and a conditional one, not two unconditional ones). `color` had
+       no such collision (nothing else sets `color` for this state), so it
+       switched to the intended dark ink on schedule while the background
+       silently didn't follow — dark text on a permanently transparent (i.e.
+       whatever's behind it, always dark here) background. Touch hits the
+       identical collision one step later, against .button:active's own
+       @media(hover:none) equivalent instead of :hover.
 
-     Fixed by re-asserting the hover/active background explicitly, at
-     higher specificity (attribute + pseudo-class beats attribute alone),
-     so it wins by design rather than by accident of load order — reads
-     var(--bg-h) rather than repeating a literal color, so retuning the
-     toggle's hover fill above only ever needs the one edit. */
+       Fixed by re-asserting the hover/active background explicitly, at
+       higher specificity (attribute + pseudo-class beats attribute alone),
+       so it wins by design rather than by accident of load order — reads
+       var(--bg-h) rather than repeating a literal color, so retuning the
+       toggle's hover fill above only ever needs the one edit.
+  */
   /* The touch half of that same fix, reworked 2026-10-01 — REAL BUG, reported
-     as "it flashes white before it says added" on reception-package.html's
-     station cards.
+       as "it flashes white before it says added" on reception-package.html's
+       station cards.
 
-     It used to mirror the :hover rule above, asserting
-     `background-color: var(--bg-h)` on :active. That is right for the tap it
-     was written for — tapping a button that is ALREADY pressed, to remove the
-     item — but it also lands on the tap that CREATES the pressed state, and
-     there it is wrong twice over. Touch browsers hold :active for a beat after
-     touchend so a quick tap still registers visually, so it is still matching
-     when the click handler flips aria-pressed. In that moment the button picks
-     up the pressed vocabulary all at once: `background: transparent` strips the
-     gold gradient that was covering background-color, --bg-h flips from
-     var(--ink) to var(--limestone), and --fg-h means the label is dark. A
-     near-white pill with dark text, held for the rest of the :active hold and
-     then faded back out over background-color's own 0.45s. That is the flash.
-     The .button::after sheen compounds it: a 0.85s sweep of
-     rgba(255,255,255,0.35) that a short tap can only ever start and reverse,
-     and that reads as far brighter once the gradient underneath it is gone.
+       It used to mirror the :hover rule above, asserting
+       `background-color: var(--bg-h)` on :active. That is right for the tap it
+       was written for — tapping a button that is ALREADY pressed, to remove the
+       item — but it also lands on the tap that CREATES the pressed state, and
+       there it is wrong twice over. Touch browsers hold :active for a beat after
+       touchend so a quick tap still registers visually, so it is still matching
+       when the click handler flips aria-pressed. In that moment the button picks
+       up the pressed vocabulary all at once: `background: transparent` strips the
+       gold gradient that was covering background-color, --bg-h flips from
+       var(--ink) to var(--limestone), and --fg-h means the label is dark. A
+       near-white pill with dark text, held for the rest of the :active hold and
+       then faded back out over background-color's own 0.45s. That is the flash.
+       The .button::after sheen compounds it: a 0.85s sweep of
+       rgba(255,255,255,0.35) that a short tap can only ever start and reverse,
+       and that reads as far brighter once the gradient underneath it is gone.
 
-     Fixed by giving a toggle NO press-fill on touch at all, rather than by
-     timing the existing one around the state change. On a toggle the state
-     change is itself the feedback — the button visibly becomes "Added" — so
-     the fill is redundant on top of it, and .button:active's unconditional
-     scale(0.98) still supplies the tactile part. background-color and color
-     are pinned back to the button's own resting --bg/--fg rather than simply
-     left out, because leaving them out would hand the element back to
-     @media (hover: none) .button:active and reopen the invisible dark-on-
-     transparent text this rule was created to fix. Replaces that rule rather
-     than overriding it: the two would sit at equal specificity (0,3,0) and be
-     settled by source order alone, which is the exact trap the specificity traps
-     describes and which caused the original collision documented above.
+       Fixed by giving a toggle NO press-fill on touch at all, rather than by
+       timing the existing one around the state change. On a toggle the state
+       change is itself the feedback — the button visibly becomes "Added" — so
+       the fill is redundant on top of it, and .button:active's unconditional
+       scale(0.98) still supplies the tactile part. background-color and color
+       are pinned back to the button's own resting --bg/--fg rather than simply
+       left out, because leaving them out would hand the element back to
+       @media (hover: none) .button:active and reopen the invisible dark-on-
+       transparent text this rule was created to fix. Replaces that rule rather
+       than overriding it: the two would sit at equal specificity (0,3,0) and be
+       settled by source order alone, which is the exact trap the specificity traps
+       describes and which caused the original collision documented above.
 
-     Deliberately scoped to [aria-pressed] (either value), not just ="true" —
-     the gradient is stripped on the way INTO the pressed state, so the
-     outgoing unpressed frame needs the sheen held off too. Desktop is
-     untouched: the :hover rule above still stands, where a pointer genuinely
-     does need hover feedback distinct from the pressed state. */
+       Deliberately scoped to [aria-pressed] (either value), not just ="true" —
+       the gradient is stripped on the way INTO the pressed state, so the
+       outgoing unpressed frame needs the sheen held off too. Desktop is
+       untouched: the :hover rule above still stands, where a pointer genuinely
+       does need hover feedback distinct from the pressed state.
+  */
   .button-small {
     height: var(--button-compact-height);
     padding: 0 var(--button-compact-padding-x);
     font-size: var(--button-compact-font-size);
   }
+
   /* Scoped to this file (moved from global.css by
-       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+         scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .button-light {
     /* Filled (not outline) at rest, at reduced opacity — hover intensifies to
-           full solid rather than dropping to transparent. --bd matches --bg so
-           the border reads as part of the fill, not a separate outline. Used for
-           non-hero secondary CTAs on dark backgrounds (the hero's own secondary
-           CTA uses the real .button-ghost below instead). */
+             full solid rather than dropping to transparent. --bd matches --bg so
+             the border reads as part of the fill, not a separate outline. Used for
+             non-hero secondary CTAs on dark backgrounds (the hero's own secondary
+             CTA uses the real .button-ghost below instead).
+  */
     --bg: rgba(var(--limestone-rgb), 0.88);
     --fg: var(--ink);
     --bd: rgba(var(--limestone-rgb), 0.88);
     --bg-h: var(--limestone);
     --fg-h: var(--ink);
   }
+
   /* ============================================================
-       (i) THE ENQUIRE BUTTON — .button-gold-outline
-       ============================================================
-       .button-ghost next to .button-gradient read as the disabled sibling
-       rather than the secondary action, and three things were doing that at
-       once: it was GREY where the other was gold, its border sat at 0.42
-       alpha so the outline barely existed, and it had no icon so it carried
-       noticeably less visual mass.
+         (i) THE ENQUIRE BUTTON — .button-gold-outline
+         ============================================================
+         .button-ghost next to .button-gradient read as the disabled sibling
+         rather than the secondary action, and three things were doing that at
+         once: it was GREY where the other was gold, its border sat at 0.42
+         alpha so the outline barely existed, and it had no icon so it carried
+         noticeably less visual mass.
 
-       Hue was the main one. Two buttons in the same colour, one filled and
-       one outlined, read as a deliberate primary/secondary pair; a gold
-       pill beside a grey pill reads as "one action and one thing that isn't
-       available". So this keeps the outline — the hierarchy is still
-       correct, Book a table should lead — and moves it into the same family
-       by tinting the border and the label gold, then fills solid gold on
-       hover, which is a more confident resolution than .button-ghost's fade
-       to limestone.
+         Hue was the main one. Two buttons in the same colour, one filled and
+         one outlined, read as a deliberate primary/secondary pair; a gold
+         pill beside a grey pill reads as "one action and one thing that isn't
+         available". So this keeps the outline — the hierarchy is still
+         correct, Book a table should lead — and moves it into the same family
+         by tinting the border and the label gold, then fills solid gold on
+         hover, which is a more confident resolution than .button-ghost's fade
+         to limestone.
 
-       .button-ghost is DROPPED from the element rather than overridden.
-       Overriding it would have meant silently redefining all five of its
-       custom properties, leaving a class on the markup that no longer
-       describes anything true about the button — and styles.css's own
-       comment reserves it for hero secondary CTAs. Written as
-       ".button.button-gold-outline" at (0,2,0) so it beats .button's own
-       (0,1,0) defaults outright rather than on source order (the same-specificity
-       collision). */
+         .button-ghost is DROPPED from the element rather than overridden.
+         Overriding it would have meant silently redefining all five of its
+         custom properties, leaving a class on the markup that no longer
+         describes anything true about the button — and styles.css's own
+         comment reserves it for hero secondary CTAs. Written as
+         ".button.button-gold-outline" at (0,2,0) so it beats .button's own
+         (0,1,0) defaults outright rather than on source order (the same-specificity
+         collision).
+  */
   .button.button-gold-outline {
     --bg: transparent;
     --fg: var(--gold-2);
@@ -435,42 +471,51 @@ const classes = [
     --bg-h: var(--gold);
     --fg-h: var(--ink);
     /* 2px, up from .button's 1px (2026-10-04), so the outline carries
-         visual mass closer to Book a table's solid fill beside it. */
+           visual mass closer to Book a table's solid fill beside it.
+  */
     border-width: 2px;
   }
+
   /* The envelope is a LABEL, not a "proceed" chevron, so it must not
-       inherit .button:hover svg's 4px forward nudge — that motion only
-       reads correctly on a trailing arrow. Exactly the precedent
-       #availChangeBtn's calendar icon already set in styles.css, and the
-       reason the icon here is an envelope rather than a second copy of
-       Book a table's arrow: "Enquire" is the vaguer of the two labels, so
-       the icon is doing real work saying what the action is, instead of
-       repeating what its neighbour already says. */
+         inherit .button:hover svg's 4px forward nudge — that motion only
+         reads correctly on a trailing arrow. Exactly the precedent
+         #availChangeBtn's calendar icon already set in styles.css, and the
+         reason the icon here is an envelope rather than a second copy of
+         Book a table's arrow: "Enquire" is the vaguer of the two labels, so
+         the icon is doing real work saying what the action is, instead of
+         repeating what its neighbour already says.
+  */
   .button-gold-outline :global(svg) {
     transition: none;
   }
+
   @media (--hover) {
     .button.button-gold-outline:hover :global(svg) {
       transform: none;
     }
   }
+
   @media (--no-hover) {
     .button.button-gold-outline:active :global(svg) {
       transform: none;
     }
   }
+
   /* A Button that is itself a scroll-reveal target (GalleryPreview's) keeps
-     the reveal's transition. [data-reveal] in global.css sets it at the same
-     specificity as .button's own list above, and this file loads after
-     global.css, so .button's list would replace it wholesale (prototype bug
-     #2) and the button would snap in instead of fading. */
+       the reveal's transition. [data-reveal] in global.css sets it at the same
+       specificity as .button's own list above, and this file loads after
+       global.css, so .button's list would replace it wholesale (prototype bug
+       #2) and the button would snap in instead of fading.
+  */
   .button[data-reveal] {
     transition:
       opacity 0.9s var(--ease),
       transform 1s var(--ease);
     transition-delay: var(--d, 0ms);
   }
-  /* Also used by ReceptionStations.css's stage shimmer. */
+
+  /* Also used by ReceptionStations.css's stage shimmer.
+  */
   @keyframes btn-shimmer-sweep {
     0%,
     60% {

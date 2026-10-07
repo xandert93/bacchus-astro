@@ -120,19 +120,23 @@ import { below } from "@lib/media-queries.js"
 
 <style>
   /* Scoped to this component (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .visit {
     border-bottom: 1px solid rgba(var(--limestone-rgb), 0.12);
   }
+
   .visit-list {
     display: grid;
     gap: 1px;
     margin-top: clamp(18px, 2vw, 24px);
   }
+
   .visit-list a:hover {
     padding-left: 10px;
     color: var(--gold-2);
   }
+
   .visit-list .visit-label {
     display: flex;
     align-items: center;
@@ -144,12 +148,14 @@ import { below } from "@lib/media-queries.js"
     color: var(--gold-2);
     flex: none;
   }
+
   .visit-list .visit-item-icon {
     flex: none;
     display: grid;
     place-items: center;
     color: var(--gold-2);
   }
+
   .visit-list .visit-value {
     font-family: "Newsreader", Georgia, serif;
     font-size: 16.5px;
@@ -157,14 +163,17 @@ import { below } from "@lib/media-queries.js"
     color: var(--limestone-2);
     text-align: right;
   }
+
   .visit-note {
     margin-top: clamp(22px, 3vw, 30px);
     font-size: 12.5px;
     color: var(--muted);
   }
+
   .visit .arch {
     aspect-ratio: 4/5;
   }
+
   .visit-list > :global(*) {
     display: flex;
     align-items: center;
@@ -176,9 +185,11 @@ import { below } from "@lib/media-queries.js"
       padding 0.4s var(--ease),
       color 0.3s;
   }
+
   .visit-list > :global(*:last-child) {
     border-bottom: none;
   }
+
   @media (--below-desktop) {
     .visit .arch {
       order: -1;

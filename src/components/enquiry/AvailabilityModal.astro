@@ -48,12 +48,14 @@ import Button from "@components/ui/Button.astro"
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   /* ---------- Quick-pick calendar modal (weddings.html only) ----------
-       Reuses .availability.diary + .availability-foot unchanged inside a fixed overlay — same
-       show/hide technique as .lightbox below (opacity+visibility with a matched
-       transition-delay, not display:none, so it can actually fade — see main.js
-       for why display-based show/hide caused so much trouble on .availability-picked). */
+         Reuses .availability.diary + .availability-foot unchanged inside a fixed overlay — same
+         show/hide technique as .lightbox below (opacity+visibility with a matched
+         transition-delay, not display:none, so it can actually fade — see main.js
+         for why display-based show/hide caused so much trouble on .availability-picked).
+  */
   .availability-modal {
     position: fixed;
     inset: 0;
@@ -70,6 +72,7 @@ import Button from "@components/ui/Button.astro"
       opacity 0.35s var(--ease),
       visibility 0s linear 0.35s;
   }
+
   .availability-modal.show {
     opacity: 1;
     visibility: visible;
@@ -77,10 +80,12 @@ import Button from "@components/ui/Button.astro"
       opacity 0.35s var(--ease),
       visibility 0s linear 0s;
   }
+
   .availability-modal-backdrop {
     position: absolute;
     inset: 0;
   }
+
   .availability-modal-panel {
     position: relative;
     width: 100%;
@@ -88,6 +93,7 @@ import Button from "@components/ui/Button.astro"
     margin: auto;
     padding-top: 48px;
   }
+
   .availability-modal-close {
     position: absolute;
     top: 0;
@@ -106,6 +112,7 @@ import Button from "@components/ui/Button.astro"
       color 0.3s var(--ease),
       border-color 0.3s var(--ease);
   }
+
   @media (--hover) {
     .availability-modal-close:hover {
       background: var(--gold);
@@ -113,6 +120,7 @@ import Button from "@components/ui/Button.astro"
       border-color: var(--gold);
     }
   }
+
   @media (--no-hover) {
     .availability-modal-close:active {
       background: var(--gold);
@@ -120,21 +128,25 @@ import Button from "@components/ui/Button.astro"
       border-color: var(--gold);
     }
   }
+
   .availability-modal-panel :global(.availability.diary) {
     margin: 0;
     max-width: none;
   }
+
   .availability-modal-done {
     flex: none;
   }
+
   .availability-modal-done:disabled {
     opacity: 0.3;
     cursor: auto;
     /* .button's hover (translateY + box-shadow) and ::after sheen sweep, plus its
-         :active scale-down, aren't guarded by :disabled anywhere in the shared
-         .button rules (styles.css) — browsers don't reliably suppress :hover/:active
-         on a disabled native <button> on their own, so without this the full
-         button animation set still fires while it's supposed to be inert. */
+           :active scale-down, aren't guarded by :disabled anywhere in the shared
+           .button rules (styles.css) — browsers don't reliably suppress :hover/:active
+           on a disabled native <button> on their own, so without this the full
+           button animation set still fires while it's supposed to be inert.
+  */
     pointer-events: none;
   }
 </style>

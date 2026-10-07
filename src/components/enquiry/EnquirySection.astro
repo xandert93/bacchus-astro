@@ -63,7 +63,8 @@ const {
 
 <style>
   /* Scoped to this component (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .enquire {
     position: relative;
     background:
@@ -71,6 +72,7 @@ const {
       linear-gradient(180deg, #f3eddf, var(--paper) 55%, var(--paper));
     overflow: hidden;
   }
+
   .enquire::before {
     content: "";
     position: absolute;
@@ -83,19 +85,22 @@ const {
       transparent
     );
   }
+
   /* Same trick the wizard steps use (.wizard-step.active{display:contents})
-       — removes .enquiry-intro's own box so its children (eyebrow, h2, lead,
-       trust-rail) become direct items of .grid's own grid, sitting alongside
-       .enquiry-form as genuine siblings, which is what lets .trust-rail below get
-       reordered after the form specifically rather than always sitting right
-       after the lead paragraph. Needs to beat .enquiry-form's own order:2 (set at
-       the shared 980px breakpoint above and still in effect here) — anything
-       less than that just lands it back before the form. */
+         — removes .enquiry-intro's own box so its children (eyebrow, h2, lead,
+         trust-rail) become direct items of .grid's own grid, sitting alongside
+         .enquiry-form as genuine siblings, which is what lets .trust-rail below get
+         reordered after the form specifically rather than always sitting right
+         after the lead paragraph. Needs to beat .enquiry-form's own order:2 (set at
+         the shared 980px breakpoint above and still in effect here) — anything
+         less than that just lands it back before the form.
+  */
   @media (--below-enquiry-two-column) {
     .enquiry-intro {
       display: contents;
     }
   }
+
   .enquire .rail-photo {
     margin-top: 26px;
     border-radius: var(--radius-card);
@@ -103,6 +108,7 @@ const {
     position: relative;
     aspect-ratio: 16 / 10;
   }
+
   .enquire .rail-photo figcaption {
     position: absolute;
     left: 0;
@@ -115,73 +121,88 @@ const {
     font-size: 13.5px;
     font-style: italic;
   }
+
   @media (--below-enquiry-two-column) {
     .enquire .rail-photo {
       display: none;
     }
   }
+
   /* #availability .availability.diary's own margin-inline:auto (added above, near
-       #availability .split) is scoped to that section's own later, 920px
-       collapse point instead of living here — this section's own two-column
-       split now holds past 980px, so centering it here as well would be
-       wrong for the 921-980px gap. */
+         #availability .split) is scoped to that section's own later, 920px
+         collapse point instead of living here — this section's own two-column
+         split now holds past 980px, so centering it here as well would be
+         wrong for the 921-980px gap.
+  */
   @media (--below-desktop) {
     .enquiry-intro {
       grid-column: 1;
       grid-row: auto;
     }
   }
+
   @media (--below-desktop) {
     .enquiry-intro {
       order: 1;
     }
   }
+
   .enquire .wrap {
     position: relative;
   }
+
   /* Right column is a fixed 500px track (not 1fr) so it matches the form
-     card's own max-width exactly — matches the showcase calendar's own
-     .availability.diary width (styles.css) so every widget on the page shares one
-     sourced width. Left column (the rail) takes whatever's left. */
+       card's own max-width exactly — matches the showcase calendar's own
+       .availability.diary width (styles.css) so every widget on the page shares one
+       sourced width. Left column (the rail) takes whatever's left.
+  */
   .enquire .grid {
     display: grid;
     align-items: start;
     grid-template-columns: 1fr 500px;
     gap: clamp(32px, 5vw, 72px);
   }
+
   /* Collapse point moved down from the site's usual 980px: with the right
-       column now a fixed 500px (not 1fr), the left column is what shrinks as
-       the viewport narrows, and stays reasonably readable all the way down
-       to ~920px — only below that does it get genuinely cramped. */
+         column now a fixed 500px (not 1fr), the left column is what shrinks as
+         the viewport narrows, and stays reasonably readable all the way down
+         to ~920px — only below that does it get genuinely cramped.
+  */
   @media (--below-enquiry-two-column) {
     .enquire .grid {
       grid-template-columns: 1fr;
     }
   }
+
   /* .grid's own gap used to apply exactly once, between the rail block and
-       the form — now that .enquiry-intro's children are direct grid items too, it
-       was landing between every one of them instead, stacking on top of
-       their own margins. Zeroed here and replaced with one explicit
-       margin-top on the form, so only the rail-to-form transition keeps
-       that spacing. */
+         the form — now that .enquiry-intro's children are direct grid items too, it
+         was landing between every one of them instead, stacking on top of
+         their own margins. Zeroed here and replaced with one explicit
+         margin-top on the form, so only the rail-to-form transition keeps
+         that spacing.
+  */
   @media (--below-enquiry-two-column) {
     .enquire .grid {
       gap: 0;
     }
   }
+
   .enquiry-intro .lead {
     margin-top: 20px;
     max-width: 42ch;
   }
+
   .enquire .rail-photo :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 1.4s var(--ease);
   }
+
   .enquire .rail-photo:hover :global(img) {
     transform: scale(var(--image-hover-zoom-ambient));
   }
+
   @media (--below-desktop) {
     .enquire .grid {
       grid-template-columns: 1fr;

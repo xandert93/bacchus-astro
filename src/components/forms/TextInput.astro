@@ -80,18 +80,22 @@ const {
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   /* The gold sweep-underline belonged to an earlier field treatment and is
-     switched off; the span stays for the invalid state below. */
+       switched off; the span stays for the invalid state below.
+  */
   .field-input .field-underline {
     display: none;
   }
+
   /* Custom calendar icon (.field-date-icon in the markup), matching the
-       trust-rail icons' own line-icon treatment (stroke-width 1.6, bronze)
-       instead of the browser's default grey glyph. The native
-       ::-webkit-calendar-picker-indicator stays in place underneath (just
-       invisible), so it's still the thing actually receiving the click — this
-       SVG is purely visual. */
+         trust-rail icons' own line-icon treatment (stroke-width 1.6, bronze)
+         instead of the browser's default grey glyph. The native
+         ::-webkit-calendar-picker-indicator stays in place underneath (just
+         invisible), so it's still the thing actually receiving the click — this
+         SVG is purely visual.
+  */
   .field-date-icon {
     position: absolute;
     right: 16px;
@@ -100,20 +104,25 @@ const {
     color: var(--bronze);
     pointer-events: none;
   }
+
   :global(.field.bad) .field-underline {
     background: rgba(var(--oxblood-rgb), 0.4);
   }
+
   :global(.field.bad) .field-underline::after {
     width: 100%;
     background: var(--oxblood);
   }
+
   :global(.field) input,
   :global(.field) textarea {
     font-family: "Newsreader", Georgia, serif;
   }
+
   .field-input {
     position: relative;
   }
+
   :global(.field) input,
   :global(.field) :global(select),
   :global(.field) textarea {
@@ -129,18 +138,21 @@ const {
       background-color 0.3s var(--ease),
       box-shadow 0.3s var(--ease);
   }
+
   /* Three deliberately escalating states: resting is plain; hover moves
-       background to the full --limestone-2 with a moderate gold border; focus
-       keeps that background but pushes the border to full gold and adds a
-       crisp inset ring (matches .option-card.is-selected's own selected-state ring), not a soft
-       outer glow. Hover listed before :focus-within so focus still wins if
-       both apply at once (hovering a field you're already in). */
+         background to the full --limestone-2 with a moderate gold border; focus
+         keeps that background but pushes the border to full gold and adds a
+         crisp inset ring (matches .option-card.is-selected's own selected-state ring), not a soft
+         outer glow. Hover listed before :focus-within so focus still wins if
+         both apply at once (hovering a field you're already in).
+  */
   .field-input:hover input,
   .field-input:hover :global(select),
   .field-input:hover textarea {
     border-color: rgba(var(--gold-rgb), 0.5);
     background: var(--limestone-2);
   }
+
   .field-input:focus-within input,
   .field-input:focus-within :global(select),
   .field-input:focus-within textarea {
@@ -148,31 +160,38 @@ const {
     background: var(--limestone-2);
     box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), 0.35);
   }
+
   :global(.field) textarea {
     resize: vertical;
     min-height: 82px;
   }
+
   :global(.field) input::placeholder,
   :global(.field) textarea::placeholder {
     color: rgba(var(--muted-ink-rgb), 0.48);
     opacity: 1;
   }
+
   /* Native <input type="date"> has no ::placeholder — its own empty "dd/mm/
-       yyyy" and its filled value share the same `color` property, so a
-       text-input-style placeholder/filled color split isn't possible with CSS
-       alone. .has-value (toggled in main.js) stands in for it. */
+         yyyy" and its filled value share the same `color` property, so a
+         text-input-style placeholder/filled color split isn't possible with CSS
+         alone. .has-value (toggled in main.js) stands in for it.
+  */
   input[type="date"] {
     color: rgba(var(--muted-ink-rgb), 0.48);
   }
+
   :global(input[type="date"].has-value) {
     color: var(--ink);
   }
+
   /* Native date inputs. color-scheme: light stops the picker popup rendering
-     dark-mode chrome when the OS is in dark mode, the main source of it
-     looking out of place. The native picker indicator is stretched,
-     invisible, across the right of the box under the custom icon, so the icon
-     is what shows and the native control is still what takes the click.
-     Through .field so it outranks the base input rule's padding. */
+       dark-mode chrome when the OS is in dark mode, the main source of it
+       looking out of place. The native picker indicator is stretched,
+       invisible, across the right of the box under the custom icon, so the icon
+       is what shows and the native control is still what takes the click.
+       Through .field so it outranks the base input rule's padding.
+  */
   :global(.field) input[type="date"] {
     color-scheme: light;
     cursor: auto;

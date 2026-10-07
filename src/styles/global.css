@@ -498,6 +498,7 @@ h2 em {
   .split {
     grid-template-columns: 1fr;
   }
+
   .split .ph-wrap {
     order: -1;
   }

@@ -19,7 +19,8 @@
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .marquee {
     background: var(--ink);
     color: var(--limestone);
@@ -28,15 +29,18 @@
     border-top: 1px solid rgba(var(--gold-rgb), 0.2);
     border-bottom: 1px solid rgba(var(--gold-rgb), 0.2);
   }
+
   .marquee-track {
     display: flex;
     gap: 0;
     width: max-content;
     animation: slide 38s linear infinite;
   }
+
   .marquee:hover .marquee-track {
     animation-play-state: paused;
   }
+
   .marquee :global(span) {
     font-family: "Fraunces", serif;
     font-size: clamp(15px, 1.7vw, 21px);
@@ -47,6 +51,7 @@
     gap: 30px;
     color: rgba(var(--limestone-rgb), 0.82);
   }
+
   .marquee :global(span)::after {
     content: "";
     width: 5px;

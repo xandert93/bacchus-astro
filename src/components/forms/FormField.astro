@@ -66,13 +66,15 @@ const hasNote = Astro.slots.has("note")
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .field-note {
     font-size: 12px;
     color: var(--muted-ink);
     margin-top: 8px;
     font-family: "Newsreader", Georgia, serif;
   }
+
   .error {
     font-family: "Newsreader", Georgia, serif;
     font-size: 11.5px;
@@ -83,31 +85,38 @@ const hasNote = Astro.slots.has("note")
     opacity: 0;
     transition: all 0.3s var(--ease);
   }
+
   .field.bad .error {
     margin-top: 8px;
     height: 18px;
     opacity: 1;
   }
+
   .field-note-top {
     margin-top: 0;
     margin-bottom: 8px;
   }
+
   .field {
     display: flex;
     flex-direction: column;
     /* Half the row (minus half the 12px column gap) by default, so a pair of
-         adjacent .field elements without .full (currently just first + last
-         name) sit side by side — the only place this form actually needs two
-         columns. Everything else opts into a full-width row via .full below. */
+           adjacent .field elements without .full (currently just first + last
+           name) sit side by side — the only place this form actually needs two
+           columns. Everything else opts into a full-width row via .full below.
+  */
     flex: 1 1 calc(50% - 6px);
     /* Flex items default to min-width:auto, refusing to shrink below their
-         content's intrinsic width — same reasoning as .split > * {min-width:0}
-         elsewhere, guards against a field ever overflowing its 50% share. */
+           content's intrinsic width — same reasoning as .split > * {min-width:0}
+           elsewhere, guards against a field ever overflowing its 50% share.
+  */
     min-width: 0;
   }
+
   .field.full {
     flex: 1 1 100%;
   }
+
   .field label {
     font-size: 10.5px;
     letter-spacing: 0.18em;
@@ -115,11 +124,14 @@ const hasNote = Astro.slots.has("note")
     color: var(--bronze);
     margin-bottom: 9px;
   }
+
   .field.bad {
     animation: shake 0.4s;
   }
+
   /* Overrides the desktop 50% basis so the first and last name stack too,
-     matching the form's single-column collapse at this breakpoint. */
+       matching the form's single-column collapse at this breakpoint.
+  */
   @media (--below-tablet) {
     .field {
       flex-basis: 100%;

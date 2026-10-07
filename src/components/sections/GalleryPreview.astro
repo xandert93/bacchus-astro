@@ -66,12 +66,14 @@ const tag = category[0].toUpperCase() + category.slice(1)
 
 <style>
   /* Scoped to this component (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   @media (--from-desktop) {
     .gallery-grid.gallery-grid-four-col {
       grid-template-columns: repeat(4, 1fr);
     }
   }
+
   .gallery .head-row {
     display: flex;
     justify-content: space-between;
@@ -80,57 +82,68 @@ const tag = category[0].toUpperCase() + category.slice(1)
     flex-wrap: wrap;
     margin-bottom: clamp(30px, 4vw, 48px);
   }
+
   /* Hidden on the three page-specific mini-galleries (.gallery — every photo
-     in that grid is already the one category the section heading names) —
-     gallery.html's own full grid doesn't use this wrapper class, so its
-     .gallery-tag stays visible there, where it's actually load-bearing (mixed
-     categories + a filter bar). The underlying data-tag/data-title
-     attributes are untouched either way — the lightbox reads those directly,
-     not this span's text. */
+       in that grid is already the one category the section heading names) —
+       gallery.html's own full grid doesn't use this wrapper class, so its
+       .gallery-tag stays visible there, where it's actually load-bearing (mixed
+       categories + a filter bar). The underlying data-tag/data-title
+       attributes are untouched either way — the lightbox reads those directly,
+       not this span's text.
+  */
   .gallery :global(.gallery-tag) {
     display: none;
   }
+
   .gallery {
     background: #f3eddf;
     overflow: hidden;
   }
+
   /* Below the tablet cutover the "View Gallery" button moves below the
-       grid. Same display:contents reorder trick as .enquiry-intro/.trust-rail:
-       .head-row's box is removed so its children become direct items of .wrap,
-       letting the button be pushed after .gallery-grid (a sibling, not a
-       descendant, so plain order on .head-row alone couldn't reach past it). */
+         grid. Same display:contents reorder trick as .enquiry-intro/.trust-rail:
+         .head-row's box is removed so its children become direct items of .wrap,
+         letting the button be pushed after .gallery-grid (a sibling, not a
+         descendant, so plain order on .head-row alone couldn't reach past it).
+  */
   @media (--below-desktop) {
     .gallery .wrap {
       display: flex;
       flex-direction: column;
     }
   }
+
   @media (--below-desktop) {
     .gallery .head-row {
       display: contents;
     }
   }
+
   /* .head-row going display:contents means its own margin-bottom (the
-       .gallery .head-row rule, styles.css) can no longer render — a
-       display:contents element generates no box, so it has nothing to hang
-       a margin on. That was the gap between the heading block and .gallery-grid;
-       replacing it here on the text div directly (order:0, so it still
-       lands right before .gallery-grid) so the spacing survives the collapse. */
+         .gallery .head-row rule, styles.css) can no longer render — a
+         display:contents element generates no box, so it has nothing to hang
+         a margin on. That was the gap between the heading block and .gallery-grid;
+         replacing it here on the text div directly (order:0, so it still
+         lands right before .gallery-grid) so the spacing survives the collapse.
+  */
   @media (--below-desktop) {
     .gallery .head-row > :global(div) {
       margin-bottom: clamp(30px, 4vw, 48px);
     }
   }
+
   @media (--below-desktop) {
     .gallery .head-row :global(.button) {
       order: 2;
       align-self: flex-start;
       /* Matches the sitewide .cta-row convention (index.html, weddings.html
-         both use exactly this for a CTA following content) rather than an
-         arbitrary value of its own. */
+           both use exactly this for a CTA following content) rather than an
+           arbitrary value of its own.
+  */
       margin-top: 40px;
     }
   }
+
   @media (--below-tablet) {
     .gallery .head-row :global(.button) {
       width: 100%;
@@ -138,11 +151,13 @@ const tag = category[0].toUpperCase() + category.slice(1)
       justify-content: center;
     }
   }
+
   /* The other three above sit in a row container that gets
-       align-items:center at this breakpoint (see above) — .wrap here can't,
-       since it also holds .gallery-grid, and centering that would break its 2-col
-       grid. align-self on the button alone gets the same centered look
-       without touching .gallery-grid. */
+         align-items:center at this breakpoint (see above) — .wrap here can't,
+         since it also holds .gallery-grid, and centering that would break its 2-col
+         grid. align-self on the button alone gets the same centered look
+         without touching .gallery-grid.
+  */
   @media (--below-tablet) {
     .gallery .head-row :global(.button) {
       align-self: center;

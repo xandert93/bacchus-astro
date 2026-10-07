@@ -80,19 +80,23 @@
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   @media (--below-enquiry-two-column) {
     :global(.enquire) .trust-rail {
       order: 3;
     }
   }
+
   :global(.enquire) .trust-rail {
     /* Flat 24px, matching the sitewide convention for a list following intro
-         copy (e.g. .split ul.check, .tab-panel ul, .deposit-box). */
+           copy (e.g. .split ul.check, .tab-panel ul, .deposit-box).
+  */
     margin-top: 24px;
     display: grid;
     gap: clamp(8px, 2vw, 12px);
   }
+
   :global(.enquire) .trust-rail .trust-item-icon {
     width: 24px;
     height: 24px;
@@ -100,6 +104,7 @@
     place-items: center;
     color: var(--bronze);
   }
+
   :global(.enquire) .trust-rail p {
     margin-top: clamp(8px, 2vw, 12px);
     font-family: "Newsreader", Georgia, serif;
@@ -107,6 +112,7 @@
     line-height: 1.55;
     color: var(--muted-ink);
   }
+
   :global(.enquire) .trust-rail > li {
     list-style: none;
     display: grid;
@@ -116,9 +122,11 @@
     padding: 18px 2px;
     border-bottom: 1px solid rgba(var(--muted-ink-rgb), 0.12);
   }
+
   :global(.enquire) .trust-rail > li:last-child {
     border-bottom: none;
   }
+
   :global(.enquire) .trust-rail :global(b) {
     display: block;
     font-family: "Fraunces", Georgia, serif;

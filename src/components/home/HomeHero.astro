@@ -58,7 +58,8 @@ import Button from "@components/ui/Button.astro"
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .portcullis {
     position: absolute;
     inset: 0;
@@ -66,6 +67,7 @@ import Button from "@components/ui/Button.astro"
     display: flex;
     pointer-events: none;
   }
+
   .portcullis .bar {
     flex: 1;
     background: linear-gradient(180deg, #2c2820 0%, #14120d 100%);
@@ -74,36 +76,46 @@ import Button from "@components/ui/Button.astro"
     transform: translateY(0%);
     animation: rise 1.05s cubic-bezier(0.7, 0, 0.2, 1) forwards;
   }
+
   .portcullis .bar:nth-child(1) {
     animation-delay: 0.1s;
   }
+
   .portcullis .bar:nth-child(2) {
     animation-delay: 0.18s;
   }
+
   .portcullis .bar:nth-child(3) {
     animation-delay: 0.26s;
   }
+
   .portcullis .bar:nth-child(4) {
     animation-delay: 0.34s;
   }
+
   .portcullis .bar:nth-child(5) {
     animation-delay: 0.42s;
   }
+
   .portcullis .bar:nth-child(6) {
     animation-delay: 0.5s;
   }
+
   .portcullis .bar:nth-child(7) {
     animation-delay: 0.58s;
   }
+
   .portcullis .bar:nth-child(8) {
     animation-delay: 0.66s;
   }
+
   @media (--reduced-motion) {
     .portcullis .bar {
       animation: none;
       transform: translateY(-115%);
     }
   }
+
   :global(.hero) .kicker {
     display: inline-flex;
     align-items: center;
@@ -115,10 +127,12 @@ import Button from "@components/ui/Button.astro"
     margin-top: 24px;
     margin-bottom: 24px;
   }
+
   .hero-text-mask {
     display: block;
     overflow: hidden;
   }
+
   .scroll-cue {
     position: absolute;
     right: clamp(20px, 5vw, 44px);
@@ -133,6 +147,7 @@ import Button from "@components/ui/Button.astro"
     align-items: center;
     gap: 14px;
   }
+
   .scroll-cue i {
     display: block;
     width: 1px;
@@ -140,16 +155,19 @@ import Button from "@components/ui/Button.astro"
     background: linear-gradient(180deg, var(--gold), transparent);
     animation: cue 2.2s var(--ease-io) infinite;
   }
+
   @media (--below-hero-full) {
     .scroll-cue {
       display: none;
     }
   }
+
   .hero-text-mask > :global(span) {
     display: block;
     transform: translateY(105%);
     transition: transform 1.15s var(--ease);
   }
+
   :global(.loaded) .hero-text-mask > :global(span) {
     transform: translateY(0);
   }

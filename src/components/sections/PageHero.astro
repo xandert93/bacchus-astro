@@ -66,7 +66,8 @@ const hasCtas = Astro.slots.has("ctas")
 
 <style>
   /* Scoped to this component. The hero's frame and the compact .hero-sm
-     variant are styled in HeroFrame.astro. */
+       variant are styled in HeroFrame.astro.
+  */
   .crumb {
     display: flex;
     align-items: center;
@@ -77,55 +78,62 @@ const hasCtas = Astro.slots.has("ctas")
     color: rgba(var(--limestone-rgb), 0.55);
     margin-bottom: 24px;
   }
+
   .crumb a {
     transition: color 0.3s;
   }
+
   .crumb a:hover {
     color: var(--gold-2);
   }
+
   .crumb svg {
     opacity: 0.6;
   }
+
   /* --- Placeholder imagery -------------------------------------------
-     Banquet's and High Tea's heroes (and their dish tiles, see
-     PackageDish.css) have no real photography yet. Both are
-     deliberately blacked out rather than filled with a stand-in shot: a
-     stand-in reads as a finished choice
-     when the page is walked through, whereas an empty black frame reads
-     as "still to come", which is the honest signal while the client is
-     sourcing images. Both carry a visible label saying so, so nobody has
-     to infer it from the colour alone.
+       Banquet's and High Tea's heroes (and their dish tiles, see
+       PackageDish.css) have no real photography yet. Both are
+       deliberately blacked out rather than filled with a stand-in shot: a
+       stand-in reads as a finished choice
+       when the page is walked through, whereas an empty black frame reads
+       as "still to come", which is the honest signal while the client is
+       sourcing images. Both carry a visible label saying so, so nobody has
+       to infer it from the colour alone.
 
-     Replacing it: pass the page's photo to PageHero as `image`, which drops
-     both the black frame and the label.
+       Replacing it: pass the page's photo to PageHero as `image`, which drops
+       both the black frame and the label.
 
-     .package-hero-placeholder sits on HeroFrame's .hero-media (passed in as
-     mediaClass), so it carries HeroFrame's scoping attribute, not this
-     file's — hence :global(). */
+       .package-hero-placeholder sits on HeroFrame's .hero-media (passed in as
+       mediaClass), so it carries HeroFrame's scoping attribute, not this
+       file's — hence :global().
+  */
   :global(.package-hero-placeholder) {
     background: #000;
   }
+
   /* A plain line of small type in the bottom-right of the black frame,
-     not a pill. The pill version carried a background, border and
-     padding, which made it wide enough to collide with the hero's CTA
-     buttons at tablet and laptop widths — .hero-content only reserves
-     clamp(46px, 7vh, 76px) of space below those buttons, and at 1440x900
-     that resolves to ~63px against a pill occupying ~32-56px from the
-     bottom. Seven pixels of clearance, and none at all once the pill
-     wrapped to two lines. Plain type is short enough to sit inside that
-     gutter at every width.
+       not a pill. The pill version carried a background, border and
+       padding, which made it wide enough to collide with the hero's CTA
+       buttons at tablet and laptop widths — .hero-content only reserves
+       clamp(46px, 7vh, 76px) of space below those buttons, and at 1440x900
+       that resolves to ~63px against a pill occupying ~32-56px from the
+       bottom. Seven pixels of clearance, and none at all once the pill
+       wrapped to two lines. Plain type is short enough to sit inside that
+       gutter at every width.
 
-     Spans the hero edge-to-edge and right-aligns, rather than being
-     pinned by a `right` offset. A full-width block can't overflow its
-     container, so there's no shrink-to-fit cap left to get wrong (the
-     bug the pill had on phones), and it wraps on its own if it ever
-     needs to. The max-width/margin/padding trio is copied from .wrap so
-     the text lands exactly on the hero copy's own right edge instead of
-     floating at an unrelated offset — that's what "adequate offset"
-     means here, the same gutter everything else on the page uses.
+       Spans the hero edge-to-edge and right-aligns, rather than being
+       pinned by a `right` offset. A full-width block can't overflow its
+       container, so there's no shrink-to-fit cap left to get wrong (the
+       bug the pill had on phones), and it wraps on its own if it ever
+       needs to. The max-width/margin/padding trio is copied from .wrap so
+       the text lands exactly on the hero copy's own right edge instead of
+       floating at an unrelated offset — that's what "adequate offset"
+       means here, the same gutter everything else on the page uses.
 
-     Sits above .hero-scrim (z-index 2) but below .hero-content (3), so
-     the scrim can't dim it and it can't overlap the h1. */
+       Sits above .hero-scrim (z-index 2) but below .hero-content (3), so
+       the scrim can't dim it and it can't overlap the h1.
+  */
   .package-hero-placeholder-label {
     position: absolute;
     left: 0;

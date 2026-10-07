@@ -9,7 +9,8 @@
  * where its counterpart lives.
  */
 
-/** Wizard step 1 chips — `data-v` on `.chip` in every enquiry form. */
+/** Wizard step 1 chips — `data-v` on `.chip` in every enquiry form.
+ */
 export const EVENT_TYPES = [
   { title: "Wedding", value: "wedding" },
   { title: "Corporate", value: "corporate" },

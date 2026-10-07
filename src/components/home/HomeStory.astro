@@ -75,18 +75,21 @@ import { below } from "@lib/media-queries.js"
 
 <style>
   /* Scoped to this file (moved from global.css by
-     scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .cta-row {
     display: flex;
     flex-wrap: wrap;
     gap: 14px;
   }
+
   @media (--below-tablet) {
     .cta-row {
       flex-direction: column;
       align-items: center;
     }
   }
+
   @media (--below-tablet) {
     .cta-row :global(.button) {
       width: 100%;
@@ -94,36 +97,44 @@ import { below } from "@lib/media-queries.js"
       justify-content: center;
     }
   }
+
   /* Scoped to this page (moved from global.css by
-       scripts/scope-styles.mjs). See FaqSection.astro for how scoping works. */
+         scripts/scope-styles.mjs). See FaqSection.astro for how scoping works.
+  */
   .story p {
     font-family: "Newsreader", Georgia, serif;
   }
+
   .story {
     background: linear-gradient(180deg, var(--paper), #f3eddf);
   }
+
   .story p {
     color: var(--muted-ink);
     margin-bottom: 18px;
     max-width: 52ch;
   }
+
   @media (--below-home-lead-measure) {
     .story p {
       max-width: none;
     }
   }
+
   /* Below ~900px, .section-head's own max-width (760px, or #events's/.story's
-       column width once narrower than that) is already doing the narrowing —
-       the extra 52ch cap on top of it just makes the paragraph noticeably
-       narrower than the heading above it instead of matching it. Placed after
-       the base rule above, not before (the same-specificity collision: same
-       selector, same specificity — source order decides). */
+         column width once narrower than that) is already doing the narrowing —
+         the extra 52ch cap on top of it just makes the paragraph noticeably
+         narrower than the heading above it instead of matching it. Placed after
+         the base rule above, not before (the same-specificity collision: same
+         selector, same specificity — source order decides).
+  */
   .facts {
     display: flex;
     gap: clamp(20px, 4vw, 48px);
     margin-top: 38px;
     flex-wrap: wrap;
   }
+
   .facts .fact-number {
     font-family: "Fraunces", serif;
     font-size: clamp(30px, 4.4vw, 50px);
@@ -131,6 +142,7 @@ import { below } from "@lib/media-queries.js"
     display: block;
     line-height: 1;
   }
+
   .facts .label {
     font-size: 10.5px;
     letter-spacing: 0.2em;
@@ -139,12 +151,15 @@ import { below } from "@lib/media-queries.js"
     margin-top: 10px;
     display: block;
   }
+
   :global(.on-dark) .facts .fact-number {
     color: var(--limestone-2);
   }
+
   .story-visual {
     position: relative;
   }
+
   .story-visual .badge {
     position: absolute;
     bottom: -26px;
@@ -157,16 +172,19 @@ import { below } from "@lib/media-queries.js"
     max-width: clamp(150px, 34vw, 230px);
     box-shadow: 0 26px 60px -24px rgba(var(--muted-ink-rgb), 0.6);
   }
+
   /* Scales with the badge's own padding/max-width above (clamp, not fixed
-       34px) — needed now that .story-visual goes full-width at 760px and below
-       instead of staying capped at 440px, so the badge itself must shrink to
-       match a much smaller image instead of overwhelming it. */
+         34px) — needed now that .story-visual goes full-width at 760px and below
+         instead of staying capped at 440px, so the badge itself must shrink to
+         match a much smaller image instead of overwhelming it.
+  */
   .story-visual .badge .badge-number {
     font-family: "Fraunces", serif;
     font-size: clamp(24px, 6vw, 34px);
     color: var(--gold-2);
     line-height: 1;
   }
+
   .story-visual .badge .badge-caption {
     font-size: 10.5px;
     letter-spacing: 0.18em;
@@ -174,11 +192,13 @@ import { below } from "@lib/media-queries.js"
     color: var(--muted);
     margin-top: 8px;
   }
+
   @media (--below-home-two-column) {
     .story-visual {
       order: -1;
     }
   }
+
   @media (--below-home-two-column) {
     .story-visual .badge {
       left: auto;
@@ -186,17 +206,20 @@ import { below } from "@lib/media-queries.js"
       bottom: 20px;
     }
   }
+
   .story .grid {
     display: grid;
     grid-template-columns: 1.05fr 0.95fr;
     gap: clamp(36px, 6vw, 86px);
     align-items: center;
   }
+
   @media (--below-home-two-column) {
     .story .grid {
       grid-template-columns: 1fr;
     }
   }
+
   .story-visual .arch {
     aspect-ratio: 3/4;
   }
