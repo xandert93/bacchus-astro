@@ -83,8 +83,11 @@ The full map is `docs/architecture/structure.md`. The rules that decide it:
   had a space). Porting the prototype lost 54 spaces this way ("ourBanquet",
   "RedLeicester"). `compressHTML: true` was tried and rejected: Prettier's
   Astro plugin formats with JSX rules, so the two would fight.
-- The prototype's footer "Sandboxes" link was dropped deliberately: the
-  sandboxes are pitch material, not production site.
+- **Unfinished pages are drafts**, kept on `main` but never built for the
+  live site: the page in `src/drafts/`, one entry in
+  `src/drafts/registry.ts`. They show in `npm run dev`, listed at
+  `/sandboxes` (linked from the footer only there). Details in
+  `docs/architecture/structure.md`, "Draft pages".
 - Commits: Conventional Commits, **always with a scope**:
   `type(scope): description`, e.g. `feat(weddings): port weddings page`.
   Lower-case imperative description, no trailing full stop. Scope is the area
