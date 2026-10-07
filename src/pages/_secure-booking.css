@@ -793,11 +793,13 @@
   font-size: 14px;
   color: var(--oxblood);
 }
+
 .secure-booking-warning-box svg {
   flex: none;
   margin-top: 2px;
   color: var(--oxblood);
 }
+
 .secure-booking-float-help {
   position: fixed;
   right: 24px;
@@ -824,6 +826,7 @@
     color 0.3s var(--ease),
     transform 0.3s var(--ease);
 }
+
 @media (--hover) {
   .secure-booking-float-help:hover {
     background: var(--ink);
