@@ -1,0 +1,25 @@
+// How Cloudflare deploys the site. Workers Builds runs `npm run build`, then
+// `npx wrangler deploy` for main (the live site) or `npx wrangler preview`
+// for any other branch, and both read this file. Build commands and build
+// variables live in the Cloudflare dashboard, not here: see
+// docs/architecture/tech-stack.md, "Hosting".
+{
+  // Must match the Worker's name in the dashboard, or a deploy creates a
+  // second Worker instead of updating this one.
+  "name": "bacchus-astro",
+
+  // Which version of the Workers runtime to behave like. Bump it deliberately,
+  // never automatically.
+  "compatibility_date": "2026-10-07",
+
+  // The site is fully static: Cloudflare serves Astro's build output as is,
+  // with the rules in public/_headers applied.
+  "assets": {
+    "directory": "./dist",
+  },
+
+  // Required by `wrangler preview`, even when empty. Branch previews need no
+  // settings of their own yet; their build variables (INCLUDE_DRAFTS) are set
+  // under Builds, "Previews Base", in the dashboard.
+  "previews": {},
+}
