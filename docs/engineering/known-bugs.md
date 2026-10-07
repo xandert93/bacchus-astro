@@ -51,3 +51,31 @@ the four package pages included, and fails on any script error.
 **Rule**: define a `const` function above any code that runs on load and
 uses it, even inside a callback. Every page is in the page test for this
 reason; add new pages to it as they're ported.
+
+---
+
+## 2. A script tag mentioned in a comment broke the dev server
+
+**Symptom**: `npm run dev` printed a red "Failed to run dependency scan"
+error with "PARSE_ERROR … on the site is processed, which makes it
+deferred". Pages still loaded, but it looked like the server had failed.
+Every branch had it; `npm run build` and the tests never showed it. Found
+2026-10-07.
+
+**Cause**: at startup the dev server (Vite) scans every `.astro` file for
+the scripts it imports, so it can bundle their dependencies ahead of time. It
+finds them by searching the source for `<script` as plain text, comments
+included. A comment in `src/pages/gallery.astro` explaining `is:inline`
+said "Every other <script> on the site is processed…", so the scan took that
+as the start of a real script and tried to parse the prose after it as
+JavaScript. The build doesn't run this scan, so only the dev server hit it.
+
+**Fix**: the comment says "script element" instead, in
+`src/pages/gallery.astro`.
+
+**Test**: `tests/e2e/source.spec.ts` fails if any `.astro` file has
+`<script` anywhere other than a real script element.
+
+**Rule**: never write a tag's name with its angle bracket in a comment in an
+`.astro` file. Say "script element", or put it in backticks without the
+bracket.

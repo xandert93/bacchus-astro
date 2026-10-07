@@ -55,7 +55,7 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "@data/gallery"
 
       {/* is:inline tells Astro to leave this script EXACTLY here, as written:
            not bundled, not turned into a deferred module, not moved. Every
-           other <script> on the site is processed, which makes it deferred —
+           other script element on the site is processed, which makes it deferred —
            and that is precisely wrong here (the late filter seed). The mini
            galleries link in with ?filter=weddings etc.; if the radio were set
            any later than this point, the browser would already have painted
