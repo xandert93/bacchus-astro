@@ -7,11 +7,13 @@
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(12px, 1.6vw, 20px);
 }
+
 @media (--below-desktop) {
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 @media (--below-tablet) {
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);

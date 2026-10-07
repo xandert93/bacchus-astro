@@ -190,6 +190,7 @@ const { menu } = Astro.props
   .nav-dd-panel {
     position: fixed;
     top: var(--nav-h);
+
     /* Centered on the viewport (left:50% + translateX(-50%) against a fixed
            element resolves against the viewport, same as .nav's own center since
            .wrap centers within it) — not left/right-anchored to an edge, since
@@ -205,6 +206,7 @@ const { menu } = Astro.props
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+
     /* pointer-events was missing from this list originally — with no
            transition entry it flips to "none" the instant the mouse leaves the
            trigger, before the 0.3s fade-out even starts. Kept as a second line of
@@ -353,6 +355,7 @@ const { menu } = Astro.props
     display: flex;
     align-items: flex-start;
     gap: 12px;
+
     /* 12px of left padding at EVERY state; the 2px border sits outside it and is
            always present, transparent until the row is hovered or current. Nothing
            reflows when it lands, which is the whole reason it is declared here
@@ -363,12 +366,14 @@ const { menu } = Astro.props
     padding: 11px 12px;
     border: 0;
     border-left: 2px solid transparent;
+
     /* Tight on the left where the marker sits, rounded on the right. A fully
            rounded left edge would leave the 2px bar as a floating curved sliver
            rather than a straight rule against the row.
   */
     border-radius: 3px calc(var(--radius-card) - 2px) calc(var(--radius-card) - 2px) 3px;
     text-decoration: none;
+
     /* 0.18s, not the 0.4s this was ported with. 0.4s suits
            .package-stations-index-row, which is a vertical index read slowly; a nav
            panel is swept across, and at 0.4s the row has not finished arriving
@@ -663,6 +668,7 @@ const { menu } = Astro.props
   */
   .nav-dd-panel-card-dark {
     background: rgba(var(--muted-ink-rgb), 0.91);
+
     /* 1.5px, up from the 1px this started at. A hairline defined the card's
            edge over a dark section but only just; half a pixel more gives it enough
            presence to read as a card without becoming a frame.
@@ -917,6 +923,7 @@ const { menu } = Astro.props
     align-items: baseline;
     justify-content: space-between;
     gap: 16px;
+
     /* Takes over .nav-dd-panel-heading's own 20px bottom margin, zeroed
            below — a margin on a flex item inside this row would push the
            row's own height around instead of setting the gap beneath it.
@@ -1021,10 +1028,12 @@ const { menu } = Astro.props
     font-weight: 350;
     font-size: 15px;
     line-height: 1.375;
+
     /* Matches .quote blockquote — the site's existing precedent for
            italic text over a photo — rather than plain white.
   */
     color: var(--limestone-2);
+
     /* Layered: a tight dark shadow for edge definition against bright
            patches, plus a softer one for separation from the image.
   */
@@ -1049,6 +1058,7 @@ const { menu } = Astro.props
   .nav-dd-panel-card:has(.nav-dd-item[data-target]:is(:hover, :focus))
     .nav-dd-panel-caption[data-state="default"] {
     opacity: 0;
+
     /* The other half of the asymmetry above: no delay leaving, so landing
            on a row swaps the photo at once. Written as the full shorthand
            rather than a lone transition-delay — a bare delay here would have
@@ -1214,6 +1224,7 @@ const { menu } = Astro.props
     .nav-dd-panel-media
     :global(img[data-state="default"]) {
     opacity: 0;
+
     /* The other half of the asymmetry above: no delay leaving, so landing
            on a row swaps the photo at once. Written as the full shorthand
            rather than a lone transition-delay — a bare delay here would have

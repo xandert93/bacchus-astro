@@ -169,6 +169,7 @@ const links = [menu.hub, ...menu.items]
     align-items: center;
     gap: 12px;
     font-family: "Fraunces", serif;
+
     /* Declared on .menu near the top of this file — it has to match
            .menu .mobile-nav-link exactly or the four rows stop reading as one
            list. See that token's note.
@@ -183,6 +184,7 @@ const links = [menu.hub, ...menu.items]
     cursor: pointer;
     opacity: 0;
     transform: translateY(28px);
+
     /* Delay lives on the opacity/transform entries only, via the same
            --m-delay custom property styles.css uses — never the
            transitionDelay shorthand, which would also delay the colour
@@ -201,6 +203,7 @@ const links = [menu.hub, ...menu.items]
 
   :global(.menu) .mobile-nav-group-trigger .mobile-nav-number {
     color: var(--gold);
+
     /* Matches .menu .mobile-nav-link .mobile-nav-number's 0.38em — see its note.
   */
     font-size: 0.38em;

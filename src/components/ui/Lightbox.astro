@@ -85,6 +85,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
     /* Safety net for the actual bug this was pressing against: a tall photo
          (near img's own 78vh cap) leaves very little room below it for the
          caption, and this page's caption grew a line when the serving note
@@ -121,6 +122,7 @@
   .lightbox figure {
     position: relative;
     max-width: var(--lightbox-max-width);
+
     /* 78vh, down from 86vh (2026-09-30, same pass as img's own drop below)
          — see img's comment for why: this was leaving too little guaranteed
          room below a tall photo for the caption, on request specifically to
@@ -128,6 +130,7 @@
          fallback as the primary fix.
   */
     max-height: 78vh;
+
     /* See .lightbox's own comment above — centers when there's room,
          yields (rather than clips) when there isn't. Kept as a safety net
          even after the height budgets below were tightened: no static
@@ -136,6 +139,7 @@
          edge cases rather than silently hiding content again.
   */
     margin-block: auto;
+
     /* Same reasoning as the homepage carousel (.carousel-view, the
          touch-action drag bug): without this, touch devices can't tell a horizontal swipe
          (meant for prev/next here) from a vertical scroll and default to
@@ -146,6 +150,7 @@
 
   .lightbox img {
     max-width: var(--lightbox-max-width);
+
     /* 70vh, down from 78vh (2026-09-30) — on request, to shrink the image
          itself as the primary fix for the caption-clipping bug rather than
          leaning on .lightbox's overflow-y:auto scroll fallback: at the old

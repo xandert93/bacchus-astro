@@ -40,17 +40,21 @@ interface Props {
       display: none;
     }
   }
+
   @keyframes drift {
     0% {
       transform: translateY(0) translateX(0);
       opacity: 0;
     }
+
     10% {
       opacity: 0.75;
     }
+
     90% {
       opacity: 0.45;
     }
+
     100% {
       transform: translateY(-100vh) translateX(18px);
       opacity: 0;

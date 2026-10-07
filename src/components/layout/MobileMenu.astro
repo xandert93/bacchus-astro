@@ -94,6 +94,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     flex-direction: column;
     justify-content: center;
     justify-content: safe center;
+
     /* .menu does NOT scroll — .menu-scroll inside it does. The padding and
          the safe-centring moved there with it.
          Why it matters: .menu carries a transform for its open/close animation,
@@ -158,6 +159,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     justify-content: safe center;
     padding: 96px clamp(24px, 7vw, 60px) 32px;
     overflow-y: auto;
+
     /* The one real DISCONTINUITY at the moment an expanding group takes the
          content past the container height: a classic scrollbar appears and takes
          layout width, so the whole column reflows and the centred rows re-wrap in
@@ -176,6 +178,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
   .menu-bg {
     position: absolute;
     inset: 0;
+
     /* Absolute against .menu, which is fixed, viewport-sized and — crucially —
          no longer scrolls. So this fills the overlay and stays put, with no
          containing-block switching and nothing to lag behind a resizing URL bar.
@@ -307,6 +310,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
   */
   .menu .mobile-nav-link .mobile-nav-number {
     color: var(--gold);
+
     /* 0.38em, up from the original 0.32em across two passes: em tracks the
          label, so each reduction shrank the numeral with it. These were already
          at the small end, and below ~9px Inter numerals go thin on a dark ground,
@@ -352,6 +356,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
     width: 100%;
     max-width: 300px;
     justify-content: center;
+
     /* Scaled up from .button-small's own size, exactly as
          .availability-foot .button already does at this same 300px width. That
          rule's note applies verbatim here: the compact size made sense sitting

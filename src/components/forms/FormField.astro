@@ -100,12 +100,14 @@ const hasNote = Astro.slots.has("note")
   .field {
     display: flex;
     flex-direction: column;
+
     /* Half the row (minus half the 12px column gap) by default, so a pair of
            adjacent .field elements without .full (currently just first + last
            name) sit side by side — the only place this form actually needs two
            columns. Everything else opts into a full-width row via .full below.
   */
     flex: 1 1 calc(50% - 6px);
+
     /* Flex items default to min-width:auto, refusing to shrink below their
            content's intrinsic width — same reasoning as .split > * {min-width:0}
            elsewhere, guards against a field ever overflowing its 50% share.

@@ -122,9 +122,11 @@ Repo: `github.com/xandert93/bacchus-astro` (private), default branch `main`.
 - `npm run format` / `npm run format:check`: Prettier with
   `prettier-plugin-astro`, `printWidth: 90`. Format-on-save is set in
   `.vscode/settings.json`.
-- `npm run lint` / `npm run lint:fix`: ESLint (`eslint.config.js`). Enforces
-  arrow functions, `const`/`let` over `var`, and use before definition.
-  `lint:fix` applies only fixes that can't change behaviour.
+- `npm run lint` / `npm run lint:fix`: ESLint (`eslint.config.js`) for
+  scripts, then Stylelint (`stylelint.config.mjs`) for CSS, including
+  `.astro` style blocks. ESLint enforces arrow functions, `const`/`let` over
+  `var`, and use before definition; Stylelint enforces a blank line between
+  CSS rules. `lint:fix` applies only fixes that can't change behaviour.
 - `npm run check`: `astro check`, TypeScript across `.astro` and `.ts` files,
   including component props. Must stay at 0 errors.
 - `npm run test:e2e`: Playwright, against a production build served by

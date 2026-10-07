@@ -219,6 +219,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     background: #fff;
     border: 1px solid rgba(var(--muted-ink-rgb), 0.1);
     border-radius: var(--radius-card);
+
     /* min unchanged (still 22px) so true mobile (≤620px) keeps its existing
          padding — 4vw only exceeds 22px above ~550px, so this only actually
          grows anything above that. max raised from 34px to 44px.
@@ -379,6 +380,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     display: flex;
     flex-direction: column;
     gap: 4px;
+
     /* Matches the shared .availability-head's own margin-bottom and .availability-picked's
          own margin-top just below — the established rhythm around this
          widget's own sub-sections.
@@ -508,25 +510,30 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
   #availForm :global(.availability-cell) {
     font-family: "Inter", sans-serif;
   }
+
   #availForm .availability-head {
     justify-content: space-between;
     margin-bottom: 26px;
   }
+
   #availForm .availability-head .availability-month {
     font-size: clamp(21px, 2.2vw, 27px);
   }
+
   #availForm .availability-title {
     text-align: center;
     display: flex;
     flex-direction: column;
     gap: 6px;
   }
+
   #availForm .availability-sub {
     font-size: 9.5px;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--muted-ink);
   }
+
   #availForm .availability-prev,
   #availForm .availability-next {
     width: 40px;
@@ -560,6 +567,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       border-color: rgba(var(--muted-ink-rgb), 0.3);
     }
   }
+
   #availForm .availability-prev:disabled,
   #availForm .availability-next:disabled {
     opacity: 0.3;
@@ -582,12 +590,15 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     flex-direction: column;
     gap: 4px;
   }
+
   #availPicked.show {
     display: flex;
   }
+
   #availPicked.status-open .availability-picked-status {
     color: var(--avail-green-fg);
   }
+
   #availPicked.status-interest .availability-picked-status {
     color: var(--avail-amber-fg);
   }
@@ -671,6 +682,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
   .availability.diary :global(.availability-cell) {
     height: auto;
     aspect-ratio: 1;
+
     /* Scales with cell size instead of a fixed value, since both this and
          .availability.compact's cells resize with viewport/container width (aspect-
          ratio:1 on a 7-column grid) while the old fixed 14px/13px numbers
@@ -773,6 +785,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
       width: 100%;
       max-width: 300px;
       justify-content: center;
+
       /* Scaled up from .button-small's own size — that sizing made sense sitting
            tight next to the label on desktop, but on a full-width mobile pill
            there's no reason to keep it cramped. Matches the base .button size
@@ -930,6 +943,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     background: none;
     border: none;
     box-shadow: none;
+
     /* Explicit 0 (not just "no override"), since without this it silently falls
            back to plain .availability's own padding: clamp(22px,3vw,34px) on all four
            sides — the wizard's own form card (see form{} above) already provides
@@ -937,6 +951,7 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
   */
     padding: 0;
   }
+
   @keyframes selPulse {
     to {
       box-shadow: 0 0 0 8px rgba(var(--gold-rgb), 0);

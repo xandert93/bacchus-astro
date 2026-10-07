@@ -192,6 +192,7 @@ const { backgroundImage } = Astro.props
       opacity 0.35s var(--ease),
       transform 0.35s var(--ease);
   }
+
   #tStars.is-in-view .star {
     opacity: 1;
     transform: scale(1);
@@ -208,15 +209,19 @@ const { backgroundImage } = Astro.props
   #tStars.is-in-view .star:nth-child(1) {
     transition-delay: 0ms;
   }
+
   #tStars.is-in-view .star:nth-child(2) {
     transition-delay: 70ms;
   }
+
   #tStars.is-in-view .star:nth-child(3) {
     transition-delay: 140ms;
   }
+
   #tStars.is-in-view .star:nth-child(4) {
     transition-delay: 210ms;
   }
+
   #tStars.is-in-view .star:nth-child(5) {
     transition-delay: 280ms;
   }
@@ -284,6 +289,7 @@ const { backgroundImage } = Astro.props
     cursor: pointer;
     display: grid;
     place-items: center;
+
     /* Named properties rather than "all", so nothing else on this element
          can pick up the timing by accident (the same-specificity collision).
   */
@@ -479,6 +485,7 @@ const { backgroundImage } = Astro.props
     flex-direction: column;
     gap: 6px;
     padding: 14px 16px;
+
     /* Grid items default to min-width: auto, so a track can still be forced
          wider than its 1fr share by its content's natural minimum size (a long
          name) even with repeat(4, 1fr) — zeroing it here is what actually makes

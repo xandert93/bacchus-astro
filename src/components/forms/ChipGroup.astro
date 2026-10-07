@@ -131,6 +131,7 @@ const { id, options, selected } = Astro.props
 
   .chip :global(svg) {
     flex: none;
+
     /* Optical nudge, not a box-model bug — flex's align-items:center matches
            the SVG's geometric box to the text's line box, but the Font Awesome
            glyphs' visible "ink" isn't centered within their own viewBox, reading
