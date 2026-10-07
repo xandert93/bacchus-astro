@@ -31,7 +31,8 @@ export default defineType({
       title: "Vegetarian (V)",
       type: "boolean",
       initialValue: false,
-      description: "Only where the source marks it. Never inferred from the name.",
+      description:
+        "On the stations these are OURS, not the catalogue's — it marks none, so each is inferred from the dish name and unconfirmed by Bacchus. That is the opposite of the rule on package menus, where a marking is never inferred; the stations were already published this way, and the Reception package carries a warning note saying so. Provisional until the client confirms them.",
     }),
   ],
   preview: {
