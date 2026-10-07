@@ -51,6 +51,16 @@ export const DRAFT_PAGES: DraftPage[] = [
     entrypoint: "./src/drafts/secure-booking.astro",
     lastWorkedOn: "7 Oct 2026",
   },
+  {
+    name: "Sample Menu",
+    stage: "proposed",
+    type: "Page",
+    description:
+      "A sample of the food and drink by course (canapés, the seated menu, wine and bar), with dietary care and a call to request the full menu. Parked restaurant content: groundwork for a sample-menu page once the restaurant side of the site is picked up, waiting on that decision.",
+    href: "/menu",
+    entrypoint: "./src/drafts/menu.astro",
+    lastWorkedOn: "7 Oct 2026",
+  },
 ]
 
 // The prototype's sandboxes, copied as they were into public/prototype/,

@@ -22,7 +22,9 @@ itself (what we chose, why, and how payments work) is in
    redesigns; one new thing at a time. Every page is ported: `index`,
    `weddings`, `corporate`, `celebrations`, `gallery`, and the four
    packages at `/weddings/packages/{reception,banquet,high-tea,beverage}`.
-   `menu.html` is deliberately not ported (parked restaurant content).
+   `menu.html` is parked restaurant content: ported to `/menu` as a draft
+   (on `main`, never built for the live site) and unlinked, until the
+   restaurant side is picked up.
 2. **Image pipeline** (done, apart from the originals still to come from
    Bacchus). Every photo is built from its original where one exists; see
    `docs/engineering/images.md`.

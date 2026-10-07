@@ -1,0 +1,62 @@
+---
+// /menu: a sample of the food and drink, by course. Parked restaurant
+// content, so a draft (src/drafts/registry.ts): built in dev and draft
+// builds, never for the live site, and not linked from the site (don't link
+// it without asking first). Groundwork for the later sample-menu page. No buttons
+// in the hero, by design (docs/design/design-system.md, "Hero rhythm"), and
+// no Visit section, like the package pages: the prototype's menu never had it.
+import BaseLayout from "@layouts/BaseLayout.astro"
+import PageHero from "@components/sections/PageHero.astro"
+import MenuCourseTabs from "@components/menu/MenuCourseTabs.astro"
+import IntroSplit from "@components/sections/IntroSplit.astro"
+import MenuEnquireCall from "@components/menu/MenuEnquireCall.astro"
+---
+
+<BaseLayout
+  title="Menu — Bacchus, Mdina"
+  menuBackgroundImage="food-and-drink/seabass"
+  showVisitSection={false}
+>
+  <PageHero
+    crumb="Menu"
+    image={{
+      src: "food-and-drink/seabass",
+      alt: "Pan-seared fish with vegetables, plated",
+    }}
+  >
+    A taste of <em>the table</em>
+    <Fragment slot="sub">
+      Mediterranean cooking built around what's landed and what's in season — a sample of
+      what's plated at Bacchus, from passed canapés to the seated menu.
+    </Fragment>
+  </PageHero>
+
+  <MenuCourseTabs />
+
+  <IntroSplit
+    eyebrow="Dietary & allergen care"
+    included={[
+      "Full allergen information available on request",
+      "Menus tasted in advance for weddings and larger events",
+      "Seasonal, Mediterranean-led sourcing",
+    ]}
+    photo={{
+      src: "food-and-drink/lamb",
+      alt: "Slow-cooked lamb with beetroot and citrus",
+    }}
+  >
+    <Fragment slot="heading">
+      Cooked to fit the <em>table</em>, not around it
+    </Fragment>
+    <p
+      data-reveal
+      style="--d: 160ms; color: var(--muted-ink); margin-top: 22px; max-width: 50ch"
+    >
+      Vegetarian, vegan, gluten-free and allergen-specific menus are built alongside the
+      standard offering, not bolted on as an afterthought — tell us when you enquire and
+      we'll shape the tasting around it.
+    </p>
+  </IntroSplit>
+
+  <MenuEnquireCall />
+</BaseLayout>

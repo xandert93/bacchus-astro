@@ -1,0 +1,146 @@
+---
+// A row of dishes, each photo in the arch frame with its name and a line
+// about it, optionally numbered like a course. The homepage's "From the
+// kitchen" uses it, and so does the menu page, once per tab.
+//
+// Three columns by default, the middle dish set lower; four for a wider
+// selection. Stacks to two columns below desktop and one on phones.
+import Photo from "@components/ui/Photo.astro"
+import { below } from "@lib/media-queries.js"
+
+export interface Dish {
+  name: string
+  description: string
+  // src is a key from src/lib/images.ts.
+  photo: { src: string; alt: string }
+  // A roman numeral shown on the photo ("I", "II"…), for a run of courses.
+  course?: string
+}
+
+interface Props {
+  dishes: Dish[]
+  columns?: 3 | 4
+  // Each dish fades in on its own, staggered. Off where the grid sits in a
+  // tab panel that reveals as a whole (the menu page).
+  revealEach?: boolean
+}
+const { dishes, columns = 3, revealEach = false } = Astro.props
+
+const photoSizes = `${below.desktop} 100vw, ${Math.round(100 / columns)}vw`
+---
+
+<div class:list={["dishes", { "four-column-grid": columns === 4 }]}>
+  {dishes.map((dish, index) => (
+    <article
+      class="dish"
+      data-reveal={revealEach ? "" : undefined}
+      style={revealEach ? `--d: ${index * 130}ms` : undefined}
+    >
+      <div class="arch arch-dish">
+        {dish.course && <span class="course-number">{dish.course}</span>}
+        <Photo src={dish.photo.src} sizes={photoSizes} alt={dish.photo.alt} />
+      </div>
+      <h4>{dish.name}</h4>
+      <p>{dish.description}</p>
+    </article>
+  ))}
+</div>
+
+<style>
+  .dishes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(18px, 2.6vw, 34px);
+  }
+
+  .dish {
+    position: relative;
+  }
+
+  .arch-dish {
+    overflow: hidden;
+    border-radius: 200px 200px 4px 4px;
+    aspect-ratio: 3/4;
+    background: #211d17;
+  }
+
+  .dish p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  .dish .course-number {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    color: var(--gold-2);
+    background: rgba(var(--muted-ink-rgb), 0.6);
+    backdrop-filter: blur(6px);
+    padding: 7px 12px;
+    border-radius: 2px;
+  }
+
+  .dish:nth-child(2) {
+    transform: translateY(clamp(16px, 3vw, 44px));
+  }
+
+  .dishes.four-column-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .dishes.four-column-grid .dish:nth-child(2) {
+    transform: none;
+  }
+
+  @media (--below-desktop) {
+    .dishes.four-column-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (--below-desktop) {
+    .dishes {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (--below-desktop) {
+    .dish:nth-child(2) {
+      transform: none;
+    }
+  }
+
+  @media (--below-tablet) {
+    .dishes {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+  }
+
+  @media (--below-tablet) {
+    .arch-dish {
+      aspect-ratio: 4/5;
+    }
+  }
+
+  .dish :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.3s var(--ease);
+  }
+
+  .dish:hover :global(img) {
+    transform: scale(var(--image-hover-zoom-feature));
+  }
+
+  .dish :global(h4) {
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 22px;
+  }
+</style>

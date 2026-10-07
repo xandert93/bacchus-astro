@@ -1,0 +1,66 @@
+---
+// The menu page's closing call to action: ask for the full menu, or see the
+// gallery. On the same parchment band as the enquiry section, whose form
+// lives on the homepage, so the button goes there.
+import Button from "@components/ui/Button.astro"
+import "@styles/enquire-background.css"
+---
+
+<section class="section-padding enquire" id="enquire">
+  <div class="wrap menu-enquire-content">
+    <div class="eyebrow" data-reveal>
+      Ready to taste it?
+    </div>
+    <h2 data-reveal style="--d: 80ms">
+      Ask us for the <em>full menu</em>
+    </h2>
+    <p class="lead" data-reveal style="--d: 160ms">
+      Tell us your event and guest count, and we'll send the complete menu with pricing.
+    </p>
+    <div class="menu-enquire-actions" data-reveal style="--d: 240ms">
+      <Button href="/#enquire" variant="gradient" arrow>
+        <span>Enquire now</span>
+      </Button>
+      <Button href="/gallery" variant="dark">
+        <span>See the gallery</span>
+      </Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .menu-enquire-content {
+    max-width: 760px;
+    text-align: center;
+  }
+
+  .eyebrow {
+    justify-content: center;
+  }
+
+  .lead {
+    margin: 22px auto 0;
+    text-align: center;
+  }
+
+  .menu-enquire-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 30px;
+  }
+
+  @media (--below-tablet) {
+    .menu-enquire-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .menu-enquire-actions :global(.button) {
+      width: 100%;
+      max-width: 300px;
+      justify-content: center;
+    }
+  }
+</style>

@@ -1,0 +1,190 @@
+---
+// "From the kitchen, by course": a sample of the menu in three tabs
+// (canapés, the seated menu, wine and bar), then a call to request the full
+// menu. tabs.js switches the tabs; their styles are in tabs.css. The dishes
+// don't fade in one by one: they sit in tab panels, and a reveal waiting in
+// an inactive tab would never fire.
+import Button from "@components/ui/Button.astro"
+import DishGrid from "@components/sections/DishGrid.astro"
+import type { Dish } from "@components/sections/DishGrid.astro"
+import "@styles/tabs.css"
+
+interface Course {
+  id: string
+  tab: string
+  dishes: Dish[]
+  columns?: 3 | 4
+  // A line under the dishes, for what the photos can't show.
+  note?: string
+}
+
+const COURSES: Course[] = [
+  {
+    id: "canapes",
+    tab: "Canapés & Reception",
+    columns: 4,
+    dishes: [
+      {
+        name: "Canapés, passed",
+        description: "Built for standing receptions and drinks.",
+        photo: {
+          src: "food-and-drink/canapes-service",
+          alt: "Canapés being served to guests",
+        },
+      },
+      {
+        name: "The reception tray",
+        description: "A mixed cold selection, served on arrival.",
+        photo: { src: "food-and-drink/canapes-tray", alt: "A tray of canapés" },
+      },
+      {
+        name: "Roulade canapés",
+        description: "A hot savoury option from the corporate menu.",
+        photo: { src: "corporate/canape-roulade", alt: "Canapé roulades" },
+      },
+      {
+        name: "Cocktail reception tray",
+        description: "Bite-sized, built for a standing crowd.",
+        photo: { src: "corporate/cocktail-tray", alt: "A cocktail reception tray" },
+      },
+    ],
+  },
+  {
+    id: "mains",
+    tab: "Seated Menu",
+    dishes: [
+      {
+        course: "I",
+        name: "Seared catch of the day",
+        description: "Spring vegetables, light pea purée, salsa verde.",
+        photo: {
+          src: "food-and-drink/seabass",
+          alt: "Pan-seared fish with vegetables, plated",
+        },
+      },
+      {
+        course: "II",
+        name: "Slow-cooked lamb",
+        description: "Pistachio crust, beetroot and orange.",
+        photo: {
+          src: "food-and-drink/lamb",
+          alt: "Slow-cooked lamb with beetroot and citrus",
+        },
+      },
+      {
+        course: "III",
+        name: "The seated banquet",
+        description: "Set or bespoke, tasted with you in advance.",
+        photo: {
+          src: "venue/hall-chandeliers-banquet",
+          alt: "The banquet room set for a seated dinner",
+        },
+      },
+    ],
+  },
+  {
+    id: "drinks",
+    tab: "Wine & Bar",
+    dishes: [
+      {
+        name: "A glass on arrival",
+        description: "Sparkling or Maltese white, poured at the door.",
+        photo: {
+          src: "food-and-drink/champagne",
+          alt: "A guest raising a glass of sparkling wine",
+        },
+      },
+    ],
+    note: "Our in-house wine list is sourced from Maltese producers, with a private bar available for weddings, corporate evenings and larger celebrations — from a welcome glass to a full open bar through the night.",
+  },
+]
+---
+
+<section class="section-padding on-dark" id="menutabs">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" data-reveal>
+        A sample, not the full list
+      </div>
+      <h2 data-reveal style="--d: 80ms">
+        From the kitchen, by <em>course</em>
+      </h2>
+      <p class="lead" data-reveal style="--d: 160ms; margin-top: 22px">
+        The full menu runs to dozens of cold and hot savoury dishes plus a dedicated
+        dessert list, all fully customisable for your event. Shown here: a sample from
+        each course.
+      </p>
+    </div>
+
+    <div class="tab-bar" role="tablist" data-reveal style="--d: 220ms">
+      <span class="pill"></span>
+      {COURSES.map((course, index) => (
+        <button
+          class:list={{ active: index === 0 }}
+          data-tab={course.id}
+          role="tab"
+          aria-selected={index === 0 ? "true" : "false"}
+        >
+          {course.tab}
+        </button>
+      ))}
+    </div>
+
+    <div class="panels" data-reveal style="--d: 300ms">
+      {COURSES.map((course, index) => (
+        <div
+          class:list={["tab-panel", "full", { active: index === 0 }]}
+          data-panel={course.id}
+        >
+          <DishGrid dishes={course.dishes} columns={course.columns} />
+          {course.note && <p class="course-note">{course.note}</p>}
+        </div>
+      ))}
+    </div>
+
+    <div class="cta-row" data-reveal style="--d: 380ms">
+      <Button href="/#enquire" variant="light" arrow>
+        <span>Request the full menu</span>
+      </Button>
+      <p class="cta-note">Full menu, allergen list and pricing on request.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import "@scripts/tabs.js"
+</script>
+
+<style>
+  .course-note {
+    max-width: 56ch;
+    margin-top: 8px;
+    color: var(--muted);
+  }
+
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-top: clamp(38px, 5vw, 58px);
+  }
+
+  .cta-note {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @media (--below-tablet) {
+    .cta-row {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cta-row :global(.button) {
+      width: 100%;
+      max-width: 300px;
+      justify-content: center;
+    }
+  }
+</style>
