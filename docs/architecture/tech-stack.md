@@ -88,6 +88,24 @@ builds the site on Cloudflare and puts it live on its `workers.dev` address;
 the result shows as a "Workers Builds" check on the commit in GitHub. This is
 Workers with static assets, not the older Cloudflare Pages product.
 
+**How a build runs.** The dashboard (Worker `bacchus-astro`, Settings,
+Builds) has two tabs:
+
+- **Production** (`main`): `npm run build`, then `npx wrangler deploy`, which
+  puts it live.
+- **Previews Base** (every other branch, when "Builds for Preview branches" is
+  on): `npm run build`, then `npx wrangler preview`, which publishes the
+  branch on its own preview address without touching the live site. Its
+  build variables set `INCLUDE_DRAFTS=true`, so previews show the draft pages.
+
+Both commands read `wrangler.jsonc` at the repo root: the Worker's name, the
+folder to serve (`dist/`), and the `previews` block that `wrangler preview`
+refuses to run without. Commands and build variables stay in the dashboard.
+
+A build takes about ten minutes, nearly all of it encoding photos: unlike
+GitHub's checks, the Cloudflare builds checked so far (2026-10-07) re-encoded
+every photo rather than reusing Astro's image cache.
+
 **Why not Vercel**, the original plan: Vercel's free (Hobby) plan is for
 personal, non-commercial use only, so a restaurant's site would need the Pro
 plan from day one. Cloudflare's free plan has no such rule.
