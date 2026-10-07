@@ -162,6 +162,7 @@ const brandLinkAttributes = checkout ? {} : { href: "/", "aria-label": "Bacchus 
   :global(body.menu-open) .nav::after {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+
     /* Fully opaque while the drawer is open (2026-10-05). The page bar's fill
          is 0.86 alpha and relies on the blur above to hide what passes behind
          it; with the blur off, the drawer's own links stayed legible through
@@ -194,6 +195,7 @@ const brandLinkAttributes = checkout ? {} : { href: "/", "aria-label": "Bacchus 
   .nav-links {
     display: flex;
     align-items: center;
+
     /* 2px, not 6px (changed 2026-10-02). Each link already carries 16px of
          padding a side, so adjacent labels have 32px between them before the gap
          counts at all — 6px was adding a seventh of that again for no structural
@@ -227,6 +229,7 @@ const brandLinkAttributes = checkout ? {} : { href: "/", "aria-label": "Bacchus 
     font-weight: 500;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+
     /* 0.82, up from 0.7 (2026-10-02). 0.7 measures 8.12:1 against the dark bar,
          which is objectively fine — but uppercase Inter at 11.5px with 0.16em
          tracking covers very little of its own area, so it reads considerably
@@ -343,6 +346,7 @@ const brandLinkAttributes = checkout ? {} : { href: "/", "aria-label": "Bacchus 
     left: 0;
     right: 0;
     bottom: 0;
+
     /* 0.6 and blur(10px), up from 0.5 and blur(3px) (2026-10-02). The panel was
          reading differently depending on which section happened to be behind it —
          fine over a light section, muddy over a dark one. The variable that
@@ -717,6 +721,7 @@ const brandLinkAttributes = checkout ? {} : { href: "/", "aria-label": "Bacchus 
   .nav .wrap {
     display: flex;
     align-items: center;
+
     /* flex-start + "margin-left: auto" on the <nav> below, NOT space-between:
          the links group against the CTAs at the right edge rather than sitting
          centred. Changed 2026-10-02 with the whole-site nav merge — with two CTAs
@@ -867,12 +872,14 @@ const brandLinkAttributes = checkout ? {} : { href: "/", "aria-label": "Bacchus 
       animation: none;
     }
   }
+
   @keyframes nav-enter {
     from {
       opacity: 0;
       transform: translateY(-14px);
     }
   }
+
   @keyframes nav-backdrop-enter {
     from {
       opacity: 0;

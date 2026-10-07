@@ -22,6 +22,7 @@
      token rather than two equal literals, so they cannot drift apart again. */
   --package-grid-column-gap: clamp(32px, 5.5vw, 72px);
 }
+
 .package-now-viewing {
   font-family: "Inter", sans-serif;
   font-size: 10px;
@@ -31,6 +32,7 @@
   color: var(--muted);
   margin-bottom: 8px;
 }
+
 /* styles.css only styles .capacity as ".tab-panel .capacity" — this
    one now sits outside .panels/.tab-panel entirely (a single shared
    element, not one per tier), so it needs its own copy of that same
@@ -39,6 +41,7 @@
   display: inline-flex;
   align-items: baseline;
   gap: 9px;
+
   /* Was 20px — bumped to match the gap the removed price/blurb block
      used to leave before "Signature dishes" (that block's own
      margin-bottom), now that .capacity is the last thing before it. */
@@ -48,6 +51,7 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
+
 /* Only the tier name itself fades on switch — "Now viewing" and
    "Banquet · " are static chrome that never change and sit outside
    .panels entirely (a single element, not one per tab-panel), so
@@ -63,10 +67,12 @@
     opacity 0.3s var(--ease),
     transform 0.35s var(--ease);
 }
+
 .package-tier-name.package-tier-name-out {
   opacity: 0;
   transform: translateY(4px);
 }
+
 /* The vertical fade a CLICK-triggered tier switch plays (tab bar,
    tier card, sticky switcher). A touch swipe has its own motion —
    the track's horizontal slide, see .package-tier-view/.panels below
@@ -84,19 +90,23 @@
   opacity: 1;
   transform: none;
 }
+
 @keyframes packageTierFadeIn {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: none;
   }
 }
+
 .package-tier-content.package-tier-fade-in {
   animation: packageTierFadeIn 0.55s var(--ease);
 }
+
 @media (--reduced-motion) {
   .package-tier-content.package-tier-fade-in {
     animation: none;
@@ -118,6 +128,7 @@
   align-items: end;
   column-gap: clamp(16px, 3vw, 32px);
   row-gap: 22px;
+
   /* Was clamp(44px, 6vw, 72px) — sized for when .package-menu-pdf-note
      (since removed) sat in this gap and ate into it via its
      own -6px top margin. With nothing left to break the gap up, the
@@ -126,10 +137,12 @@
      used elsewhere on this page (e.g. .package-menu-groups below). */
   margin-bottom: clamp(32px, 4.5vw, 48px);
 }
+
 .package-tabs-heading {
   grid-area: heading;
   margin: 0;
 }
+
 /* .tab-bar's sitewide margin-bottom (styles.css) exists for its usual
    context — stacked directly above .panels, needing a gap before the
    panel content starts. Sitting inline next to the heading here
@@ -151,12 +164,14 @@
   margin-bottom: 0;
   border-radius: var(--radius-pill);
 }
+
 .package-tabs-tabbar button {
   width: 120px;
   padding: 10px 18px;
   border-radius: var(--radius-pill);
   text-align: center;
 }
+
 /* The sliding active-tab highlight (.pill, main.js-driven) has a
    sharp 2px radius sitewide — mismatched now that the bar and
    buttons are fully rounded. The gradient background it now carries
@@ -167,17 +182,21 @@
 .package-tabs-tabbar .pill {
   border-radius: var(--radius-pill);
 }
+
 .package-tabs-lead {
   grid-area: lead;
   max-width: 760px;
   margin: 0;
 }
+
 .package-tabs-lead p {
   margin: 0;
 }
+
 .package-tabs-lead p + p {
   margin-top: 12px;
 }
+
 @media (--below-package-tiers-desktop) {
   .package-tabs-grid {
     grid-template-columns: 1fr;
@@ -214,10 +233,12 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(14px, 2vw, 22px);
+
   /* Matches .package-tabs-grid's own margin-bottom above the cards, so the
      gap above and beneath the card grid reads as even. */
   margin-bottom: clamp(32px, 4.5vw, 48px);
 }
+
 .package-tier-card {
   position: relative;
   display: block;
@@ -240,20 +261,24 @@
     border-color 0.4s var(--ease),
     transform 0.4s var(--ease);
 }
+
 @media (--hover) {
   .package-tier-card:hover {
     transform: translateY(-4px);
     border-color: rgba(var(--gold-rgb), 0.32);
   }
 }
+
 @media (--no-hover) {
   .package-tier-card:active {
     transform: translateY(-2px);
   }
 }
+
 .package-tier-card.active {
   border-color: rgba(var(--gold-rgb), 0.55);
 }
+
 /* A circular selection indicator — hollow ring on every card (reads as
    "this is a selectable option" even before anything's picked), fills
    solid gold with the check going from transparent to ink so it shows
@@ -276,15 +301,18 @@
     border-color 0.3s var(--ease),
     color 0.3s var(--ease);
 }
+
 .package-tier-card-check svg {
   width: 14px;
   height: 14px;
 }
+
 .package-tier-card.active .package-tier-card-check {
   border-color: var(--gold-2);
   background: var(--gold-2);
   color: var(--ink);
 }
+
 .package-tier-card-eyebrow {
   display: block;
   font-family: "Inter", sans-serif;
@@ -295,6 +323,7 @@
   color: var(--muted);
   margin-bottom: 14px;
 }
+
 .package-tier-card-name {
   display: block;
   font-family: "Fraunces", serif;
@@ -303,6 +332,7 @@
   color: var(--limestone-2);
   margin-bottom: 10px;
 }
+
 .package-tier-card-price {
   display: block;
   font-family: "Fraunces", serif;
@@ -310,6 +340,7 @@
   color: var(--limestone-2);
   margin-bottom: 14px;
 }
+
 .package-tier-card-unit {
   font-family: "Newsreader", Georgia, serif;
   font-size: 12px;
@@ -319,6 +350,7 @@
   color: var(--muted);
   margin-left: 4px;
 }
+
 .package-tier-card-desc {
   display: block;
   font-family: "Newsreader", Georgia, serif;
@@ -326,6 +358,7 @@
   font-size: 16px;
   line-height: 1.6;
 }
+
 /* Showing all three full cards stacked on mobile pushes the actual
    menu content (dishes, ingredient lists) a long way down the page
    before a visitor reaches it — the tab bar above already lets them
@@ -385,6 +418,7 @@
   padding: 6px;
   border: 1px solid rgba(var(--gold-rgb), 0.4);
   border-radius: var(--radius-pill);
+
   /* Same recipe as .nav.stuck::after (styles.css) — the "scrolled
      nav" frosted-dark treatment — rather than the plainer
      rgba(--ink-rgb)/blur(8px) this started with (borrowed from
@@ -402,10 +436,12 @@
     opacity 0.35s var(--ease),
     transform 0.35s var(--ease);
 }
+
 .package-sticky-switch.is-visible {
   opacity: 1;
   pointer-events: auto;
 }
+
 .package-sticky-switch-btn {
   position: relative;
   z-index: 1;
@@ -419,6 +455,7 @@
   color: rgba(var(--limestone-rgb), 0.75);
   transition: color 0.3s var(--ease);
 }
+
 /* No background here any more — the sliding .pill below (same
    mechanism as the real tab bar's, via window.BacchusTabs.initTabGroup
    in main.js) supplies the gold now, exactly like .tab-bar
@@ -429,6 +466,7 @@
 .package-sticky-switch-btn.active {
   color: var(--ink);
 }
+
 /* Same computed contrast fix as the sitewide .tab-bar button rule
    (styles.css) — rgba(--limestone-rgb, 0.75) resting vs full
    --limestone-2 hover/tap computes to ~1.9:1, a real visible
@@ -439,6 +477,7 @@
     color: var(--limestone-2);
   }
 }
+
 /* Same-page action button (switches tier, doesn't navigate away) —
    needs its own gated tap feedback per the sticky touch hover, or an
    unguarded :hover would read as stuck-active on touch after a tap. */
@@ -447,6 +486,7 @@
     color: var(--limestone-2);
   }
 }
+
 /* The sliding highlight itself — same recipe as .tab-bar .pill
    (styles.css), just re-declared here since this button group is
    deliberately NOT given the .tab-bar class (see the container's own
@@ -461,6 +501,7 @@
   bottom: 6px;
   left: 0;
   width: 0;
+
   /* Matches the sitewide .tab-bar .pill's two-tone gold gradient
      (styles.css, shared via --gold-gradient with .button-gradient) —
      this was still the old flat --gold fill from before that gradient
@@ -473,6 +514,7 @@
     width 0.55s var(--ease);
   z-index: 0;
 }
+
 .package-sticky-switch-name {
   font-family: "Inter", sans-serif;
   font-size: 11.5px;
@@ -480,12 +522,14 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+
 .package-sticky-switch-price {
   font-family: "Inter", sans-serif;
   font-size: 11px;
   font-weight: 500;
   opacity: 0.75;
 }
+
 @media (--from-package-tiers-desktop) {
   .package-sticky-switch {
     top: calc(var(--nav-h) + 16px);
@@ -511,6 +555,7 @@
     padding: 10px 18px;
   }
 }
+
 /* Matches this file's own tier-mobile cutover (840px, above) rather
    than a sitewide breakpoint — this component only ever appears
    alongside the tier switcher it condenses, so it should flip in step
@@ -559,6 +604,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   margin: 0;
+
   /* Gold gradient text, same recipe as .package-menu-group h4 above —
      this label was previously a plain div at flat --gold-2, but it
      heads the dish-tile grid the same way .package-menu-group h4
@@ -569,6 +615,7 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+
   /* Was a flat 14px, read as too tight against the photo grid below
      on every breakpoint, on request — sized up and made responsive
      to match the pattern already used elsewhere in this component
@@ -577,6 +624,7 @@
      ul/li .tab-panel could reach into) — just a bigger value. */
   margin-bottom: clamp(20px, 2.5vw, 28px);
 }
+
 /* The real dish photography here is shot square (1:1) — .gallery-item's
    sitewide aspect-ratio (4/5, styles.css) is tuned for gallery.html's
    own portrait shots, and would crop ~10% off each side of these to
@@ -585,6 +633,7 @@
 .package-dishes-grid .gallery-item {
   aspect-ratio: 1/1;
 }
+
 /* There was a filter override here until 2026-09-24, softening the
    sitewide .gallery-item mute for these three dish tiles: rest moved
    30% of the way toward the hover values (grayscale 0.3 -> 0.21,
@@ -609,6 +658,7 @@
 .package-dish {
   margin: 0;
 }
+
 /* .package-reveal used to be a per-item scroll-stagger reveal for these
    tiles and the menu groups. It was switched off on 2026-10-01 because
    content kept going missing (see the project notes), and the class now
@@ -642,6 +692,7 @@
   transform: none;
   animation: none;
 }
+
 .package-dish-name {
   margin-top: 10px;
   text-align: center;
@@ -650,6 +701,7 @@
   font-size: clamp(12.5px, 1.4vw, 13.5px);
   color: rgba(var(--limestone-rgb), 0.85);
 }
+
 /* .package-dishes-grid stays 3 columns at every width (no breakpoint of
    its own), so each dish tile gets narrow on tablet/mobile — the
    expand-hint icon (.gallery-item::before, bottom-right sitewide) and
@@ -664,6 +716,7 @@
     bottom: auto;
   }
 }
+
 /* Tiles get narrower still below the page's own mobile breakpoint —
    pull the icon closer to the corner AND shrink it.
 
@@ -700,6 +753,7 @@
     background-size: 11px;
   }
 }
+
 .package-menu-group h4 {
   font-family: "Inter", sans-serif;
   font-size: 11.5px;
@@ -707,6 +761,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   margin-bottom: 4px;
+
   /* Gold gradient text, same recipe as packages-section.html's
      .package-dining-card-numeral/-tiers-label — replaces the flat
      --gold-2. */
@@ -716,6 +771,7 @@
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+
 /* .tab-panel ul (styles.css) sets margin-top: 26px — right for the
    homepage's tab panels, where the list follows a paragraph of body
    copy, but much too loose under these 11.5px eyebrow-style group
@@ -738,6 +794,7 @@
 .package-menu-group ul {
   margin-top: 0;
 }
+
 /* Gold dividers, this page only — the homepage's tab panels keep the
    flat limestone rule. Same component, but the density is nothing
    alike: four items there against roughly forty here across six
@@ -770,6 +827,7 @@
     rgba(var(--limestone-rgb), 0.12)
   );
 }
+
 /* Vegetarian marker inside the ingredient lists above — a circled "V"
    badge rather than a literal "(V)". Both the ring and the letter's
    gradient are built on --green-on-dark (styles.css), not the
@@ -795,6 +853,7 @@
 .package-veg-marker {
   /* Never inherit a hanging list indent into the badge. */
   text-indent: 0;
+
   /* One definition feeding both the ring and the letter, so the two
      can never drift apart — the same reason --gold-gradient is a
      single token rather than a recipe copied per component
@@ -810,6 +869,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   /* 1.6em of this element's OWN 0.72em font-size, i.e. ~1.15x the
      surrounding text — a circle that clears the cap height without
      outgrowing the line. Both numbers move together; changing only
@@ -824,6 +884,7 @@
   line-height: 1;
   letter-spacing: 0;
   vertical-align: middle;
+
   /* Gradient letter, same background-clip recipe as
      .package-menu-group h4 above. The gradient's DARK end is
      --green-on-dark itself and it brightens from there — deliberately
@@ -843,6 +904,7 @@
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+
 /* The ring, carrying the same gradient at the same 135deg so it and
    the letter read as one mark lit from one direction.
 
@@ -876,6 +938,7 @@
   -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 1.5px), #000 0);
   mask: radial-gradient(farthest-side, #0000 calc(100% - 1.5px), #000 0);
 }
+
 /* The <li> markup puts a word space before the badge (~3.6px at this
    font-size), which read as too tight against the ingredient name —
    this doubles it. (See .package-veg-marker-keep-with-word below for
@@ -897,6 +960,7 @@
   margin-inline-start: 4px;
   margin-block-start: -3px;
 }
+
 /* Stops the badge wrapping onto a line of its own and sitting there
    marooned with no text beside it, which it did on any ingredient
    name that happened to fill the column ("...Slow-Cooked Tomato,
@@ -921,6 +985,7 @@
 .package-veg-marker-keep-with-word {
   white-space: nowrap;
 }
+
 /* The legend's badge is followed directly by the word "vegetarian",
    with only a plain word space between them — too tight against a
    ring that already carries its own visual weight. Spacing goes on
@@ -930,6 +995,7 @@
 .package-menu-note .package-veg-marker {
   margin-inline-end: 4px;
 }
+
 /* Same callout-card recipe as secure-booking.html's warning boxes
    (border + tinted background + leading icon, both matched to one
    accent color), swapped from oxblood (that page's "illustrative/
@@ -955,16 +1021,19 @@
   background: rgba(var(--bronze-rgb), 0.12);
   max-width: 64ch;
 }
+
 .package-menu-note svg {
   flex: none;
   margin-top: 2px;
   color: var(--gold-2);
 }
+
 .package-menu-note-text {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
+
 .package-menu-note-text p {
   font-size: 12.5px;
   color: var(--muted);
@@ -1006,6 +1075,7 @@
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   overscroll-behavior-x: contain;
+
   /* Height is set explicitly by script/syncViewHeight() below, synced
      to only the ACTIVE panel — without this, .panels being a flex row
      holding all three tiers side by side (so the swipe carousel has
@@ -1021,11 +1091,13 @@
      separate jump. */
   transition: height 0.5s var(--ease);
 }
+
 @media (--reduced-motion) {
   .package-tier-view {
     transition: none;
   }
 }
+
 /* Cross-links to the other two mutually-exclusive formats
    (Reception/High Tea), placed after the tier content. Previously a
    copy-pasted "Explore the Stations add-on" link left over from
@@ -1045,6 +1117,7 @@
   align-items: center;
   gap: 8px;
 }
+
 /* No explicit width: .panels is a block-level flex container, so
    width:auto already resolves to the window's width, and
    flex-basis:100% + flex-shrink:0 per child is enough on its own to
@@ -1057,6 +1130,7 @@
 .package-tier-view::-webkit-scrollbar {
   display: none;
 }
+
 /* No transition: transform and no will-change any more — both belonged
    to the hand-rolled drag, and the browser's own scroller needs
    neither. Dropping will-change also stops permanently promoting a
@@ -1068,6 +1142,7 @@
   align-items: flex-start;
   gap: clamp(20px, 4vw, 48px);
 }
+
 /* Overrides main.js's shared .tab-panel display:none / .active
    display:grid + panelIn entrance animation (styles.css): the track
    needs every tier actually laid out to have something to slide
@@ -1085,9 +1160,11 @@
   animation: none;
   flex: 0 0 100%;
   min-width: 0;
+
   /* Each tier is its own snap position. */
   scroll-snap-align: start;
 }
+
 /* Held on <body> for as long as the tier window is scrolling, plus a
    moment past it (see setScrollingState() in the script). Kept its
    original name through the move to native scrolling: it is still the
@@ -1113,6 +1190,7 @@
 body.package-tier-dragging .grain {
   display: none;
 }
+
 /* is-scrolling too (main.js sets it for any page scroll) — a fixed
    backdrop-blurred panel re-blurs moving content every frame on a
    vertical scroll for the same reason it did on a swipe. */
@@ -1121,6 +1199,7 @@ body.is-scrolling .package-sticky-switch {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
+
 /* Warning variant of .package-menu-note, for facts that are NOT
    confirmed catalogue copy — the base note is bronze/gold precisely
    because it carries real, confirmed text (see its own comment), so an
@@ -1142,12 +1221,15 @@ body.is-scrolling .package-sticky-switch {
   border-color: rgba(var(--oxblood-on-dark-rgb), 0.45);
   background: rgba(var(--oxblood-on-dark-rgb), 0.11);
 }
+
 .package-menu-note-warning svg {
   color: var(--oxblood-on-dark);
 }
+
 .package-menu-note-warning .package-menu-note-text p {
   color: rgba(var(--limestone-rgb), 0.78);
 }
+
 .package-menu-note-warning .package-menu-note-text b {
   color: var(--oxblood-on-dark);
   font-weight: 600;
@@ -1201,6 +1283,7 @@ body.is-scrolling .package-sticky-switch {
     radial-gradient(120% 80% at 85% 0%, rgba(var(--gold-rgb), 0.06), transparent 60%),
     radial-gradient(120% 80% at 0% 100%, rgba(var(--gold-rgb), 0.025), transparent 60%);
 }
+
 /* ---------- Package menu grids (Reception, Banquet, High Tea, Beverage) ----------
    Lives here, not in each page's own \3c style> block, because all four package
    pages use it and the whole point of --package-grid-column-gap is that there
@@ -1214,12 +1297,14 @@ body.is-scrolling .package-sticky-switch {
   row-gap: clamp(30px, 4.5vw, 50px);
   column-gap: var(--package-grid-column-gap);
 }
+
 .package-dishes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   row-gap: clamp(10px, 2vw, 22px);
   column-gap: var(--package-grid-column-gap);
   margin-bottom: clamp(32px, 4.5vw, 48px);
+
   /* .gallery-item:not(.is-revealed) img binds transition-delay to
      var(--d, 0ms) for its reveal pop-in and, on reception-package.html, these
      tiles are permanently matched by that selector (they sit in a display:none
@@ -1227,16 +1312,19 @@ body.is-scrolling .package-sticky-switch {
      ancestor's stagger value can't leak into the hover-zoom's timing. */
   --d: 0ms;
 }
+
 @media (--below-desktop) {
   .package-menu-groups {
     grid-template-columns: 1fr 1fr;
   }
 }
+
 @media (--below-desktop) {
   .package-dishes-grid {
     --package-grid-column-gap: clamp(10px, 2vw, 22px);
   }
 }
+
 @media (--below-tablet) {
   .package-menu-groups {
     grid-template-columns: 1fr;

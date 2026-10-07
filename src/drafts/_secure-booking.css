@@ -6,7 +6,7 @@
    ("Deposit collection preview") records what was substituted (real logo,
    photo and footer facts) and what was ported as-is.
 
-   One page-level stylesheet rather than a <style> per component, as it was
+   One page-level stylesheet rather than a style block per component, as it was
    ported: the rules still read as one design, and splitting them into the
    components is a later pass (see docs/engineering/refactoring-tools.md). */
 
@@ -85,6 +85,7 @@
 .secure-booking-summary-section {
   position: relative;
   z-index: 10;
+
   /* Top stays deliberately smaller than the standard section gap below —
      the hero already provides its own visual separation right above this
      one, so it doesn't need the full rhythm on that side too. */

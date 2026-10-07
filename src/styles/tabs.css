@@ -9,6 +9,7 @@
 .tab-panel li {
   font-family: "Newsreader", Georgia, serif;
 }
+
 .tab-bar {
   display: inline-flex;
   position: relative;
@@ -21,15 +22,18 @@
   overflow-x: auto;
   scrollbar-width: none;
 }
+
 .tab-bar::-webkit-scrollbar {
   display: none;
 }
+
 .tab-bar .pill {
   position: absolute;
   top: 5px;
   bottom: 5px;
   left: 0;
   width: 0;
+
   /* Was a flat var(--gold) fill, felt underwhelming — replaced sitewide
      with a two-tone gold gradient after comparing this against a wider-
      range "extreme" version and a few border treatments live on
@@ -44,6 +48,7 @@
     width 0.55s var(--ease);
   z-index: 0;
 }
+
 .tab-bar button {
   position: relative;
   z-index: 1;
@@ -59,19 +64,23 @@
   color: rgba(var(--limestone-rgb), 0.75);
   transition: color 0.4s var(--ease);
 }
+
 .tab-bar button.active {
   color: var(--ink);
 }
+
 @media (--hover) {
   .tab-bar button:not(.active):hover {
     color: var(--limestone-2);
   }
 }
+
 @media (--no-hover) {
   .tab-bar button:not(.active):active {
     color: var(--limestone-2);
   }
 }
+
 /* Sitewide gap, not a deliberate omission — every .tab-bar instance (this
    Events section, menu.html's own tab bar, sandboxes/reception-package.html's
    tier switcher) gave inactive tabs zero hover feedback. Same
@@ -106,28 +115,34 @@
 .panels {
   position: relative;
 }
+
 .tab-panel {
   display: none;
   grid-template-columns: 1fr 1fr;
   gap: clamp(32px, 5.5vw, 72px);
 }
+
 .tab-panel.active {
   display: grid;
   animation: panelIn 0.7s var(--ease) both;
 }
+
 .tab-panel.full {
   grid-template-columns: 1fr;
   gap: 0;
 }
+
 .tab-panel h3 {
   font-size: clamp(25px, 3.4vw, 40px);
   margin-bottom: 18px;
   font-weight: 300;
 }
+
 .tab-panel ul {
   list-style: none;
   margin-top: 26px;
   display: grid;
+
   /* Was 2px, and that 2px was why every item sat closer to the divider
      above it than the one below. The divider IS each li's own border-top
      and the padding below is symmetric, but a grid row gap lands BELOW an
@@ -137,6 +152,7 @@
      if the gap ever came back. */
   gap: 0;
 }
+
 .tab-panel li {
   /* Newsreader's glyphs don't sit centred inside their own line box — its
      descender is generous enough that the visible mass of a lowercase line
@@ -149,9 +165,11 @@
      onto the top, so the row's total height and the divider rhythm are
      untouched and only the copy inside moves. */
   --tab-panel-item-optical-nudge: 2px;
+
   /* One value for the text's left offset, the bullet's hanging room and
      where the divider starts, so those three can't drift apart. */
   --tab-panel-item-indent: 30px;
+
   /* The divider, as an image rather than a colour, so a page can swap in a
      gradient by overriding this one property without touching any of the
      background plumbing below — and so li:first-child can still switch it
@@ -164,6 +182,7 @@
   padding: calc(14px + var(--tab-panel-item-optical-nudge)) 0
     calc(14px - var(--tab-panel-item-optical-nudge)) var(--tab-panel-item-indent);
   position: relative;
+
   /* The divider used to be this border, drawn edge to edge — so it started
      to the LEFT of the hyphen bullet and the bullet read as sitting inside
      a ruled row. Indenting it to where the copy starts turns the bullet
@@ -187,6 +206,7 @@
   transform: translateX(-14px);
   animation: liIn 0.6s var(--ease) forwards;
 }
+
 /* No rule above the first item — framing the whole list in dividers reads
    as boxed-in (docs/design/design-system.md, "Spacing details"). border-top goes too, not
    just the image: it keeps this row's spacing byte-identical to what it was
@@ -195,22 +215,28 @@
   border-top: none;
   background-image: none;
 }
+
 .tab-panel li:nth-child(1) {
   animation-delay: 0.18s;
 }
+
 .tab-panel li:nth-child(2) {
   animation-delay: 0.3s;
 }
+
 .tab-panel li:nth-child(3) {
   animation-delay: 0.42s;
 }
+
 .tab-panel li:nth-child(4) {
   animation-delay: 0.54s;
 }
+
 .tab-panel li::before {
   content: "";
   position: absolute;
   left: 2px;
+
   /* Was a flat 22px, ~3.5px above where the first line's centre actually
      falls, which compounded with the old 2px row gap into a visible lean
      toward the divider above. Derived from the li's own metrics now, so it
@@ -234,12 +260,14 @@
   height: 1px;
   background: var(--gold);
 }
+
 @media (--below-tablet) {
   .tab-bar {
     display: flex;
     width: 100%;
   }
 }
+
 @media (--below-tablet) {
   .tab-bar button {
     flex: 1;
@@ -248,16 +276,19 @@
     letter-spacing: 0.1em;
   }
 }
+
 @keyframes panelIn {
   from {
     opacity: 0;
     transform: translateY(24px);
   }
+
   to {
     opacity: 1;
     transform: none;
   }
 }
+
 @keyframes liIn {
   to {
     opacity: 1;

@@ -461,6 +461,7 @@ const DINING = [
     border: 1px solid rgba(var(--limestone-rgb), 0.12);
     border-radius: var(--radius-card);
     overflow: hidden;
+
     /* Restates [data-reveal]'s own opacity/transform transition (same
            specificity, 0,1,0) alongside the new border-color entry — per
            the same-specificity collision, a same-specificity rule wins wholesale,
@@ -587,6 +588,7 @@ const DINING = [
   .package-dining-card-numeral {
     position: absolute;
     bottom: 14px;
+
     /* Matches .package-dining-card-body's own horizontal padding clamp below,
            so the numeral's left edge lines up with the card copy's left edge.
   */
@@ -596,6 +598,7 @@ const DINING = [
     font-size: clamp(30px, 3.4vw, 44px);
     line-height: 1;
     letter-spacing: 0.02em;
+
     /* Gold gradient text — same background-clip:text recipe as .on-dark
            .eyebrow, rather than a flat gold.
   */
@@ -625,6 +628,7 @@ const DINING = [
            row siblings — sits on top of the gap above, not instead of it.
   */
     margin-top: auto;
+
     /* Centered as its own unit (label + names both), rather than following
            the h4/p's left alignment — centering just the names row read as
            misaligned against the label sitting above it.
@@ -639,6 +643,7 @@ const DINING = [
     letter-spacing: 0.22em;
     text-transform: uppercase;
     margin-bottom: 8px;
+
     /* Gold gradient text, same recipe as .package-dining-card-numeral above —
            a flat --bronze here measured ~3.9:1 contrast against this card's
            --ink-2 background, short of WCAG's 4.5:1 small-text minimum.
@@ -706,6 +711,7 @@ const DINING = [
     display: flex;
     align-items: center;
     gap: 16px;
+
     /* Matches .section-head's own margin-bottom (clamp(44px, 6vw, 72px)) so
            the gap above "Then add your bar" equals the gap above "Choose your
            dining experience".
@@ -752,6 +758,7 @@ const DINING = [
     position: relative;
     display: grid;
     grid-template-columns: 1fr;
+
     /* Same ground and same resting edge as .package-dining-card
            (2026-09-25) — was linear-gradient(120deg, --ink-3, --ink-2) with a
            gold 0.22 border. The gradient and the gold edge were marking this
@@ -765,6 +772,7 @@ const DINING = [
     border: 1px solid rgba(var(--limestone-rgb), 0.12);
     border-radius: var(--radius-card);
     overflow: hidden;
+
     /* Same [data-reveal] restatement as .package-dining-card above, same
            reason — this card also carries data-reveal.
   */
@@ -821,6 +829,7 @@ const DINING = [
     max-width: 100%;
     aspect-ratio: 16 / 10;
     overflow: hidden;
+
     /* width:100%/max-width:100% caps this back to the grid track's own width
            regardless of what aspect-ratio would otherwise compute from a
            stretched row height — confirmed live at 861px, where the grid
@@ -915,6 +924,7 @@ const DINING = [
              than the space actually available.
   */
       min-width: 0;
+
       /* Top/right/bottom only — left is 0 since column-gap already separates
              this from the image. The right side is 4px short of the other two:
              that's the 4px handed to --package-thumbnail-width above, given back
@@ -924,6 +934,7 @@ const DINING = [
   */
       padding: clamp(16px, 4vw, 20px) calc(clamp(16px, 4vw, 20px) - 4px)
         clamp(16px, 4vw, 20px) 0;
+
       /* One flat gap between the body's children (heading, copy, button —
              tiers are hidden at this width).
   */

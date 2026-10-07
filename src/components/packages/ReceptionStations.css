@@ -21,15 +21,18 @@
   --station-hairline: rgba(var(--limestone-rgb), 0.14);
   --station-text: rgba(var(--limestone-2-rgb), 0.9);
   --station-faint: rgba(var(--limestone-rgb), 0.5);
+
   /* Matches .wrap's own side padding, so the full-bleed carousel
      and tab rail can cancel it out exactly. */
   --station-gutter: clamp(20px, 5vw, 44px);
+
   /* The gap BETWEEN cards in the scroller. Its own token because
      the 2-up flex-basis has to subtract it (see section 5), so the
      two can never drift apart — the same "one value, consumed
      twice" move as --package-grid-column-gap in styles.css
      (the drifting grid gaps). */
   --station-carousel-gap: clamp(14px, 1.6vw, 20px);
+
   /* The site's nav is position: fixed at --nav-h, so anything
      scrolled to would otherwise land underneath it. NOT used by
      the station deep links any more — those compute their own
@@ -44,6 +47,7 @@
     rgba(var(--ink-rgb), 0.82)
   );
   position: relative;
+
   /* The corner washes are NOT declared here any more. They were,
      while this was the only section that had them — which was the
      fair objection: one section with a ground nothing else on the
@@ -56,6 +60,7 @@
      export's --ink-2; the two are #1c1a16 and #1b1813, which is
      not a visible difference, and one ground token beats two. */
 }
+
 /* NO TOP-EDGE RULE, deliberately (2026-09-25). The export shipped a
    flat `border-top: 1px solid rgba(gold, 0.28)`, which was swapped
    for .enquire::before's fading hairline and then dropped
@@ -83,6 +88,7 @@
    open and hands spacing back to the component. */
 .eyebrow.eyebrow-static {
   margin-bottom: 0;
+
   /* .eyebrow inherits Inter from body and never declares it, which
      is fine everywhere else on the site because eyebrows are
      <div>s and <p>s. The six category headings in the desktop
@@ -94,6 +100,7 @@
      (0,2,0) against the heading rule's (0,0,1). */
   font-family: "Inter", system-ui, sans-serif;
 }
+
 /* Doubled class deliberately — .is-revealed .eyebrow::before in
    styles.css is (0,2,0), so a single-class modifier would be
    strictly less specific and lose outright rather than by source
@@ -121,11 +128,13 @@
 .package-station-price {
   display: flex;
   align-items: baseline;
+
   /* 4px, matching the margin-left .package-tier-card-unit uses to
      sit against its own price on this page. */
   gap: 4px;
   margin: 0;
 }
+
 /* Gradient-clipped, which v1 deliberately REJECTED — but only
    because v1's ground was --paper, where --gold-gradient's bright
    stop measures ~3.1:1. On --ink-2 it has room. If this section
@@ -139,6 +148,7 @@
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+
 /* Verbatim .package-tier-card-unit from this page —
    the sitewide treatment for a "per person" qualifier hanging off a
    price. The export had it as Inter, 10.5px, uppercase, 0.16em,
@@ -210,9 +220,11 @@
   color: var(--station-text);
   text-wrap: pretty;
 }
+
 .package-station-item-list li {
   display: inline;
 }
+
 /* Gradient-clipped, on request (2026-09-28) — the same recipe
    .package-station-price-amount already uses for its figure, so
    the middot picks up the one accent colour every price on this
@@ -254,6 +266,7 @@
   margin-inline-start: 1px;
   margin-block-start: -3px;
 }
+
 .package-stations-veg-note .package-veg-marker {
   margin-inline-end: 4px;
 }
@@ -290,9 +303,11 @@
 .package-station-add-button[hidden] {
   display: none; /* .button sets display, which would beat [hidden] */
 }
+
 .package-station-add-button-icon {
   flex: none;
 }
+
 /* Cancels the sitewide .button:hover svg / .button:active svg
    nudge (styles.css, translateX(4px) on hover/tap) for this icon
    specifically (2026-09-30, on request — "it shouldn't be moving
@@ -349,9 +364,11 @@
   overflow-x: auto;
   scrollbar-width: none;
 }
+
 .package-stations-category-tabs::-webkit-scrollbar {
   display: none;
 }
+
 /* EQUAL-WIDTH BUTTONS, but only where the labels are the short set
    (2026-09-28). Six words of three to six characters left the row
    visibly ragged — "Sea" at half the width of "Boards" — and a
@@ -420,6 +437,7 @@
   grid-auto-flow: column;
   grid-auto-columns: minmax(max-content, 1fr);
 }
+
 .package-stations-category-tab {
   flex: none;
   white-space: nowrap;
@@ -438,15 +456,18 @@
     color 0.4s var(--ease),
     background 0.45s var(--ease);
 }
+
 .package-stations-category-tab[aria-current="true"] {
   background: var(--gold-gradient);
   color: var(--ink);
 }
+
 @media (--hover) {
   .package-stations-category-tab:not([aria-current="true"]):hover {
     color: var(--limestone-2);
   }
 }
+
 @media (--no-hover) {
   .package-stations-category-tab:not([aria-current="true"]):active {
     color: var(--limestone-2);
@@ -502,6 +523,7 @@
     border-radius: var(--radius-pill);
   }
 }
+
 /* SECTION C'S MOBTAB OPTS OUT of the full-bleed/fade-mask phone
    treatment just above (2026-09-29) — its tab bar keeps the boxed
    pill-rail look it already has at 621-859.98px all the way down,
@@ -549,6 +571,7 @@
     mask-image: none;
   }
 }
+
 /* 980, not the old 860: the index column is what supersedes these,
    and it doesn't arrive until 980 (see section 8). At 860 the two
    boundaries used to be the same number, which left no width with
@@ -613,20 +636,25 @@
   border: 1px solid var(--station-card-edge);
   color: var(--limestone-2);
 }
+
 .package-station-card[hidden] {
   display: none;
 }
+
 .package-station-card-figure {
   position: relative;
   margin: 0;
+
   /* zoom-in, not pointer: this opens a lightbox rather than
      navigating. Same cursor .gallery-item uses, and the only other
      place the site uses it. */
   cursor: zoom-in;
+
   /* So the hover zoom below is clipped by the figure rather than
      sliding under the copy beneath it. */
   overflow: hidden;
 }
+
 /* 1 / 1, walked down again the same day: source native 4/5 ->
    6/7 -> 1/1 (2026-09-28, both steps on request). Same underlying
    constraint as the first step, restated because it hadn't
@@ -663,6 +691,7 @@
   height: auto; /* the height="1100" attribute would otherwise win */
   aspect-ratio: 1 / 1;
   object-fit: cover;
+
   /* Real, and larger, crop to distribute (2026-09-28) — a fifth
      of the source's vertical extent, up from the ~6.7% the 6/7
      step introduced. 58% is carried forward unchanged again,
@@ -677,6 +706,7 @@
     transform 0.9s var(--ease),
     filter 0.45s var(--ease);
 }
+
 .package-station-card-figure::after {
   content: "";
   position: absolute;
@@ -713,6 +743,7 @@
   position: absolute;
   top: 12px;
   right: 12px;
+
   /* 2, not the gallery's 3: the figure's own ::after scrim sits at
      1 here. Separate stacking contexts, no visual difference. */
   z-index: 2;
@@ -727,10 +758,12 @@
   color: var(--limestone);
   border: 0;
   padding: 0;
+
   /* Matches the figure around it rather than pointer — this opens a
      lightbox, it doesn't navigate. */
   cursor: zoom-in;
 }
+
 /* Smaller on a phone-width carousel card, the same step
    reception-package.html takes for its dish tiles at the same
    width. Unpaired max-width query is fine: the rule it overrides
@@ -751,6 +784,7 @@
     height: 11px;
   }
 }
+
 /* Hidden until hover on a mouse; ALWAYS visible on touch, where
    cursor: zoom-in communicates nothing (the sticky touch hover). */
 @media (--hover) {
@@ -775,6 +809,7 @@
      as this comment used to ask for, instead of four copies of the
      same three numbers. See that rule for the reasoning. */
 }
+
 .package-station-card-caption {
   position: absolute;
   left: 20px;
@@ -785,6 +820,7 @@
   flex-direction: column;
   gap: 6px;
 }
+
 /* Ceiling 28px, down from 30px (2026-09-28). Safe to change here
    and nowhere else: .package-station-card-name exists only in this
    file — nothing in styles.css or main.js reads it — so there is
@@ -820,9 +856,11 @@
   line-height: 1.02;
   color: var(--limestone-2);
 }
+
 .package-station-card-caption .package-station-price-amount {
   font-size: clamp(21px, 5.5vw, 24px);
 }
+
 /* SUPERSEDED (2026-09-29, fifteenth pass): this used to be a plain
    "ITEMS INCLUDED" label (Lovable mockup, 2026-09-28) — replaced on
    request with the station's own category name, styled as a real
@@ -845,6 +883,7 @@
   font-size: 10px;
   letter-spacing: 0.2em;
   gap: 10px;
+
   /* 0, up 4px from the -4px base (2026-09-30, bumped a second time
      on request — was +2px/-2px, now +4px/0 — mobile carousel only,
      the mobtab phone carousel is the only <620.98px context this
@@ -854,9 +893,11 @@
      index column's own "ARRIVING AT 860px, C-only"). */
   margin-bottom: 0;
 }
+
 .package-station-card-body p.eyebrow.eyebrow-static::before {
   width: 22px;
 }
+
 @media (--from-stations-desktop) {
   .package-station-card-body p.eyebrow.eyebrow-static {
     /* 4px, up 8px from the -4px base (2026-09-30, bumped a second
@@ -866,10 +907,12 @@
     margin-bottom: 4px;
   }
 }
+
 .package-station-card-body {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+
   /* 12px, up a touch from 10px (2026-09-28). Reaches every child
      pair in the body uniformly — items-label/list, list/divider,
      divider/note, note/button — which is deliberate: the divider
@@ -885,6 +928,7 @@
   gap: 12px;
   padding: clamp(16px, 4vw, 18px) clamp(16px, 4.5vw, 20px) clamp(18px, 5vw, 20px);
 }
+
 /* Shared with .package-stations-stage-body's own add button
    (2026-09-30) — both parents are display:flex; flex-direction:
    column at this tier, so margin-top:auto behaves identically in
@@ -926,12 +970,15 @@
   scrollbar-width: none;
   overscroll-behavior-x: contain;
 }
+
 .package-stations-browser.is-enhanced .package-stations-card-list::-webkit-scrollbar {
   display: none;
 }
+
 .package-stations-browser.is-enhanced .package-station-card {
   scroll-snap-align: start;
 }
+
 /* Mouse-drag-to-scroll affordance (see the "Mouse drag-to-scroll"
    block in the [data-stations="carousel"] controller near the foot
    of this page) — the one gesture native scrolling doesn't give a
@@ -944,6 +991,7 @@
     cursor: grab;
   }
 }
+
 /* Set on the track only while a mouse drag is in progress — the
    closed fist, matching .carousel-view.drag on the mini galleries.
    Also disables text/image selection so dragging across card copy
@@ -986,12 +1034,14 @@
   * {
   cursor: grabbing;
 }
+
 .package-stations-browser.is-enhanced
   .package-stations-card-list.package-stations-card-list-dragging {
   scroll-behavior: auto;
   user-select: none;
   -webkit-user-select: none;
 }
+
 /* The other half of the same correction, and the reason it needs its
    own class rather than riding on -dragging above: snapping has to
    stay off LONGER than the drag does.
@@ -1121,12 +1171,14 @@
 .package-stations-browser.is-enhanced .package-stations-carousel-nav {
   display: flex;
   align-items: center;
+
   /* No justify-content: the rail is flex:1 and takes all the slack
      itself, which is what holds the arrows hard left and the count
      hard right without space-between deciding it for them. */
   gap: 18px;
   margin-top: clamp(18px, 2.2vw, 26px);
 }
+
 /* A CONTROLS ROW, not a counter and two buttons (2026-09-28).
    Arrows left, a progress rail taking the slack, the count right —
    which is .carousel-controls on the homepage, beat for beat
@@ -1147,12 +1199,14 @@
   overflow: hidden;
   background: rgba(var(--limestone-rgb), 0.14);
 }
+
 .package-stations-carousel-progress i {
   position: absolute;
   inset: 0;
   background: var(--gold-gradient);
   transform-origin: left;
   transform: scaleX(0);
+
   /* 0.8s, the homepage rail's own timing. Slower than the 0.4s
      the arrows and the index rows use on purpose: this is the one
      thing in the row that describes a JOURNEY rather than a state,
@@ -1160,6 +1214,7 @@
      than as a position moving. */
   transition: transform 0.8s var(--ease);
 }
+
 /* The count itself is the price treatment, reused. This page
    already pairs a gradient-Fraunces figure with a small quiet unit
    sixteen times over (.package-station-price-amount +
@@ -1178,6 +1233,7 @@
   gap: 3px;
   font-variant-numeric: tabular-nums;
 }
+
 .package-stations-carousel-counter-current {
   font-family: "Fraunces", Georgia, serif;
   font-size: clamp(22px, 2.2vw, 26px);
@@ -1188,6 +1244,7 @@
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+
 /* FRAUNCES, not Inter (corrected 2026-09-28). Inter was a
    mis-copy: the pairing this was modelled on is
    .package-station-price-amount + .package-station-price-unit,
@@ -1204,11 +1261,13 @@
   letter-spacing: 0.02em;
   color: var(--station-faint);
 }
+
 .package-stations-carousel-buttons {
   flex: none;
   display: flex;
   gap: 8px;
 }
+
 /* BROUGHT INTO LINE WITH THE SITE (2026-09-28). This was a fourth,
    one-off arrow treatment, and — the part that mattered — it was
    the LIGHT-ground recipe used on a dark ground: a 1px limestone
@@ -1280,13 +1339,16 @@
     border-color 0.3s var(--ease),
     opacity 0.3s var(--ease);
 }
+
 .package-stations-carousel-arrow:disabled {
   opacity: 0.35;
+
   /* cursor: auto, not not-allowed — a disabled arrow isn't an
      error, just not the current actionable option (docs/design/
      design-system.md, "Interaction"). */
   cursor: auto;
 }
+
 /* Inverted, not just deepened (2026-09-30, on request) — was
    background: var(--ink); color: var(--gold), the same dark
    chip only more solid. A flat var(--gold) fill (not
@@ -1308,6 +1370,7 @@
     border-color: var(--gold);
   }
 }
+
 @media (--no-hover) {
   .package-stations-carousel-arrow:not(:disabled):active {
     background: var(--gold);
@@ -1393,9 +1456,11 @@
 .package-stations-index {
   display: none;
 }
+
 @media (--from-desktop) {
   .package-stations-browser.is-enhanced .package-stations-browser-body {
     display: grid;
+
     /* clamp(225px, 22.5vw, 300px), narrowed from clamp(240px, 24vw,
        320px) on 2026-09-28 alongside the index row copy shrinking a
        step (see .package-stations-index-row-name/-price and
@@ -1479,6 +1544,7 @@
        unaffected by anything the ceiling does), roughly +8px at
        1180px, +9px once the index reaches its now-lower cap. */
     grid-template-columns: clamp(225px, 21vw, 280px) minmax(0, 1fr);
+
     /* NARROWED 2026-09-28, on request — there was real width being
        spent here beyond what separating a picker from a scroller
        needs. clamp(24px, 3vw, 40px), down from clamp(32px, 4.2vw,
@@ -1511,6 +1577,7 @@
     padding-top: 6px;
   }
 }
+
 /* Six of these stack down a narrow column, each one gold-gradient
    text plus a 34px gold rule — so this component multiplies the
    eyebrow far more than any other place on the site uses it, and
@@ -1533,9 +1600,11 @@
   letter-spacing: 0.2em;
   gap: 10px;
 }
+
 .package-stations-index-group .eyebrow-static::before {
   width: 22px;
 }
+
 .package-stations-index-list {
   list-style: none;
   margin: 0;
@@ -1544,6 +1613,7 @@
   flex-direction: column;
   gap: 2px;
 }
+
 /* REWORKED 2026-09-28. Three things were wrong with the previous
    pair of states, and they compound:
 
@@ -1573,6 +1643,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+
   /* Left padding is 12px at every state; the 2px transparent
      border sits outside it, so nothing reflows when either lands. */
   padding: 7px 12px;
@@ -1587,6 +1658,7 @@
     background 0.4s var(--ease),
     border-color 0.4s var(--ease);
 }
+
 /* Sized down a step (2026-09-28): clamp(14.5px, 1.3vw, 16.5px),
    down from clamp(15.5px, 1.35vw, 17.5px) — both bounds trimmed
    ~1px, not just the ceiling. That's a different move from the
@@ -1604,6 +1676,7 @@
   font-size: clamp(14.5px, 1.3vw, 16.5px);
   line-height: 1.2;
   letter-spacing: -0.01em;
+
   /* 0.72, down from 0.86. Sixteen names at near-full brightness
      made the whole column read as primary content competing with
      the cards beside it. Dimming the resting state also does most
@@ -1613,6 +1686,7 @@
   transition:
     transform 0.45s var(--ease),
     color 0.3s var(--ease);
+
   /* Added 2026-09-30, on request, once the added-marker badge grew
      a couple of passes running — without this, a flex child with
      no explicit sizing wraps to a second line rather than shrink
@@ -1631,6 +1705,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 /* Upgraded from a bare gold tick glyph to a filled badge (2026-09-30,
    on request, "make it stand out more, something a bit more
    stylish") — same circular-badge language as .package-veg-marker
@@ -1692,12 +1767,15 @@
   color: var(--ink);
   stroke-width: 2.6;
 }
+
 .package-stations-index-row-added-marker[hidden] {
   display: none;
 }
+
 .package-stations-index-row-spacer {
   flex-grow: 1;
 }
+
 /* Same step down as the name beside it: clamp(13px, 1.2vw, 14.5px),
    from clamp(14px, 1.3vw, 15.5px) — both bounds -1px, vw trimmed
    proportionally to match. */
@@ -1706,6 +1784,7 @@
   font-size: clamp(13px, 1.2vw, 14.5px);
   color: rgba(var(--limestone-rgb), 0.5);
 }
+
 /* The history, since two earlier calls are being reversed here and
    the reasons are worth not relitigating: this started as the full
    --gold-gradient pill, on the argument that gold-gradient is
@@ -1726,10 +1805,12 @@
   background: rgba(var(--limestone-rgb), 0.07);
   border-left-color: var(--gold);
 }
+
 .package-stations-index-row[aria-current="true"] .package-stations-index-row-name {
   font-weight: 400;
   color: var(--limestone-2);
 }
+
 /* SUPERSEDED 2026-09-28 — price and "pp" no longer match the
    NAME's colour. Two passes earlier this was var(--limestone-2),
    reasoned as "brighten like the text" applied literally. On
@@ -1746,6 +1827,7 @@
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+
 /* var(--muted), matching the CARD's own .package-station-price-
    unit (the long-form "per person" label) rather than name's
    brightness — the card's own unit treatment, reused, not a
@@ -1758,6 +1840,7 @@
 .package-stations-index-row[aria-current="true"] .package-station-price-unit-short {
   color: var(--muted);
 }
+
 /* Hover is a quieter draft of current — a third of the surface
    tint, no border, and the only movement in either state. The nudge
    is on the NAME rather than the row because the row is now a
@@ -1799,6 +1882,7 @@
     color: var(--muted);
   }
 }
+
 /* Touch gets the same surface on press but no nudge — a 3px slide
    under a finger that is covering the row communicates nothing
    (the sticky touch hover's family: state that only makes sense with a pointer).
@@ -1891,6 +1975,7 @@
     position: relative;
     margin: 0;
     min-height: 100%;
+
     /* The whole photograph opens the lightbox, not just the small
        round button in its corner — the button stays as the
        keyboard and screen-reader route and as the visible hint,
@@ -2068,6 +2153,7 @@
     position: static;
     display: block;
     height: auto;
+
     /* 5/4 — the exact inverse of the sources' native 4:5 portrait
        (880x1100), which is a useful thing to know when retuning
        this: the box is as landscape as the photograph is portrait.
@@ -2157,6 +2243,7 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: clamp(24px, 2.8vw, 32px);
     row-gap: 8px;
+
     /* A flat 14.5px, not a clamp — the exact size .tab-panel li
        uses in styles.css, which is the component the ingredient
        lists on all four package pages reuse. These two lists end up
@@ -2187,6 +2274,7 @@
   .package-stations-stage-body .package-station-item-list li::before {
     content: "—";
     margin-right: 0.55em;
+
     /* Flat --gold, matching .tab-panel li::before in styles.css —
        the bullet on the ingredient lists across all four package
        pages, which reuse that component as-is.
@@ -2227,6 +2315,7 @@
 .package-stations-thumbnails {
   display: none;
 }
+
 @media (--from-tablet) and (--below-stations-desktop) {
   .package-stations-browser.is-enhanced .package-stations-thumbnails {
     list-style: none;
@@ -2237,9 +2326,11 @@
     padding: 0;
   }
 }
+
 .package-stations-thumbnails li[hidden] {
   display: none;
 }
+
 .package-stations-thumbnail {
   width: 100%;
   display: flex;
@@ -2252,12 +2343,14 @@
   cursor: pointer;
   color: inherit;
 }
+
 .package-stations-thumbnail-figure {
   display: block;
   border-radius: var(--radius-card);
   overflow: hidden;
   transition: box-shadow 0.45s var(--ease);
 }
+
 .package-stations-thumbnail-figure img {
   display: block;
   width: 100%;
@@ -2268,6 +2361,7 @@
     filter 0.6s var(--ease),
     transform 0.9s var(--ease);
 }
+
 /* A space-between row, and deliberately back to one after a stacked
    version was tried and rejected on 2026-09-25. Worth knowing so it
    isn't re-proposed: at 700px these four columns are ~147px wide and
@@ -2283,18 +2377,21 @@
   align-items: baseline;
   gap: 8px;
 }
+
 .package-stations-thumbnail-name {
   font-family: "Fraunces", Georgia, serif;
   font-size: clamp(15px, 2vw, 17px);
   line-height: 1.15;
   color: rgba(var(--limestone-rgb), 0.7);
 }
+
 .package-stations-thumbnail-price {
   flex: none;
   font-family: "Fraunces", Georgia, serif;
   font-size: clamp(14px, 1.8vw, 15px);
   color: rgba(var(--limestone-rgb), 0.55);
 }
+
 /* SUPERSEDED (2026-09-29) — used to be a detached double ring
    (0 0 0 2px var(--ink-2), 0 0 0 4px var(--gold)), the section's own
    dark ground standing in for the gap between the image and the
@@ -2310,9 +2407,11 @@
     0 0 0 2px var(--gold),
     0 10px 22px -10px rgba(var(--gold-rgb), 0.55);
 }
+
 .package-stations-thumbnail[aria-pressed="true"] .package-stations-thumbnail-name {
   color: var(--limestone-2);
 }
+
 /* Gold-gradient clipped text on request (2026-09-30) — same recipe
    as .package-stations-index-row[aria-current="true"] .package-
    stations-index-row-price uses for its own "selected" cost, reused
@@ -2324,6 +2423,7 @@
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+
 /* Was muted-at-rest (grayscale 0.3 / brightness 0.9) lifting back
    to `filter: none` on hover, on the grounds that .gallery-item
    did the same. It no longer does: styles.css dropped that pattern
@@ -2419,6 +2519,7 @@
 .package-stations-hybrid-desktop {
   display: none;
 }
+
 @media (--from-stations-desktop) {
   .package-stations-hybrid-mobtab {
     display: none;
@@ -2446,6 +2547,7 @@
     display: none;
   }
 }
+
 /* SLIDING PILL, matching reception-package.html's .tab-bar tier
    switcher (2026-09-29) — replaces the flat per-button gold-
    gradient fill this used to set directly on [aria-selected="true"]
@@ -2471,6 +2573,7 @@
 .package-stations-hybrid-mobtab .package-stations-category-tabs {
   position: relative;
 }
+
 /* Fully rounded, matching reception-package.html's Daisy/Lavender/
    Rose tier switcher (.package-tabs-tabbar in that file) — its own
    track/button/pill radius trio, all var(--radius-pill), ported
@@ -2498,6 +2601,7 @@
     border-radius: var(--radius-pill);
   }
 }
+
 /* TABLET ONLY (2026-09-29): the track fills the full width of its
    column here instead of sizing to its own content (base rule:
    width: max-content) — there's real room to spare at 621-859.98px
@@ -2519,6 +2623,7 @@
     width: 100%;
   }
 }
+
 /* top/bottom: 5px replaced with top/left: 0 plus a JS-set height
    (2026-09-29) — the fixed inset only worked for a single row,
    where "container edge + 5px" and "this button's own edge" were
@@ -2543,6 +2648,7 @@
     height 0.55s var(--ease);
   z-index: 0;
 }
+
 .package-stations-hybrid-mobtab .package-stations-category-tab {
   position: relative;
   z-index: 1;
@@ -2551,9 +2657,11 @@
   justify-self: stretch;
   text-align: center;
 }
+
 .package-stations-hybrid-mobtab .package-stations-category-tab[aria-selected="true"] {
   color: var(--ink);
 }
+
 @media (--from-tablet) {
   .package-stations-hybrid-mobtab
     .package-stations-browser.is-enhanced
@@ -2561,11 +2669,13 @@
     display: none;
   }
 }
+
 .package-stations-hybrid-mobtab
   .package-stations-browser.is-enhanced
   .package-stations-carousel-nav {
   justify-content: space-between;
 }
+
 /* Flat 14px, not the clamp(15px, 1.5vw, 16px) this used to be
    (2026-09-29) — that clamp's crossover doesn't land until a
    1000px viewport, so it was already flat 15px across every width
@@ -2605,6 +2715,7 @@
   columns: 2;
   column-gap: 8px;
 }
+
 .package-station-card .package-station-item-list li {
   position: relative;
   display: block;
@@ -2612,9 +2723,11 @@
   margin-bottom: 8px;
   break-inside: avoid;
 }
+
 .package-station-card .package-station-item-list li:last-child {
   margin-bottom: 0;
 }
+
 .package-station-card .package-station-item-list li::before {
   position: absolute;
   left: 0;
@@ -2622,14 +2735,17 @@
   content: "—";
   color: var(--gold);
 }
+
 .package-station-card .package-station-item-list li:not(:last-child)::after {
   content: none;
 }
+
 .package-station-card .package-station-item-list li .package-veg-marker {
   margin-inline-start: 2px;
   width: 1.4em;
   height: 1.4em;
   font-size: 0.65em;
+
   /* -1.5px, up another 0.5px from -1px (2026-09-30, on request). */
   margin-block-start: -1.5px;
 }
@@ -2695,6 +2811,7 @@
 .package-stations-hybrid-desktop .package-stations-index-row-name {
   font-size: 16.5px;
 }
+
 .package-stations-hybrid-desktop .package-stations-index-row-price {
   font-size: 14.5px;
 }
@@ -2902,10 +3019,12 @@
   font-size: 14px;
   color: var(--oxblood-on-dark);
 }
+
 .package-stations-photo-note svg {
   flex: none;
   margin-top: 2px;
 }
+
 /* Second note stacked under the photography one. Tighter leading
    than a single-line callout wants, since this one runs to several
    sentences. */
@@ -2913,6 +3032,7 @@
   margin-top: 12px;
   line-height: 1.5;
 }
+
 /* Third note, same stacking as the veg one above (2026-09-30, on
    request, ahead of this merge) —
    the six category labels are our own editorial grouping, not the

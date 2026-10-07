@@ -19,6 +19,7 @@
   text-align: center;
   padding: 10px;
 }
+
 .package-dish-placeholder-initials {
   font-family: "Fraunces", Georgia, serif;
   font-size: clamp(26px, 4.5vw, 40px);
@@ -27,6 +28,7 @@
   line-height: 1;
   color: rgba(var(--limestone-rgb), 0.3);
 }
+
 .package-dish-placeholder-note {
   font-family: "Inter", sans-serif;
   font-size: 9px;
@@ -35,6 +37,7 @@
   text-transform: uppercase;
   color: rgba(var(--oxblood-on-dark-rgb), 0.85);
 }
+
 @media (--below-tablet) {
   .package-dish-placeholder-note {
     display: none;

@@ -171,24 +171,29 @@ import Button from "@components/ui/Button.astro"
   :global(.loaded) .hero-text-mask > :global(span) {
     transform: translateY(0);
   }
+
   @keyframes rise {
     to {
       transform: translateY(-115%);
     }
   }
+
   @keyframes cue {
     0% {
       transform: scaleY(0);
       transform-origin: top;
     }
+
     50% {
       transform: scaleY(1);
       transform-origin: top;
     }
+
     51% {
       transform: scaleY(1);
       transform-origin: bottom;
     }
+
     100% {
       transform: scaleY(0);
       transform-origin: bottom;

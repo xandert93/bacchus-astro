@@ -8,6 +8,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 /* Two columns, not the siblings' three: wine entries carry a tasting
    note each, which needs a measure a third of the wrap can't give it. */
 @media (--from-desktop) {
@@ -15,6 +16,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 /* Each category opens with the catalogue's own framing sentence — what
    the package is based on, what every bar option includes, or the fact
    that themed bars sit outside the open bar. Real copy, so it leads the
@@ -34,6 +36,7 @@
   font-size: 15px;
   color: var(--muted);
 }
+
 /* A wine is a name, a grape, a producer and a tasting note — four facts,
    not one line of text, so each <li> stacks them instead of running them
    together. The meta line is Inter (UI chrome, per the 3-font split in
@@ -43,9 +46,11 @@
 .package-wine-note {
   display: block;
 }
+
 .package-wine-name {
   color: var(--limestone-2);
 }
+
 .package-wine-meta {
   margin-top: 3px;
   font-family: "Inter", sans-serif;
@@ -55,12 +60,14 @@
   text-transform: uppercase;
   color: var(--gold-2);
 }
+
 .package-wine-note {
   margin-top: 7px;
   font-size: 13.5px;
   line-height: 1.55;
   color: var(--muted);
 }
+
 /* The catalogue prints each themed bar's "service of five ..." line as a
    subhead above its list. Kept as the list's own first item so it sits
    inside the same divided rhythm, but italic and unbulleted so it still
@@ -68,6 +75,7 @@
 .package-group-subhead {
   color: var(--muted);
 }
+
 /* (0,2,2) beats .tab-panel li::before's (0,1,2), so the bullet is
    suppressed by specificity rather than by source order. */
 .package-menu-group ul li.package-group-subhead::before {

@@ -163,6 +163,7 @@ const OCCASIONS = [
   */
   .tabs-bar {
     border-radius: var(--radius-pill);
+
     /* Matches #events .section-head's own margin-bottom (32px) rather than
            the shared .tab-bar clamp(18-24px) above — .tabs-bar is only ever used
            here, so this is effectively an #events-specific value already.
@@ -206,6 +207,7 @@ const OCCASIONS = [
     aspect-ratio: 4/5;
     border-radius: 260px 260px 6px 6px;
     overflow: hidden;
+
     /* .tab-panel no longer sets align-items: center (removed so the text
            column isn't force-stretched/centered against a taller image row) —
            but that leaves .arch-tab's own height subject to stretch too, which
