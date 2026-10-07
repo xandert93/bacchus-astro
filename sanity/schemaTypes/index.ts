@@ -1,65 +1,82 @@
 import type { SchemaTypeDefinition } from "sanity"
 
-// --- Reusable objects -------------------------------------------------------
-import provenance from "./objects/provenance"
-import price from "./objects/price"
-import seo from "./objects/seo"
-import capacity from "./objects/capacity"
-import catalogueVariance from "./objects/catalogueVariance"
-import consentRecord from "./objects/consentRecord"
-import statusEvent from "./objects/statusEvent"
-import menuItem from "./objects/menuItem"
-import wineEntry from "./objects/wineEntry"
-import menuGroup from "./objects/menuGroup"
-import packageNote from "./objects/packageNote"
-import signatureDish from "./objects/signatureDish"
-import emphasisedQuote from "./objects/emphasisedQuote"
-import quoteLineItem from "./objects/quoteLineItem"
-import paymentRecord from "./objects/paymentRecord"
-import restaurantDish from "./objects/restaurantDish"
+// Shared — used across more than one feature.
+import provenance from "./shared/provenance.object"
+import price from "./shared/price.object"
+import seo from "./shared/seo.object"
+import catalogueVariance from "./shared/catalogueVariance.object"
 
-// --- Documents --------------------------------------------------------------
-import booking from "./documents/booking"
-import waitlistEntry from "./documents/waitlistEntry"
-import venueClosure from "./documents/venueClosure"
-import quote from "./documents/quote"
-import weddingPackage from "./documents/weddingPackage"
-import packageTier from "./documents/packageTier"
-import stationCategory from "./documents/stationCategory"
-import station from "./documents/station"
-import venueSpace from "./documents/venueSpace"
-import addOn from "./documents/addOn"
-import galleryImage from "./documents/galleryImage"
-import testimonial from "./documents/testimonial"
-import supplier from "./documents/supplier"
-import guideArticle from "./documents/guideArticle"
-import faq from "./documents/faq"
-import restaurantMenuSection from "./documents/restaurantMenuSection"
+// Bookings and the waitlist.
+import booking from "./bookings/booking.document"
+import waitlistEntry from "./bookings/waitlistEntry.document"
+import consentRecord from "./bookings/consentRecord.object"
+import statusEvent from "./bookings/statusEvent.object"
 
-// --- Singletons -------------------------------------------------------------
-import siteSettings from "./singletons/siteSettings"
-import weddingPolicy from "./singletons/weddingPolicy"
+// Quotes and payment.
+import quote from "./quotes/quote.document"
+import quoteLineItem from "./quotes/quoteLineItem.object"
+import paymentRecord from "./quotes/paymentRecord.object"
+
+// Wedding packages, their menus and the reception stations.
+import weddingPackage from "./packages/weddingPackage.document"
+import packageTier from "./packages/packageTier.document"
+import station from "./packages/station.document"
+import stationCategory from "./packages/stationCategory.document"
+import menuGroup from "./packages/menuGroup.object"
+import menuItem from "./packages/menuItem.object"
+import wineEntry from "./packages/wineEntry.object"
+import packageNote from "./packages/packageNote.object"
+import signatureDish from "./packages/signatureDish.object"
+
+// The venue itself.
+import venueSpace from "./venue/venueSpace.document"
+import venueClosure from "./venue/venueClosure.document"
+import addOn from "./venue/addOn.document"
+import capacity from "./venue/capacity.object"
+
+// Editorial content.
+import galleryImage from "./editorial/galleryImage.document"
+import testimonial from "./editorial/testimonial.document"
+import guideArticle from "./editorial/guideArticle.document"
+import faq from "./editorial/faq.document"
+import supplier from "./editorial/supplier.document"
+import emphasisedQuote from "./editorial/emphasisedQuote.object"
+
+// Restaurant side, parked until the events side is finished.
+import restaurantMenuSection from "./restaurant/restaurantMenuSection.document"
+import restaurantDish from "./restaurant/restaurantDish.object"
+
+// Edited in place, one document each.
+import siteSettings from "./settings/siteSettings.document"
+import weddingPolicy from "./settings/weddingPolicy.document"
 
 /**
  * Schema registry.
  *
+ * Files are grouped by feature rather than by kind, because that is the axis
+ * anyone maintaining this navigates by: a change to how bookings work touches
+ * the booking document, its consent record and its status history, and those
+ * now sit together. The `.document.ts` and `.object.ts` suffixes keep the
+ * distinction that grouping would otherwise hide, and it is a load-bearing
+ * one — a document is a top-level thing staff create and edit in the sidebar,
+ * an object only ever exists nested inside something else and never appears
+ * on its own.
+ *
  * There is deliberately NO `availability` type, and that is the single most
  * important thing to know about this schema. The public calendar's three
- * states — Available / Enquiries received / Booked — are derived at query time
- * from booking records, never stored. A calendar held as its own documents is
- * one a human has to keep in sync by hand, and it will be wrong. See
- * `queries/availability.ts` for the derivation.
+ * states — Available / Enquiries received / Booked — are derived at query
+ * time from booking records, never stored. A calendar held as its own
+ * documents is one a human has to keep in sync by hand, and it will be wrong.
+ * See `queries/availability.ts` for the derivation.
  *
  * Also deliberately absent, each for its own reason:
  *
- *   navigation      Item counts are load-bearing in the proposed three-column
- *                   panels (three Restaurant rows, six Events rows), so an
- *                   editable list is an editable way to break the layout. The
- *                   structure is also not signed off. Stays in code.
+ *   navigation      Item counts are load-bearing in the three-column panels
+ *                   (three Restaurant rows, six Events rows), so an editable
+ *                   list is an editable way to break the layout. Stays in
+ *                   code.
  *   gift vouchers,  Restaurant-side commerce is parked, and the
- *   products        Stripe-versus-Shopify question is genuinely open. Modelling
- *                   a catalogue now would be designing for a decision nobody
- *                   has made.
+ *   products        Stripe-versus-Shopify question is genuinely open.
  *   page layout     Column counts, sticky switchers, the arch shape, reveal
  *                   timings. All consequences of the content or of measured
  *                   breakpoints. A CMS toggle for any of them invites someone
@@ -72,43 +89,45 @@ import weddingPolicy from "./singletons/weddingPolicy"
  *                   made a wording fix silently miss half its occurrences.
  */
 export const schemaTypes: SchemaTypeDefinition[] = [
-  // Objects
   provenance,
   price,
   seo,
-  capacity,
   catalogueVariance,
-  consentRecord,
-  statusEvent,
-  menuItem,
-  wineEntry,
-  menuGroup,
-  packageNote,
-  signatureDish,
-  emphasisedQuote,
-  quoteLineItem,
-  paymentRecord,
-  restaurantDish,
 
-  // Documents
   booking,
   waitlistEntry,
-  venueClosure,
+  consentRecord,
+  statusEvent,
+
   quote,
+  quoteLineItem,
+  paymentRecord,
+
   weddingPackage,
   packageTier,
-  stationCategory,
   station,
+  stationCategory,
+  menuGroup,
+  menuItem,
+  wineEntry,
+  packageNote,
+  signatureDish,
+
   venueSpace,
+  venueClosure,
   addOn,
+  capacity,
+
   galleryImage,
   testimonial,
-  supplier,
   guideArticle,
   faq,
-  restaurantMenuSection,
+  supplier,
+  emphasisedQuote,
 
-  // Singletons
+  restaurantMenuSection,
+  restaurantDish,
+
   siteSettings,
   weddingPolicy,
 ]
