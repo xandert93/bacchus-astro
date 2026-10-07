@@ -15,7 +15,7 @@ version is in `CLAUDE.md`; this is the full map.
   `menuBackgroundImage`, `showVisitSection`, `checkout` (SiteHeader's
   checkout bar, filled from the `header` slot, and no drawer) and `noIndex`.
   Has a named slot `after-footer` for page overlays.
-- `/secure-booking`, the deposit page, is a checkout: brand-only bar, no
+- `/secure-booking`, the deposit page (a draft), is a checkout: brand-only bar, no
   drawer, kept out of search results, never linked from the site. It reads
   the placeholder booking in `src/data/demo-booking.ts`.
 - **Pages compose; components hold the markup.** A page file is frontmatter
@@ -51,8 +51,10 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   every draft and prototype sandbox by stage. The footer links to it only
   when drafts are built (`import.meta.env.DRAFTS_INCLUDED`). Prototype copies
   show only on a machine that has `public/prototype/`.
-- **Finishing a draft**: move its page into `src/pages/`, remove its
-  registry entry, and add it to `tests/e2e/pages.spec.ts`.
+- **Tests**: the Playwright build includes drafts, so a draft goes in
+  `tests/e2e/pages.spec.ts` like any page.
+- **Finishing a draft**: move its page into `src/pages/` and remove its
+  registry entry.
 
 ---
 
@@ -158,13 +160,12 @@ Every button is `<Button>` (`ui/Button.astro`).
   owner sits beside that owner and is named after it
   (`packages/PackageTierSection.css` beside `PackageTierSection.astro`). A
   page's own file sits beside the page with a leading underscore
-  (`_beverage.css`, `_gallery.js`, `_secure-booking.css`), which Astro never
+  (`_beverage.css`, `_gallery.js`; a draft's `_secure-booking.css`), which Astro never
   treats as a route. `src/styles/` holds only files with no single owner:
   `global.css` and the shared `tabs.css` and `gallery-grid.css`.
 - **`_secure-booking.css` is one page-level stylesheet**, not a `<style>` per
   component: it was ported whole, in its own `secure-booking-*` namespace.
-  Splitting it into the components is a later pass. Where one of its rules
-  styles a `<Button>`, it needs three classes to beat Button's scoped two.
+  Splitting it into the components is a later pass.
 - **Elements without the file's scoping attribute need `:global()`.** That
   means elements a script creates (calendar cells, particles, the
   testimonial quote's `<em>`) and elements rendered through a slot or by a
