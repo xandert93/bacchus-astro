@@ -35,5 +35,6 @@ of `global.css` (or out of another file with `--from <file>`, or copies with
   seeded statuses are relative to today), so re-take it.
 - Playwright failing with "Target page, context or browser has been closed"
   is the machine running out of headroom with too many parallel browsers,
-  not the site: `--workers=2` passes.
+  not the site. `playwright.config.ts` now runs two at a time for this
+  reason; if it still happens, close other heavy apps and re-run.
 - Node in Git Bash: `/tmp` means `C:\tmp`, not Git Bash's `/tmp`.
