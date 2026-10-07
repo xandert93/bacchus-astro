@@ -175,7 +175,7 @@ export default defineType({
       type: "string",
       group: "client",
       description:
-        'Not collected by the form today. Quotes and the deposit page address a couple ("Bertha & Alex"), so this is where that second name would live rather than being parsed out of a single field.',
+        'Optional, and only worth asking for where it makes sense — a wedding, chiefly. Quotes and the deposit page address a couple ("Bertha & Alex"), so the second name lives here rather than being parsed back out of a single field. Left empty, a quote is addressed to the enquirer alone; nothing downstream requires it.',
     }),
     defineField({
       name: "email",

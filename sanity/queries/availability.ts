@@ -37,10 +37,13 @@
  *    the `weddingPolicy` singleton. The minimum notice is currently a
  *    placeholder (three months) and the horizon is two years.
  *
- * One deliberate omission to decide on: `venueClosure`. The closure query is
- * written below but is NOT folded into the status map, because closures are a
- * proposed addition rather than something the project has agreed to. Opt in by
- * uncommenting the merge in `deriveStatuses`.
+ * 6. CLOSURES BLOCK A DATE TOO, and they win over everything including a
+ *    confirmed booking. A date can be unavailable for a reason that is not a
+ *    booking — the hall repairs expected in 2027 being the case already on
+ *    record — and the alternative to modelling that is a fake booking, which
+ *    corrupts the data quotes, testimonials and reporting all read. If a
+ *    closure and a confirmed booking collide, the booking is a problem for
+ *    staff to resolve, not a reason to show the date as free.
  */
 
 /** The three states the calendar renders, named as the existing CSS expects. */
@@ -77,7 +80,7 @@ export const weddingDateStatusesQuery = /* groq */ `
 }
 `
 
-/** Closures overlapping the window. See rule 5 above — not yet wired in. */
+/** Closures overlapping the window. See rule 6 above. */
 export const closureRangesQuery = /* groq */ `
 *[
   _type == "venueClosure" &&
@@ -100,53 +103,60 @@ export const availabilityPolicyQuery = /* groq */ `
 }
 `
 
+export interface ClosureRange {
+  startDate: string
+  endDate: string
+}
+
+/** Every ISO date from start to end, inclusive. */
+export const eachDate = (startIso: string, endIso: string): string[] => {
+  const dates: string[] = []
+  const cursor = new Date(`${startIso}T00:00:00Z`)
+  const end = new Date(`${endIso}T00:00:00Z`)
+
+  while (cursor <= end) {
+    dates.push(cursor.toISOString().slice(0, 10))
+    cursor.setUTCDate(cursor.getUTCDate() + 1)
+  }
+
+  return dates
+}
+
 /**
- * Collapse booking rows into one status per date.
+ * Collapse bookings and closures into one status per date.
  *
  * Confirmed beats pending, which is why this cannot be a simple last-write
  * map: a date with one confirmed booking and three pending enquiries is
- * Booked, regardless of row order.
+ * Booked, regardless of row order. Closures are applied last and
+ * unconditionally, because they outrank everything — see rule 6.
  */
 export const deriveStatuses = (
   rows: AvailabilityInput[],
-  // closures: {startDate: string; endDate: string}[] = [],
+  closures: ClosureRange[] = [],
 ): Record<string, AvailabilityStatus> => {
   const byDate: Record<string, AvailabilityStatus> = {}
 
   for (const row of rows) {
     if (!row?.date) continue
-    const blocking = row.status === "confirmed" || row.status === "completed"
-    if (blocking) {
+
+    const isBlocking = row.status === "confirmed" || row.status === "completed"
+
+    if (isBlocking) {
       byDate[row.date] = "taken"
     } else if (row.status === "pending" && byDate[row.date] !== "taken") {
       byDate[row.date] = "interest"
     }
   }
 
-  // Opt in to closures by uncommenting this and the parameter above. Closures
-  // win over everything, including a confirmed booking — if the venue is shut,
-  // the booking is a problem to be dealt with, not a reason to show the date
-  // as available.
-  //
-  // for (const closure of closures) {
-  //   for (const iso of eachDate(closure.startDate, closure.endDate)) {
-  //     byDate[iso] = 'taken'
-  //   }
-  // }
+  for (const closure of closures) {
+    if (!closure?.startDate || !closure?.endDate) continue
+
+    for (const date of eachDate(closure.startDate, closure.endDate)) {
+      byDate[date] = "taken"
+    }
+  }
 
   return byDate
-}
-
-/** Inclusive date range as ISO strings. */
-export const eachDate = (startIso: string, endIso: string): string[] => {
-  const out: string[] = []
-  const cursor = new Date(`${startIso}T00:00:00Z`)
-  const end = new Date(`${endIso}T00:00:00Z`)
-  while (cursor <= end) {
-    out.push(cursor.toISOString().slice(0, 10))
-    cursor.setUTCDate(cursor.getUTCDate() + 1)
-  }
-  return out
 }
 
 /**

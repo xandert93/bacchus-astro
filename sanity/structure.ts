@@ -78,6 +78,12 @@ export const structure: StructureResolver = (S) =>
               S.listItem()
                 .title("Tiers & categories")
                 .child(S.documentTypeList("packageTier").title("Tiers & categories")),
+              S.listItem()
+                .title("Dishes")
+                .child(S.documentTypeList("menuDish").title("Dishes")),
+              S.listItem()
+                .title("Seasons")
+                .child(S.documentTypeList("season").title("Seasons")),
               S.divider(),
               S.listItem()
                 .title("Stations")
@@ -184,15 +190,17 @@ export const structure: StructureResolver = (S) =>
                       '(_type == "galleryImage" && isPlaceholder == true) || (_type == "station" && image.isPlaceholder == true)',
                     ),
                 ),
-              S.listItem()
-                .title("Copy changes awaiting approval")
-                .child(
-                  S.documentList()
-                    .title("Copy changes awaiting approval")
-                    .filter(
-                      '_type == "station" && defined(catalogueVariance) && catalogueVariance.clientApproved != true',
-                    ),
-                ),
+              S.listItem().title("Copy changes awaiting approval").child(
+                // Dishes being their own documents is what lets this be one
+                // flat filter. While they were nested inside each tier's
+                // menu groups it took a traversal, and the station names
+                // were the only part a plain filter could reach.
+                S.documentList()
+                  .title("Copy changes awaiting approval")
+                  .filter(
+                    '_type in ["menuDish", "station"] && defined(catalogueVariance) && catalogueVariance.clientApproved != true',
+                  ),
+              ),
               S.listItem()
                 .title("Blocked articles")
                 .child(
