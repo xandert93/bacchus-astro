@@ -28,8 +28,8 @@ export default defineConfig({
     // Unfinished pages: built in dev and draft builds, never on the live site.
     draftPages(),
     // sitemap-index.xml: every page, for search engines to find them by
-    // (listed in public/robots.txt). Drafts aren't built for the live site,
-    // so they're never in it.
+    // (listed in /robots.txt, src/pages/robots.txt.ts). Drafts aren't built
+    // for the live site, so they're never in it.
     sitemap(),
   ],
   image: {
