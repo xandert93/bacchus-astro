@@ -15,6 +15,11 @@
 // `sizes` is required and must describe how wide the photo is drawn at each
 // breakpoint — it's how the browser chooses a file before CSS has loaded.
 // `maxWidth` caps the largest copy for photos that are only ever small.
+//
+// LAZY BY DEFAULT: the browser fetches the photo only as it nears the
+// screen, so a visitor who never scrolls down never downloads it, and the
+// photos they can see aren't sharing the connection with ones they can't. A
+// photo in the first screenful passes loading="eager" (the header's logo).
 import { getImage } from "astro:assets"
 import type { HTMLAttributes } from "astro/types"
 import { image, isWebCopyOnly } from "@lib/images"
@@ -31,7 +36,15 @@ interface Props extends ImgAttributes {
   maxWidth?: number
 }
 
-const { src: key, alt, sizes, maxWidth, decoding = "async", ...rest } = Astro.props
+const {
+  src: key,
+  alt,
+  sizes,
+  maxWidth,
+  decoding = "async",
+  loading = "lazy",
+  ...rest
+} = Astro.props
 
 const AVIF_QUALITY = 62
 const WEBP_QUALITY = 82
@@ -90,6 +103,7 @@ const height = Math.round((meta.height / meta.width) * cap)
       width={width}
       height={height}
       alt={alt}
+      loading={loading}
       decoding={decoding}
       {...rest}
     />
@@ -102,6 +116,7 @@ const height = Math.round((meta.height / meta.width) * cap)
     width={width}
     height={height}
     alt={alt}
+    loading={loading}
     decoding={decoding}
     {...rest}
   />

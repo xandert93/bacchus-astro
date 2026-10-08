@@ -19,6 +19,9 @@ How photos get from the originals to the page.
   (`${below.desktop} 100vw, 50vw`), so they always match the layout.
 - **`<picture>` is `display: contents` sitewide**, so it never affects
   layout. Any `> img` child selector needs a `> picture > img` twin.
+- **`<Photo>` is lazy by default**: the browser fetches it only as it nears
+  the screen. Only a photo in the first screenful passes `loading="eager"`
+  (the header's logo); heroes are always eager, with `fetchpriority="high"`.
 
 ---
 
