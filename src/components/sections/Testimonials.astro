@@ -2,6 +2,7 @@
 import Particles from "@components/ui/Particles.astro"
 import Photo from "@components/ui/Photo.astro"
 import { getTestimonials } from "@lib/sanity/testimonials"
+import { toScriptJson } from "@lib/script-json"
 // "From our guestbook" rotator. The picker cards and dots are rendered here
 // from the published testimonials in Sanity; Testimonials.js fills the
 // active quote and its meta line (the quote is measured in the browser to
@@ -13,10 +14,6 @@ interface Props {
 const { backgroundImage } = Astro.props
 
 const testimonials = await getTestimonials()
-
-// The same list for Testimonials.js, as JSON in the page. "<" is escaped so
-// a quote can never close the element it sits in.
-const testimonialsJson = JSON.stringify(testimonials).replace(/</g, "\\u003c")
 ---
 
 <section class="section-padding quote testimonials" id="testimonials">
@@ -122,7 +119,12 @@ const testimonialsJson = JSON.stringify(testimonials).replace(/</g, "\\u003c")
       </button>
     </div>
   </div>
-  <script type="application/json" id="testimonialsData" set:html={testimonialsJson} />
+  {/* The same list, as JSON for Testimonials.js. */}
+  <script
+    type="application/json"
+    id="testimonialsData"
+    set:html={toScriptJson(testimonials)}
+  ></script>
 </section>
 
 <script>
