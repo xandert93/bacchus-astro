@@ -10,6 +10,7 @@
     "dev:host": "astro dev --port 3000 --host 0.0.0.0",
     "build": "astro build",
     "preview": "astro preview",
+    "preview:host": "npm run build && astro preview --host",
     "astro": "astro",
     "check": "astro check",
     "lint": "eslint . --cache && stylelint \"src/**/*.{css,astro}\"",
