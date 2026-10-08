@@ -1,6 +1,8 @@
 ---
 // Facebook + Instagram. Used in the mobile drawer and the footer, which
 // differ only by an extra class on the wrapper - hence the `class` prop.
+import { CONTACT } from "@data/contact"
+
 interface Props {
   class?: string
 }
@@ -9,7 +11,7 @@ const { class: extraClass } = Astro.props
 
 <div class:list={["social-links", extraClass]}>
   <a
-    href="https://www.facebook.com/bacchusMdina"
+    href={CONTACT.social.facebook}
     target="_blank"
     rel="noopener"
     aria-label="Bacchus on Facebook"
@@ -19,7 +21,7 @@ const { class: extraClass } = Astro.props
     </svg>
   </a>
   <a
-    href="https://www.instagram.com/bacchus_mdina/"
+    href={CONTACT.social.instagram}
     target="_blank"
     rel="noopener"
     aria-label="Bacchus on Instagram"

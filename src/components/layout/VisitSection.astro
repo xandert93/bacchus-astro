@@ -1,7 +1,7 @@
 ---
 // "Come and see it for yourself" - identical on every page in the prototype.
 import Photo from "@components/ui/Photo.astro"
-import { CONTACT } from "@data/contact"
+import { ADDRESS_LINE, CONTACT } from "@data/contact"
 import { below } from "@lib/media-queries.js"
 ---
 
@@ -45,7 +45,7 @@ import { below } from "@lib/media-queries.js"
             </span>
             Where
           </span>
-          <span class="visit-value">1 Inguanez Street, Mdina MDN 1000, Malta</span>
+          <span class="visit-value">{ADDRESS_LINE}</span>
         </div>
         <div>
           <span class="visit-label">
