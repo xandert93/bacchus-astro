@@ -53,7 +53,7 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   when drafts are built (`import.meta.env.DRAFTS_INCLUDED`). Prototype copies
   show only on a machine that has `public/prototype/`.
 - **Tests**: the Playwright build includes drafts, so a draft goes in
-  `tests/e2e/pages.spec.ts` like any page.
+  `tests/e2e/site-pages.ts` like any page.
 - **Finishing a draft**: move its page into `src/pages/` and remove its
   registry entry.
 

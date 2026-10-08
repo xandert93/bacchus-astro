@@ -31,6 +31,8 @@ code they cover.
   read them.
 - `docs/engineering/refactoring-tools.md`: the scripts that prove a style or
   markup refactor changed nothing.
+- `docs/engineering/seo.md`: descriptions, canonical addresses, link
+  previews, structured data and the sitemap.
 - `docs/planning/roadmap.md`: migration phases, feature order and backlog.
 - `docs/architecture/tech-stack.md`: the chosen stack and why, the live
   Shopify site, payments.
@@ -140,7 +142,9 @@ format:check`, `npm run lint` and `npm run check`, plus the one spec file
   `astro preview` on port 4322 (never the dev server). Two projects:
   `desktop` runs everything; `mobile` (Pixel 7) runs only tests tagged
   `@mobile`. Specs live in `tests/e2e/`. `pages.spec.ts` loads every page and
-  fails on any script error: **add each newly ported page to it.**
+  fails on any script error, and `seo.spec.ts` checks each one's search and
+  link-preview tags: **add each newly ported page to
+  `tests/e2e/site-pages.ts`**, the list both read.
 - When fixing a bug, add a test that fails without the fix, and confirm it
   does fail against the old code. Then add the bug to
   `docs/engineering/known-bugs.md`.
