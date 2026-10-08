@@ -1,145 +1,14 @@
 /**
- * Content queries for the public pages.
+ * Content queries not yet used by the site.
  *
  * Written alongside the schema as a proof that it answers the pages the
  * prototype already has. Where a query encodes a rule rather than just
  * fetching fields, the rule is noted.
+ *
+ * Once the site reads a type, its query moves to the module that uses it, in
+ * `src/lib/sanity/` (packages, stations, gallery and testimonials so far), so
+ * each query has one copy, beside the code that depends on its shape.
  */
-
-/**
- * One package page — Reception, Banquet, High Tea or Beverage.
- *
- * Two things this query does that a naive one would not:
- *
- *   It carries `dietaryMarking` down to the page. The renderer needs it to
- *   suppress both the (V) badges and the foot-of-page legend line together on
- *   High Tea, whose catalogue source marks no dishes at all.
- *
- *   It filters prices by `blocksPublication`. The corkage figure exists in the
- *   data and must not reach the page, because its source never said whether it
- *   was per bottle or per person. Doing that here rather than in the template
- *   means every consumer inherits it — including the PDF quote generator.
- */
-export const packagePageQuery = /* groq */ `
-*[_type == "weddingPackage" && slug.current == $slug][0]{
-  name,
-  "slug": slug.current,
-  role,
-  tierStyle,
-  dietaryMarking,
-  cardSummary,
-  heroHeading,
-  heroIntro,
-  heroImage{..., "alt": alt},
-  allergenNote,
-  notes[]{tone, body, placement, resolvesWith},
-  seo,
-  "tiers": *[_type == "packageTier" && package._ref == ^._id] | order(order asc){
-    name,
-    "slug": slug.current,
-    order,
-    summary,
-    includedNote,
-    "price": select(
-      price.provenance.blocksPublication != true => price{
-        amount, unit, isIndicative, vatIncluded, provenance
-      }
-    ),
-    seasonalRates[]{
-      price{amount, unit, isIndicative, vatIncluded, provenance},
-      season->{name, startDate, endDate, repeatsAnnually, priority}
-    },
-    menuGroups[]{
-      title,
-      note,
-      // Dishes are referenced rather than inline, so they are dereferenced
-      // here and arrive in the same shape the template had before. Wines stay
-      // inline because they never recur across categories.
-      items[]{
-        _type == "reference" => @->{"_type": "menuDish", name, isVegetarian, note},
-        _type == "wineEntry" => {_type, name, grapes, producer, tastingNote, style}
-      }
-    },
-    signatureDishes[]{name, isPlaceholderImage, image{..., "alt": alt}}
-  }
-}
-`
-
-/**
- * The reception stations, grouped by category.
- *
- * `lightboxDetail` is composed HERE, not stored. It is the serving note
- * followed by the item names joined with a middle dot — the same string the
- * current `data-detail` attribute holds by hand. Composing it in the query is
- * what keeps the sixteen stations from having two copies of their own item
- * lists, which is how a wording fix previously caught one occurrence of two
- * and looked like it had worked.
- */
-export const stationsQuery = /* groq */ `
-*[_type == "stationCategory"] | order(order asc){
-  label,
-  shortLabel,
-  "slug": slug.current,
-  labelProvenance,
-  "stations": *[_type == "station" && category._ref == ^._id] | order(order asc){
-    name,
-    "slug": slug.current,
-    servingNote,
-    allItemsVegetarian,
-    isChefsPick,
-    price{amount, unit},
-    "items": items[].name,
-    "itemsWithDiet": items[]{name, isVegetarian},
-    image{..., "alt": alt, "isPlaceholder": isPlaceholder},
-    "lightboxDetail": servingNote + " " + array::join(items[].name, " · ")
-  }
-}
-`
-
-/** The gallery, filterable. Pass `$category` as null for everything. */
-export const galleryQuery = /* groq */ `
-*[
-  _type == "galleryImage" &&
-  ($category == null || category == $category)
-] | order(coalesce(order, 9999) asc, _createdAt desc){
-  "id": _id,
-  title,
-  alt,
-  category,
-  tags,
-  year,
-  isFeatured,
-  isPlaceholder,
-  image,
-  "space": space->{name, "slug": slug.current},
-  "credit": credit->{name, websiteUrl}
-}
-`
-
-/**
- * Published testimonials for the rotator.
- *
- * `status == "published"` AND `consentName` — belt and braces on purpose.
- * Document validation already refuses to publish a named testimonial without
- * name consent, but validation can be bypassed by an API write, and this is
- * someone's real name on a real website. The read path checks too.
- */
-export const testimonialsQuery = /* groq */ `
-*[
-  _type == "testimonial" &&
-  status == "published" &&
-  consentName == true
-] | order(coalesce(order, 9999) asc){
-  "id": _id,
-  quote,
-  displayName,
-  rating,
-  location,
-  category,
-  eventDate,
-  "photo": select(consentPhoto == true => photo{..., "alt": alt})
-}
-`
 
 /**
  * FAQs for a page.
@@ -237,6 +106,13 @@ export const unresolvedFactsQuery = /* groq */ `
   "placeholderImages": *[
     (_type == "galleryImage" && isPlaceholder == true) ||
     (_type == "station" && image.isPlaceholder == true)
+  ]{_type, name, title},
+  // Photos we only have as compressed web copies: the list of originals to
+  // ask Bacchus for.
+  "webCopyImages": *[
+    (_type == "galleryImage" && isWebCopy == true) ||
+    (_type == "station" && image.isWebCopy == true) ||
+    (_type == "packageTier" && count(signatureDishes[image.isWebCopy == true]) > 0)
   ]{_type, name, title},
   "blockedArticles": *[
     _type == "guideArticle" && status == "blocked"
