@@ -1,23 +1,103 @@
 ---
 // What every page's head holds: character set, viewport, title, favicon and
-// the three web fonts. BaseLayout (every site page) and BareLayout (pages
-// without the site's chrome, like /sandboxes) both render it, so a new font
-// or meta tag is added once. Each layout keeps the head element itself, as
-// Astro's own starters do, so Astro still finds it to add the page's styles.
+// the three web fonts, plus what search engines and link previews read.
+// BaseLayout (every site page) and BareLayout (pages without the site's
+// chrome, like /sandboxes) both render it, so a new font or meta tag is
+// added once. Each layout keeps the head element itself, as Astro's own
+// starters do, so Astro still finds it to add the page's styles.
+//
+// SEARCH AND SHARING, when a page passes a description:
+//   • description: the snippet under the title in search results.
+//   • canonical: the one address this page should be listed under, so
+//     /weddings and /weddings?filter=x don't compete as two pages.
+//   • Open Graph (og:*) and Twitter tags: the title, text and photo shown
+//     when a link is shared on WhatsApp, Facebook, LinkedIn and so on.
+//   • structured data on the homepage: see src/lib/structured-data.ts.
+// Every address is absolute, built from `site` in astro.config.mjs.
+import { getImage } from "astro:assets"
+import { image } from "@lib/images"
+import { venueStructuredData } from "@lib/structured-data"
+import { toScriptJson } from "@lib/script-json"
+
 interface Props {
   title: string
+  // The search-result snippet and link-preview text. About 150 characters;
+  // search engines cut anything past roughly 160.
+  description?: string
+  // The link-preview photo, a key from src/lib/images.ts. Usually the
+  // page's hero.
+  socialImage?: string
+  // Adds the venue's structured data (address, phone, social accounts). On
+  // the homepage only, the page that stands for the business.
+  describesVenue?: boolean
   // Keeps the page out of search results, for pages that aren't meant to be
   // found (the drafts index, or a page reached only from a private link).
   noIndex?: boolean
 }
-const { title, noIndex = false } = Astro.props
+
+const DEFAULT_SOCIAL_IMAGE = "venue/ballroom-night"
+
+const {
+  title,
+  description,
+  socialImage = DEFAULT_SOCIAL_IMAGE,
+  describesVenue = false,
+  noIndex = false,
+} = Astro.props
+
+// During the build Astro.url names the file being written ("/weddings.html",
+// "/index.html"); the address visitors use has no extension ("/weddings").
+const pagePath = Astro.url.pathname.replace(/\.html$/, "").replace(/\/index$/, "/")
+const canonicalUrl = new URL(pagePath, Astro.site).href
+
+// 1200 × 630 is the shape every link preview crops to; a JPEG, because not
+// every app that renders previews can read AVIF or WebP.
+const SOCIAL_IMAGE_WIDTH = 1200
+const SOCIAL_IMAGE_HEIGHT = 630
+
+const socialImageFile = description
+  ? await getImage({
+      src: image(socialImage),
+      width: SOCIAL_IMAGE_WIDTH,
+      height: SOCIAL_IMAGE_HEIGHT,
+      fit: "cover",
+      format: "jpg",
+      quality: 80,
+    })
+  : null
+const socialImageUrl = socialImageFile && new URL(socialImageFile.src, Astro.site).href
+
+const venueData =
+  describesVenue && socialImageUrl
+    ? venueStructuredData(Astro.site!, socialImageUrl)
+    : null
 ---
 
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>{title}</title>
 {noIndex && <meta name="robots" content="noindex" />}
+{description && socialImageUrl && (
+  <>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Bacchus" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:width" content={String(SOCIAL_IMAGE_WIDTH)} />
+    <meta property="og:image:height" content={String(SOCIAL_IMAGE_HEIGHT)} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </>
+)}
+{venueData && (
+  <script type="application/ld+json" set:html={toScriptJson(venueData)}></script>
+)}
 <link rel="icon" type="image/png" href="/favicon.png" />
+<link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link

@@ -12,6 +12,12 @@ import SiteFooter from "@components/layout/SiteFooter.astro"
 
 interface Props {
   title: string
+  // The search-result snippet and link-preview text (see SiteHead).
+  description: string
+  // The link-preview photo, a key from src/lib/images.ts. Usually the hero.
+  socialImage?: string
+  // The homepage's venue details for search engines (see SiteHead).
+  describesVenue?: boolean
   showEnquireLink?: boolean
   menuBackgroundImage?: string
   // The shared "Visit Bacchus" band above the footer. Off on the package
@@ -27,6 +33,9 @@ interface Props {
 }
 const {
   title,
+  description,
+  socialImage,
+  describesVenue = false,
   showEnquireLink = false,
   menuBackgroundImage,
   showVisitSection = true,
@@ -36,9 +45,15 @@ const {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
-    <SiteHead title={title} noIndex={noIndex} />
+    <SiteHead
+      title={title}
+      description={description}
+      socialImage={socialImage}
+      describesVenue={describesVenue}
+      noIndex={noIndex}
+    />
   </head>
   <body>
     <div class="grain"></div>

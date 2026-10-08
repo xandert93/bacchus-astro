@@ -47,6 +47,8 @@ day the site goes live on Bacchus's own domain.
 - **Remove the `noindex` header.** `public/_headers` tells search engines not
   to list any page, because the `workers.dev` address is public. Left in
   place after launch, it would keep the real site out of Google.
+- **Submit the sitemap** (`https://bacchus.com.mt/sitemap-index.xml`) in
+  Google Search Console, once the domain points here.
 
 ---
 
@@ -118,11 +120,12 @@ Restaurant features (gift vouchers and so on) wait until these are done.
 
 ### Search visibility and guide articles
 
-Agreed in principle; nothing written.
+The basics are built; the guides are agreed in principle, and none is
+written.
 
-- **SEO basics come first.** No page has a meta description, canonical URL,
-  Open Graph tags or structured data (`LocalBusiness`, `Event`, `FAQPage`).
-  About a day's work, in the base layout.
+- **SEO basics: done** (2026-10-08). Descriptions, canonical addresses, link
+  previews, the venue's structured data, breadcrumbs and a sitemap; see
+  `docs/engineering/seo.md`. `Event` and `FAQPage` were left out on purpose.
 - **One page per search phrase is out.** "Wedding venues Malta", "historic
   wedding venue Malta" and similar are the same intent, and `/weddings` should
   rank for them. A page per phrase is a named Google spam pattern (doorway
