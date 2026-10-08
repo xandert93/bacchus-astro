@@ -9,7 +9,7 @@
     "build": "sanity build",
     "deploy": "sanity deploy",
     "check": "tsc --noEmit",
-    "import": "sanity dataset import import/content.ndjson"
+    "import": "sanity dataset import import/content.ndjson --replace"
   },
   "dependencies": {
     "@sanity/vision": "^6.18.0",

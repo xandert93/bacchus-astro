@@ -26,9 +26,10 @@
 
 import fs from "node:fs"
 import path from "node:path"
-import { fileURLToPath } from "node:url"
+import { fileURLToPath, pathToFileURL } from "node:url"
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
+const imagesRoot = path.join(repoRoot, "src", "assets", "images")
 const outputPath = path.join(repoRoot, "sanity", "import", "content.ndjson")
 const summaryOnly = process.argv.includes("--summary")
 
@@ -55,6 +56,53 @@ const parseAmount = (price) => {
 
 const priceUnitFor = (unit) => (/person/i.test(unit ?? "") ? "per-person" : "flat")
 
+/** "from €12" is the cheapest of several options; "€53" is a plain price. */
+const isStartingPrice = (price) => /^from\b/i.test(String(price ?? "").trim())
+
+/** "26 April 2014" -> "2014-04-26", the shape a Sanity date field stores. */
+const toIsoDate = (displayDate) => {
+  if (!displayDate) return undefined
+  const parsed = new Date(`${displayDate} 12:00 UTC`)
+
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString().slice(0, 10)
+}
+
+// The keys in src/lib/images.ts's WEB_COPY_ONLY, read from the file as text:
+// it uses Vite's import.meta.glob, so Node cannot import it. These photos are
+// already-compressed copies, and the flag tells the site not to compress them
+// again (the stations are web copies too, by folder).
+const webCopyKeys = new Set(
+  [
+    ...fs
+      .readFileSync(path.join(repoRoot, "src", "lib", "images.ts"), "utf8")
+      .matchAll(/^\s*"([a-z0-9-]+\/[a-z0-9-/]+)",$/gm),
+  ].map((match) => match[1]),
+)
+
+const isWebCopy = (key) =>
+  webCopyKeys.has(key) || key.startsWith("reception-menu/stations/")
+
+/**
+ * A photo by its key in src/lib/images.ts, as an image field the importer
+ * uploads. `_sanityAsset` is the import tool's own convention: it uploads the
+ * file, then swaps this for a reference to the stored asset. Uploads are
+ * deduplicated by content, so re-running this does not store a second copy.
+ */
+const imageField = (key, extraFields = {}) => {
+  const fileName = fs
+    .readdirSync(path.join(imagesRoot, path.dirname(key)))
+    .find((name) => name.replace(/\.(jpg|png|webp)$/, "") === path.basename(key))
+
+  if (!fileName) throw new Error(`No photo "${key}" in src/assets/images/`)
+
+  return {
+    _type: "image",
+    _sanityAsset: `image@${pathToFileURL(path.join(imagesRoot, path.dirname(key), fileName)).href}`,
+    isWebCopy: isWebCopy(key),
+    ...extraFields,
+  }
+}
+
 /**
  * Every price on the site comes from one shared client quote rather than from
  * the catalogue, so none of it is confirmed and all of it is one data point:
@@ -71,11 +119,12 @@ const quotePriceProvenance = (overrides = {}) => ({
   ...overrides,
 })
 
-const buildPrice = (amount, unit, provenance) => ({
+const buildPrice = (amount, unit, provenance, startingPrice = false) => ({
   _type: "price",
   amount,
   unit,
   isIndicative: true,
+  isStartingPrice: startingPrice,
   vatIncluded: true,
   provenance,
 })
@@ -323,6 +372,7 @@ const build = (content) => {
                       "Contested. The quote gives this figure; correspondence says banqueting begins at around €135 per person. Do not publish either as settled.",
                   })
                 : quotePriceProvenance(),
+              isStartingPrice(tier.price),
             )
 
       documents.push({
@@ -333,6 +383,7 @@ const build = (content) => {
         slug: slugField(tier.id),
         order: index + 1,
         summary: tier.description,
+        ...(tier.intro ? { intro: tier.intro } : {}),
         ...(price ? { price } : {}),
         menuGroups: tier.groups.map((group, groupIndex) => ({
           _type: "menuGroup",
@@ -357,6 +408,10 @@ const build = (content) => {
           _type: "signatureDish",
           _key: `dish-${dishIndex}-${slugify(dish.name)}`,
           name: dish.name,
+          ...(dish.category ? { course: dish.category } : {}),
+          ...(dish.photo
+            ? { image: imageField(dish.photo.src, { alt: dish.photo.alt }) }
+            : { placeholderInitials: dish.initials }),
           // No photograph yet renders a "photo to follow" tile, which is a
           // placeholder by any other name.
           isPlaceholderImage: !dish.photo,
@@ -400,6 +455,7 @@ const build = (content) => {
       name: station.name,
       slug: slugField(station.name),
       category: { _type: "reference", _ref: `stationCategory-${station.category}` },
+      catalogueNumber: station.number,
       order,
       ...(amount === null
         ? {}
@@ -426,20 +482,39 @@ const build = (content) => {
       // one-off so the section reads as finished in a pitch. The flag is what
       // keeps the on-page disclaimer attached to the image rather than to the
       // page, and puts them on the "needs a real export" list.
-      image: { _type: "image", isPlaceholder: true, alt: station.photo.alt },
+      image: imageField(station.photo.src, {
+        isPlaceholder: true,
+        alt: station.photo.alt,
+      }),
     })
   }
 
   // --- Gallery --------------------------------------------------------------
 
+  // The category's own name is what the caption shows unless a photo says
+  // otherwise, so only the photos that differ get a label.
+  const categoryTitles = {
+    weddings: "Weddings",
+    corporate: "Corporate",
+    celebrations: "Celebrations",
+    venue: "Venue",
+  }
+
   for (const [index, photo] of content.gallery.GALLERY_PHOTOS.entries()) {
+    const image = imageField(photo.src)
+    const hasOwnLabel = photo.tag !== categoryTitles[photo.category]
+
     documents.push({
       _id: `galleryImage-${slugify(photo.src)}`,
       _type: "galleryImage",
+      image: { _type: "image", _sanityAsset: image._sanityAsset },
       alt: photo.alt,
       title: photo.title,
       category: photo.category,
+      ...(hasOwnLabel ? { label: photo.tag } : {}),
+      ...(hasOwnLabel && photo.badge ? { shortLabel: photo.badge } : {}),
       isFeatured: Boolean(photo.wide),
+      isWebCopy: image.isWebCopy,
       isPlaceholder: false,
       order: index + 1,
     })
@@ -456,6 +531,7 @@ const build = (content) => {
       displayName: testimonial.name,
       rating: testimonial.rating,
       location: testimonial.location,
+      ...(toIsoDate(testimonial.date) ? { eventDate: toIsoDate(testimonial.date) } : {}),
       category: "wedding",
       // Real, client-supplied reviews, front-loaded by hand rather than
       // collected through the review-request flow — so there is no booking to
