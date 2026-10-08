@@ -1,9 +1,7 @@
 # Bacchus — Astro build
 
 Production rebuild of the Bacchus site (restaurant + events venue, Mdina,
-Malta). The vanilla HTML prototype lives next door in `../bacchus-prototype`;
-it is frozen as of 2026-10-02 except for pitch-critical fixes, so changes are
-not made in two places.
+Malta).
 
 Personal working preferences are in `CLAUDE.local.md` (gitignored).
 
