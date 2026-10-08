@@ -20,8 +20,20 @@ interface Props {
 }
 import HeroFrame from "@components/sections/HeroFrame.astro"
 import HeroImage from "@components/ui/HeroImage.astro"
+import { breadcrumbStructuredData } from "@lib/structured-data"
+import { toScriptJson } from "@lib/script-json"
 
 const { image, parent = { href: "/", label: "Home" }, crumb } = Astro.props
+
+// The same trail as structured data, for search results, which show it in
+// place of the bare URL. It always starts from Home, which the visible
+// crumb leaves out below the top level.
+const breadcrumbs = breadcrumbStructuredData(Astro.site!, [
+  { name: "Home", path: "/" },
+  ...(parent.href === "/" ? [] : [{ name: parent.label, path: parent.href }]),
+  { name: crumb },
+])
+
 const hasSecondarySub = Astro.slots.has("sub-secondary")
 const hasCtas = Astro.slots.has("ctas")
 ---
@@ -63,6 +75,8 @@ const hasCtas = Astro.slots.has("ctas")
     </div>
   )}
 </HeroFrame>
+
+<script type="application/ld+json" set:html={toScriptJson(breadcrumbs)}></script>
 
 <style>
   /* Scoped to this component. The hero's frame and the compact .hero-sm
