@@ -250,6 +250,16 @@ wire real money against an unresolved policy.
 
 ## Step 8 — hand it to the client
 
+**Deadline: the plan, before 7 November 2026.** The project is on Sanity's
+30-day Growth trial, which ends then. Private datasets are a Growth feature:
+the Free plan allows public datasets only, and `production` must stay
+private once it holds enquiries. Growth is priced per seat (each person who
+logs in), about $15 a month each at the time of writing; check
+[sanity.io/pricing](https://www.sanity.io/pricing). It should be Bacchus's
+subscription, on their organisation (see the last point below). What Sanity
+does to a private dataset when a trial lapses wasn't confirmed, so don't
+find out by letting it lapse.
+
 - Deploy the Studio so staff reach it at a URL rather than running it locally.
 - Create accounts with least-privilege roles. Reading enquiries means
   processing personal data; not everyone should be an administrator.
