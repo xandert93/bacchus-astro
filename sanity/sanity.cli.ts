@@ -1,6 +1,6 @@
 import { defineCliConfig } from "sanity/cli"
 
-import { SANITY_DATASET, SANITY_PROJECT_ID } from "./lib/project"
+import { PRODUCTION_DATASET, SANITY_PROJECT_ID } from "./lib/project"
 
 /**
  * Configuration for the `sanity` CLI, as opposed to the Studio itself.
@@ -24,7 +24,7 @@ import { SANITY_DATASET, SANITY_PROJECT_ID } from "./lib/project"
 export default defineCliConfig({
   api: {
     projectId: SANITY_PROJECT_ID,
-    dataset: SANITY_DATASET,
+    dataset: PRODUCTION_DATASET,
   },
   deployment: {
     autoUpdates: false,

@@ -1,20 +1,31 @@
-import { defineConfig } from "sanity"
+import { defineConfig, type WorkspaceOptions } from "sanity"
 import { structureTool } from "sanity/structure"
 import { visionTool } from "@sanity/vision"
 
 import { schemaTypes, singletonTypes } from "./schemaTypes"
 import { structure } from "./structure"
-import { SANITY_DATASET, SANITY_PROJECT_ID } from "./lib/project"
+import {
+  DEVELOPMENT_DATASET,
+  PRODUCTION_DATASET,
+  SANITY_PROJECT_ID,
+  type Dataset,
+} from "./lib/project"
 
 /**
  * Studio configuration.
  *
- * The project and dataset come from `lib/project.ts`, shared with the CLI
+ * The project and datasets come from `lib/project.ts`, shared with the CLI
  * and the Astro site.
  *
+ *   TWO WORKSPACES when run locally: Production and Development, switched
+ *   from the top left. Development holds the seed data (`seed/`). The Studio
+ *   built for staff (`sanity build` / `sanity deploy`) has Production only:
+ *   `SANITY_STUDIO_SHOW_DEVELOPMENT_DATASET` is set in `.env.development`,
+ *   which Sanity loads for `sanity dev` and never for a build.
+ *
  *   DATASET VISIBILITY: private, decided. Every booking and waitlist entry
- *   here holds personal data, and a public dataset answers any query without
- *   a token. The site reads through a server-side token instead. (Region is
+ *   holds personal data, and a public dataset answers any query without a
+ *   token. The site reads through a server-side token instead. (Region is
  *   not a choice: Sanity stores every dataset in the EU, in Belgium.)
  *
  *   ROLES: staff reading enquiry documents are processing personal data.
@@ -24,12 +35,13 @@ import { SANITY_DATASET, SANITY_PROJECT_ID } from "./lib/project"
  * consider dropping it from the production build, since it will happily run
  * any query against live enquiry data for anyone who can open the Studio.
  */
-export default defineConfig({
-  name: "bacchus",
-  title: "Bacchus",
+const workspace = (dataset: Dataset, title: string): WorkspaceOptions => ({
+  name: dataset,
+  title,
+  basePath: `/${dataset}`,
 
   projectId: SANITY_PROJECT_ID,
-  dataset: SANITY_DATASET,
+  dataset,
 
   plugins: [structureTool({ structure }), visionTool()],
 
@@ -51,3 +63,12 @@ export default defineConfig({
         : prev,
   },
 })
+
+const showDevelopment = process.env.SANITY_STUDIO_SHOW_DEVELOPMENT_DATASET === "true"
+
+export default defineConfig([
+  workspace(PRODUCTION_DATASET, "Bacchus"),
+  ...(showDevelopment
+    ? [workspace(DEVELOPMENT_DATASET, "Bacchus — development (seed data)")]
+    : []),
+])
