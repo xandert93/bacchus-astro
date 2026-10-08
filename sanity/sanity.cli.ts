@@ -1,5 +1,7 @@
 import { defineCliConfig } from "sanity/cli"
 
+import { SANITY_DATASET, SANITY_PROJECT_ID } from "./lib/project"
+
 /**
  * Configuration for the `sanity` CLI, as opposed to the Studio itself.
  *
@@ -10,8 +12,8 @@ import { defineCliConfig } from "sanity/cli"
  * and dataset to act on when importing documents, deploying the Studio or
  * validating a schema.
  *
- * Both read the same environment variables, so there is still one source of
- * truth for the project. Copy `.env.example` to `.env.local`.
+ * Both read the project from `lib/project.ts`, so there is still one source
+ * of truth for it.
  *
  * `autoUpdates` is off deliberately. Left on, Sanity serves the deployed
  * Studio a newer version of itself than the one that was built and tested
@@ -21,8 +23,8 @@ import { defineCliConfig } from "sanity/cli"
  */
 export default defineCliConfig({
   api: {
-    projectId: process.env.SANITY_STUDIO_PROJECT_ID,
-    dataset: process.env.SANITY_STUDIO_DATASET ?? "production",
+    projectId: SANITY_PROJECT_ID,
+    dataset: SANITY_DATASET,
   },
   deployment: {
     autoUpdates: false,

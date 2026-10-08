@@ -16,7 +16,6 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
-# Sanity's CLI loads .env.local; .env.example is committed as the template
 .env.local
 .env.*.local
 
