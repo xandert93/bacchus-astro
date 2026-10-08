@@ -26,12 +26,10 @@ const requireEnv = (name: string): string => {
  * immediately and says which variable to set. Copy `.env.example` to
  * `.env.local` once the project exists.
  *
- *   DATASET REGION: EU, decided. Every booking, waitlist entry and testimonial
- *   here holds the personal data of (largely) EU residents, and Sanity's
- *   default region is the US. The region is fixed when the project is created
- *   and changing it afterwards means exporting the whole dataset and
- *   re-importing into a new project, so this has to be set at creation and
- *   not left to the default.
+ *   DATASET VISIBILITY: private, decided. Every booking and waitlist entry
+ *   here holds personal data, and a public dataset answers any query without
+ *   a token. The site reads through a server-side token instead. (Region is
+ *   not a choice: Sanity stores every dataset in the EU, in Belgium.)
  *
  *   ROLES: staff reading enquiry documents are processing personal data.
  *   Assign least-privilege roles rather than making everyone an administrator.
