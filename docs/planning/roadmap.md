@@ -29,11 +29,12 @@ itself (what we chose, why, and how payments work) is in
 2. **Image pipeline** (done, apart from the originals still to come from
    Bacchus). Every photo is built from its original where one exists; see
    `docs/engineering/images.md`.
-3. **Sanity.** Schemas are drafted in `sanity/` and nothing has been run yet.
-   The route from there to a CMS the client edits is `sanity-rollout.md`,
-   which also carries the one decision it needs: the site is static, so the
-   enquiry endpoint and the availability feed need the Cloudflare adapter on
-   those routes alone.
+3. **Sanity** (under way). The project is live and the site reads its
+   packages, stations, gallery and testimonials from it (2026-10-08). Next:
+   the rebuild-on-publish webhook, then enquiries. The route is
+   `sanity-rollout.md`, which also carries the one decision it needs: the
+   site is static, so the enquiry endpoint and the availability feed need the
+   Cloudflare adapter on those routes alone.
 4. **Forms and payments.** Hosting is done: Cloudflare builds and deploys
    `main` on every push (`docs/architecture/tech-stack.md`, "Hosting").
 
@@ -72,9 +73,8 @@ Restaurant features (gift vouchers and so on) wait until these are done.
 
 ### 2. Package content in Sanity
 
-- Model the catalogue's four packages as structured data. The package pages
-  are built; their data is in `src/data/packages/`, shaped for the Sanity
-  schemas.
+- **Done** (2026-10-08): the four packages, their tiers, menus and the
+  stations are in Sanity, and the package pages read them from there.
 - The catalogue's prices and terms are already public, so publishing them as
   pages changes how easy they are to find, not who can see them.
 

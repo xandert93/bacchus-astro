@@ -38,4 +38,27 @@ How photos get from the originals to the page.
   untouched at their own size, with only smaller variants generated. That
   list is the request list for Bacchus. **When an original arrives**:
   replace the file, delete its entry.
-- `src/assets/images/` holds every photo, by subject.
+- `src/assets/images/` holds every photo the pages place themselves, by
+  subject.
+
+---
+
+## Photos stored in Sanity
+
+The gallery, the signature dishes and the stations are photos the client
+manages, so they're uploaded in the Studio rather than kept here.
+
+- **Same pipeline.** `<Photo>` takes a Sanity photo (`RemotePhoto`, from
+  `src/lib/sanity/photos.ts`) as well as a key. Astro downloads the untouched
+  upload from Sanity's CDN at build time and makes the AVIF and WebP copies
+  as usual; visitors are served this site's files, never Sanity's.
+  `cdn.sanity.io` is the only domain allowed (`image.domains` in
+  `astro.config.mjs`).
+- **Web copies** are flagged in the Studio ("Web copy — the original is
+  still to come") rather than listed in `WEB_COPY_ONLY`. Upload the original
+  when it arrives and untick it.
+- **Hotspot and crop** set in the Studio are ignored for now: tiles crop with
+  CSS `object-fit: cover`, as before.
+- A photo can be both here and in Sanity (the Daisy blinis are in the
+  Weddings page's package card and in Reception's dishes). They're two uses
+  with two owners: the page's design, and the client's content.
