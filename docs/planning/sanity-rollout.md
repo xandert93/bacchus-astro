@@ -109,12 +109,47 @@ imports only `sanity/lib/` (as `@studio/…`), which has no dependencies.
 
 Commands from the repo root:
 
-| Command                  | What it does                           |
-| ------------------------ | -------------------------------------- |
-| `npm run sanity:install` | Installs the Studio's own dependencies |
-| `npm run sanity:dev`     | Runs the Studio locally                |
-| `npm run sanity:check`   | Typechecks the schemas                 |
-| `npm run sanity:deploy`  | Publishes the Studio to its hosted URL |
+| Command                          | What it does                                        |
+| -------------------------------- | --------------------------------------------------- |
+| `npm run sanity:install`         | Installs the Studio's own dependencies              |
+| `npm run sanity:dev`             | Runs the Studio locally, with both datasets         |
+| `npm run sanity:check`           | Typechecks the schemas and the seed                 |
+| `npm run sanity:deploy`          | Publishes the Studio to its hosted URL              |
+| `npm run sanity:seed`            | Rewrites the development dataset's seed data        |
+| `npm run sanity:copy-production` | Copies production's content over development's copy |
+
+Sanity commands that load the schema (`schema validate`,
+`documents validate`) now ask which workspace: add `--workspace production`
+or `--workspace development`.
+
+### The development dataset
+
+Created 2026-10-08, private, for building and testing anything that reads or
+writes data without going near the client's. It holds a copy of the real
+content plus seed data in every collection, as if the site had been live
+for a year: 19 enquiries and bookings in every status, their quotes and
+payments, the waitlist, closures, spaces, add-ons, seasons, FAQs, guide
+articles, suppliers, testimonials awaiting review, the parked restaurant
+menu and both settings documents. All 345 documents pass the schema's own
+validation.
+
+- **The seed** is `sanity/seed/`, one file per area, run by
+  `npm run sanity:seed`. Every person in it is invented (example.com
+  emails, phone numbers from the range reserved for fiction), and every
+  date is relative to the day it runs, so re-running it keeps the data
+  current. It refuses to write anywhere but development.
+- **Private records have a dot in their id** (`booking.seed-turner-grech`),
+  as the real enquiry endpoint will give them: Sanity never shows such a
+  document to anyone who isn't logged in, even in a public dataset.
+- **Refreshing the copied content**: `npm run sanity:copy-production`, then
+  `npm run sanity:seed` again (the seed fills in a few fields the copy
+  resets).
+- **In the Studio**, switch between Production and Development at the top
+  left. Only `sanity dev` shows Development (`sanity/.env.development`); the
+  Studio built for staff has Production alone.
+- **On the site**, `SANITY_DATASET=development` in `.env` points
+  `npm run dev` and local builds at it. The live site and CI never set it,
+  so they always read production.
 
 ## Step 2 — move the content in
 
@@ -252,13 +287,21 @@ wire real money against an unresolved policy.
 
 **Deadline: the plan, before 7 November 2026.** The project is on Sanity's
 30-day Growth trial, which ends then. Private datasets are a Growth feature:
-the Free plan allows public datasets only, and `production` must stay
-private once it holds enquiries. Growth is priced per seat (each person who
-logs in), about $15 a month each at the time of writing; check
-[sanity.io/pricing](https://www.sanity.io/pricing). It should be Bacchus's
-subscription, on their organisation (see the last point below). What Sanity
-does to a private dataset when a trial lapses wasn't confirmed, so don't
-find out by letting it lapse.
+the Free plan allows public datasets only, and **when a trial ends without
+an upgrade, Sanity makes private datasets public** and turns every
+non-admin into a viewer
+([Sanity's trial docs](https://www.sanity.io/docs/platform-management/growth-plan-trial)).
+Growth is $15 per seat a month (each person who logs in;
+[sanity.io/pricing](https://www.sanity.io/pricing), checked 2026-10-08), so
+about $30–45 a month for two or three logins. It should be Bacchus's
+subscription, on their organisation (see the last point below).
+
+The fallback if Bacchus won't pay: stay on Free with public datasets. Records
+holding personal data already get a dot in their id, which keeps them hidden
+from anyone not logged in (see "The development dataset", step 1). What it
+costs: every staff member is an administrator (Free has no other editing
+role), and anything created by hand in the Studio would be public unless its
+id is set the same way.
 
 - Deploy the Studio so staff reach it at a URL rather than running it locally.
 - Create accounts with least-privilege roles. Reading enquiries means
