@@ -45,3 +45,13 @@ A newer push to the same branch cancels the older run.
 
 Node's version is pinned in `.nvmrc`, which CI reads, so the laptop and CI
 run the same one.
+
+---
+
+## Secrets
+
+The build reads content from Sanity's private dataset, so CI needs
+`SANITY_API_READ_TOKEN`. It's stored on GitHub (the repo's Settings → Secrets
+and variables → Actions) and passed to every job by the `env` block at the
+top of the workflow. GitHub hides its value in logs (`***`). To replace it:
+`gh secret set SANITY_API_READ_TOKEN`, then paste the token when asked.

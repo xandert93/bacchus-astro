@@ -123,6 +123,15 @@ export default defineType({
       validation: (Rule) => Rule.max(3),
     }),
     defineField({
+      name: "intro",
+      title: "Introduction",
+      type: "text",
+      group: "menu",
+      rows: 4,
+      description:
+        "A paragraph above the menu, for a tier that needs one before its list. Beverage's categories use it; the dining tiers have none.",
+    }),
+    defineField({
       name: "includedNote",
       title: "What the tier includes",
       type: "text",

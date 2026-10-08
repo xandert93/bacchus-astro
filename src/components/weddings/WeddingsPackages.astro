@@ -8,11 +8,15 @@
 // over it); the "View menu" pill is decorative (aria-hidden), so screen
 // readers hear one link per card rather than two.
 import Photo from "@components/ui/Photo.astro"
-import { RECEPTION_TIERS } from "@data/packages/reception"
-import { BANQUET_TIERS } from "@data/packages/banquet"
-import { HIGH_TEA_TIERS } from "@data/packages/high-tea"
+import { getPackageTiers } from "@lib/sanity/packages"
 import Button from "@components/ui/Button.astro"
 import { below } from "@lib/media-queries.js"
+
+const [receptionTiers, banquetTiers, highTeaTiers] = await Promise.all([
+  getPackageTiers("reception"),
+  getPackageTiers("banquet"),
+  getPackageTiers("high-tea"),
+])
 
 const DINING = [
   {
@@ -21,7 +25,7 @@ const DINING = [
     numeral: "I",
     description:
       "A relaxed standing reception — cold and hot canapés, a flying buffet, desserts and the wedding cake.",
-    tiers: RECEPTION_TIERS,
+    tiers: receptionTiers,
     photo: {
       src: "reception-menu/dishes/daisy-salmon-lobster-blinis",
       alt: "A salmon and lobster blini canapé from the Reception menu",
@@ -33,7 +37,7 @@ const DINING = [
     numeral: "II",
     description:
       "The seated wedding breakfast — starter, intermediate and main course, tasted before the day.",
-    tiers: BANQUET_TIERS,
+    tiers: banquetTiers,
     photo: {
       src: "weddings/banquet",
       alt: "The seated wedding banquet, table set for the breakfast",
@@ -45,7 +49,7 @@ const DINING = [
     numeral: "III",
     description:
       "An afternoon alternative to the formal banquet — dainty sandwiches, hot savouries and sweets.",
-    tiers: HIGH_TEA_TIERS,
+    tiers: highTeaTiers,
     photo: { src: "weddings/high-tea", alt: "The High Tea spread, laid out for guests" },
   },
 ]

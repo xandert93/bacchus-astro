@@ -1,11 +1,14 @@
 ---
 // "Beyond the tiers": the sixteen Reception stations, with the notes that
 // say what on them is ours rather than the catalogue's. Reception-only.
-// The content is src/data/packages/reception-stations.ts; the browsing
-// behaviour is ReceptionStations.js (see StationsBrowser for the two
-// layouts).
+// The content comes from Sanity (src/lib/sanity/stations.ts), fetched once
+// here for both layouts; the browsing behaviour is ReceptionStations.js (see
+// StationsBrowser for the two layouts).
 import StationsBrowser from "./StationsBrowser.astro"
+import { getStations } from "@lib/sanity/stations"
 import "./ReceptionStations.css"
+
+const { categories, stations } = await getStations()
 ---
 
 <section
@@ -32,11 +35,11 @@ import "./ReceptionStations.css"
     </div>
 
     <div class="package-stations-hybrid-mobtab">
-      <StationsBrowser variant="stage" />
+      <StationsBrowser variant="stage" categories={categories} stations={stations} />
     </div>
 
     <div class="package-stations-hybrid-desktop">
-      <StationsBrowser variant="carousel" />
+      <StationsBrowser variant="carousel" categories={categories} stations={stations} />
     </div>
 
     <div class="package-stations-photo-note" data-reveal>

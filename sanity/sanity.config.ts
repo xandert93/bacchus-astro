@@ -4,27 +4,13 @@ import { visionTool } from "@sanity/vision"
 
 import { schemaTypes, singletonTypes } from "./schemaTypes"
 import { structure } from "./structure"
-
-const requireEnv = (name: string): string => {
-  const value = process.env[name]
-
-  if (!value) {
-    throw new Error(
-      `${name} is not set. Copy sanity/.env.example to sanity/.env.local and fill it in — see docs/planning/sanity-rollout.md, step 1.`,
-    )
-  }
-
-  return value
-}
+import { SANITY_DATASET, SANITY_PROJECT_ID } from "./lib/project"
 
 /**
  * Studio configuration.
  *
- * `SANITY_STUDIO_PROJECT_ID` has no default and throws when missing, rather
- * than falling back to a placeholder. A placeholder would let the Studio start
- * and then fail confusingly against a project that does not exist; this fails
- * immediately and says which variable to set. Copy `.env.example` to
- * `.env.local` once the project exists.
+ * The project and dataset come from `lib/project.ts`, shared with the CLI
+ * and the Astro site.
  *
  *   DATASET VISIBILITY: private, decided. Every booking and waitlist entry
  *   here holds personal data, and a public dataset answers any query without
@@ -42,8 +28,8 @@ export default defineConfig({
   name: "bacchus",
   title: "Bacchus",
 
-  projectId: requireEnv("SANITY_STUDIO_PROJECT_ID"),
-  dataset: process.env.SANITY_STUDIO_DATASET ?? "production",
+  projectId: SANITY_PROJECT_ID,
+  dataset: SANITY_DATASET,
 
   plugins: [structureTool({ structure }), visionTool()],
 

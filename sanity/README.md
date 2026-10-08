@@ -44,7 +44,7 @@ sanity/
   queries/
     availability.ts         The calendar, derived — replaces seededStatus()
     pricing.ts              Resolving a price for a date, through seasons
-    content.ts              Page queries, plus the open-questions working list
+    content.ts              Queries the site doesn't use yet, plus the open-questions list
 ```
 
 Files are grouped by feature, because that is how they are navigated when

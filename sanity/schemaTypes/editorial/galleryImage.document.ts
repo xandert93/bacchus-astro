@@ -73,6 +73,21 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "label",
+      title: "Label",
+      type: "string",
+      description:
+        'Replaces the category name in the lightbox caption, e.g. "From the kitchen" on food photographed for the Venue category. Leave empty to show the category.',
+    }),
+    defineField({
+      name: "shortLabel",
+      title: "Short label",
+      type: "string",
+      description:
+        'The badge on the photo when the label is too long for it, e.g. "Kitchen". Leave empty to use the label.',
+      hidden: ({ document }) => !document?.label,
+    }),
+    defineField({
       name: "tags",
       title: "Tags",
       type: "array",
@@ -111,6 +126,14 @@ export default defineType({
       initialValue: false,
       description:
         "The gallery grid gives one tile a double-width span. Keep this to very few images.",
+    }),
+    defineField({
+      name: "isWebCopy",
+      title: "Web copy — the original is still to come",
+      type: "boolean",
+      initialValue: false,
+      description:
+        "On for an already-compressed copy. The site serves it as it is rather than compressing it a second time. Upload the original when it arrives and turn this off.",
     }),
     defineField({
       name: "isPlaceholder",

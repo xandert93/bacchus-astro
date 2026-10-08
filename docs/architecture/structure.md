@@ -19,15 +19,16 @@ version is in `CLAUDE.md`; this is the full map.
   drawer, kept out of search results, never linked from the site. It reads
   the placeholder booking in `src/data/demo-booking.ts`.
 - **Pages compose; components hold the markup.** A page file is frontmatter
-  plus a list of sections (the homepage is about 45 lines). Content that
-  repeats or will come from Sanity lives in `src/data/` and is rendered with
-  `map()`; one-off copy stays in the component that shows it.
+  plus a list of sections (the homepage is about 45 lines). Content the
+  client edits comes from Sanity, through `src/lib/sanity/`; other content
+  that repeats lives in `src/data/`; both are rendered with `map()`. One-off
+  copy stays in the component that shows it.
 - **Import with the path aliases** (`tsconfig.json`): `@components/…`,
   `@layouts/…`, `@data/…`, `@lib/…`, `@scripts/…`, `@styles/…`,
   `@assets/…`, never `../../../`, so files can move without breaking
   imports.
 - Package pages (`src/pages/weddings/packages/`) are thin: hero, the shared
-  `PackageTierSection` fed from `src/data/packages/<package>.ts`, the photo
+  `PackageTierSection` fed by `getPackageTiers()` from Sanity, the photo
   strip, enquiry. Only Beverage has page-specific overrides
   (`_beverage.css`, imported by its page).
 - `/weddings/packages` redirects to `/weddings#packages` (`astro.config.mjs`).
@@ -125,20 +126,23 @@ Every button is `<Button>` (`ui/Button.astro`).
 
 ## Data
 
+- `src/lib/sanity/`: the content the client edits, read from Sanity at build
+  time. `client.ts` (the one client, and `fetchContent`, which fails the
+  build on an empty answer), then one module per content type, each holding
+  its query and turning the result into the shape its components render:
+  `packages.ts` (tiers and menus), `stations.ts`, `gallery.ts`,
+  `testimonials.ts`, with `prices.ts` and `photos.ts` shared between them.
+  Only frontmatter calls these, so neither they nor the token reach the
+  browser. Testimonials.js gets its list as JSON written into the page by
+  `Testimonials.astro`. See `docs/planning/sanity-rollout.md`, step 3.
 - `src/data/navigation.ts`: both nav menus, for the bar and the drawer.
-- `src/data/gallery.ts`: the full gallery's photos and filters.
+- `src/data/gallery.ts`: the gallery's filters (the photos are in Sanity).
 - `src/data/enquiry.ts`: event types and chip notes. Read by both
   `EnquirySection.astro` and `EnquiryForm.js`: one list.
-- `src/data/packages/`: the four packages' tiers and menus (`types.ts` has
-  the shape, modelled on the drafted Sanity schemas) and Reception's sixteen
-  stations. Catalogue house-style notes are at the top of each file.
 - `src/data/contact.ts`: the venue's phone and email, for the Visit section
   and the deposit page's support cards.
 - `src/data/demo-booking.ts`: the deposit page's placeholder booking, in
   the shape a real one will take.
-- `src/data/testimonials.ts`: the four testimonials. `Testimonials.astro`
-  renders the picker cards and dots from it at build time; `Testimonials.js`
-  renders the active quote (it has to measure it to cap it at five lines).
 - `src/lib/media-queries.js`: every breakpoint and media query, for CSS,
   scripts and `<img sizes>` (see `docs/design/design-system.md`).
 - `src/lib/images.ts`: every photo, by key (see

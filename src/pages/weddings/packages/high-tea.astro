@@ -1,7 +1,7 @@
 ---
 // /weddings/packages/high-tea — the High Tea package: an afternoon table in
 // three tiers, the catalogue's own alternative to the formal banquet. The
-// content is src/data/packages/high-tea.ts.
+// tiers and menus come from Sanity (src/lib/sanity/packages.ts).
 //
 // NO vegetarian markers, deliberately, and the page says so in a warning
 // note: the catalogue marks (V) throughout Reception and Banquet but not
@@ -14,7 +14,7 @@
 // pages print none — and pricing varies by season, so treat them as one data
 // point. No photography yet: black "photo to follow" frames, as on Banquet.
 import BaseLayout from "@layouts/BaseLayout.astro"
-import { HIGH_TEA_TIERS } from "@data/packages/high-tea"
+import { getPackageTiers } from "@lib/sanity/packages"
 import PackageTierSection from "@components/packages/PackageTierSection.astro"
 import PackageMenuNote from "@components/packages/PackageMenuNote.astro"
 import PageHero from "@components/sections/PageHero.astro"
@@ -22,6 +22,8 @@ import EnquirySection from "@components/enquiry/EnquirySection.astro"
 import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
 import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
 import Button from "@components/ui/Button.astro"
+
+const tiers = await getPackageTiers("high-tea")
 
 // The "closer look" photo strip.
 const carouselSlides = [
@@ -83,7 +85,7 @@ const carouselSlides = [
     </Fragment>
   </PageHero>
 
-  <PackageTierSection tiers={HIGH_TEA_TIERS}>
+  <PackageTierSection tiers={tiers}>
     <Fragment slot="heading">
       Compare the three <em>tiers</em>
     </Fragment>

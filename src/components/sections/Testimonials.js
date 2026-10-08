@@ -1,7 +1,6 @@
 // The testimonials carousel (#testimonials). Loaded by Testimonials.astro.
 
 import { reduce } from "@scripts/lib/motion.js"
-import { TESTIMONIALS } from "@data/testimonials"
 
 // ---------- Testimonials rotator ----------
 ;(() => {
@@ -15,6 +14,7 @@ import { TESTIMONIALS } from "@data/testimonials"
   const nextBtn = document.getElementById("tNext")
   const ringFill = document.getElementById("tRingFill")
   const starsWrap = document.getElementById("tStars")
+  const dataEl = document.getElementById("testimonialsData")
   if (
     !section ||
     !quoteBox ||
@@ -25,7 +25,8 @@ import { TESTIMONIALS } from "@data/testimonials"
     !prevBtn ||
     !nextBtn ||
     !ringFill ||
-    !starsWrap
+    !starsWrap ||
+    !dataEl
   )
     return
   const stars = [].slice.call(starsWrap.children)
@@ -33,12 +34,13 @@ import { TESTIMONIALS } from "@data/testimonials"
   const T_RING_CIRC = 2 * Math.PI * 23
   ringFill.style.strokeDasharray = String(T_RING_CIRC)
 
-  // The testimonials themselves live in src/data/testimonials.ts, shared
-  // with Testimonials.astro (which renders the picker cards and dots).
-  // <em> markers become real <em> elements (see tBuildQuoteNodes) — the
-  // gold comes from Testimonials.astro's .quote blockquote em rule, the
-  // italic from <em>'s own default.
-  const items = TESTIMONIALS
+  // The testimonials come from Sanity at build time. Testimonials.astro
+  // renders the picker cards and dots from them, and writes the same list
+  // into the page as JSON for this script, since the browser can't query
+  // Sanity itself. <em> markers become real <em> elements (see
+  // tBuildQuoteNodes) — the gold comes from Testimonials.astro's .quote
+  // blockquote em rule, the italic from <em>'s own default.
+  const items = JSON.parse(dataEl.textContent)
 
   let tActive = 0,
     tFadeTimer = null,
@@ -60,8 +62,8 @@ import { TESTIMONIALS } from "@data/testimonials"
   const T_MAX_LINES = 5
 
   // Turns <em>...</em> markers in a quote string into real <em> elements
-  // (plain text elsewhere) — safe here since `text` only ever comes from
-  // our own hardcoded items array above, never remote/user content.
+  // (plain text elsewhere). Every piece goes in as a text node, never as
+  // HTML, so nothing in a quote can inject markup.
   const tBuildQuoteNodes = (text) => {
     const frag = document.createDocumentFragment()
     const re = /<em>(.*?)<\/em>/g

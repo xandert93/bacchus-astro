@@ -79,5 +79,30 @@ Three oxblood notes are live:
 - **Formatted text wraps across lines**, so a plain find-and-replace can miss
   occurrences and still look like it worked. Change each occurrence by hand,
   then search for the old spelling afterwards.
-- **Each package's data file** (`src/data/packages/`) lists the changes made
-  to that package at the top.
+- **The corrections per package** are listed below. They used to sit at the
+  top of each package's data file, which moved into Sanity on 2026-10-08.
+  Text is now edited in the Studio; record any new correction here too.
+
+---
+
+## Corrections by package
+
+- **Reception**: house style throughout; nothing package-specific recorded.
+- **Reception stations**: three things are ours, not the catalogue's, and the
+  page says so in its notes: the six categories and the order they put the
+  stations in (the catalogue lists all sixteen flat); every vegetarian mark
+  (the catalogue marks none on the stations, so each is inferred from the
+  dish name); and Pasta Table's shortened dish names ("Slow-Cooked Beef" for
+  the catalogue's "Slow-Cooked Beef & Parsley", and so on), still to be
+  signed off. The prototype had drifted into two versions of that card; the
+  shortened one is the version its notes describe.
+- **Banquet** and **High Tea**: "SANWHICHES" to "Sandwiches", "SAVORIES" to
+  "Savouries", "Caramelized" to "Caramelised", "Pine Not Roll" to "Pine Nut
+  Roll", "Macaroons" to "Macarons", and sentence-cased dish words raised to
+  title case.
+- **Beverage**: "Rosmary" to "Rosemary"; accents restored on "Piña Colada",
+  "Saint-Émilion", "Château", "Shiraz Rosé" and "Sancerre Rosé";
+  "characterized" to "characterised". Left as printed: "Terre Antich",
+  "Henessey", and the Whiskey and Rum bars' "service of five" over six
+  items. Omitted on request: the catalogue's "After Mass Reception", which
+  needs the client before it is published.

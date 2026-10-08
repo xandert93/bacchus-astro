@@ -28,6 +28,12 @@ import { PRICE_UNITS } from "../../lib/constants"
  * system that varies by month and season (April said to run slightly higher
  * than March). No figure here is a year-round rate card, and the one that
  * pretends to be would be the one that gets quoted back at them.
+ *
+ * `isStartingPrice` is a different thing, and the only one that changes what
+ * the page prints. It marks a figure that is the cheapest of several options
+ * (Beverage's bar options, "from €12"), so the page says "from". Seasonal
+ * variation does not get a "from": it applies to every price on the site, so
+ * it is said once, in the page notes, rather than on every card.
  */
 export default defineType({
   name: "price",
@@ -51,7 +57,7 @@ export default defineType({
     }),
     defineField({
       name: "isIndicative",
-      title: 'Indicative — "from" rather than fixed',
+      title: "Indicative — may vary by season",
       type: "boolean",
       initialValue: true,
       description:
@@ -65,6 +71,14 @@ export default defineType({
       description: "Confirmed by client correspondence: quoted prices include VAT.",
     }),
     defineField({
+      name: "isStartingPrice",
+      title: 'Starting price — shows "from" on the page',
+      type: "boolean",
+      initialValue: false,
+      description:
+        'For a figure that is the cheapest of several options, e.g. "from €12" for bar options. Not for seasonal variation, which "Indicative" covers.',
+    }),
+    defineField({
       name: "provenance",
       title: "Source & confirmation",
       type: "provenance",
@@ -75,14 +89,14 @@ export default defineType({
     select: {
       amount: "amount",
       unit: "unit",
-      indicative: "isIndicative",
+      startingPrice: "isStartingPrice",
       status: "provenance.status",
     },
-    prepare: ({ amount, unit, indicative, status }) => {
+    prepare: ({ amount, unit, startingPrice, status }) => {
       const unitLabel = PRICE_UNITS.find((u) => u.value === unit)?.title ?? unit
       return {
         title:
-          `${indicative ? "from " : ""}€${Number(amount ?? 0).toFixed(2)} ${unitLabel ?? ""}`.trim(),
+          `${startingPrice ? "from " : ""}€${Number(amount ?? 0).toFixed(2)} ${unitLabel ?? ""}`.trim(),
         subtitle:
           status === "confirmed" ? undefined : `${status} — shows a warning on the page`,
       }

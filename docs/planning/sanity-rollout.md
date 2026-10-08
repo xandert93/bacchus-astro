@@ -40,13 +40,12 @@ the route from here to a working system.
 - **The decisions.** Why availability is derived, why quotes snapshot their
   figures, why navigation is not in the CMS, and the rest, recorded against
   the types they affect.
-- **The content migration** (step 2 below). `npm run sanity:migrate` turns
-  `src/data/` into an import file and checks itself; it just has no dataset to
-  import into yet.
-
-Nothing has been run. The `sanity` package is not installed and the folder is
-excluded from `tsconfig.json`, so none of it has been typechecked or loaded
-into a Studio. Expect a shakeout pass on first boot.
+- **The project** (step 1): created 2026-10-08, with a private `production`
+  dataset.
+- **The content migration** (step 2): run, and then retired. Sanity is now the
+  only copy of the packages, stations, gallery and testimonials.
+- **The site reads from Sanity** (step 3), apart from the webhook that
+  rebuilds it when something is published.
 
 ---
 
@@ -85,110 +84,112 @@ from a small JSON endpoint on load.
 
 ## Step 1 — create the project
 
-Everything here is done except the part that needs a Sanity account.
+**Done, 2026-10-08.** Project `piwjjpge`, dataset `production`, set to
+**private**: a public dataset answers any query without a token, which would
+publish every enquiry's name and email once they arrive. There was no region
+to choose: Sanity stores every dataset in the EU (Google Cloud, Belgium).
 
-**Done.** The Studio is installed (Sanity v6) as its own package, with its
-Studio config, its CLI config and its own TypeScript setup. The schemas have
-been through their shakeout and came out clean: `tsc` reports 0 errors, and
-Sanity's own `schema validate` reports **0 errors and 0 warnings** across all
-37 types. One real mistake surfaced and was fixed — `faq.showOnPages` declared
-both a `tags` layout and a list of allowed values, which makes Sanity ignore
-the list and accept anything typed in, so an FAQ could have been assigned to a
-page that does not exist.
+The project ID and dataset are in `sanity/lib/project.ts`, read by the Studio,
+the CLI and the site alike. Neither is a secret, so they're committed rather
+than set up per machine.
 
-**Still to do, and only you can do it**, because it needs a Sanity login that
-an agent session cannot perform:
-
-1. Create the project at [sanity.io/manage](https://sanity.io/manage). There
-   is no region to pick: Sanity stores every dataset in the EU (Google Cloud,
-   Belgium), which is what the personal data in enquiries needs anyway.
-2. `cp sanity/.env.example sanity/.env.local` and put the project ID in it.
-   The config throws a named error when it is missing rather than falling back
-   to a placeholder, so a half-configured Studio fails immediately instead of
-   failing confusingly against a project that does not exist.
-3. `npx sanity login`, once, from inside `sanity/`.
-4. **Make the `production` dataset private.** From inside `sanity/`, run
-   `npx sanity dataset visibility set production private`. A public dataset
-   answers any query without a token, which would publish every enquiry's name
-   and email. The site reads with a server-side token instead.
-5. `npm run sanity:dev` to confirm the Studio opens, then
-   `npm run sanity:migrate && npm run sanity:import` to load the content.
-
-When the Astro site later starts reading from Sanity, the project ID and
-dataset also need adding in the Cloudflare dashboard.
+The schemas came through their shakeout clean: `tsc` reports 0 errors and
+Sanity's own `schema validate` 0 errors and 0 warnings. One real mistake
+surfaced and was fixed — `faq.showOnPages` declared both a `tags` layout and
+a list of allowed values, which makes Sanity ignore the list and accept
+anything typed in, so an FAQ could have been assigned to a page that does not
+exist.
 
 **The Studio is its own npm package** in `sanity/`, not a dependency of the
 Astro site. Sanity v6 needs React 19, React DOM and styled-components, and
 this site ships no framework JavaScript; adding all of that to serve an admin
 tool the public never loads would undo that for nothing. The root
-`tsconfig.json` keeps excluding `sanity/`, which typechecks itself.
+`tsconfig.json` keeps excluding `sanity/`, which typechecks itself. The site
+imports only `sanity/lib/` (as `@studio/…`), which has no dependencies.
 
 Commands from the repo root:
 
-| Command                  | What it does                                 |
-| ------------------------ | -------------------------------------------- |
-| `npm run sanity:install` | Installs the Studio's own dependencies       |
-| `npm run sanity:dev`     | Runs the Studio locally                      |
-| `npm run sanity:check`   | Typechecks the schemas                       |
-| `npm run sanity:migrate` | Regenerates the import file from `src/data/` |
-| `npm run sanity:import`  | Loads that file into the dataset             |
-| `npm run sanity:deploy`  | Publishes the Studio to its hosted URL       |
+| Command                  | What it does                           |
+| ------------------------ | -------------------------------------- |
+| `npm run sanity:install` | Installs the Studio's own dependencies |
+| `npm run sanity:dev`     | Runs the Studio locally                |
+| `npm run sanity:check`   | Typechecks the schemas                 |
+| `npm run sanity:deploy`  | Publishes the Studio to its hosted URL |
 
 ## Step 2 — move the content in
 
-**Written: `scripts/sanity-migrate.mjs`, run with `npm run sanity:migrate`.**
+**Done, 2026-10-08, and retired.** A script (`scripts/sanity-migrate.mjs`, in
+git history) turned `src/data/` into an import file: 190 dishes, 13 tiers, 4
+packages, 16 stations, 6 station categories, 23 gallery images and 4
+testimonials, with the 48 photos uploaded alongside. It read the proofed
+content in `src/data/`, never the catalogue PDF, whose text extraction drops
+accented characters and whole words.
 
-It reads `src/data/` and writes `sanity/import/content.ndjson`, ready for
-`npx sanity dataset import`. Current output is 256 documents: 190 dishes, 13
-tiers, 4 packages, 16 stations, 6 station categories, 23 gallery images and 4
-testimonials.
+Then the script and those data files were deleted. Two copies of the content
+would drift, and the script can't be run again safely anyway: it would
+overwrite whatever the client has edited since.
 
-It reads the content from `src/data/`, never the catalogue PDF. The port
-already read the rendered catalogue pages and proofed the result — British
-English, accents restored, real misspellings fixed — and a text extraction of
-the PDF silently drops accented characters and sometimes whole words.
-Re-reading it would throw all of that away.
+What the migration decided, still true of the data:
 
-It **imports** those files rather than parsing them as text, which turned out
-to be possible because Node 24 strips TypeScript types natively and every
-import in `src/data/` is type-only. So the data arrives as real objects, and a
-typo in the script fails loudly instead of silently matching nothing — which
-is exactly how the first run found a wrong export name.
+- **Dishes are shared.** 255 dish lines across all tiers became 190 dish
+  documents, so a spelling fix lands everywhere at once. A dish marked
+  vegetarian in any tier is marked in every tier, since the catalogue is
+  inconsistent about repeating the mark.
+- **Every price records its source.** All of them come from the one client
+  quote and are unconfirmed; Banquet's are marked contested, with the €135
+  figure and its source attached.
+- **Photos keep their flags.** The sixteen station photos are marked as
+  placeholders (AI stand-ins), and the photos we only have as compressed
+  web copies are marked `isWebCopy`, which the Studio's open-questions query
+  lists as originals to ask Bacchus for.
 
-Three things it does that are worth knowing:
-
-- **Deduplicates dishes.** 255 dish references across all tiers resolve to 190
-  stored dishes, so 65 duplicate lines disappear. A dish marked vegetarian in
-  any tier is marked everywhere, since the catalogue is inconsistent about
-  repeating the mark.
-- **Sets provenance from what we actually know.** Every price is recorded as
-  coming from the one client quote and left unconfirmed; Banquet is marked
-  contested with the €135 figure and its source attached; the three oxblood
-  page notes are created with the content rather than written by hand.
-- **Checks every reference before writing.** A dangling reference would import
-  without complaint and surface later as a menu with missing lines.
-
-IDs are deterministic (`menuDish-brie-candied-walnuts-leaves`), so re-running
-updates the same documents instead of creating a second copy of everything.
-That matters because the first run will not be the last.
-
-The output is gitignored: it is generated from `src/data/`, and committing it
-would be a second copy of the content, free to drift from the first.
-
-**Still to migrate**, because the content is not in `src/data/` in a
-structured form yet: venue spaces, the FAQ set, suppliers and the two settings
-documents. Those are small, and several are better typed straight into the
-Studio than scripted.
+**Still to enter**, never having been structured data on the site: venue
+spaces, the FAQ set, suppliers and the two settings documents. Small enough
+to type straight into the Studio.
 
 ## Step 3 — read from Sanity
 
-Swap the hardcoded data for queries, one content type at a time rather than
-all at once — packages first, since they are the largest and best understood.
+**Built, 2026-10-08, apart from the rebuild webhook.**
 
-Each page keeps building statically; a Sanity webhook pings a Cloudflare
-deploy hook so publishing something rebuilds the site. The client sees their
-change live a minute or two after pressing publish, without anyone touching
-the code.
+The package pages, Reception's stations, the gallery and the testimonials
+read from Sanity. Each content type has one module in `src/lib/sanity/` that
+holds its query and turns the result into the shape its components render, so
+no component sees Sanity's shape. Pages still build as static HTML; nothing
+queries Sanity in a visitor's browser.
+
+- **The token.** The dataset is private, so the build reads it with a
+  read-only (Viewer) token, `SANITY_API_READ_TOKEN`. It lives in three places,
+  never in the repository: `.env` at the repo root (local builds and
+  `npm run dev`), GitHub's Actions secrets (CI), and the Cloudflare
+  dashboard (Settings → Build → Variables and secrets, for production and
+  preview builds). Astro checks for it before the build starts
+  (`astro.config.mjs`).
+- **Missing content fails the build.** An empty answer, or a station without
+  its photo, stops the build with a message naming what's missing. Cloudflare
+  then keeps the last good version live, rather than deploying a page with a
+  hole in it.
+- **Photos** uploaded in the Studio go through the same pipeline as the rest
+  (`docs/engineering/images.md`).
+
+**Still to do: rebuild on publish.** Two settings, both in dashboards:
+
+1. **Cloudflare**: the Worker → Settings → Builds → Deploy Hooks → create one
+   for `main`, and copy its URL. A POST to it starts a production build.
+2. **Sanity**: sanity.io/manage → the project → API → Webhooks → create one:
+   - URL: the deploy hook; method POST; dataset `production`.
+   - Trigger on create, update and delete; leave "drafts" off, so only
+     publishing rebuilds.
+   - Filter, so only the types the site reads trigger a build (without it,
+     every enquiry would rebuild the site once they arrive):
+
+     ```groq
+     _type in ["weddingPackage", "packageTier", "menuDish", "station",
+       "stationCategory", "galleryImage", "testimonial"]
+     ```
+
+     Add a type to it when the site starts reading one.
+
+The client then sees a change live a minute or two after pressing publish.
 
 ## Step 4 — take enquiries
 

@@ -34,6 +34,8 @@ code they cover.
 - `docs/engineering/seo.md`: descriptions, canonical addresses, link
   previews, structured data and the sitemap.
 - `docs/planning/roadmap.md`: migration phases, feature order and backlog.
+- `docs/planning/sanity-rollout.md`: the CMS, step by step: what's built,
+  the read token, the rebuild webhook, what's next.
 - `docs/architecture/tech-stack.md`: the chosen stack and why, the live
   Shopify site, payments.
 
@@ -55,9 +57,9 @@ code they cover.
 
 The full map is `docs/architecture/structure.md`. The rules that decide it:
 
-- **Pages compose; components hold the markup.** Content that repeats or will
-  come from Sanity lives in `src/data/`; one-off copy stays in the component
-  that shows it.
+- **Pages compose; components hold the markup.** Content the client edits
+  comes from Sanity through `src/lib/sanity/`; other repeated content lives in
+  `src/data/`; one-off copy stays in the component that shows it.
 - **Import with the path aliases** (`@components/…`, `@lib/…` and so on),
   never `../../../`.
 - **A file with one owner sits beside it, named after it**
@@ -155,7 +157,8 @@ format:check`, `npm run lint` and `npm run check`, plus the one spec file
 
 Start the dev server in background mode: `astro dev --background` (manage
 with `astro dev stop`, `astro dev status`, `astro dev logs`). The user runs
-`npm run dev` themselves. Build with `npm run build`.
+`npm run dev` themselves. Build with `npm run build`. Both read content from
+Sanity and need `SANITY_API_READ_TOKEN` in `.env` (never committed).
 
 Docs: https://docs.astro.build. This project is on Astro 7.x. Consult before
 related work:

@@ -1,16 +1,19 @@
 ---
 import Particles from "@components/ui/Particles.astro"
 import Photo from "@components/ui/Photo.astro"
-import { TESTIMONIALS } from "@data/testimonials"
+import { getTestimonials } from "@lib/sanity/testimonials"
+import { toScriptJson } from "@lib/script-json"
 // "From our guestbook" rotator. The picker cards and dots are rendered here
-// from src/data/testimonials.ts; Testimonials.js fills the active quote and
-// its meta line (the quote is measured in the browser to cap it at five
-// lines) and runs the autoplay.
+// from the published testimonials in Sanity; Testimonials.js fills the
+// active quote and its meta line (the quote is measured in the browser to
+// cap it at five lines) and runs the autoplay.
 interface Props {
   // The darkened photo behind the section — a key from src/lib/images.ts.
   backgroundImage: string
 }
 const { backgroundImage } = Astro.props
+
+const testimonials = await getTestimonials()
 ---
 
 <section class="section-padding quote testimonials" id="testimonials">
@@ -54,7 +57,7 @@ const { backgroundImage } = Astro.props
       data-reveal
       style="--d: 240ms"
     >
-      {TESTIMONIALS.map((item) => (
+      {testimonials.map((item) => (
         <button
           type="button"
           class="testimonial-card"
@@ -84,7 +87,7 @@ const { backgroundImage } = Astro.props
         </svg>
       </button>
       <div class="testimonial-dots" id="tDots" aria-hidden="true">
-        {TESTIMONIALS.map(() => (
+        {testimonials.map(() => (
           <span class="testimonial-dot" />
         ))}
       </div>
@@ -116,6 +119,12 @@ const { backgroundImage } = Astro.props
       </button>
     </div>
   </div>
+  {/* The same list, as JSON for Testimonials.js. */}
+  <script
+    type="application/json"
+    id="testimonialsData"
+    set:html={toScriptJson(testimonials)}
+  ></script>
 </section>
 
 <script>

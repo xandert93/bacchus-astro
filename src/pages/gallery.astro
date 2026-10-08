@@ -9,7 +9,20 @@ import "@styles/gallery-grid.css"
 import Lightbox from "@components/ui/Lightbox.astro"
 import EnquirySection from "@components/enquiry/EnquirySection.astro"
 import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
-import { GALLERY_FILTERS, GALLERY_PHOTOS } from "@data/gallery"
+import { GALLERY_FILTERS } from "@data/gallery"
+import { getGalleryPhotos } from "@lib/sanity/gallery"
+
+const photos = await getGalleryPhotos()
+
+// The tiles' entrance stagger: 60ms apart, starting again from 0 at each new
+// run of one category, as the prototype had it.
+const REVEAL_STEP_MS = 60
+const revealDelays = photos.reduce<number[]>((delays, photo, index) => {
+  const continuesRun = index > 0 && photos[index - 1].category === photo.category
+  delays.push(continuesRun ? delays[index - 1] + REVEAL_STEP_MS : 0)
+
+  return delays
+}, [])
 ---
 
 <BaseLayout
@@ -75,14 +88,14 @@ import { GALLERY_FILTERS, GALLERY_PHOTOS } from "@data/gallery"
         })()
       </script>
       <div class="gallery-grid" id="ggrid">
-        {GALLERY_PHOTOS.map((photo, i) => (
+        {photos.map((photo, i) => (
           <GalleryTile
             class:list={{ "gallery-item-span-two": photo.wide }}
             data-cat={photo.category}
             data-title={photo.title}
             data-tag={photo.tag}
             data-reveal="img"
-            style={i === 0 ? undefined : `--d: ${photo.revealDelay}ms`}
+            style={i === 0 ? undefined : `--d: ${revealDelays[i]}ms`}
             tag={photo.badge ?? photo.tag}
             photo={{
               src: photo.src,

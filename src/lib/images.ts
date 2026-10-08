@@ -1,6 +1,6 @@
 // Every photograph on the site, looked up by a short key that mirrors its
 // folder under src/assets/images/ — "venue/ballroom-night",
-// "reception-menu/stations/oyster-royale". Organised by SUBJECT (what the
+// "food-and-drink/canapes-tray". Organised by SUBJECT (what the
 // photo shows), not by which page uses it: most photos appear on several
 // pages, and "hero" is a role a photo plays, not what it is.
 //
@@ -33,8 +33,7 @@ export const image = (key: string): ImageMetadata => {
 // re-encoded (re-encoding a lossy file loses quality a second time), and
 // only scaled-down variants are generated. This list is also the list of
 // originals to request from Bacchus; delete an entry once its original is in.
-// The stations are AI-generated placeholders, kept apart: they're due to be
-// replaced with real photography rather than upgraded.
+// Photos stored in Sanity carry their own flag instead (RemotePhoto, below).
 export const WEB_COPY_ONLY = new Set([
   "weddings/couple-outside-2",
   "weddings/oysters",
@@ -52,5 +51,20 @@ export const WEB_COPY_ONLY = new Set([
   "brand/bacchus-logo",
 ])
 
-export const isWebCopyOnly = (key: string): boolean =>
-  WEB_COPY_ONLY.has(key) || key.startsWith("reception-menu/stations/")
+export const isWebCopyOnly = (key: string): boolean => WEB_COPY_ONLY.has(key)
+
+// A photograph stored in Sanity rather than in src/assets/images/: the
+// gallery, the signature dishes and the stations, which the client edits.
+// It goes through the same pipeline as a local photo (Photo.astro), fetched
+// from Sanity's CDN at build time; the width and height come from Sanity
+// too, since Astro can't read them from a file it doesn't have yet.
+export interface RemotePhoto {
+  url: string
+  width: number
+  height: number
+  // An already-compressed copy, served untouched (see WEB_COPY_ONLY above).
+  isWebCopy: boolean
+}
+
+// What <Photo src> accepts: a key from this file, or a photo from Sanity.
+export type PhotoSource = string | RemotePhoto

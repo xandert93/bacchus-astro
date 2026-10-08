@@ -6,8 +6,8 @@
 //
 //   node scripts/markup-diff.mjs <distA> <distB> [route ...]
 import fs from "node:fs"
-import path from "node:path"
 import { chromium } from "@playwright/test"
+import { pageFile } from "./lib/page-file.mjs"
 
 const [a, b, ...routes] = process.argv.slice(2)
 const pages = routes.length
@@ -27,7 +27,7 @@ const pages = routes.length
 const browser = await chromium.launch()
 const page = await browser.newPage()
 const dump = async (dist, route) => {
-  const file = path.resolve(dist, `.${route}`, "index.html")
+  const file = pageFile(dist, route)
   // Scripts are stripped first: an inline module script would otherwise run
   // here and change the markup (the marquee doubles its own words, say),
   // and only some scripts are inlined, so the two builds wouldn't match.

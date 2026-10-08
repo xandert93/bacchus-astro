@@ -45,7 +45,31 @@ export default defineType({
           description: "What is in the photograph, for someone who cannot see it.",
           validation: (Rule) => Rule.required(),
         }),
+        defineField({
+          name: "isWebCopy",
+          title: "Web copy — the original is still to come",
+          type: "boolean",
+          initialValue: false,
+          description:
+            "On for an already-compressed copy. The site serves it as it is rather than compressing it a second time. Upload the original when it arrives and turn this off.",
+        }),
       ],
+    }),
+    defineField({
+      name: "course",
+      title: "Course",
+      type: "string",
+      description:
+        'The small label on the photo and in the lightbox, e.g. "Cold Canapé", "Dessert".',
+    }),
+    defineField({
+      name: "placeholderInitials",
+      title: "Initials on the placeholder tile",
+      type: "string",
+      description:
+        'Shown on the black "photo to follow" tile while there is no photograph, e.g. "BC" for Beef Carpaccio.',
+      hidden: ({ parent }) => Boolean(parent?.image),
+      validation: (Rule) => Rule.max(3),
     }),
     defineField({
       name: "isPlaceholderImage",

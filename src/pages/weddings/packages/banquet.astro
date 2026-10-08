@@ -1,6 +1,7 @@
 ---
 // /weddings/packages/banquet — the Banquet package: a six-course seated
-// dinner in three tiers. The content is src/data/packages/banquet.ts.
+// dinner in three tiers. The tiers and menus come from Sanity
+// (src/lib/sanity/packages.ts).
 //
 // PRICING IS SHOWN WITH A WARNING, not silently resolved: the client quote
 // gives €65/€85/€95, while client correspondence says banqueting starts
@@ -13,7 +14,7 @@
 // read as finished choices. Pass PageHero an image, and give the dishes
 // photos in the data file, once Bacchus supplies them.
 import BaseLayout from "@layouts/BaseLayout.astro"
-import { BANQUET_TIERS } from "@data/packages/banquet"
+import { getPackageTiers } from "@lib/sanity/packages"
 import PackageTierSection from "@components/packages/PackageTierSection.astro"
 import PackageMenuNote from "@components/packages/PackageMenuNote.astro"
 import PageHero from "@components/sections/PageHero.astro"
@@ -21,6 +22,8 @@ import EnquirySection from "@components/enquiry/EnquirySection.astro"
 import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
 import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
 import Button from "@components/ui/Button.astro"
+
+const tiers = await getPackageTiers("banquet")
 
 // The "closer look" photo strip.
 const carouselSlides = [
@@ -82,7 +85,7 @@ const carouselSlides = [
     </Fragment>
   </PageHero>
 
-  <PackageTierSection tiers={BANQUET_TIERS}>
+  <PackageTierSection tiers={tiers}>
     <Fragment slot="heading">
       Compare the three <em>tiers</em>
     </Fragment>
