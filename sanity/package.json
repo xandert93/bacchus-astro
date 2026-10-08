@@ -1,0 +1,25 @@
+{
+  "name": "bacchus-studio",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Sanity Studio for Bacchus. Its own package so the Studio's React dependencies stay out of the Astro site.",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "check": "tsc --noEmit",
+    "import": "sanity dataset import import/content.ndjson"
+  },
+  "dependencies": {
+    "@sanity/vision": "^6.18.0",
+    "react": "^19.2.2",
+    "react-dom": "^19.2.2",
+    "sanity": "^6.18.0",
+    "styled-components": "^6.1.15"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "^5.9.3"
+  }
+}

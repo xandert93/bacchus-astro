@@ -85,19 +85,51 @@ from a small JSON endpoint on load.
 
 ## Step 1 — create the project
 
-Small, and it blocks everything else.
+Everything here is done except the part that needs a Sanity account.
 
-- Create the Sanity project and its dataset **in the EU region**. Decided, and
-  it has to be set at creation: the data is largely EU residents' personal
-  details, Sanity's default is the US, and changing it later means exporting
-  everything and re-importing into a new project.
-- Install `sanity` and `@sanity/vision`, drop `sanity` from the `exclude` list
-  in `tsconfig.json` so the schemas are typechecked with everything else, and
-  boot the Studio.
-- Fix whatever the first boot complains about. 37 types written without ever
-  being loaded will not be perfect.
-- Add the project ID and dataset as environment variables, locally and in the
-  Cloudflare dashboard.
+**Done.** The Studio is installed (Sanity v6) as its own package, with its
+Studio config, its CLI config and its own TypeScript setup. The schemas have
+been through their shakeout and came out clean: `tsc` reports 0 errors, and
+Sanity's own `schema validate` reports **0 errors and 0 warnings** across all
+37 types. One real mistake surfaced and was fixed — `faq.showOnPages` declared
+both a `tags` layout and a list of allowed values, which makes Sanity ignore
+the list and accept anything typed in, so an FAQ could have been assigned to a
+page that does not exist.
+
+**Still to do, and only you can do it**, because it needs a Sanity login that
+an agent session cannot perform:
+
+1. Create the project at [sanity.io/manage](https://sanity.io/manage) with its
+   dataset **in the EU region**. Decided, and it must be set at creation: the
+   data is largely EU residents' personal details, Sanity's default is the US,
+   and changing it later means exporting everything into a new project.
+2. `cp sanity/.env.example sanity/.env.local` and put the project ID in it.
+   The config throws a named error when it is missing rather than falling back
+   to a placeholder, so a half-configured Studio fails immediately instead of
+   failing confusingly against a project that does not exist.
+3. `npx sanity login`, once, from inside `sanity/`.
+4. `npm run sanity:dev` to confirm the Studio opens, then
+   `npm run sanity:migrate && npm run sanity:import` to load the content.
+
+When the Astro site later starts reading from Sanity, the project ID and
+dataset also need adding in the Cloudflare dashboard.
+
+**The Studio is its own npm package** in `sanity/`, not a dependency of the
+Astro site. Sanity v6 needs React 19, React DOM and styled-components, and
+this site ships no framework JavaScript; adding all of that to serve an admin
+tool the public never loads would undo that for nothing. The root
+`tsconfig.json` keeps excluding `sanity/`, which typechecks itself.
+
+Commands from the repo root:
+
+| Command                  | What it does                                 |
+| ------------------------ | -------------------------------------------- |
+| `npm run sanity:install` | Installs the Studio's own dependencies       |
+| `npm run sanity:dev`     | Runs the Studio locally                      |
+| `npm run sanity:check`   | Typechecks the schemas                       |
+| `npm run sanity:migrate` | Regenerates the import file from `src/data/` |
+| `npm run sanity:import`  | Loads that file into the dataset             |
+| `npm run sanity:deploy`  | Publishes the Studio to its hosted URL       |
 
 ## Step 2 — move the content in
 

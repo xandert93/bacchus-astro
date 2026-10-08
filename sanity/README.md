@@ -7,7 +7,20 @@ dataset, and `sanity` is not installed, so none of it has been typechecked or
 loaded into a Studio. The steps to change that, in order, are
 `docs/planning/sanity-rollout.md`; this file is only the model itself.
 
-Authored for Sanity v4 (`defineType` / `defineField`, TypeScript).
+Authored for Sanity v6 (`defineType` / `defineField`, TypeScript).
+
+**The Studio is its own npm package**, with its own `package.json`,
+`tsconfig.json` and `node_modules` here in `sanity/`. It is not part of the
+Astro site's dependency tree, and that is deliberate: Sanity v6 requires React
+19, React DOM and styled-components, and the Astro site ships no framework
+JavaScript at all. Pulling React in to serve an admin tool the public never
+loads would undo that for nothing.
+
+So the two halves stay apart. The Studio is developed and deployed on its own
+(`sanity deploy` publishes it to a Sanity-hosted URL), and the Astro site will
+only ever need `@sanity/client` to read content. The root `tsconfig.json`
+therefore keeps excluding `sanity/` — this package typechecks itself with
+`npm run sanity:check`.
 
 ---
 

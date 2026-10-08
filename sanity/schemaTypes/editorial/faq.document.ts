@@ -120,7 +120,10 @@ export default defineType({
           { title: "Deposit page", value: "deposit" },
           { title: "Restaurant", value: "restaurant" },
         ],
-        layout: "tags",
+        // No `layout: "tags"` here: tags are for free-form entry, and these
+        // are a fixed set of pages. Declaring both makes Sanity ignore the
+        // list and accept anything typed in, which would silently let an FAQ
+        // be assigned to a page that does not exist.
       },
       description:
         "Empty means it is held for the assistant and the guide articles but not shown on any page.",
