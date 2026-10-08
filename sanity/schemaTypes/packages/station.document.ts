@@ -60,6 +60,14 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "catalogueNumber",
+      title: "Catalogue number",
+      type: "number",
+      description:
+        "The station's number in the catalogue. The page's \"add to selection\" state is keyed off it, so keep it unique and never reuse one.",
+      validation: (Rule) => Rule.required().integer().min(1),
+    }),
+    defineField({
       name: "order",
       title: "Order within category",
       type: "number",
@@ -123,6 +131,14 @@ export default defineType({
           description:
             "True for all sixteen today. Drives the on-page disclaimer. See the note on this type.",
         }),
+        defineField({
+          name: "isWebCopy",
+          title: "Web copy — the original is still to come",
+          type: "boolean",
+          initialValue: false,
+          description:
+            "On for an already-compressed copy. The site serves it as it is rather than compressing it a second time. Upload the original when it arrives and turn this off.",
+        }),
       ],
     }),
     defineField({
@@ -134,8 +150,8 @@ export default defineType({
     }),
   ],
   // Own fields only — a list cannot be sorted by a field behind a reference.
-  // Category grouping happens in the query (queries/content.ts), which fetches
-  // categories and nests their stations underneath.
+  // Category grouping happens in the site's query (src/lib/sanity/stations.ts),
+  // which fetches categories and nests their stations underneath.
   orderings: [
     {
       title: "Order within category",
