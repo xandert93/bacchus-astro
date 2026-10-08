@@ -54,3 +54,19 @@ export const WEB_COPY_ONLY = new Set([
 
 export const isWebCopyOnly = (key: string): boolean =>
   WEB_COPY_ONLY.has(key) || key.startsWith("reception-menu/stations/")
+
+// A photograph stored in Sanity rather than in src/assets/images/: the
+// gallery, the signature dishes and the stations, which the client edits.
+// It goes through the same pipeline as a local photo (Photo.astro), fetched
+// from Sanity's CDN at build time; the width and height come from Sanity
+// too, since Astro can't read them from a file it doesn't have yet.
+export interface RemotePhoto {
+  url: string
+  width: number
+  height: number
+  // An already-compressed copy, served untouched (see WEB_COPY_ONLY above).
+  isWebCopy: boolean
+}
+
+// What <Photo src> accepts: a key from this file, or a photo from Sanity.
+export type PhotoSource = string | RemotePhoto

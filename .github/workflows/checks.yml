@@ -7,6 +7,12 @@ on:
   push:
   pull_request:
 
+# The build reads the site's content from Sanity, whose dataset is private.
+# The token is stored on GitHub under Settings → Secrets and variables →
+# Actions, and only ever appears in the logs as ***.
+env:
+  SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+
 # A newer push to the same branch cancels the run still going for the old one.
 concurrency:
   group: checks-${{ github.ref }}

@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config"
+import { defineConfig, envField } from "astro/config"
 import sitemap from "@astrojs/sitemap"
 import { draftPages } from "./src/integrations/draft-pages"
 
@@ -32,6 +32,25 @@ export default defineConfig({
     // so they're never in it.
     sitemap(),
   ],
+  image: {
+    // Photos the client manages in Sanity (the gallery, the signature dishes,
+    // the stations) are fetched from its CDN at build time and go through
+    // the same pipeline as the ones in src/assets/: AVIF and WebP, every
+    // size, served from this site. Only listed domains are processed.
+    domains: ["cdn.sanity.io"],
+  },
+  env: {
+    schema: {
+      // Reads the private Sanity dataset during the build. "secret" means it
+      // can only be imported by server code, so it can't end up in a page's
+      // JavaScript. Set in .env locally, and as a secret on GitHub and in
+      // the Cloudflare dashboard (docs/planning/sanity-rollout.md, step 3).
+      SANITY_API_READ_TOKEN: envField.string({ context: "server", access: "secret" }),
+    },
+    // Without the token every query comes back empty, so fail at the start
+    // of the build rather than part-way through it.
+    validateSecrets: true,
+  },
   redirects: {
     // The package pages live under /weddings/packages/<leaf>, but there is no
     // packages overview page: Weddings' own packages section already is one.
