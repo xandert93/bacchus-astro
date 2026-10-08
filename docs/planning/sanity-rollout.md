@@ -99,16 +99,19 @@ page that does not exist.
 **Still to do, and only you can do it**, because it needs a Sanity login that
 an agent session cannot perform:
 
-1. Create the project at [sanity.io/manage](https://sanity.io/manage) with its
-   dataset **in the EU region**. Decided, and it must be set at creation: the
-   data is largely EU residents' personal details, Sanity's default is the US,
-   and changing it later means exporting everything into a new project.
+1. Create the project at [sanity.io/manage](https://sanity.io/manage). There
+   is no region to pick: Sanity stores every dataset in the EU (Google Cloud,
+   Belgium), which is what the personal data in enquiries needs anyway.
 2. `cp sanity/.env.example sanity/.env.local` and put the project ID in it.
    The config throws a named error when it is missing rather than falling back
    to a placeholder, so a half-configured Studio fails immediately instead of
    failing confusingly against a project that does not exist.
 3. `npx sanity login`, once, from inside `sanity/`.
-4. `npm run sanity:dev` to confirm the Studio opens, then
+4. **Make the `production` dataset private.** From inside `sanity/`, run
+   `npx sanity dataset visibility set production private`. A public dataset
+   answers any query without a token, which would publish every enquiry's name
+   and email. The site reads with a server-side token instead.
+5. `npm run sanity:dev` to confirm the Studio opens, then
    `npm run sanity:migrate && npm run sanity:import` to load the content.
 
 When the Astro site later starts reading from Sanity, the project ID and

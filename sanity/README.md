@@ -195,8 +195,8 @@ Things the schema work raised that still need an answer. What the client owes
 us more broadly is in `docs/planning/sanity-rollout.md`.
 
 1. **Staff roles.** Least-privilege rather than everyone-an-administrator.
-   Reading an enquiry means processing personal data. (The dataset region is
-   settled: EU, set at creation.)
+   Reading an enquiry means processing personal data. (Where the data lives
+   is settled: Sanity stores every dataset in the EU, and ours is private.)
 2. **Personal-data retention.** `weddingPolicy.retentionMonths` defaults to 36
    and feeds the review date on every consent record. The number is the
    client's call; the scheduled purge needs _a_ number to work from.
