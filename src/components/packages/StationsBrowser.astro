@@ -10,18 +10,21 @@
 // thumbnails from the cards and un-hides what each layout uses. So the
 // cards are the single source of content for both, and each list is its
 // own lightbox group.
-import { STATIONS, STATION_CATEGORIES } from "@data/packages/reception-stations"
+import type { Station, StationCategory } from "@lib/sanity/stations"
 import StationCard from "./StationCard.astro"
 import Button from "@components/ui/Button.astro"
 
 interface Props {
   variant: "stage" | "carousel"
+  categories: StationCategory[]
+  // In display order: grouped by category.
+  stations: Station[]
 }
 
-const { variant } = Astro.props
+const { variant, categories, stations } = Astro.props
 const isStage = variant === "stage"
 const lightboxGroup = isStage ? "stations-hybrid-mobtab" : "stations-hybrid-desktop"
-const labelOf = (id: string) => STATION_CATEGORIES.find((c) => c.id === id)!.label
+const labelOf = (id: string) => categories.find((category) => category.id === id)!.label
 
 const previousArrow = "M13 5H2m3.5-3.5L2 5l3.5 3.5"
 const nextArrow = "M1 5h11M8.5 1.5 12 5 8.5 8.5"
@@ -41,7 +44,7 @@ const nextArrow = "M1 5h11M8.5 1.5 12 5 8.5 8.5"
       hidden
     >
       <span class="pill" aria-hidden="true" />
-      {STATION_CATEGORIES.map((category, i) => (
+      {categories.map((category, i) => (
         <button
           type="button"
           role="tab"
@@ -67,7 +70,7 @@ const nextArrow = "M1 5h11M8.5 1.5 12 5 8.5 8.5"
       aria-label="Jump to a station category"
       hidden
     >
-      {STATION_CATEGORIES.map((category, i) => (
+      {categories.map((category, i) => (
         <button
           type="button"
           class="package-stations-category-tab"
@@ -112,7 +115,7 @@ const nextArrow = "M1 5h11M8.5 1.5 12 5 8.5 8.5"
         id={isStage ? undefined : "package-stations-card-list-hybrid"}
         role="list"
       >
-        {STATIONS.map((station) => (
+        {stations.map((station) => (
           <StationCard
             station={station}
             categoryLabel={labelOf(station.category)}
@@ -190,7 +193,7 @@ const nextArrow = "M1 5h11M8.5 1.5 12 5 8.5 8.5"
                 01
               </span>
               <span class="package-stations-carousel-counter-total">
-                / <span data-carousel-total>{STATIONS.length}</span>
+                / <span data-carousel-total>{stations.length}</span>
               </span>
             </p>
           </>

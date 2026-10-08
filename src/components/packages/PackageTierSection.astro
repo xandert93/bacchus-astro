@@ -17,7 +17,7 @@
 // The sticky switcher (a compact tier picker pinned while the menus are in
 // view) sizes its buttons to fit three short names on a phone; Beverage's
 // four categories wouldn't fit, so it turns it off.
-import type { PackageTier } from "@data/packages/types"
+import type { PackageTier } from "@lib/sanity/packages"
 import PackageDish from "./PackageDish.astro"
 import PackageMenuGroup from "./PackageMenuGroup.astro"
 import "./PackageTierSection.css"
@@ -111,7 +111,7 @@ const { tiers, id, stickySwitch = true } = Astro.props
               {tier.intro && <p class="package-panel-intro">{tier.intro}</p>}
               {tier.dishes && (
                 <>
-                  <h4 class="package-dishes-label">{tier.dishesLabel}</h4>
+                  <h4 class="package-dishes-label">Signature dishes</h4>
                   <div class="package-dishes-grid" data-reveal-group>
                     {tier.dishes.map((dish) => (
                       <PackageDish dish={dish} tierId={tier.id} />

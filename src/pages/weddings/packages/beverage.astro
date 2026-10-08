@@ -1,8 +1,8 @@
 ---
 // /weddings/packages/beverage — the Beverage package, the one package that is
 // NOT a meal format: chosen alongside whichever of Reception, Banquet or High
-// Tea a couple picks, and its four categories combine freely. The content is
-// src/data/packages/beverage.ts.
+// Tea a couple picks, and its four categories combine freely. The categories
+// and wine lists come from Sanity (src/lib/sanity/packages.ts).
 //
 // What differs from the other three pages, and why:
 // - four categories rather than three tiers, so the cards sit 2x2;
@@ -17,7 +17,7 @@
 // person, and guessing the unit of a chargeable fee is worse than leaving it
 // out.
 import BaseLayout from "@layouts/BaseLayout.astro"
-import { BEVERAGE_TIERS } from "@data/packages/beverage"
+import { getPackageTiers } from "@lib/sanity/packages"
 import PackageTierSection from "@components/packages/PackageTierSection.astro"
 import PackageMenuNote from "@components/packages/PackageMenuNote.astro"
 import PageHero from "@components/sections/PageHero.astro"
@@ -27,6 +27,8 @@ import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
 // After the components, so it overrides the shared package styles.
 import "./_beverage.css"
 import Button from "@components/ui/Button.astro"
+
+const tiers = await getPackageTiers("beverage")
 
 // The "closer look" photo strip.
 const carouselSlides = [
@@ -88,7 +90,7 @@ const carouselSlides = [
     </Fragment>
   </PageHero>
 
-  <PackageTierSection tiers={BEVERAGE_TIERS} stickySwitch={false}>
+  <PackageTierSection tiers={tiers} stickySwitch={false}>
     <Fragment slot="heading">
       The four <em>categories</em>
     </Fragment>

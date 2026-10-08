@@ -4,8 +4,8 @@
 // added to any of them. Reached from the Reception card on /weddings; not in
 // the nav, by design.
 //
-// The content is data (src/data/packages/reception.ts and
-// reception-stations.ts); this page only arranges the sections. The tier
+// The content comes from Sanity (src/lib/sanity/packages.ts and
+// stations.ts); this page only arranges the sections. The tier
 // section and its behaviour are shared with the other three package pages
 // (PackageTierSection, PackageTierSection.js); the stations are Reception-only
 // (ReceptionStations, ReceptionStations.js). Every dish tile and station
@@ -16,7 +16,7 @@
 // how the tiers and the stations were built in separate sandboxes and
 // merged.
 import BaseLayout from "@layouts/BaseLayout.astro"
-import { RECEPTION_TIERS } from "@data/packages/reception"
+import { getPackageTiers } from "@lib/sanity/packages"
 import PackageTierSection from "@components/packages/PackageTierSection.astro"
 import ReceptionStations from "@components/packages/ReceptionStations.astro"
 import PackageMenuNote from "@components/packages/PackageMenuNote.astro"
@@ -26,6 +26,8 @@ import WaitlistPopover from "@components/enquiry/WaitlistPopover.astro"
 import Lightbox from "@components/ui/Lightbox.astro"
 import PhotoCarousel from "@components/sections/PhotoCarousel.astro"
 import Button from "@components/ui/Button.astro"
+
+const tiers = await getPackageTiers("reception")
 
 // The "closer look" photo strip.
 const carouselSlides = [
@@ -94,7 +96,7 @@ const carouselSlides = [
     </Fragment>
   </PageHero>
 
-  <PackageTierSection tiers={RECEPTION_TIERS} id="reception-tiers">
+  <PackageTierSection tiers={tiers} id="reception-tiers">
     <Fragment slot="heading">
       Compare the three <em>tiers</em>
     </Fragment>
