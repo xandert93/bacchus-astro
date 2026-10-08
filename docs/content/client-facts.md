@@ -270,9 +270,12 @@ Everything below is illustrative and is labelled as such on the page.
 
 ## Questions for the client
 
-- **The CMS subscription**, by 7 November 2026: Sanity's Growth plan, needed
-  to keep enquiry data private, is paid per person who logs in. Who pays, and
-  how many staff need a login? (`docs/planning/sanity-rollout.md`, step 8.)
+- **The CMS subscription**, by 7 November 2026, when the free trial ends:
+  Sanity's Growth plan keeps enquiry data private and lets staff have
+  limited roles. It's $15 a month per person who logs in. Will Bacchus pay
+  for it on their own account, and how many staff need to log in?
+  (`docs/planning/sanity-rollout.md`, step 8, which also covers the free
+  fallback.)
 
 - **Space names**: are the Secret Garden, Prince De Redin Hall and Terrace the
   right names, and is "the ballroom" the Prince De Redin Hall?

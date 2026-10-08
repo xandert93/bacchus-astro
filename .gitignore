@@ -41,3 +41,7 @@ playwright-report/
 
 # Sanity Studio's local runtime cache
 /sanity/.sanity/
+
+# Exports made by `npm run sanity:copy-production` on the way to the
+# development dataset: a full copy of the client's content, never committed.
+/sanity/exports/

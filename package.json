@@ -21,6 +21,8 @@
     "sanity:check": "npm --prefix sanity run check",
     "sanity:build": "npm --prefix sanity run build",
     "sanity:deploy": "npm --prefix sanity run deploy",
+    "sanity:seed": "npm --prefix sanity run seed",
+    "sanity:copy-production": "npm --prefix sanity run copy-production",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

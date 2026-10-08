@@ -46,6 +46,15 @@ export default defineConfig({
       // JavaScript. Set in .env locally, and as a secret on GitHub and in
       // the Cloudflare dashboard (docs/planning/sanity-rollout.md, step 3).
       SANITY_API_READ_TOKEN: envField.string({ context: "server", access: "secret" }),
+      // Which dataset the site reads. Leave it unset everywhere except your
+      // own .env, where "development" points `npm run dev` at the seed data
+      // (sanity/seed/). The live site and CI always read production.
+      SANITY_DATASET: envField.enum({
+        context: "server",
+        access: "public",
+        values: ["production", "development"],
+        default: "production",
+      }),
     },
     // Without the token every query comes back empty, so fail at the start
     // of the build rather than part-way through it.

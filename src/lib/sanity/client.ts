@@ -4,11 +4,12 @@
 // ever sent to one. The content is baked into the HTML; publishing in the
 // Studio triggers a rebuild (docs/planning/sanity-rollout.md, step 3).
 import { createClient } from "@sanity/client"
-import { SANITY_API_READ_TOKEN } from "astro:env/server"
-import { SANITY_DATASET, SANITY_PROJECT_ID } from "@studio/lib/project"
+import { SANITY_API_READ_TOKEN, SANITY_DATASET } from "astro:env/server"
+import { SANITY_PROJECT_ID } from "@studio/lib/project"
 
 const client = createClient({
   projectId: SANITY_PROJECT_ID,
+  // Production, unless .env says otherwise (astro.config.mjs).
   dataset: SANITY_DATASET,
   // Pinned, so a change on Sanity's side can't change what a query returns
   // without a commit here.
