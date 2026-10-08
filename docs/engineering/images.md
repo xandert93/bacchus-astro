@@ -22,6 +22,9 @@ How photos get from the originals to the page.
 - **`<Photo>` is lazy by default**: the browser fetches it only as it nears
   the screen. Only a photo in the first screenful passes `loading="eager"`
   (the header's logo); heroes are always eager, with `fetchpriority="high"`.
+- **No photo's largest copy is wider than 3200px** (`LARGEST_WIDTH` in
+  `Photo.astro`), however big the original. It's also what the lightbox
+  shows.
 
 ---
 

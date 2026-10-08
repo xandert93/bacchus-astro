@@ -59,3 +59,20 @@ for (const path of PAGES) {
     expect(downloaded.map((photo) => photo.alt)).toEqual([])
   })
 }
+
+// The originals run to 5504px. Served whole, the widest was a 1.4 MB photo
+// (2 MB in the lightbox) for a sharpness gain nobody would see.
+test("no photo offers a copy wider than 3200px", async ({ page }) => {
+  await page.goto("/")
+
+  const widths = await page.evaluate(() =>
+    [...document.querySelectorAll("img")]
+      .filter((img) => !img.closest(".hero-media"))
+      .flatMap((img) => [img, ...(img.parentElement?.querySelectorAll("source") ?? [])])
+      .flatMap((source) => (source.getAttribute("srcset") ?? "").match(/\d+(?=w)/g) ?? [])
+      .map(Number),
+  )
+
+  expect(widths.length).toBeGreaterThan(0)
+  expect(Math.max(...widths)).toBeLessThanOrEqual(3200)
+})

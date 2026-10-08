@@ -51,10 +51,15 @@ const WEBP_QUALITY = 82
 // Scaled-down variants of an already-lossy web copy get a gentler setting,
 // since they are being compressed for a second time.
 const WEB_COPY_QUALITY = 88
+// The largest copy made of any photo. The originals run to 5504px, and
+// served whole the widest was a 1.4 MB download that only a 4K screen would
+// pick, for a sharpness gain nobody would see. It's also the copy the
+// lightbox shows (the img's src), which never needs more.
+const LARGEST_WIDTH = 3200
 
 const meta = image(key)
 const webCopy = isWebCopyOnly(key)
-const cap = Math.min(meta.width, maxWidth ?? Infinity)
+const cap = Math.min(meta.width, maxWidth ?? LARGEST_WIDTH)
 const widths = [320, 480, 640, 960, 1280, 1600, 1920, 2400]
   .filter((w) => w < cap)
   .concat(webCopy && cap === meta.width ? [] : [cap])
