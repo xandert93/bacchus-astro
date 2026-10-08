@@ -16,13 +16,11 @@
     "lint": "eslint . --cache && stylelint \"src/**/*.{css,astro}\"",
     "lint:fix": "eslint . --cache --fix && stylelint \"src/**/*.{css,astro}\" --fix",
     "test:e2e": "playwright test",
-    "sanity:migrate": "node scripts/sanity-migrate.mjs",
     "sanity:install": "npm --prefix sanity install",
     "sanity:dev": "npm --prefix sanity run dev",
     "sanity:check": "npm --prefix sanity run check",
     "sanity:build": "npm --prefix sanity run build",
     "sanity:deploy": "npm --prefix sanity run deploy",
-    "sanity:import": "npm --prefix sanity run import --",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

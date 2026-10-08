@@ -8,8 +8,7 @@
     "dev": "sanity dev",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "check": "tsc --noEmit",
-    "import": "sanity dataset import import/content.ndjson --replace"
+    "check": "tsc --noEmit"
   },
   "dependencies": {
     "@sanity/vision": "^6.18.0",
