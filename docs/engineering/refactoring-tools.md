@@ -2,9 +2,9 @@
 
 Scripts in `scripts/` for proving a refactor changed nothing it shouldn't.
 
-`scripts/` also holds `sanity-migrate.mjs`, which is not one of these: it
-turns `src/data/` into a Sanity import file. See
-`docs/planning/sanity-rollout.md`, step 2.
+`scripts/lib/page-file.mjs` maps a request path to its built file, in
+either output layout (`weddings.html`, or the older `weddings/index.html`),
+so a build from before 2026-10-08 still compares with one after.
 
 ---
 

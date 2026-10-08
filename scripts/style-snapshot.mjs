@@ -15,6 +15,7 @@ import { chromium, devices } from "@playwright/test"
 import fs from "node:fs"
 import http from "node:http"
 import path from "node:path"
+import { pageFile } from "./lib/page-file.mjs"
 const TYPES = {
   ".html": "text/html",
   ".js": "text/javascript",
@@ -26,9 +27,8 @@ const TYPES = {
 }
 const server = http
   .createServer((req, res) => {
-    let f = path.join("dist", decodeURIComponent(req.url.split("?")[0].split("#")[0]))
-    if (fs.existsSync(f) && fs.statSync(f).isDirectory()) f = path.join(f, "index.html")
-    if (!fs.existsSync(f)) {
+    const f = pageFile("dist", req.url.split("?")[0].split("#")[0])
+    if (!f) {
       res.writeHead(404)
       return res.end()
     }
