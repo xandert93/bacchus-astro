@@ -10,7 +10,7 @@
     "deploy": "sanity deploy",
     "check": "tsc --noEmit",
     "seed": "sanity exec seed/development.ts --with-user-token",
-    "copy-production": "sanity dataset export production exports/production.tar.gz --overwrite && sanity dataset import exports/production.tar.gz development --replace"
+    "copy-production": "sanity dataset export production exports/production.tar.gz --types weddingPackage,packageTier,menuDish,station,stationCategory,galleryImage --no-drafts --overwrite && sanity dataset import exports/production.tar.gz development --replace"
   },
   "dependencies": {
     "@sanity/vision": "^6.18.0",

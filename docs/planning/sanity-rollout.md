@@ -143,7 +143,14 @@ validation.
   document to anyone who isn't logged in, even in a public dataset.
 - **Refreshing the copied content**: `npm run sanity:copy-production`, then
   `npm run sanity:seed` again (the seed fills in a few fields the copy
-  resets).
+  resets). Worth doing when the client has changed menus or photos and you
+  want development to match, or when experiments have left development's
+  copy in a mess. It copies **published content only**: packages, tiers,
+  dishes, stations and their categories, and the gallery. Never bookings,
+  the waitlist, quotes or testimonials, which hold real people's details;
+  development keeps its invented ones. A type the site starts reading is
+  added to the `--types` list in `sanity/package.json` only if it holds no
+  personal data.
 - **In the Studio**, switch between Production and Development at the top
   left. Only `sanity dev` shows Development (`sanity/.env.development`); the
   Studio built for staff has Production alone.
