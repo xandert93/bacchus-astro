@@ -1,4 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
+import { PRICE_UNITS } from "../../lib/constants"
+import { help } from "../../lib/help"
+import { capitalise, formatEuros, joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * One tier or category within a package — Daisy, Lavender, Rose; Orchid,
@@ -54,7 +57,7 @@ export default defineType({
       title: "Name",
       type: "string",
       group: "content",
-      description: "Daisy, Lavender, Rose, Orchid, Local Wine, Themed Bars…",
+      description: "e.g. Daisy, Lavender, Rose, Orchid, Local Wine or Themed Bars.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -63,7 +66,7 @@ export default defineType({
       type: "slug",
       group: "content",
       options: { source: "name", maxLength: 48 },
-      description: "Used as the in-page anchor — #rose, #dahlia.",
+      description: "Generated from the name. Used in links to this tier, e.g. #rose.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -71,8 +74,10 @@ export default defineType({
       title: "Order",
       type: "number",
       group: "content",
-      description:
-        "Ascending. For ranked tiers this is the ranking; for Beverage's categories it is only display order.",
+      description: help(
+        "Lowest first.",
+        "For ranked tiers this is the ranking. For Beverage, it is only the order they appear in.",
+      ),
       validation: (Rule) => Rule.required().integer(),
     }),
     defineField({
@@ -82,15 +87,17 @@ export default defineType({
       group: "content",
       rows: 3,
       description:
-        'Shown on the tier card — e.g. "An elegant opening tier: ten cold and ten hot canapés, a three-dish flying buffet, four desserts, coffee and the wedding cake."',
+        'Shown on the tier card, e.g. "An elegant opening tier: ten cold and ten hot canapés, a three-dish flying buffet, four desserts, coffee and the wedding cake."',
     }),
     defineField({
       name: "price",
       title: "Base price",
       type: "price",
       group: "content",
-      description:
-        "Optional. A tier whose price is not trustworthy has none rather than a guess — see the note on this type. Applies all year unless a seasonal rate below covers the date.",
+      description: help(
+        "Optional. Leave empty rather than guess if the price isn't reliable.",
+        "Applies all year, unless a seasonal rate below covers the date.",
+      ),
     }),
     defineField({
       name: "seasonalRates",
@@ -98,8 +105,10 @@ export default defineType({
       type: "array",
       group: "content",
       of: [defineArrayMember({ type: "seasonalRate" })],
-      description:
-        "Overrides the base price for dates inside a season. Leave empty and the base price applies all year, which is where every tier stands today — Bacchus has not supplied a rate card.",
+      description: help(
+        "Replaces the base price for dates inside a season.",
+        "Empty for every tier at the moment: Bacchus hasn't sent seasonal prices yet.",
+      ),
     }),
 
     // --- Menu ---------------------------------------------------------------
@@ -109,8 +118,10 @@ export default defineType({
       type: "array",
       group: "menu",
       of: [defineArrayMember({ type: "menuGroup" })],
-      description:
-        'Cold Canapés, Hot Canapés, Flying Buffet, Desserts, Coffee Station, Wedding Cake — or, on Beverage, the wine packages. Read from the RENDERED catalogue pages, never from a text extraction: an automated pull drops every accented character and in places whole words ("Goat\'s Cheese" vanished from an Orchid line, "Gavi Di Gavi" from a wine name).',
+      description: help(
+        "e.g. Cold Canapés, Hot Canapés, Flying Buffet, Desserts, Coffee Station and Wedding Cake. On Beverage, the wine packages.",
+        "Copy from the catalogue by reading it, not by copying and pasting from the PDF: pasting loses accents and sometimes whole words.",
+      ),
     }),
     defineField({
       name: "signatureDishes",
@@ -118,8 +129,10 @@ export default defineType({
       type: "array",
       group: "menu",
       of: [defineArrayMember({ type: "signatureDish" })],
-      description:
-        'The three photographed tiles above the menu columns. Only Reception has real photography; the other three render placeholder tiles, and Beverage has none at all because "signature dishes" is the wrong frame for a wine list.',
+      description: help(
+        "Up to three photo tiles above the menu.",
+        "Only Reception has real photos so far. The others show placeholder tiles, and Beverage has none.",
+      ),
       validation: (Rule) => Rule.max(3),
     }),
     defineField({
@@ -129,7 +142,7 @@ export default defineType({
       group: "menu",
       rows: 4,
       description:
-        "A paragraph above the menu, for a tier that needs one before its list. Beverage's categories use it; the dining tiers have none.",
+        "Optional paragraph above the menu. Used on Beverage, not on the dining tiers.",
     }),
     defineField({
       name: "includedNote",
@@ -138,7 +151,7 @@ export default defineType({
       group: "menu",
       rows: 3,
       description:
-        "Anything true of the whole tier rather than one group. In-house cake is included in the reception package price, for instance.",
+        "Anything that applies to the whole tier, e.g. the in-house cake being included in the Reception price.",
     }),
   ],
   // Orderings sort on the document's own fields only — Sanity cannot sort a
@@ -152,25 +165,22 @@ export default defineType({
   preview: {
     select: {
       name: "name",
+      packageName: "package.name",
       amount: "price.amount",
       unit: "price.unit",
       status: "price.provenance.status",
       blocked: "price.provenance.blocksPublication",
     },
-    prepare: ({ name, amount, unit, status, blocked }) => {
-      const price = amount
-        ? `€${Number(amount).toFixed(2)} ${unit === "per-person" ? "pp" : (unit ?? "")}`.trim()
-        : "no price"
-      return {
-        title: name,
-        subtitle: [
-          price,
-          blocked ? "withheld" : null,
-          status && status !== "confirmed" ? status : null,
-        ]
-          .filter(Boolean)
-          .join(" · "),
-      }
-    },
+    prepare: ({ name, packageName, amount, unit, status, blocked }) => ({
+      title: name,
+      subtitle: joinParts(
+        packageName,
+        amount
+          ? joinParts(formatEuros(amount), optionTitle(PRICE_UNITS, unit))
+          : "No price",
+        blocked ? "Hidden from the site" : undefined,
+        status && status !== "confirmed" ? capitalise(status) : undefined,
+      ),
+    }),
   },
 })

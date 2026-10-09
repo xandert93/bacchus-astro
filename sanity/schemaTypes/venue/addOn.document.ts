@@ -1,4 +1,7 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { formatEuros, joinParts, optionTitle } from "../../lib/preview"
+import { PRICE_UNITS } from "../../lib/constants"
 
 /**
  * A priced extra that can appear on a quote — set-up items, equipment, hire
@@ -31,6 +34,15 @@ import { defineField, defineType } from "sanity"
  * deliberately NOT modelled here. They are not Bacchus's to sell, and they
  * belong to the preferred-supplier directory instead.
  */
+const ADD_ON_CATEGORIES = [
+  { title: "Furniture", value: "furniture" },
+  { title: "Decoration", value: "decoration" },
+  { title: "Technical (sound, lighting)", value: "technical" },
+  { title: "Bar", value: "bar" },
+  { title: "Service", value: "service" },
+  { title: "Other", value: "other" },
+] as const
+
 export default defineType({
   name: "addOn",
   title: "Add-on / set-up item",
@@ -46,16 +58,7 @@ export default defineType({
       name: "category",
       title: "Category",
       type: "string",
-      options: {
-        list: [
-          { title: "Furniture", value: "furniture" },
-          { title: "Decoration", value: "decoration" },
-          { title: "Technical (sound, lighting)", value: "technical" },
-          { title: "Bar", value: "bar" },
-          { title: "Service", value: "service" },
-          { title: "Other", value: "other" },
-        ],
-      },
+      options: { list: [...ADD_ON_CATEGORIES] },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -63,31 +66,34 @@ export default defineType({
       title: "Included in the hire fee at no extra charge",
       type: "boolean",
       initialValue: false,
-      description:
-        "Confirmed for catering furniture and utensils, basic decoration, and the in-house coordinator. An item with this on must never produce a priced quote line.",
+      description: help(
+        "Confirmed for catering furniture and utensils, basic decoration and the in-house coordinator.",
+        "When ticked, this item never adds a charge to a quote.",
+      ),
     }),
     defineField({
       name: "price",
       title: "Price",
       type: "price",
       hidden: ({ document }) => Boolean(document?.isIncludedAtNoCharge),
-      description: "Per the client quote. Not confirmed as current pricing.",
+      description: "Taken from a past quote. Not confirmed as the current price.",
     }),
     defineField({
       name: "description",
       title: "Description",
       type: "text",
       rows: 3,
-      description:
-        "What the item actually is, where the name alone would mislead. See the note on this type for the two live cases.",
+      description: "What the item actually is, where the name alone could mislead.",
     }),
     defineField({
       name: "availableForQuote",
       title: "Offer on quotes",
       type: "boolean",
       initialValue: true,
-      description:
-        "Off for anything recorded for reference but not currently offered. The client cautioned against couples adding much beyond a photobooth.",
+      description: help(
+        "Untick for anything kept for reference but not currently offered.",
+        "Bacchus has advised against couples adding much beyond a photobooth.",
+      ),
     }),
   ],
   orderings: [
@@ -110,9 +116,12 @@ export default defineType({
     },
     prepare: ({ name, category, amount, unit, free }) => ({
       title: name,
-      subtitle: free
-        ? `${category} · included at no charge`
-        : `${category} · €${Number(amount ?? 0).toFixed(2)} ${unit ?? ""}`,
+      subtitle: joinParts(
+        optionTitle(ADD_ON_CATEGORIES, category),
+        free
+          ? "Included at no charge"
+          : joinParts(formatEuros(amount), optionTitle(PRICE_UNITS, unit)),
+      ),
     }),
   },
 })

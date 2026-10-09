@@ -1,4 +1,6 @@
 import { defineField, defineType } from "sanity"
+import { PRICE_UNITS } from "../../lib/constants"
+import { formatEuros, joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * What a tier costs during one season.
@@ -46,8 +48,7 @@ export default defineType({
     },
     prepare: ({ seasonName, amount, unit }) => ({
       title: seasonName ?? "Season",
-      subtitle:
-        `€${Number(amount ?? 0).toFixed(2)} ${unit === "per-person" ? "pp" : (unit ?? "")}`.trim(),
+      subtitle: joinParts(formatEuros(amount), optionTitle(PRICE_UNITS, unit)),
     }),
   },
 })

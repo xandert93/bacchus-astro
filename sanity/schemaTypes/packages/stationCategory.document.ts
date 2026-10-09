@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
 
 /**
  * A grouping of reception stations — the six tabs on the stations section.
@@ -27,7 +28,7 @@ export default defineType({
       name: "label",
       title: "Full label",
       type: "string",
-      description: "Heads each card and names the tab for screen readers.",
+      description: "The heading on each card, and the tab's name for screen readers.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -35,7 +36,7 @@ export default defineType({
       title: "Tab label",
       type: "string",
       description:
-        "What the tab displays. Keep it to one short word — six of these share a mobile width.",
+        "What the tab shows. Keep it to one short word: six tabs share a phone's width.",
       validation: (Rule) => Rule.required().max(12),
     }),
     defineField({
@@ -43,8 +44,10 @@ export default defineType({
       title: "Slug",
       type: "slug",
       options: { source: "shortLabel", maxLength: 24 },
-      description:
-        'Matches the existing `data-group` values — boards, sea, fire, afield, italian, sweet. Note "afield" currently labels "Across Asia", which is a leftover rather than a rename; keep the slug stable regardless, the deep links use it.',
+      description: help(
+        "Used in links to this category. Don't change it once set, or existing links break.",
+        'e.g. "afield" for Across Asia is an old name, but changing it would break links.',
+      ),
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -55,10 +58,10 @@ export default defineType({
     }),
     defineField({
       name: "labelProvenance",
-      title: "Label — source & confirmation",
+      title: "Label: source & confirmation",
       type: "provenance",
       description:
-        "The six category labels are our editorial grouping, not the catalogue's, and are still awaiting the client's sign-off.",
+        "We grouped the stations into these six categories. Bacchus hasn't approved them yet.",
     }),
   ],
   orderings: [
@@ -68,7 +71,7 @@ export default defineType({
     select: { label: "label", short: "shortLabel", order: "order" },
     prepare: ({ label, short, order }) => ({
       title: label,
-      subtitle: `tab: ${short} · #${order}`,
+      subtitle: `Tab ${order ?? "?"}: "${short ?? ""}"`,
     }),
   },
 })

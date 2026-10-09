@@ -1,4 +1,6 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { capitalise } from "../../lib/preview"
 
 /**
  * A capacity figure, with its seating basis stated.
@@ -27,8 +29,10 @@ export default defineType({
       name: "min",
       title: "Minimum guests",
       type: "number",
-      description:
-        "Only where a real floor exists. Bacchus confirmed no minimum guest count and no minimum spend, so this is usually empty.",
+      description: help(
+        "Usually empty.",
+        "Bacchus has confirmed there is no minimum guest count or minimum spend.",
+      ),
       validation: (Rule) => Rule.min(0).integer(),
     }),
     defineField({
@@ -49,7 +53,7 @@ export default defineType({
         ],
         layout: "radio",
       },
-      description: "Required. A figure without this is not publishable.",
+      description: "Required. A guest number means little without it.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -57,7 +61,7 @@ export default defineType({
       title: "Layout note",
       type: "string",
       description:
-        'How the figure moves with the layout — e.g. "adjusted per guest count to stay comfortable at any size".',
+        'How the number changes with the layout, e.g. "adjusted per guest count to stay comfortable at any size".',
     }),
     defineField({
       name: "provenance",
@@ -69,10 +73,14 @@ export default defineType({
   preview: {
     select: { min: "min", max: "max", basis: "basis", status: "provenance.status" },
     prepare: ({ min, max, basis, status }) => {
-      const range = min ? `${min}–${max}` : `up to ${max}`
+      const range = min ? `${min}–${max}` : `Up to ${max}`
+
       return {
         title: `${range} ${basis === "either" ? "guests" : basis}`,
-        subtitle: status === "confirmed" ? undefined : `${status} — keeps the disclaimer`,
+        subtitle:
+          status === "confirmed"
+            ? "Confirmed"
+            : `${capitalise(status)}: shows a warning on the page`,
       }
     },
   },

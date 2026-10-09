@@ -1,4 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * A guide article — the five agreed pieces, and whatever follows them.
@@ -38,6 +40,19 @@ import { defineArrayMember, defineField, defineType } from "sanity"
  * wedding-specific — restaurant pieces, Mdina pieces, anything a diner would
  * read — which is what `restaurant` and `mdina` are here for.
  */
+const ARTICLE_CATEGORIES = [
+  { title: "Weddings", value: "weddings" },
+  { title: "Mdina & the estate", value: "mdina" },
+  { title: "Restaurant", value: "restaurant" },
+] as const
+
+const ARTICLE_STATUSES = [
+  { title: "Idea — agreed, not written", value: "idea" },
+  { title: "Draft", value: "draft" },
+  { title: "Blocked — cannot be written yet", value: "blocked" },
+  { title: "Published", value: "published" },
+] as const
+
 export default defineType({
   name: "guideArticle",
   title: "Guide article",
@@ -69,7 +84,7 @@ export default defineType({
       type: "text",
       group: "content",
       rows: 3,
-      description: "Shown on cards and in the Guides row. Two sentences at most.",
+      description: "Shown on the article's card. Two sentences at most.",
       validation: (Rule) => Rule.max(300),
     }),
     defineField({
@@ -136,15 +151,8 @@ export default defineType({
       title: "Category",
       type: "string",
       group: "content",
-      options: {
-        list: [
-          { title: "Weddings", value: "weddings" },
-          { title: "Mdina & the estate", value: "mdina" },
-          { title: "Restaurant", value: "restaurant" },
-        ],
-      },
-      description:
-        "See the note on this type for how this decides placement in the navigation.",
+      options: { list: [...ARTICLE_CATEGORIES] },
+      description: "Decides where the article appears in the site's menus.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -168,15 +176,7 @@ export default defineType({
       title: "Status",
       type: "string",
       group: "publication",
-      options: {
-        list: [
-          { title: "Idea — agreed, not written", value: "idea" },
-          { title: "Draft", value: "draft" },
-          { title: "Blocked — cannot be written yet", value: "blocked" },
-          { title: "Published", value: "published" },
-        ],
-        layout: "radio",
-      },
+      options: { list: [...ARTICLE_STATUSES], layout: "radio" },
       initialValue: "idea",
       validation: (Rule) => Rule.required(),
     }),
@@ -187,13 +187,15 @@ export default defineType({
       group: "publication",
       rows: 4,
       hidden: ({ document }) => document?.status !== "blocked",
-      description:
-        "What has to be settled first. For the cost guide: the Banquet pricing conflict, seasonal pricing, and the placeholder capacity figures.",
+      description: help(
+        "What has to be settled first.",
+        "For example, the cost guide is waiting on the Banquet pricing conflict, seasonal pricing and the real capacity figures.",
+      ),
       validation: (Rule) =>
         Rule.custom((value, context) => {
           const doc = context.document as { status?: string } | undefined
           if (doc?.status === "blocked" && !value) {
-            return "A blocked article has to say what is blocking it, or nobody will know when it is unblocked."
+            return "Say what is blocking it, so we know when it can go ahead."
           }
           return true
         }),
@@ -209,7 +211,7 @@ export default defineType({
       title: "Priority order",
       type: "number",
       group: "publication",
-      description: "The agreed best-first order. 1 is the ultimate guide.",
+      description: "The order to write them in. 1 is the ultimate guide.",
       validation: (Rule) => Rule.integer(),
     }),
     defineField({
@@ -235,7 +237,10 @@ export default defineType({
     select: { title: "title", status: "status", category: "category", order: "order" },
     prepare: ({ title, status, category, order }) => ({
       title: order ? `${order}. ${title}` : title,
-      subtitle: [status, category].filter(Boolean).join(" · "),
+      subtitle: joinParts(
+        optionTitle(ARTICLE_STATUSES, status),
+        optionTitle(ARTICLE_CATEGORIES, category),
+      ),
     }),
   },
 })

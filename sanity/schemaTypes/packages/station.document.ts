@@ -1,4 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { formatEuros, joinParts, pluralise } from "../../lib/preview"
 
 /**
  * One reception food station — Charcuterie Table, Oyster Royale, BBQ Table,
@@ -49,7 +51,7 @@ export default defineType({
       type: "slug",
       options: { source: "name", maxLength: 64 },
       description:
-        "The deep-link target — reception-package.html#<slug> today, /weddings/packages/reception#<slug> once on Astro. Note mobile deep-linking to a station is a known open bug.",
+        "Generated from the name. Used in links straight to this station. Don't change it once set.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -63,8 +65,10 @@ export default defineType({
       name: "catalogueNumber",
       title: "Catalogue number",
       type: "number",
-      description:
-        "The station's number in the catalogue. The page's \"add to selection\" state is keyed off it, so keep it unique and never reuse one.",
+      description: help(
+        "The station's number in the catalogue.",
+        "Each station needs its own number. Never reuse one, even after deleting a station.",
+      ),
       validation: (Rule) => Rule.required().integer().min(1),
     }),
     defineField({
@@ -77,39 +81,44 @@ export default defineType({
       name: "price",
       title: "Price",
       type: "price",
-      description: "Per person, as the card shows it — e.g. €10.50.",
+      description: "Per person, as shown on the card, e.g. €10.50.",
     }),
     defineField({
       name: "items",
       title: "Items",
       type: "array",
       of: [defineArrayMember({ type: "stationItem" })],
-      description:
-        "Also composed into the lightbox caption at render time. Do not maintain a second copy of this list anywhere.",
+      description: "Also used for the caption when the photo is opened full size.",
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
       name: "servingNote",
       title: "Serving note",
       type: "string",
-      description:
-        'How it is served — e.g. "Served with crackers, Grissini & freshly baked bread." Leads the lightbox caption.',
+      description: help(
+        'How it is served, e.g. "Served with crackers, Grissini & freshly baked bread."',
+        "Starts the caption when the photo is opened full size.",
+      ),
     }),
     defineField({
       name: "allItemsVegetarian",
       title: "Every item is vegetarian",
       type: "boolean",
       initialValue: false,
-      description:
-        'Lets the card show one "All vegetarian" badge instead of repeating (V) on every line — true today for Macaron Tower and Doughnut Wall. A backlog idea, not yet built; the flag is here so the data does not need revisiting when it is.',
+      description: help(
+        'Will let the card show one "All vegetarian" badge instead of (V) on every line, e.g. for the Macaron Tower and Doughnut Wall.',
+        "Not shown on the site yet.",
+      ),
     }),
     defineField({
       name: "isChefsPick",
       title: "Chef's pick",
       type: "boolean",
       initialValue: false,
-      description:
-        'A backlog idea for helping couples decide. Deliberately "Chef\'s pick" and not "popular" — there is nothing to back popularity as a factual claim.',
+      description: help(
+        "Will highlight the station to help couples choose. Not shown on the site yet.",
+        'It says "Chef\'s pick" rather than "popular" because we have no figures to back up popularity.',
+      ),
     }),
     defineField({
       name: "image",
@@ -128,16 +137,20 @@ export default defineType({
           title: "Placeholder image (AI-generated stand-in)",
           type: "boolean",
           initialValue: true,
-          description:
-            "True for all sixteen today. Drives the on-page disclaimer. See the note on this type.",
+          description: help(
+            "Ticked for all sixteen stations at the moment.",
+            "Shows a warning on the page. Untick when a real Bacchus photo replaces it.",
+          ),
         }),
         defineField({
           name: "isWebCopy",
           title: "Web copy — the original is still to come",
           type: "boolean",
           initialValue: false,
-          description:
-            "On for an already-compressed copy. The site serves it as it is rather than compressing it a second time. Upload the original when it arrives and turn this off.",
+          description: help(
+            "Tick if this is a compressed copy rather than the original photo. The site then won't compress it again.",
+            "When the original arrives, upload it and untick this.",
+          ),
         }),
       ],
     }),
@@ -146,7 +159,7 @@ export default defineType({
       title: "Name differs from the catalogue",
       type: "catalogueVariance",
       description:
-        '"BBQ Table" is the live case — the catalogue prints "Barbeque Table", which was first corrected to "Barbecue Table" on the British-English rule and then renamed again on request. A naming choice, so flag it to the client as a change rather than a correction.',
+        'Fill in when our name differs from the catalogue\'s, e.g. "BBQ Table" for the catalogue\'s "Barbeque Table".',
     }),
   ],
   // Own fields only — a list cannot be sorted by a field behind a reference.
@@ -163,19 +176,21 @@ export default defineType({
     select: {
       name: "name",
       amount: "price.amount",
+      category: "category.label",
+      items: "items",
       media: "image",
       placeholder: "image.isPlaceholder",
       chefsPick: "isChefsPick",
     },
-    prepare: ({ name, amount, media, placeholder, chefsPick }) => ({
+    prepare: ({ name, amount, category, items, media, placeholder, chefsPick }) => ({
       title: name,
-      subtitle: [
-        amount ? `€${Number(amount).toFixed(2)} pp` : null,
-        chefsPick ? "chef's pick" : null,
-        placeholder ? "placeholder image" : null,
-      ]
-        .filter(Boolean)
-        .join(" · "),
+      subtitle: joinParts(
+        category,
+        amount ? `${formatEuros(amount)} per person` : undefined,
+        pluralise(Array.isArray(items) ? items.length : undefined, "item"),
+        chefsPick ? "Chef's pick" : undefined,
+        placeholder ? "Placeholder photo" : undefined,
+      ),
       media,
     }),
   },

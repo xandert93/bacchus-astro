@@ -1,4 +1,6 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { joinParts } from "../../lib/preview"
 
 /**
  * A named trading period that pricing varies by — peak, shoulder, off-peak,
@@ -33,7 +35,8 @@ export default defineType({
       name: "name",
       title: "Name",
       type: "string",
-      description: 'What Bacchus calls it — "Peak", "Shoulder", "Christmas period".',
+      description:
+        'What Bacchus calls it, e.g. "Peak", "Shoulder" or "Christmas period".',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -47,16 +50,17 @@ export default defineType({
       name: "startDate",
       title: "From",
       type: "date",
-      description:
-        "For a recurring season only the month and day are used; the year is ignored.",
+      description: "For a season that repeats every year, only the day and month matter.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "endDate",
       title: "To (inclusive)",
       type: "date",
-      description:
-        "May fall before the start date on a recurring season that crosses the new year — a December-to-February period, say.",
+      description: help(
+        "The last day of the season.",
+        "It can be before the start date for a yearly season that crosses New Year, such as December to February.",
+      ),
       validation: (Rule) =>
         Rule.required().custom((value, context) => {
           const document = context.document as
@@ -79,23 +83,24 @@ export default defineType({
       type: "boolean",
       initialValue: false,
       description:
-        "On for a standing pattern, off for a period priced for one year only. See the note on this type for why both are supported.",
+        "Tick for a season that comes round every year. Leave unticked for a one-off.",
     }),
     defineField({
       name: "priority",
       title: "Priority",
       type: "number",
       initialValue: 0,
-      description:
-        "Highest wins where two seasons overlap a date — a Christmas period inside a wider winter season, for instance. Overlaps are legitimate, so the resolver needs a tiebreak rather than an error.",
+      description: help(
+        "Where two seasons overlap, the higher number wins.",
+        "For example, give a Christmas period a higher number than the winter season around it.",
+      ),
       validation: (Rule) => Rule.required().integer(),
     }),
     defineField({
       name: "provenance",
       title: "Source & confirmation",
       type: "provenance",
-      description:
-        "Expect 'unconfirmed' until Bacchus supplies their real season calendar. Nothing here came from a rate card.",
+      description: 'Expect "unconfirmed" until Bacchus sends their real season dates.',
       validation: (Rule) => Rule.required(),
     }),
   ],
@@ -131,13 +136,11 @@ export default defineType({
 
       return {
         title: name,
-        subtitle: [
+        subtitle: joinParts(
           `${format(startDate)} – ${format(endDate)}`,
-          repeats ? "every year" : null,
-          status === "confirmed" ? null : status,
-        ]
-          .filter(Boolean)
-          .join(" · "),
+          repeats ? "Every year" : "One-off",
+          status === "confirmed" ? undefined : "Unconfirmed",
+        ),
       }
     },
   },

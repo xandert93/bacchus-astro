@@ -1,4 +1,6 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { formatDate, joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * Someone waiting on a date that is currently taken.
@@ -38,6 +40,14 @@ import { defineField, defineType } from "sanity"
  * enquiries-received date is still actionable through a normal enquiry — so
  * offering both on one cell would be two competing calls to action.
  */
+const WAITLIST_STATUSES = [
+  { title: "Active — waiting", value: "active" },
+  { title: "Notified — date freed up, email sent", value: "notified" },
+  { title: "Converted — became an enquiry", value: "converted" },
+  { title: "Lapsed — date has passed", value: "lapsed" },
+  { title: "Unsubscribed", value: "unsubscribed" },
+] as const
+
 export default defineType({
   name: "waitlistEntry",
   title: "Waitlist entry",
@@ -59,22 +69,13 @@ export default defineType({
       name: "name",
       title: "Name",
       type: "string",
-      description: "Not required. See the note on this type.",
+      description: "Optional on the form, so it may be empty.",
     }),
     defineField({
       name: "status",
       title: "Status",
       type: "string",
-      options: {
-        list: [
-          { title: "Active — waiting", value: "active" },
-          { title: "Notified — date freed up, email sent", value: "notified" },
-          { title: "Converted — became an enquiry", value: "converted" },
-          { title: "Lapsed — date has passed", value: "lapsed" },
-          { title: "Unsubscribed", value: "unsubscribed" },
-        ],
-        layout: "radio",
-      },
+      options: { list: [...WAITLIST_STATUSES], layout: "radio" },
       initialValue: "active",
       validation: (Rule) => Rule.required(),
     }),
@@ -82,8 +83,10 @@ export default defineType({
       name: "verifiedAt",
       title: "Email verified at",
       type: "datetime",
-      description:
-        "Empty means unverified. The notification query MUST filter on this — an unverified address is one anybody could have typed in.",
+      description: help(
+        "Set when the person clicks the link in their confirmation email.",
+        "Empty means they haven't confirmed their address yet, so they won't be emailed when the date frees up.",
+      ),
     }),
     defineField({
       name: "notifiedAt",
@@ -96,7 +99,8 @@ export default defineType({
       title: "Became this enquiry",
       type: "reference",
       to: [{ type: "booking" }],
-      description: "Set if they came back and enquired after being notified.",
+      description:
+        "Filled in if they sent an enquiry after being told the date was free.",
     }),
     defineField({
       name: "consent",
@@ -125,12 +129,13 @@ export default defineType({
       status: "status",
       verified: "verifiedAt",
     },
-    prepare: ({ date, email, name, status, verified }) => {
-      const when = date ? new Date(date).toLocaleDateString("en-GB") : "no date"
-      return {
-        title: `${when} — ${name || email}`,
-        subtitle: [status, verified ? null : "unverified"].filter(Boolean).join(" · "),
-      }
-    },
+    prepare: ({ date, email, name, status, verified }) => ({
+      title: name || email || "Unnamed",
+      subtitle: joinParts(
+        formatDate(date) ?? "No date",
+        optionTitle(WAITLIST_STATUSES, status),
+        verified ? undefined : "Email not confirmed",
+      ),
+    }),
   },
 })

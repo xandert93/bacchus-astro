@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
 
 /**
  * One dish that can appear on a wedding package menu.
@@ -40,8 +41,10 @@ export default defineType({
       name: "name",
       title: "Dish",
       type: "string",
-      description:
-        "House style: British English, accents restored on foreign-language terms. Record any departure from the catalogue below.",
+      description: help(
+        "British English, with accents on foreign words (e.g. purée, jalapeño).",
+        'If this differs from the catalogue, record it under "Differs from the catalogue" below.',
+      ),
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -49,8 +52,7 @@ export default defineType({
       title: "Slug",
       type: "slug",
       options: { source: "name", maxLength: 96 },
-      description:
-        "Stable identifier. The migration script keys on this so a re-run updates dishes rather than creating a second copy of each.",
+      description: "Generated from the name. Don't change it once set.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -58,22 +60,24 @@ export default defineType({
       title: "Vegetarian (V)",
       type: "boolean",
       initialValue: false,
-      description:
-        "Only where the source marks it. Never inferred from the dish name. Ignored on packages whose source carries no markings at all.",
+      description: help(
+        "Tick only where the catalogue marks the dish (V). Never guess from the name.",
+        "Ignored on packages whose catalogue has no (V) markings at all.",
+      ),
     }),
     defineField({
       name: "note",
       title: "Note",
       type: "string",
       description:
-        'Qualifying detail that is part of the dish rather than a separate line — e.g. "one tier per one hundred contracted guests".',
+        'Extra detail that belongs with the dish, e.g. "one tier per one hundred contracted guests".',
     }),
     defineField({
       name: "catalogueVariance",
       title: "Differs from the catalogue",
       type: "catalogueVariance",
       description:
-        "Now a top-level field on a top-level document, which is what makes the list of copy changes awaiting the client's approval a single flat query rather than a traversal through every tier's nested menu groups.",
+        'Fill in when our wording differs from the catalogue. It then appears under "Copy changes awaiting approval" until Bacchus agrees.',
     }),
   ],
   orderings: [
@@ -89,7 +93,7 @@ export default defineType({
     prepare: ({ name, vegetarian, variance, approved }) => ({
       title: `${name}${vegetarian ? " (V)" : ""}`,
       subtitle: variance
-        ? `${variance} vs catalogue${approved ? "" : " — not yet approved"}`
+        ? `Differs from the catalogue · ${approved ? "Approved" : "Awaiting approval"}`
         : undefined,
     }),
   },

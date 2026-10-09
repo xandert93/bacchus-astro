@@ -1,4 +1,6 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { joinParts } from "../../lib/preview"
 
 /**
  * One photographed dish tile above a tier's menu columns.
@@ -29,7 +31,7 @@ export default defineType({
       name: "name",
       title: "Dish name",
       type: "string",
-      description: "Renders as the tile caption.",
+      description: "Shown as the caption on the tile.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -42,7 +44,8 @@ export default defineType({
           name: "alt",
           title: "Alt text",
           type: "string",
-          description: "What is in the photograph, for someone who cannot see it.",
+          description:
+            "Describe what's in the photo, for people who can't see it (e.g. screen reader users).",
           validation: (Rule) => Rule.required(),
         }),
         defineField({
@@ -50,8 +53,10 @@ export default defineType({
           title: "Web copy — the original is still to come",
           type: "boolean",
           initialValue: false,
-          description:
-            "On for an already-compressed copy. The site serves it as it is rather than compressing it a second time. Upload the original when it arrives and turn this off.",
+          description: help(
+            "Tick if this is a compressed copy rather than the original photo. The site then won't compress it again.",
+            "When the original arrives, upload it and untick this.",
+          ),
         }),
       ],
     }),
@@ -67,7 +72,7 @@ export default defineType({
       title: "Initials on the placeholder tile",
       type: "string",
       description:
-        'Shown on the black "photo to follow" tile while there is no photograph, e.g. "BC" for Beef Carpaccio.',
+        'Shown on the black "photo to follow" tile until there is a photo, e.g. "BC" for Beef Carpaccio.',
       hidden: ({ parent }) => Boolean(parent?.image),
       validation: (Rule) => Rule.max(3),
     }),
@@ -76,15 +81,17 @@ export default defineType({
       title: "Placeholder image (not real Bacchus photography)",
       type: "boolean",
       initialValue: false,
-      description:
-        'On means the page shows its oxblood placeholder disclaimer and the image appears in the "needs a real export" list. See the note on this type.',
+      description: help(
+        "Tick if this isn't a real Bacchus photo.",
+        'The page then shows a warning, and the image appears under "Placeholder images to replace".',
+      ),
     }),
   ],
   preview: {
     select: { name: "name", media: "image", placeholder: "isPlaceholderImage" },
     prepare: ({ name, media, placeholder }) => ({
       title: name,
-      subtitle: placeholder ? "placeholder image" : undefined,
+      subtitle: joinParts(placeholder ? "Placeholder image" : undefined),
       media,
     }),
   },

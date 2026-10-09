@@ -1,5 +1,13 @@
+import { CheckmarkCircleIcon } from "@sanity/icons/CheckmarkCircle"
+import { CloseCircleIcon } from "@sanity/icons/CloseCircle"
+import { InboxIcon } from "@sanity/icons/Inbox"
+import { RemoveCircleIcon } from "@sanity/icons/RemoveCircle"
+import { StarIcon } from "@sanity/icons/Star"
+import type { ComponentType } from "react"
 import { defineArrayMember, defineField, defineType } from "sanity"
 import { BOOKING_STATUSES, EVENT_STYLES, EVENT_TYPES } from "../../lib/constants"
+import { help } from "../../lib/help"
+import { formatDate, joinParts, optionTitle, pluralise } from "../../lib/preview"
 
 /**
  * An enquiry, and the booking it may become. One document, one lifecycle.
@@ -29,7 +37,26 @@ import { BOOKING_STATUSES, EVENT_STYLES, EVENT_TYPES } from "../../lib/constants
  *   step 2  guestCount, spacesOfInterest, eventStyle, message
  *   step 3  firstName, lastName, email, phone, consent
  *   step 4  review only — no fields of its own
+ *
+ * Field notes the help text leaves out, because staff don't need them:
+ *   - `statusHistory` is append-only by convention and written by the
+ *     serverless layer; the deposit race and the waitlist trigger are both
+ *     reconstructed from it.
+ *   - `dateIsFlexible` must never count towards a date's public status, and
+ *     neither may `backupDate`: the form promises it holds nothing.
+ *   - `eventType` "Other" is the intake safety valve. Someone who can't see
+ *     themselves in the first three options abandons the form instead.
+ *   - `partnerName` lives in its own field so quotes can address a couple
+ *     ("Bertha & Alex") without parsing it out of a single name.
  */
+
+const STATUS_ICONS: Record<string, ComponentType> = {
+  pending: InboxIcon,
+  confirmed: CheckmarkCircleIcon,
+  declined: CloseCircleIcon,
+  cancelled: RemoveCircleIcon,
+  completed: StarIcon,
+}
 export default defineType({
   name: "booking",
   title: "Booking / enquiry",
@@ -58,8 +85,10 @@ export default defineType({
       type: "array",
       group: "lifecycle",
       of: [defineArrayMember({ type: "statusEvent" })],
-      description:
-        "Append-only by convention; written by the serverless layer. Do not prune — the deposit race and the waitlist trigger are both reconstructed from this.",
+      description: help(
+        "Every change of status, recorded automatically.",
+        "Don't edit or delete entries: this is how we work out later who changed what, and why.",
+      ),
     }),
 
     // --- The event ----------------------------------------------------------
@@ -70,7 +99,7 @@ export default defineType({
       group: "event",
       options: { list: [...EVENT_TYPES], layout: "radio" },
       description:
-        '"Other" is the intake safety valve — a proposal, a photo shoot, a wake. Someone who cannot see themselves in the first three options abandons the form instead.',
+        '"Other" covers anything else, such as a proposal, a photo shoot or a wake.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -78,8 +107,10 @@ export default defineType({
       title: "Preferred date",
       type: "date",
       group: "event",
-      description:
-        "Weddings are date-exclusive — one a day — so only weddings affect the public calendar. Every other event type can share a date.",
+      description: help(
+        "Only one wedding can be booked per day, so only weddings affect the public calendar.",
+        "Other events can share a date.",
+      ),
       validation: (Rule) =>
         Rule.custom((value, context) => {
           const doc = context.document as
@@ -97,23 +128,27 @@ export default defineType({
       group: "event",
       initialValue: false,
       description:
-        "A flexible enquiry must NOT contribute to any date's public status, or it marks a date contested that nobody has actually asked for.",
+        "Ticked when the client hasn't chosen a date yet. Their enquiry doesn't show on the public calendar.",
     }),
     defineField({
       name: "backupDate",
       title: "Alternative date",
       type: "date",
       group: "event",
-      description:
-        "For Bacchus's reference only. Explicitly does NOT hold or reserve a date, and must never be counted by the availability query — the form promises exactly this.",
+      description: help(
+        "For reference only.",
+        "This date is not held or reserved, and the client was told so on the form.",
+      ),
     }),
     defineField({
       name: "guestCount",
       title: "Expected guests",
       type: "number",
       group: "event",
-      description:
-        "An estimate. Above 150 the downstairs à la carte restaurant closes to the public, which is worth staff seeing at a glance.",
+      description: help(
+        "The client's estimate.",
+        "Above 150 guests, the downstairs à la carte restaurant closes to the public.",
+      ),
       validation: (Rule) => Rule.min(1).integer(),
     }),
     defineField({
@@ -122,8 +157,10 @@ export default defineType({
       type: "array",
       group: "event",
       of: [defineArrayMember({ type: "reference", to: [{ type: "venueSpace" }] })],
-      description:
-        'Wedding enquiries only — the form hides this field otherwise. "Not sure yet" is a real answer and is stored by leaving this empty with the note below set.',
+      description: help(
+        "Wedding enquiries only.",
+        'Empty, with the box below ticked, means the client chose "Not sure yet".',
+      ),
     }),
     defineField({
       name: "spacesGuidanceRequested",
@@ -131,8 +168,10 @@ export default defineType({
       type: "boolean",
       group: "event",
       initialValue: false,
-      description:
-        'The form\'s "Not sure yet" option. Not the same as skipping the question.',
+      description: help(
+        'The client chose "Not sure yet" and would like us to suggest spaces.',
+        "Unticked with no spaces chosen means they skipped the question.",
+      ),
     }),
     defineField({
       name: "eventStyle",
@@ -140,8 +179,10 @@ export default defineType({
       type: "string",
       group: "event",
       options: { list: [...EVENT_STYLES] },
-      description:
-        'Intake colour for the events team. The form is explicit that this is "a starting point, not a package" — never treat it as a package selection.',
+      description: help(
+        "The feel the client is after.",
+        'The form calls this "a starting point, not a package", so don\'t treat it as a package choice.',
+      ),
     }),
     defineField({
       name: "message",
@@ -149,8 +190,10 @@ export default defineType({
       type: "text",
       group: "event",
       rows: 5,
-      description:
-        "Capped at 500 characters by the form. Currently also the only place a menu-tasting request can arrive, pending confirmation of how tastings are actually scheduled.",
+      description: help(
+        "Up to 500 characters.",
+        "Check here for menu tasting requests: for now, this is the only place they arrive.",
+      ),
       validation: (Rule) => Rule.max(500),
     }),
 
@@ -174,8 +217,10 @@ export default defineType({
       title: "Partner name",
       type: "string",
       group: "client",
-      description:
-        'Optional, and only worth asking for where it makes sense — a wedding, chiefly. Quotes and the deposit page address a couple ("Bertha & Alex"), so the second name lives here rather than being parsed back out of a single field. Left empty, a quote is addressed to the enquirer alone; nothing downstream requires it.',
+      description: help(
+        "Optional. Mostly for weddings.",
+        'When filled in, quotes are addressed to the couple, e.g. "Bertha & Alex". When empty, they are addressed to the enquirer alone.',
+      ),
     }),
     defineField({
       name: "email",
@@ -190,15 +235,14 @@ export default defineType({
       type: "string",
       group: "client",
       description:
-        "Free text — international formats vary and most clients type their own.",
+        "As the client typed it. International formats vary, so any format is accepted.",
     }),
     defineField({
       name: "consent",
       title: "Consent",
       type: "consentRecord",
       group: "client",
-      description:
-        "Personal data. See the note on the consent type before changing anything here.",
+      description: "Recorded by the form. Don't change it by hand.",
     }),
 
     // --- Money --------------------------------------------------------------
@@ -208,8 +252,10 @@ export default defineType({
       type: "reference",
       group: "money",
       to: [{ type: "quote" }],
-      description:
-        "The quote sent for this booking. Its figures are a snapshot, not a live price.",
+      description: help(
+        "The quote sent for this booking.",
+        "Its prices stay as sent, even if package prices change later.",
+      ),
     }),
     defineField({
       name: "payments",
@@ -217,16 +263,20 @@ export default defineType({
       type: "array",
       group: "money",
       of: [defineArrayMember({ type: "paymentRecord" })],
-      description:
-        "The first received deposit is what auto-confirms the date. Written by the payment webhook.",
+      description: help(
+        "Recorded automatically when a payment arrives.",
+        "The first deposit received confirms the booking and holds the date.",
+      ),
     }),
     defineField({
       name: "depositHoldExpiresAt",
       title: "Deposit hold expires",
       type: "datetime",
       group: "money",
-      description:
-        "Set when the deposit link is issued. The deposit page currently states a 7-day hold, which is illustrative and unconfirmed — do not treat it as policy until Bacchus says so.",
+      description: help(
+        "Set automatically when the deposit link is sent.",
+        "The deposit page currently says the date is held for 7 days. That is a placeholder, not yet confirmed by Bacchus.",
+      ),
     }),
 
     // --- Admin --------------------------------------------------------------
@@ -236,8 +286,7 @@ export default defineType({
       type: "string",
       group: "admin",
       readOnly: true,
-      description:
-        "Five pages carry the wizard. Useful for knowing which entry point converts.",
+      description: "The page the enquiry was sent from.",
     }),
     defineField({
       name: "suggestedReply",
@@ -245,8 +294,10 @@ export default defineType({
       type: "text",
       group: "admin",
       rows: 8,
-      description:
-        "Drafted by a cheap/fast model when the enquiry arrives and included in the staff notification email. Never auto-sent, and never shown to the client — a human edits and sends it.",
+      description: help(
+        "A draft reply written by AI when the enquiry arrives. It is also in the email staff receive.",
+        "It is never sent automatically. Check and edit it before sending it yourself.",
+      ),
     }),
     defineField({
       name: "internalNotes",
@@ -254,6 +305,7 @@ export default defineType({
       type: "text",
       group: "admin",
       rows: 5,
+      description: "For staff only. Never shown to the client.",
     }),
   ],
 
@@ -312,22 +364,15 @@ export default defineType({
       type: "eventType",
       guests: "guestCount",
     },
-    prepare: ({ first, last, date, flexible, status, type, guests }) => {
-      const when = date
-        ? new Date(date).toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          })
-        : flexible
-          ? "date flexible"
-          : "no date"
-      return {
-        title: `${first ?? ""} ${last ?? ""}`.trim() || "Unnamed enquiry",
-        subtitle: [status, type, when, guests ? `${guests} guests` : null]
-          .filter(Boolean)
-          .join(" · "),
-      }
-    },
+    prepare: ({ first, last, date, flexible, status, type, guests }) => ({
+      title: `${first ?? ""} ${last ?? ""}`.trim() || "Unnamed enquiry",
+      subtitle: joinParts(
+        optionTitle(BOOKING_STATUSES, status),
+        optionTitle(EVENT_TYPES, type),
+        formatDate(date) ?? (flexible ? "Date flexible" : "No date"),
+        pluralise(guests, "guest"),
+      ),
+      media: STATUS_ICONS[status] ?? InboxIcon,
+    }),
   },
 })

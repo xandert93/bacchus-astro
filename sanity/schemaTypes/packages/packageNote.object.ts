@@ -1,4 +1,8 @@
 import { defineField, defineType } from "sanity"
+import { InfoOutlineIcon } from "@sanity/icons/InfoOutline"
+import { WarningOutlineIcon } from "@sanity/icons/WarningOutline"
+import { help } from "../../lib/help"
+import { optionTitle } from "../../lib/preview"
 
 /**
  * A callout on a package page.
@@ -31,6 +35,12 @@ import { defineField, defineType } from "sanity"
  * eventually let these disappear on their own: when the status flips to
  * confirmed, the warning has nothing left to say.
  */
+const PLACEMENTS = [
+  { title: "Below the tier cards", value: "below-tier-cards" },
+  { title: "Above the menus", value: "above-menus" },
+  { title: "Foot of page", value: "page-foot" },
+] as const
+
 export default defineType({
   name: "packageNote",
   title: "Note / callout",
@@ -42,8 +52,11 @@ export default defineType({
       type: "string",
       options: {
         list: [
-          { title: "Note — bronze, confirmed", value: "note" },
-          { title: "Warning — oxblood, unconfirmed or contested", value: "warning" },
+          { title: "Note: bronze, for confirmed facts", value: "note" },
+          {
+            title: "Warning: dark red, for unconfirmed or disputed facts",
+            value: "warning",
+          },
         ],
         layout: "radio",
       },
@@ -55,21 +68,14 @@ export default defineType({
       title: "Body",
       type: "text",
       rows: 4,
-      description:
-        "Written in the site's own voice, as if the studio wrote it for the client to hand on — not as internal commentary.",
+      description: "Shown on the website, so write it for visitors, not staff.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "placement",
       title: "Placement",
       type: "string",
-      options: {
-        list: [
-          { title: "Below the tier cards", value: "below-tier-cards" },
-          { title: "Above the menus", value: "above-menus" },
-          { title: "Foot of page", value: "page-foot" },
-        ],
-      },
+      options: { list: [...PLACEMENTS] },
       initialValue: "below-tier-cards",
       validation: (Rule) => Rule.required(),
     }),
@@ -77,15 +83,18 @@ export default defineType({
       name: "resolvesWith",
       title: "Describes this unresolved fact",
       type: "provenance",
-      description:
-        "Optional, but setting it means the warning can retire itself once the fact is confirmed instead of being remembered about.",
+      description: help(
+        "Optional. Which unconfirmed fact this note is about.",
+        "Once that fact is confirmed, the warning can be removed automatically instead of someone having to remember.",
+      ),
     }),
   ],
   preview: {
     select: { tone: "tone", body: "body", placement: "placement" },
     prepare: ({ tone, body, placement }) => ({
-      title: `${tone === "warning" ? "[warning] " : ""}${String(body ?? "").slice(0, 60)}`,
-      subtitle: placement,
+      title: String(body ?? "Empty note").slice(0, 80),
+      subtitle: optionTitle(PLACEMENTS, placement),
+      media: tone === "warning" ? WarningOutlineIcon : InfoOutlineIcon,
     }),
   },
 })
