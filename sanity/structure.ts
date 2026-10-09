@@ -71,10 +71,50 @@ export const structure: StructureResolver = (S) =>
         ),
 
       // --- Quotes ---------------------------------------------------------
+      // Live first, because those are the quotes someone still has to act
+      // on. Accepted ones belong to a confirmed booking, and expired or
+      // superseded ones are kept only as a record of what was sent.
       S.listItem()
         .title("Quotes")
         .id("quotes")
-        .child(S.documentTypeList("quote").title("Quotes")),
+        .child(
+          S.list()
+            .title("Quotes")
+            .items([
+              S.listItem()
+                .title("Live: drafts & sent")
+                .id("live-quotes")
+                .child(
+                  S.documentList()
+                    .title("Live quotes")
+                    .filter('_type == "quote" && status in ["draft", "sent"]')
+                    .defaultOrdering([{ field: "eventDate", direction: "asc" }]),
+                ),
+              S.listItem()
+                .title("Accepted")
+                .id("accepted-quotes")
+                .child(
+                  S.documentList()
+                    .title("Accepted quotes")
+                    .filter('_type == "quote" && status == "accepted"')
+                    .defaultOrdering([{ field: "eventDate", direction: "asc" }]),
+                ),
+              S.listItem()
+                .title("Expired & superseded")
+                .id("past-quotes")
+                .child(
+                  S.documentList()
+                    .title("Expired & superseded quotes")
+                    .filter('_type == "quote" && status in ["expired", "superseded"]')
+                    .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
+                ),
+              S.divider(),
+              S.listItem()
+                .title("All quotes")
+                .id("all-quotes")
+                .child(S.documentTypeList("quote").title("All quotes")),
+            ]),
+        ),
 
       S.divider(),
 
