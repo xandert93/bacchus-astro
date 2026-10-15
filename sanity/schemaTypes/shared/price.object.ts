@@ -1,5 +1,7 @@
 import { defineField, defineType } from "sanity"
 import { PRICE_UNITS } from "../../lib/constants"
+import { help } from "../../lib/help"
+import { capitalise, formatEuros, joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * A money figure, its unit, and whether we are allowed to show it.
@@ -51,8 +53,7 @@ export default defineType({
       title: "Unit",
       type: "string",
       options: { list: [...PRICE_UNITS] },
-      description:
-        "Required. See the note on this type for why there is no blank option.",
+      description: "Required. A price can't be shown without saying what it is per.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -60,23 +61,27 @@ export default defineType({
       title: "Indicative — may vary by season",
       type: "boolean",
       initialValue: true,
-      description:
-        "Leave on unless Bacchus has confirmed a figure holds year round. Their pricing is generated internally and varies by season.",
+      description: help(
+        "Leave ticked unless Bacchus has confirmed this price applies all year.",
+        "Their prices usually change with the season.",
+      ),
     }),
     defineField({
       name: "vatIncluded",
       title: "VAT included",
       type: "boolean",
       initialValue: true,
-      description: "Confirmed by client correspondence: quoted prices include VAT.",
+      description: "Bacchus has confirmed quoted prices include VAT.",
     }),
     defineField({
       name: "isStartingPrice",
       title: 'Starting price — shows "from" on the page',
       type: "boolean",
       initialValue: false,
-      description:
-        'For a figure that is the cheapest of several options, e.g. "from €12" for bar options. Not for seasonal variation, which "Indicative" covers.',
+      description: help(
+        'For the cheapest of several options, e.g. "from €12" for bar options.',
+        'Not for seasonal changes: "Indicative" covers those.',
+      ),
     }),
     defineField({
       name: "provenance",
@@ -92,14 +97,15 @@ export default defineType({
       startingPrice: "isStartingPrice",
       status: "provenance.status",
     },
-    prepare: ({ amount, unit, startingPrice, status }) => {
-      const unitLabel = PRICE_UNITS.find((u) => u.value === unit)?.title ?? unit
-      return {
-        title:
-          `${startingPrice ? "from " : ""}€${Number(amount ?? 0).toFixed(2)} ${unitLabel ?? ""}`.trim(),
-        subtitle:
-          status === "confirmed" ? undefined : `${status} — shows a warning on the page`,
-      }
-    },
+    prepare: ({ amount, unit, startingPrice, status }) => ({
+      title: joinParts(
+        `${startingPrice ? "From " : ""}${formatEuros(amount) ?? "No amount"}`,
+        optionTitle(PRICE_UNITS, unit),
+      ),
+      subtitle:
+        status === "confirmed"
+          ? "Confirmed"
+          : `${capitalise(status)}: shows a warning on the page`,
+    }),
   },
 })

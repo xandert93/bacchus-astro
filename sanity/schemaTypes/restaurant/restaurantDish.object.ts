@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity"
+import { formatEuros, joinParts } from "../../lib/preview"
 
 /**
  * One dish on the restaurant menu.
@@ -58,10 +59,19 @@ export default defineType({
     }),
   ],
   preview: {
-    select: { name: "name", amount: "price.amount", media: "image" },
-    prepare: ({ name, amount, media }) => ({
+    select: {
+      name: "name",
+      amount: "price.amount",
+      vegetarian: "isVegetarian",
+      vegan: "isVegan",
+      media: "image",
+    },
+    prepare: ({ name, amount, vegetarian, vegan, media }) => ({
       title: name,
-      subtitle: amount ? `€${Number(amount).toFixed(2)}` : undefined,
+      subtitle: joinParts(
+        formatEuros(amount),
+        vegan ? "Vegan" : vegetarian ? "Vegetarian" : undefined,
+      ),
       media,
     }),
   },

@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
 
 /**
  * Site-wide identity, contact details and default metadata. One document.
@@ -61,14 +62,14 @@ export default defineType({
       type: "text",
       group: "identity",
       rows: 3,
-      description: "The short paragraph under the brand lockup in the footer.",
+      description: "The short paragraph under the logo in the footer.",
     }),
     defineField({
       name: "logo",
       title: "Logo",
       type: "image",
       group: "identity",
-      description: "The client's real mark.",
+      description: "Bacchus's real logo.",
     }),
     defineField({
       name: "foundedYear",
@@ -76,8 +77,11 @@ export default defineType({
       type: "number",
       group: "identity",
       initialValue: 1976,
-      description:
-        'Confirmed: 1976, family-run. "50+ years" and similar are derived from this, never typed. Distinct from the building\'s 1657–1660 construction.',
+      description: help(
+        "Confirmed: 1976, family-run.",
+        'Phrases like "50+ years" on the site are worked out from this, so update it here rather than in the text.',
+        "Not the same as the building's age (1657–1660).",
+      ),
       validation: (Rule) => Rule.min(1000).max(2100).integer(),
     }),
     defineField({
@@ -86,8 +90,10 @@ export default defineType({
       type: "number",
       group: "identity",
       initialValue: 1657,
-      description:
-        "The two vaulted chambers, built 1657–1660 by Grand Master Fra Martino de Redin, originally a gunpowder magazine. The restaurant's lower level specifically — weddings are not held there.",
+      description: help(
+        "The two vaulted chambers, built 1657–1660 by Grand Master Fra Martino de Redin as a gunpowder store.",
+        "This is the restaurant's lower level. Weddings aren't held there.",
+      ),
       validation: (Rule) => Rule.min(1000).max(2100).integer(),
     }),
     defineField({
@@ -96,8 +102,10 @@ export default defineType({
       type: "text",
       group: "identity",
       rows: 4,
-      description:
-        "From the catalogue: roughly one-twelfth of Mdina, about 4,500m² of grounds including some 500m² of covered open-plan banqueting space; the Secret Garden holds Roman and Arab architectural remains dating to the 1st century.",
+      description: help(
+        "From the catalogue: roughly one-twelfth of Mdina, with about 4,500m² of grounds, including some 500m² of covered open-plan banqueting space.",
+        "The Secret Garden holds Roman and Arab remains dating back to the 1st century.",
+      ),
     }),
 
     // --- Contact ------------------------------------------------------------
@@ -127,7 +135,7 @@ export default defineType({
       type: "object",
       group: "contact",
       description:
-        "For LocalBusiness structured data, and for the map if the client greenlights a custom-styled Mapbox one over a plain Google iframe.",
+        "Helps Google place the venue on maps, and positions the map on the site.",
       fields: [
         defineField({ name: "lat", title: "Latitude", type: "number" }),
         defineField({ name: "lng", title: "Longitude", type: "number" }),
@@ -139,7 +147,7 @@ export default defineType({
       type: "url",
       group: "contact",
       initialValue: "https://www.facebook.com/bacchusMdina",
-      description: "Client-supplied, real.",
+      description: "Supplied by Bacchus.",
     }),
     defineField({
       name: "instagramUrl",
@@ -147,15 +155,17 @@ export default defineType({
       type: "url",
       group: "contact",
       initialValue: "https://www.instagram.com/bacchus_mdina/",
-      description: "Client-supplied, real.",
+      description: "Supplied by Bacchus.",
     }),
     defineField({
       name: "tableBookingUrl",
       title: "Table booking URL (Tableo)",
       type: "url",
       group: "contact",
-      description:
-        "The restaurant's booking widget. A mature third-party product the project has decided to keep — only the link lives here, its configuration stays in Tableo.",
+      description: help(
+        "The link to the restaurant's table booking page.",
+        "Change booking settings in Tableo itself, not here.",
+      ),
     }),
     defineField({
       name: "enquiryNotificationEmails",
@@ -163,8 +173,10 @@ export default defineType({
       type: "array",
       group: "contact",
       of: [{ type: "string" }],
-      description:
-        "Where the staff notification lands, with its LLM-drafted suggested reply inline. Never auto-sent to the client — a human edits and sends.",
+      description: help(
+        "Who gets an email when a new enquiry arrives. It includes a suggested reply written by AI.",
+        "The reply is never sent to the client automatically: someone checks, edits and sends it.",
+      ),
     }),
 
     // --- Defaults -----------------------------------------------------------
@@ -173,16 +185,14 @@ export default defineType({
       title: "Default search & social",
       type: "seo",
       group: "defaults",
-      description:
-        "Fallback for any page without its own. Every page lacks all of this today.",
+      description: "Used on any page that doesn't have its own.",
     }),
     defineField({
       name: "structuredData",
       title: "Structured data",
       type: "object",
       group: "defaults",
-      description:
-        "Feeds LocalBusiness markup. Generated from real fields, never hand-authored — see the note on this type.",
+      description: "Details that help Google show the business in search results.",
       fields: [
         defineField({
           name: "businessType",
@@ -196,8 +206,10 @@ export default defineType({
             ],
           },
           initialValue: "Restaurant",
-          description:
-            "Two businesses share one address, which is the underlying awkwardness here — the restaurant and the events venue. Worth revisiting once the About page exists and the two have separate hubs.",
+          description: help(
+            "What kind of business Google should treat Bacchus as.",
+            "The restaurant and the events venue share one address, so this may change once they have separate pages.",
+          ),
         }),
         defineField({ name: "priceRange", title: "Price range", type: "string" }),
         defineField({
@@ -205,7 +217,7 @@ export default defineType({
           title: "Opening hours",
           type: "array",
           of: [{ type: "string" }],
-          description: 'One line per day, schema.org format — e.g. "Mo-Sa 19:00-23:00".',
+          description: 'One line per set of days, in this format: "Mo-Sa 19:00-23:00".',
         }),
       ],
     }),

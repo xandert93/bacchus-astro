@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
 
 /**
  * Per-page search and social metadata.
@@ -32,8 +33,10 @@ export default defineType({
       name: "metaTitle",
       title: "Search-result title override",
       type: "string",
-      description:
-        "Only if it should differ from the page title. Aim under 60 characters — longer gets truncated in results.",
+      description: help(
+        "Only if it should differ from the page title.",
+        "Keep it under 60 characters, or Google cuts it short.",
+      ),
       validation: (Rule) =>
         Rule.max(70).warning("Likely to be truncated in search results."),
     }),
@@ -42,8 +45,10 @@ export default defineType({
       title: "Meta description",
       type: "text",
       rows: 3,
-      description:
-        "One or two sentences, written for someone deciding whether to click. 150–160 characters is the usable range.",
+      description: help(
+        "The short summary under the title in Google. One or two sentences, written for someone deciding whether to click.",
+        "Aim for 150 to 160 characters.",
+      ),
       validation: (Rule) => [
         Rule.max(165).warning("Likely to be truncated in search results."),
         Rule.min(70).warning(
@@ -56,23 +61,26 @@ export default defineType({
       title: "Social share image",
       type: "image",
       options: { hotspot: true },
-      description:
-        "Falls back to the page hero, then to the site default. Wide crop — 1200x630 is the safe shape.",
+      description: help(
+        "The picture shown when the page is shared on social media or in a message.",
+        "Leave empty to use the page's main photo. Use a wide image, ideally 1200 × 630.",
+      ),
     }),
     defineField({
       name: "canonicalUrl",
       title: "Canonical URL override",
       type: "url",
-      description:
-        "Leave empty — the route generates its own. Only set this when two routes legitimately serve the same content.",
+      description: "Leave empty. Only for when two pages show the same content.",
     }),
     defineField({
       name: "noIndex",
       title: "Hide from search engines",
       type: "boolean",
       initialValue: false,
-      description:
-        "For a page that must be reachable by link but not findable — the deposit page is the live example, since it is only ever reached through a unique emailed link.",
+      description: help(
+        "For a page people reach by link but shouldn't find through Google.",
+        "For example, the deposit page, which clients only reach from a link in their email.",
+      ),
     }),
   ],
 })

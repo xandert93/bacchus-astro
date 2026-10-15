@@ -1,4 +1,7 @@
 import { defineField, defineType } from "sanity"
+import { BOOKING_STATUSES } from "../../lib/constants"
+import { help } from "../../lib/help"
+import { formatDateTime, joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * One entry in a booking's status history.
@@ -26,6 +29,14 @@ import { defineField, defineType } from "sanity"
  * documents are mutable by anyone with write access. The enforcement belongs
  * in the serverless layer, which should be the only writer.
  */
+const ACTORS = [
+  { title: "Staff, in Sanity Studio", value: "staff" },
+  { title: "Card payment, recorded automatically", value: "payment-webhook" },
+  { title: "Scheduled job", value: "cron" },
+  { title: "Visitor, via the site", value: "visitor" },
+  { title: "Migration or manual data fix", value: "migration" },
+] as const
+
 export default defineType({
   name: "statusEvent",
   title: "Status change",
@@ -41,7 +52,7 @@ export default defineType({
       name: "from",
       title: "Changed from",
       type: "string",
-      description: "Empty on the first entry, where the booking was created.",
+      description: "Empty on the first entry, when the booking was created.",
     }),
     defineField({
       name: "at",
@@ -53,15 +64,7 @@ export default defineType({
       name: "actor",
       title: "Changed by",
       type: "string",
-      options: {
-        list: [
-          { title: "Staff, in Sanity Studio", value: "staff" },
-          { title: "Stripe payment webhook", value: "payment-webhook" },
-          { title: "Scheduled job", value: "cron" },
-          { title: "Visitor, via the site", value: "visitor" },
-          { title: "Migration or manual data fix", value: "migration" },
-        ],
-      },
+      options: { list: [...ACTORS] },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -75,17 +78,19 @@ export default defineType({
       title: "Reason",
       type: "text",
       rows: 2,
-      description:
-        "Required in practice for a decline or a cancellation — this is what a later conversation with the couple is reconstructed from.",
+      description: help(
+        "Always give a reason for a decline or a cancellation.",
+        "If the couple ask about it later, this is what we'll go back to.",
+      ),
     }),
   ],
   preview: {
     select: { to: "to", from: "from", at: "at", actor: "actor" },
     prepare: ({ to, from, at, actor }) => ({
-      title: from ? `${from} → ${to}` : `created as ${to}`,
-      subtitle: [at ? new Date(at).toLocaleString("en-GB") : null, actor]
-        .filter(Boolean)
-        .join(" — "),
+      title: from
+        ? `${optionTitle(BOOKING_STATUSES, from)} → ${optionTitle(BOOKING_STATUSES, to)}`
+        : `Created as ${optionTitle(BOOKING_STATUSES, to)?.toLowerCase()}`,
+      subtitle: joinParts(formatDateTime(at), optionTitle(ACTORS, actor)),
     }),
   },
 })

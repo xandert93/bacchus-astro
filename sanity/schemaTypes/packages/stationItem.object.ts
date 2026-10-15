@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
 
 /**
  * One component of a reception station — "Parma ham", "Bresaola", "Chorizo".
@@ -31,8 +32,10 @@ export default defineType({
       title: "Vegetarian (V)",
       type: "boolean",
       initialValue: false,
-      description:
-        "On the stations these are OURS, not the catalogue's — it marks none, so each is inferred from the dish name and unconfirmed by Bacchus. That is the opposite of the rule on package menus, where a marking is never inferred; the stations were already published this way, and the Reception package carries a warning note saying so. Provisional until the client confirms them.",
+      description: help(
+        "The catalogue doesn't mark stations (V), so we judged these from the dish names. Bacchus hasn't confirmed them.",
+        "This is the one place we guess. On package menus, only tick (V) where the catalogue does.",
+      ),
     }),
   ],
   preview: {

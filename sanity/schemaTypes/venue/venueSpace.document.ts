@@ -1,4 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * One space on the estate — the Secret Garden, the Prince De Redin Hall, the
@@ -33,6 +35,12 @@ import { defineArrayMember, defineField, defineType } from "sanity"
  * instead. Whether venue pricing scales flat, per space or per guest is not
  * settled, so this must not be presented as a rule.
  */
+const SETTINGS = [
+  { title: "Indoor", value: "indoor" },
+  { title: "Outdoor", value: "outdoor" },
+  { title: "Covered outdoor", value: "covered-outdoor" },
+] as const
+
 export default defineType({
   name: "venueSpace",
   title: "Venue space",
@@ -64,12 +72,14 @@ export default defineType({
       type: "array",
       group: "content",
       of: [defineArrayMember({ type: "string" })],
-      description:
-        'Other names the same space goes by in client material — "De Redin Ballroom" and "the ballroom" for the Prince De Redin Hall. Lets a quote line item or an email be matched back without renaming the space.',
+      description: help(
+        'Other names this space goes by, e.g. "De Redin Ballroom" and "the ballroom" for the Prince De Redin Hall.',
+        "Helps match quotes and emails to the right space.",
+      ),
     }),
     defineField({
       name: "nameProvenance",
-      title: "Name — source & confirmation",
+      title: "Name: source & confirmation",
       type: "provenance",
       group: "content",
       description: 'Expect "unconfirmed" until the naming is settled with Bacchus.',
@@ -80,7 +90,7 @@ export default defineType({
       type: "string",
       group: "content",
       description:
-        'The one line under the name on the wizard\'s option cards — e.g. "Open air, bastion views".',
+        'The line under the name on the enquiry form, e.g. "Open air, bastion views".',
     }),
     defineField({
       name: "description",
@@ -94,24 +104,19 @@ export default defineType({
       title: "Setting",
       type: "string",
       group: "facts",
-      options: {
-        list: [
-          { title: "Indoor", value: "indoor" },
-          { title: "Outdoor", value: "outdoor" },
-          { title: "Covered outdoor", value: "covered-outdoor" },
-        ],
-        layout: "radio",
-      },
+      options: { list: [...SETTINGS], layout: "radio" },
       description:
-        'Also what the "outdoor wedding venue" search intent is answered from — the Secret Garden and Terrace are the real subjects there.',
+        'Also decides which spaces appear for "outdoor wedding venue" searches.',
     }),
     defineField({
       name: "capacity",
       title: "Capacity",
       type: "capacity",
       group: "facts",
-      description:
-        "Every capacity figure on the site today is a placeholder carrying a disclaimer. Confirmed range for the estate as a whole is 50–800 STANDING, which is not a drop-in replacement for a seated claim.",
+      description: help(
+        "Every capacity on the site is currently a placeholder, shown with a warning.",
+        "The confirmed range for the whole venue is 50 to 800 standing. That doesn't tell us how many each space seats.",
+      ),
     }),
     defineField({
       name: "includedInStandardPackage",
@@ -119,8 +124,10 @@ export default defineType({
       type: "boolean",
       group: "facts",
       initialValue: false,
-      description:
-        "Confirmed: Terrace and ballroom yes, Secret Garden no. Copy about an excluded space must say so explicitly.",
+      description: help(
+        "Confirmed: the Terrace and ballroom are included, the Secret Garden isn't.",
+        "Anything written about a space that isn't included must say so clearly.",
+      ),
     }),
     defineField({
       name: "inclusionNote",
@@ -129,22 +136,24 @@ export default defineType({
       group: "facts",
       rows: 3,
       description:
-        "The nuance — e.g. the client's own suggestion of repurposing the Secret Garden as a chillout/shisha area if a couple wants to use it.",
+        "Any detail, e.g. Bacchus's suggestion of using the Secret Garden as a chill-out or shisha area.",
     }),
     defineField({
       name: "exclusivityFee",
       title: "Exclusivity fee",
       type: "price",
       group: "facts",
-      description: "Unconfirmed how this scales. See the note on this type.",
+      description: "Not yet confirmed how this changes with guest numbers.",
     }),
     defineField({
       name: "curfewNote",
       title: "Music curfew",
       type: "string",
       group: "facts",
-      description:
-        "Confirmed: outdoor entertainment until 11pm, indoor until 4am. Set per space so the right one shows on the right page.",
+      description: help(
+        "Confirmed: outdoor entertainment until 11pm, indoor until 4am.",
+        "Set for each space, so the right time shows on the right page.",
+      ),
     }),
     defineField({
       name: "images",
@@ -152,8 +161,10 @@ export default defineType({
       type: "array",
       group: "content",
       of: [defineArrayMember({ type: "reference", to: [{ type: "galleryImage" }] })],
-      description:
-        "References the gallery rather than holding its own uploads, so one photograph is catalogued once. Note no photograph of the vaulted chambers exists yet — a real asset gap for a restaurant whose whole setting is those two rooms.",
+      description: help(
+        "Chosen from the gallery, so each photo is only uploaded once.",
+        "There is no photo of the vaulted chambers yet.",
+      ),
     }),
     defineField({
       name: "order",
@@ -182,13 +193,13 @@ export default defineType({
     },
     prepare: ({ name, setting, included, max, basis }) => ({
       title: name,
-      subtitle: [
-        setting,
-        max ? `up to ${max} ${basis ?? ""}`.trim() : null,
-        included ? "in standard package" : "exclusivity fee applies",
-      ]
-        .filter(Boolean)
-        .join(" · "),
+      subtitle: joinParts(
+        optionTitle(SETTINGS, setting),
+        max
+          ? `Up to ${max} ${basis === "either" ? "guests" : (basis ?? "")}`.trim()
+          : null,
+        included ? "In standard package" : "Not in standard package",
+      ),
     }),
   },
 })

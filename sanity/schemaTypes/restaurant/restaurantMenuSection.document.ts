@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
+import { joinParts } from "../../lib/preview"
 
 /**
  * A section of the à la carte restaurant menu.
@@ -31,7 +32,7 @@ export default defineType({
       name: "title",
       title: "Section title",
       type: "string",
-      description: "Starters, Pasta, Mains, Desserts.",
+      description: "e.g. Starters, Pasta, Mains or Desserts.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -65,7 +66,7 @@ export default defineType({
       type: "boolean",
       initialValue: false,
       description:
-        "Off until the restaurant side is actually linked back into the navigation.",
+        "Leave unticked until the restaurant pages are added back to the site's menus.",
     }),
   ],
   orderings: [
@@ -75,9 +76,13 @@ export default defineType({
     select: { title: "title", dishes: "dishes", published: "isPublished" },
     prepare: ({ title, dishes, published }) => {
       const count = Array.isArray(dishes) ? dishes.length : 0
+
       return {
         title,
-        subtitle: `${count} dish${count === 1 ? "" : "es"}${published ? "" : " · unpublished"}`,
+        subtitle: joinParts(
+          count === 1 ? "1 dish" : `${count} dishes`,
+          published ? "Published" : "Not published",
+        ),
       }
     },
   },

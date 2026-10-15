@@ -1,4 +1,6 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { capitalise, formatDate, formatEuros, joinParts } from "../../lib/preview"
 
 /**
  * One payment attempt or receipt against a booking.
@@ -94,8 +96,10 @@ export default defineType({
       name: "feeAmount",
       title: "Processing fee (EUR)",
       type: "number",
-      description:
-        "As charged, not as estimated. Percentage plus a fixed amount, and higher on non-EU cards.",
+      description: help(
+        "The fee actually charged, not an estimate.",
+        "Card fees are a percentage plus a fixed amount, and higher on cards from outside the EU.",
+      ),
       validation: (Rule) => Rule.precision(2),
     }),
     defineField({
@@ -103,7 +107,7 @@ export default defineType({
       title: "Net received (EUR)",
       type: "number",
       description:
-        "What actually landed. This is the figure that reconciles against the bank.",
+        "What actually arrived in the bank. Use this to check against the statement.",
       validation: (Rule) => Rule.precision(2),
     }),
     defineField({
@@ -111,7 +115,7 @@ export default defineType({
       title: "Reference",
       type: "string",
       description:
-        "The transfer reference shown to the payer, or the Stripe PaymentIntent id.",
+        "For a bank transfer, the reference the client was given. For a card, the Stripe payment ID.",
     }),
     defineField({
       name: "stripeSessionId",
@@ -154,10 +158,12 @@ export default defineType({
       at: "receivedAt",
     },
     prepare: ({ kind, method, status, gross, at }) => ({
-      title: `${kind} — €${Number(gross ?? 0).toFixed(2)} (${status})`,
-      subtitle: [method, at ? new Date(at).toLocaleDateString("en-GB") : null]
-        .filter(Boolean)
-        .join(" — "),
+      title: joinParts(capitalise(kind), formatEuros(gross)),
+      subtitle: joinParts(
+        capitalise(status),
+        method === "bank-transfer" ? "Bank transfer" : capitalise(method),
+        formatDate(at),
+      ),
     }),
   },
 })

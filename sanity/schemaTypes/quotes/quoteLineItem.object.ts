@@ -1,4 +1,7 @@
 import { defineField, defineType } from "sanity"
+import { QUOTE_LINE_CATEGORIES } from "../../lib/constants"
+import { help } from "../../lib/help"
+import { formatEuros, joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * One priced line on a quote.
@@ -37,30 +40,25 @@ export default defineType({
       name: "label",
       title: "Label",
       type: "string",
-      description:
-        'As it should read on the quote and the deposit page — e.g. "Food — Banquet, Dahlia tier".',
+      description: help(
+        "Exactly as it should read on the quote and the deposit page.",
+        'For example, "Food — Banquet, Dahlia tier".',
+      ),
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "category",
       title: "Category",
       type: "string",
-      options: {
-        list: [
-          { title: "Exclusive use", value: "exclusivity" },
-          { title: "Food", value: "food" },
-          { title: "Beverage", value: "beverage" },
-          { title: "Set-up", value: "setup" },
-          { title: "Other", value: "other" },
-        ],
-      },
+      options: { list: [...QUOTE_LINE_CATEGORIES] },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "quantity",
       title: "Quantity",
       type: "number",
-      description: "Guest count for a per-person line; item count for set-up.",
+      description:
+        "The number of guests for a per-person line, or the number of items for set-up.",
       validation: (Rule) => Rule.min(0),
     }),
     defineField({
@@ -73,8 +71,10 @@ export default defineType({
       name: "amount",
       title: "Line total (EUR)",
       type: "number",
-      description:
-        "Stored as sent, not recomputed from quantity x unit. See the note on this type.",
+      description: help(
+        "Exactly as on the quote.",
+        "It isn't worked out from the quantity and unit amount, so check it matches.",
+      ),
       validation: (Rule) => Rule.required().precision(2),
     }),
     defineField({
@@ -87,15 +87,27 @@ export default defineType({
         { type: "venueSpace" },
         { type: "station" },
       ],
-      description:
-        "Soft pointer for reporting only. Nothing renders a price through this — the amount above is authoritative.",
+      description: help(
+        "Optional. Which package, add-on, space or station this line was priced from, for reporting.",
+        "It never changes the price: the line total above is what the client sees.",
+      ),
     }),
   ],
   preview: {
-    select: { label: "label", amount: "amount", category: "category" },
-    prepare: ({ label, amount, category }) => ({
-      title: label,
-      subtitle: `${category} — €${Number(amount ?? 0).toFixed(2)}`,
+    select: {
+      label: "label",
+      amount: "amount",
+      category: "category",
+      quantity: "quantity",
+      unitAmount: "unitAmount",
+    },
+    prepare: ({ label, amount, category, quantity, unitAmount }) => ({
+      title: label || "Unlabelled line",
+      subtitle: joinParts(
+        optionTitle(QUOTE_LINE_CATEGORIES, category),
+        quantity && unitAmount ? `${quantity} × ${formatEuros(unitAmount)}` : undefined,
+        formatEuros(amount),
+      ),
     }),
   },
 })

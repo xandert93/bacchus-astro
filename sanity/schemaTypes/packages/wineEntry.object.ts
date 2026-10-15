@@ -31,7 +31,7 @@ export default defineType({
       title: "Name",
       type: "string",
       description:
-        'Including any appellation as printed — e.g. "Gavi Di Gavi ‘La Giustiniana’ D.O.C.G".',
+        'Including any appellation as printed, e.g. "Gavi Di Gavi ‘La Giustiniana’ D.O.C.G".',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -39,7 +39,7 @@ export default defineType({
       title: "Grape varieties",
       type: "string",
       description:
-        'Comma-separated, as the catalogue lists them — e.g. "Chardonnay, Girgentina".',
+        'Separated by commas, as in the catalogue, e.g. "Chardonnay, Girgentina".',
     }),
     defineField({
       name: "producer",
@@ -52,7 +52,7 @@ export default defineType({
       title: "Tasting note",
       type: "text",
       rows: 3,
-      description: "The catalogue's own note. British English; accents restored.",
+      description: "The catalogue's note, in British English with accents restored.",
     }),
     defineField({
       name: "style",
@@ -68,7 +68,7 @@ export default defineType({
         ],
       },
       description:
-        "Not rendered today. Here so the list can be grouped or filtered later without a re-key.",
+        "Not shown on the site yet. Will let the list be grouped by style later.",
     }),
     defineField({
       name: "catalogueVariance",

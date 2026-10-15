@@ -1,4 +1,6 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { formatDate, joinParts } from "../../lib/preview"
 
 /**
  * What a person agreed to, when, and in what words.
@@ -52,37 +54,39 @@ export default defineType({
       name: "givenAt",
       title: "Given at",
       type: "datetime",
-      description: "Set by the submission handler, not by hand.",
+      description: "Recorded automatically. Don't change it by hand.",
     }),
     defineField({
       name: "wording",
       title: "Wording shown at the time",
       type: "text",
       rows: 3,
-      description:
-        "Captured verbatim from the form at submission. Edit the form copy freely afterwards — this stays as it was.",
+      description: help(
+        "The exact wording the person agreed to.",
+        "It stays as it was, even if the form's wording changes later.",
+      ),
     }),
     defineField({
       name: "sourcePage",
       title: "Submitted from",
       type: "string",
-      description: "The page path the form was on. Five pages carry the wizard.",
+      description: "The page the form was on.",
     }),
     defineField({
       name: "retentionReviewAt",
       title: "Retention review date",
       type: "date",
-      description:
-        "When this record should be reviewed for deletion. Set from the policy default on creation; the scheduled purge reads this field.",
+      description: help(
+        "When this person's details should be reviewed for deletion.",
+        "Set automatically. Records past this date are deleted by a scheduled job.",
+      ),
     }),
   ],
   preview: {
     select: { given: "given", at: "givenAt", page: "sourcePage" },
     prepare: ({ given, at, page }) => ({
       title: given ? "Consent given" : "No consent recorded",
-      subtitle: [at ? new Date(at).toLocaleDateString("en-GB") : null, page]
-        .filter(Boolean)
-        .join(" — "),
+      subtitle: joinParts(formatDate(at), page),
     }),
   },
 })

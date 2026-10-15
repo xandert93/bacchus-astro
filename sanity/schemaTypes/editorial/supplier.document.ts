@@ -1,4 +1,6 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * A preferred supplier — photographer, florist, band, DJ, photobooth.
@@ -22,6 +24,18 @@ import { defineField, defineType } from "sanity"
  * directory that silently implies endorsement of everyone in it is a liability
  * for the venue the first time a supplier disappoints.
  */
+const SUPPLIER_CATEGORIES = [
+  { title: "Photographer", value: "photographer" },
+  { title: "Videographer", value: "videographer" },
+  { title: "Florist", value: "florist" },
+  { title: "Band", value: "band" },
+  { title: "DJ", value: "dj" },
+  { title: "Photobooth", value: "photobooth" },
+  { title: "Hair & make-up", value: "hair-makeup" },
+  { title: "Transport", value: "transport" },
+  { title: "Other", value: "other" },
+] as const
+
 export default defineType({
   name: "supplier",
   title: "Supplier",
@@ -44,19 +58,7 @@ export default defineType({
       name: "category",
       title: "Category",
       type: "string",
-      options: {
-        list: [
-          { title: "Photographer", value: "photographer" },
-          { title: "Videographer", value: "videographer" },
-          { title: "Florist", value: "florist" },
-          { title: "Band", value: "band" },
-          { title: "DJ", value: "dj" },
-          { title: "Photobooth", value: "photobooth" },
-          { title: "Hair & make-up", value: "hair-makeup" },
-          { title: "Transport", value: "transport" },
-          { title: "Other", value: "other" },
-        ],
-      },
+      options: { list: [...SUPPLIER_CATEGORIES] },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -64,8 +66,7 @@ export default defineType({
       title: "Description",
       type: "text",
       rows: 4,
-      description:
-        "Written in the site's voice, not copied from the supplier's own marketing.",
+      description: "Write it in our own words. Don't copy the supplier's own marketing.",
     }),
     defineField({
       name: "websiteUrl",
@@ -81,8 +82,7 @@ export default defineType({
       name: "contactEmail",
       title: "Contact email",
       type: "string",
-      description:
-        "Internal. Not published — suppliers get enquiries through their own site.",
+      description: "For staff only. Never shown on the site.",
       validation: (Rule) => Rule.email(),
     }),
     defineField({
@@ -101,18 +101,20 @@ export default defineType({
     }),
     defineField({
       name: "isPreferred",
-      title: "Preferred — Bacchus actively recommends them",
+      title: "Preferred: Bacchus actively recommends them",
       type: "boolean",
       initialValue: false,
-      description:
-        "Off by default. Only Bacchus can make this call; a directory that implies endorsement of everyone listed is a liability.",
+      description: help(
+        "Only tick if Bacchus has said they recommend this supplier.",
+        "Listing a supplier shouldn't suggest Bacchus vouches for them.",
+      ),
     }),
     defineField({
       name: "linksBackUrl",
       title: "Where they link back from",
       type: "url",
       description:
-        "The page on their site that links to Bacchus. Makes reciprocity auditable. Internal only.",
+        "The page on their site that links to Bacchus, so we can check it's still there. For staff only.",
     }),
     defineField({
       name: "isPublished",
@@ -147,13 +149,11 @@ export default defineType({
     },
     prepare: ({ name, category, preferred, published, media }) => ({
       title: name,
-      subtitle: [
-        category,
-        preferred ? "preferred" : null,
-        published ? null : "unpublished",
-      ]
-        .filter(Boolean)
-        .join(" · "),
+      subtitle: joinParts(
+        optionTitle(SUPPLIER_CATEGORIES, category),
+        preferred ? "Preferred" : undefined,
+        published ? "Published" : "Not published",
+      ),
       media,
     }),
   },

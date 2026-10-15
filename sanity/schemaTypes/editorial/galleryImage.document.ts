@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
 import { GALLERY_CATEGORIES } from "../../lib/constants"
+import { help } from "../../lib/help"
+import { joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * One catalogued photograph.
@@ -44,8 +46,10 @@ export default defineType({
       title: "Photograph",
       type: "image",
       options: { hotspot: true },
-      description:
-        "Upload the highest resolution available. Most existing event photography is 1024x1280 — fine for grids and cards, visibly soft stretched full-bleed as a hero.",
+      description: help(
+        "Upload the largest version you have.",
+        "Most of the current event photos are fine in the gallery, but too small for a large photo at the top of a page.",
+      ),
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -53,38 +57,43 @@ export default defineType({
       title: "Alt text",
       type: "string",
       description:
-        "What is in the photograph, for someone who cannot see it. Required — this is a page made of images.",
+        "Describe what's in the photo, for people who can't see it (e.g. screen reader users).",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "title",
       title: "Title",
       type: "string",
-      description:
-        'The editorial caption shown in the lightbox — e.g. "Reception, After Dark", "The First Toast". Distinct from alt text: this is written to be read, alt text is written to be heard.',
+      description: help(
+        'The caption when the photo is opened full size, e.g. "Reception, After Dark" or "The First Toast".',
+        "Different from the alt text: this is a caption to read, the alt text describes the photo.",
+      ),
     }),
     defineField({
       name: "category",
       title: "Category",
       type: "string",
       options: { list: [...GALLERY_CATEGORIES], layout: "radio" },
-      description:
-        'Drives the gallery filter. "Venue" rather than "Spaces" because that is what the existing markup and the inbound ?filter= deep links use.',
+      description: "Decides which gallery filter the photo appears under.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "label",
       title: "Label",
       type: "string",
-      description:
-        'Replaces the category name in the lightbox caption, e.g. "From the kitchen" on food photographed for the Venue category. Leave empty to show the category.',
+      description: help(
+        'Replaces the category name in the full-size caption, e.g. "From the kitchen" for food photos in the Venue category.',
+        "Leave empty to show the category.",
+      ),
     }),
     defineField({
       name: "shortLabel",
       title: "Short label",
       type: "string",
-      description:
-        'The badge on the photo when the label is too long for it, e.g. "Kitchen". Leave empty to use the label.',
+      description: help(
+        'A shorter label for the badge on the photo, e.g. "Kitchen".',
+        "Leave empty to use the label.",
+      ),
       hidden: ({ document }) => !document?.label,
     }),
     defineField({
@@ -94,21 +103,20 @@ export default defineType({
       of: [defineArrayMember({ type: "string" })],
       options: { layout: "tags" },
       description:
-        'Free-form, for the filtering the current flat bucket cannot do — "cake", "ceremony", "golden hour", "detail".',
+        'Any words that describe the photo, e.g. "cake", "ceremony", "golden hour".',
     }),
     defineField({
       name: "space",
       title: "Space photographed",
       type: "reference",
       to: [{ type: "venueSpace" }],
-      description: "Lets a space page pull its own photographs without a second list.",
+      description: "Lets the space's page show this photo.",
     }),
     defineField({
       name: "year",
       title: "Year taken",
       type: "number",
-      description:
-        "Approximate is fine. Grouping by year is one of the things the flat bucket cannot do.",
+      description: "A rough guess is fine.",
       validation: (Rule) => Rule.min(1970).max(2100).integer(),
     }),
     defineField({
@@ -116,32 +124,37 @@ export default defineType({
       title: "Photographer",
       type: "reference",
       to: [{ type: "supplier" }],
-      description:
-        "A reference, not a string — see the note on this type. A credited photographer is a link-exchange opportunity.",
+      description: help(
+        "Choose from the suppliers list. Add the photographer there first if they're missing.",
+        "Crediting them gives them a reason to link back to Bacchus.",
+      ),
     }),
     defineField({
       name: "isFeatured",
-      title: "Featured — gets the wide tile",
+      title: "Featured: gets the wide tile",
       type: "boolean",
       initialValue: false,
-      description:
-        "The gallery grid gives one tile a double-width span. Keep this to very few images.",
+      description: "Shown double width in the gallery. Use for very few photos.",
     }),
     defineField({
       name: "isWebCopy",
-      title: "Web copy — the original is still to come",
+      title: "Web copy: the original is still to come",
       type: "boolean",
       initialValue: false,
-      description:
-        "On for an already-compressed copy. The site serves it as it is rather than compressing it a second time. Upload the original when it arrives and turn this off.",
+      description: help(
+        "Tick if this is a compressed copy rather than the original photo. The site then won't compress it again.",
+        "When the original arrives, upload it and untick this.",
+      ),
     }),
     defineField({
       name: "isPlaceholder",
       title: "Placeholder image (not real Bacchus photography)",
       type: "boolean",
       initialValue: false,
-      description:
-        "All photography on the site is real client-provided work, with one approved exception (the station images). Anything flagged here must carry its disclaimer and should be replaced.",
+      description: help(
+        "Tick if this isn't a real Bacchus photo.",
+        "The site should only use real Bacchus photos. The one agreed exception is the station images. Anything ticked here shows a warning and should be replaced.",
+      ),
     }),
     defineField({
       name: "order",
@@ -172,7 +185,7 @@ export default defineType({
     },
     prepare: ({ title, alt, category, media, year }) => ({
       title: title || alt || "Untitled",
-      subtitle: [category, year].filter(Boolean).join(" · "),
+      subtitle: joinParts(optionTitle(GALLERY_CATEGORIES, category), year),
       media,
     }),
   },

@@ -1,4 +1,6 @@
 import { defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { formatDate, joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * A real client review.
@@ -31,6 +33,13 @@ import { defineField, defineType } from "sanity"
  * category/location/date line precisely because the name is the part that
  * actually distinguishes one testimonial from another.
  */
+const TESTIMONIAL_STATUSES = [
+  { title: "Submitted — awaiting review", value: "submitted" },
+  { title: "Approved — cleared, not yet live", value: "approved" },
+  { title: "Published", value: "published" },
+  { title: "Withheld", value: "withheld" },
+] as const
+
 export default defineType({
   name: "testimonial",
   title: "Testimonial",
@@ -45,8 +54,10 @@ export default defineType({
       title: "Quote",
       type: "emphasisedQuote",
       group: "content",
-      description:
-        "The reviewer's own words. Mark one phrase with Gold emphasis — that is our editorial pick, not theirs, and it renders in gold in the rotator.",
+      description: help(
+        "The reviewer's own words, unchanged.",
+        'Highlight one phrase with "Gold emphasis" to show it in gold on the site.',
+      ),
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -54,7 +65,7 @@ export default defineType({
       title: "Full name (internal)",
       type: "string",
       group: "content",
-      description: "Held on the record. Not what gets published — see below.",
+      description: 'For our records. The site shows "Name as published" below instead.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -63,7 +74,7 @@ export default defineType({
       type: "string",
       group: "content",
       description:
-        'What appears on the site — "Mandy & Gabriel Camenzuli", or "Marvin W" where only an initial was given.',
+        'What the site shows, e.g. "Mandy & Gabriel Camenzuli", or "Marvin W" where they only gave an initial.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -73,7 +84,7 @@ export default defineType({
       group: "content",
       options: { list: [1, 2, 3, 4, 5] },
       initialValue: 5,
-      description: "Renders as the five staggered stars.",
+      description: "Shown as stars.",
       validation: (Rule) => Rule.required().min(1).max(5).integer(),
     }),
     defineField({
@@ -81,8 +92,7 @@ export default defineType({
       title: "Location",
       type: "string",
       group: "content",
-      description:
-        'Optional. Currently "Malta" on all four, so it differentiates nothing.',
+      description: "Optional.",
     }),
     defineField({
       name: "category",
@@ -97,15 +107,14 @@ export default defineType({
           { title: "Restaurant", value: "restaurant" },
         ],
       },
-      description:
-        "Optional, same reason as location. Note the celebrations page had its placeholder quote removed rather than filled, because none of the four is celebration-specific.",
+      description: "Optional. The type of event they reviewed.",
     }),
     defineField({
       name: "eventDate",
       title: "Event date",
       type: "date",
       group: "content",
-      description: "As the reviewer gave it where they did — one cites 26 April 2014.",
+      description: "Optional. Only if the reviewer mentioned it.",
     }),
     defineField({
       name: "photo",
@@ -130,17 +139,12 @@ export default defineType({
       title: "Status",
       type: "string",
       group: "consent",
-      options: {
-        list: [
-          { title: "Submitted — awaiting review", value: "submitted" },
-          { title: "Approved — cleared, not yet live", value: "approved" },
-          { title: "Published", value: "published" },
-          { title: "Withheld", value: "withheld" },
-        ],
-        layout: "radio",
-      },
+      options: { list: [...TESTIMONIAL_STATUSES], layout: "radio" },
       initialValue: "submitted",
-      description: 'Only "Published" renders. Never auto-advance this from a submission.',
+      description: help(
+        'Only "Published" testimonials appear on the site.',
+        "A new submission always needs a person to review it first.",
+      ),
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -153,7 +157,7 @@ export default defineType({
         Rule.custom((value, context) => {
           const doc = context.document as { status?: string } | undefined
           if (doc?.status === "published" && !value) {
-            return "Cannot publish a named testimonial without consent for the name."
+            return "Tick this before publishing: we need their consent to use their name."
           }
           return true
         }),
@@ -164,8 +168,7 @@ export default defineType({
       type: "boolean",
       group: "consent",
       initialValue: false,
-      description:
-        "Separate from the name. A reviewer may agree to one and not the other.",
+      description: "Separate from the name: they may agree to one and not the other.",
     }),
     defineField({
       name: "consent",
@@ -180,7 +183,7 @@ export default defineType({
       group: "consent",
       to: [{ type: "booking" }],
       description:
-        "Empty for the four front-loaded by hand — they predate the pipeline and have no booking record.",
+        "Empty for the first four, which were added by hand before bookings were recorded here.",
     }),
     defineField({
       name: "order",
@@ -211,13 +214,11 @@ export default defineType({
     },
     prepare: ({ name, status, rating, date }) => ({
       title: name ?? "Unnamed",
-      subtitle: [
+      subtitle: joinParts(
         "★".repeat(Number(rating ?? 0)),
-        status,
-        date ? new Date(date).toLocaleDateString("en-GB") : null,
-      ]
-        .filter(Boolean)
-        .join(" · "),
+        optionTitle(TESTIMONIAL_STATUSES, status),
+        formatDate(date),
+      ),
     }),
   },
 })

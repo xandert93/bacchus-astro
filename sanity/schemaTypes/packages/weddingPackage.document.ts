@@ -1,4 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { joinParts } from "../../lib/preview"
 
 /**
  * One of the four wedding packages: Reception, Banquet, High Tea, Beverage.
@@ -54,7 +56,7 @@ export default defineType({
       title: "Name",
       type: "string",
       group: "content",
-      description: "Reception, Banquet, High Tea, Beverage.",
+      description: "e.g. Reception, Banquet, High Tea or Beverage.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -63,8 +65,10 @@ export default defineType({
       type: "slug",
       group: "content",
       options: { source: "name", maxLength: 48 },
-      description:
-        'Becomes /weddings/packages/<slug> — reception, banquet, high-tea, beverage. No "-package" or "-menus" suffix: the parent segment already says it, so /packages/reception-package would stutter.',
+      description: help(
+        "The end of the page's web address, e.g. reception gives /weddings/packages/reception.",
+        "Don't change it once set, or existing links break.",
+      ),
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -79,8 +83,10 @@ export default defineType({
         ],
         layout: "radio",
       },
-      description:
-        "Read by the quote generator to validate a selection. See the note on this type.",
+      description: help(
+        "Meal formats are alternatives: a quote has exactly one.",
+        "Additive packages (Beverage) are chosen on top of a meal format.",
+      ),
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -114,8 +120,10 @@ export default defineType({
         layout: "radio",
       },
       initialValue: "marked",
-      description:
-        'High Tea is "not marked in the source". Badges and the foot-of-page legend are suppressed together, and restored together.',
+      description: help(
+        "Whether the catalogue marks vegetarian dishes (V) for this package.",
+        'High Tea is "not marked": the (V) badges and the key at the foot of the page are both hidden.',
+      ),
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -124,7 +132,7 @@ export default defineType({
       type: "number",
       group: "structure",
       description:
-        "Card order in the packages section on the weddings page. Beverage sits last — it is the additive one.",
+        "The order of the package cards on the weddings page. Beverage goes last.",
       validation: (Rule) => Rule.required().integer(),
     }),
 
@@ -135,7 +143,7 @@ export default defineType({
       type: "text",
       group: "content",
       rows: 3,
-      description: "The one-paragraph pitch on the package card on the weddings page.",
+      description: "The short paragraph on the package card on the weddings page.",
     }),
     defineField({
       name: "heroHeading",
@@ -149,8 +157,7 @@ export default defineType({
       type: "text",
       group: "content",
       rows: 4,
-      description:
-        "Every hero on the site is crumb, h1, one paragraph, then CTAs. One paragraph.",
+      description: "One paragraph under the page heading.",
     }),
     defineField({
       name: "heroImage",
@@ -158,8 +165,10 @@ export default defineType({
       type: "image",
       group: "content",
       options: { hotspot: true },
-      description:
-        "Needs a high-resolution export. Most of the existing event photography is 1024x1280, which is visibly soft stretched full-bleed — ask the client before using one as a hero.",
+      description: help(
+        "The large photo at the top of the page. It needs a high-resolution original.",
+        "Most of the current event photos are too small and look blurry at this size. Ask Bacchus for the original first.",
+      ),
       fields: [
         defineField({
           name: "alt",
@@ -175,8 +184,11 @@ export default defineType({
       type: "array",
       group: "content",
       of: [defineArrayMember({ type: "packageNote" })],
-      description:
-        "The bronze and oxblood callouts. Three are currently live and load-bearing — the Banquet pricing conflict, the High Tea vegetarian explanation, and the Beverage pricing source. Do not remove one while the fact behind it is unresolved: it is the only thing telling a reader the figure above it is contested.",
+      description: help(
+        "The bronze and dark red notes on the page.",
+        "Three matter right now: the Banquet pricing conflict, the High Tea vegetarian explanation and the Beverage pricing source.",
+        "Don't remove one until Bacchus has confirmed the fact behind it: it is the only thing telling visitors the figure isn't settled.",
+      ),
     }),
     defineField({
       name: "allergenNote",
@@ -184,8 +196,10 @@ export default defineType({
       type: "text",
       group: "content",
       rows: 3,
-      description:
-        'Foot of page. Drop the "(V) vegetarian" legend line automatically where this package has no markings.',
+      description: help(
+        "Shown at the foot of the page.",
+        'The "(V) vegetarian" key is added automatically, except on packages without (V) markings.',
+      ),
     }),
     defineField({
       name: "seo",
@@ -205,13 +219,11 @@ export default defineType({
     select: { name: "name", role: "role", style: "tierStyle", marking: "dietaryMarking" },
     prepare: ({ name, role, style, marking }) => ({
       title: name,
-      subtitle: [
-        role === "meal-format" ? "meal format" : "additive",
-        style === "ranked-tiers" ? "ranked tiers" : "combinable categories",
-        marking === "not-marked-in-source" ? "no (V) in source" : null,
-      ]
-        .filter(Boolean)
-        .join(" · "),
+      subtitle: joinParts(
+        role === "meal-format" ? "Meal format" : "Added on top",
+        style === "ranked-tiers" ? "Choose one tier" : "Categories combine",
+        marking === "not-marked-in-source" ? "No (V) markings" : undefined,
+      ),
     }),
   },
 })

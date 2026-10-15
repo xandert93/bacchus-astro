@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
+import { pluralise } from "../../lib/preview"
 
 /**
  * A titled block of menu lines — "Cold Canapés", "Flying Buffet", "Desserts",
@@ -30,7 +31,7 @@ export default defineType({
       name: "title",
       title: "Group title",
       type: "string",
-      description: 'As it heads the column — e.g. "Cold Canapés", "Coffee Station".',
+      description: 'The heading above the list, e.g. "Cold Canapés" or "Coffee Station".',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -48,7 +49,7 @@ export default defineType({
       title: "Group note",
       type: "string",
       description:
-        'Applies to the whole group — e.g. "Served with crackers, Grissini & freshly baked bread."',
+        'Applies to the whole group, e.g. "Served with crackers, Grissini & freshly baked bread."',
     }),
     defineField({
       name: "catalogueVariance",
@@ -58,9 +59,9 @@ export default defineType({
   ],
   preview: {
     select: { title: "title", items: "items" },
-    prepare: ({ title, items }) => {
-      const count = Array.isArray(items) ? items.length : 0
-      return { title, subtitle: `${count} item${count === 1 ? "" : "s"}` }
-    },
+    prepare: ({ title, items }) => ({
+      title,
+      subtitle: pluralise(Array.isArray(items) ? items.length : 0, "item"),
+    }),
   },
 })

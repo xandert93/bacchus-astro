@@ -1,4 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { formatDate, joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * A date or range the venue cannot take a wedding, for a reason that is not a
@@ -26,6 +28,13 @@ import { defineArrayMember, defineField, defineType } from "sanity"
  * should not read as Available either. Off means the date is simply not
  * offered, with no reason given.
  */
+const CLOSURE_REASONS = [
+  { title: "Maintenance or repairs", value: "maintenance" },
+  { title: "Staff holiday / closed period", value: "closed" },
+  { title: "Held for a provisional booking", value: "held" },
+  { title: "Other", value: "other" },
+] as const
+
 export default defineType({
   name: "venueClosure",
   title: "Closure / blackout",
@@ -35,7 +44,7 @@ export default defineType({
       name: "title",
       title: "Title",
       type: "string",
-      description: 'Internal label — e.g. "Hall repairs, insurance claim".',
+      description: 'For staff only, e.g. "Hall repairs, insurance claim".',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -62,14 +71,7 @@ export default defineType({
       name: "reason",
       title: "Reason",
       type: "string",
-      options: {
-        list: [
-          { title: "Maintenance or repairs", value: "maintenance" },
-          { title: "Staff holiday / closed period", value: "closed" },
-          { title: "Held for a provisional booking", value: "held" },
-          { title: "Other", value: "other" },
-        ],
-      },
+      options: { list: [...CLOSURE_REASONS] },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -77,8 +79,10 @@ export default defineType({
       title: "Spaces affected",
       type: "array",
       of: [defineArrayMember({ type: "reference", to: [{ type: "venueSpace" }] })],
-      description:
-        "Leave empty for the whole estate. A closure affecting only one space should not black out a date a wedding could still use.",
+      description: help(
+        "Leave empty if the whole venue is closed.",
+        "If only some spaces are affected, choose them, so the date stays open for events that can use the others.",
+      ),
     }),
     defineField({
       name: "blocksWeddings",
@@ -86,15 +90,17 @@ export default defineType({
       type: "boolean",
       initialValue: true,
       description:
-        "Off for a closure that affects the restaurant only — the public wedding calendar should not react to it.",
+        "Untick if this only affects the restaurant, so the wedding calendar isn't affected.",
     }),
     defineField({
       name: "showPublicly",
       title: "Give a reason publicly",
       type: "boolean",
       initialValue: false,
-      description:
-        "Off by default. The date is simply not offered, with no explanation — staff holidays and maintenance are not visitor-facing.",
+      description: help(
+        "Usually left unticked: the date simply isn't offered, with no explanation.",
+        "Tick to show visitors a note about why.",
+      ),
     }),
     defineField({
       name: "publicNote",
@@ -112,12 +118,14 @@ export default defineType({
   ],
   preview: {
     select: { title: "title", start: "startDate", end: "endDate", reason: "reason" },
-    prepare: ({ title, start, end, reason }) => {
-      const fmt = (d?: string) => (d ? new Date(d).toLocaleDateString("en-GB") : "?")
-      return {
-        title,
-        subtitle: `${fmt(start)}${end && end !== start ? ` – ${fmt(end)}` : ""} · ${reason ?? ""}`,
-      }
-    },
+    prepare: ({ title, start, end, reason }) => ({
+      title,
+      subtitle: joinParts(
+        end && end !== start
+          ? `${formatDate(start) ?? "?"} – ${formatDate(end)}`
+          : formatDate(start),
+        optionTitle(CLOSURE_REASONS, reason),
+      ),
+    }),
   },
 })

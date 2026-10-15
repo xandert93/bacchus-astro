@@ -1,4 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
+import { help } from "../../lib/help"
+import { capitalise, joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * One confirmed fact about the venue, in question-and-answer form.
@@ -37,6 +39,16 @@ import { defineArrayMember, defineField, defineType } from "sanity"
  * example: guests can book "the Tomba", which is the client's own term for a
  * nearby arrangement nobody has yet identified.
  */
+const FAQ_TOPICS = [
+  { title: "Spaces & capacity", value: "spaces" },
+  { title: "Food & drink", value: "food" },
+  { title: "Timings & music", value: "timings" },
+  { title: "Pricing & payment", value: "pricing" },
+  { title: "Planning & suppliers", value: "planning" },
+  { title: "Access & practicalities", value: "practical" },
+  { title: "Restaurant", value: "restaurant" },
+] as const
+
 export default defineType({
   name: "faq",
   title: "FAQ / venue fact",
@@ -46,7 +58,7 @@ export default defineType({
       name: "question",
       title: "Question",
       type: "string",
-      description: "As a visitor would ask it, not as staff would file it.",
+      description: "Word it the way a visitor would ask it.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -77,25 +89,17 @@ export default defineType({
       name: "topic",
       title: "Topic",
       type: "string",
-      options: {
-        list: [
-          { title: "Spaces & capacity", value: "spaces" },
-          { title: "Food & drink", value: "food" },
-          { title: "Timings & music", value: "timings" },
-          { title: "Pricing & payment", value: "pricing" },
-          { title: "Planning & suppliers", value: "planning" },
-          { title: "Access & practicalities", value: "practical" },
-          { title: "Restaurant", value: "restaurant" },
-        ],
-      },
+      options: { list: [...FAQ_TOPICS] },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "provenance",
       title: "Source & confirmation",
       type: "provenance",
-      description:
-        "The assistant only sees confirmed facts. An unconfirmed one can still render on a page with its warning treatment.",
+      description: help(
+        "The chat assistant only uses confirmed answers.",
+        "An unconfirmed answer can still appear on a page, with a warning.",
+      ),
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -104,7 +108,7 @@ export default defineType({
       type: "boolean",
       initialValue: true,
       description:
-        'Turn off for anything where the right answer is "speak to the events team", even if the fact itself is confirmed.',
+        'Untick where the right answer is "speak to the events team", even if the fact is confirmed.',
     }),
     defineField({
       name: "showOnPages",
@@ -126,7 +130,7 @@ export default defineType({
         // be assigned to a page that does not exist.
       },
       description:
-        "Empty means it is held for the assistant and the guide articles but not shown on any page.",
+        "Leave empty to keep it off the pages. The assistant and guide articles can still use it.",
     }),
     defineField({
       name: "order",
@@ -154,13 +158,13 @@ export default defineType({
     },
     prepare: ({ question, topic, status, assistant }) => ({
       title: question,
-      subtitle: [
-        topic,
-        status,
-        status === "confirmed" && assistant ? "assistant: yes" : "assistant: no",
-      ]
-        .filter(Boolean)
-        .join(" · "),
+      subtitle: joinParts(
+        optionTitle(FAQ_TOPICS, topic),
+        capitalise(status),
+        status === "confirmed" && assistant
+          ? "Used by assistant"
+          : "Not used by assistant",
+      ),
     }),
   },
 })
