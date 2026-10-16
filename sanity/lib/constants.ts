@@ -19,29 +19,55 @@ export const EVENT_TYPES = [
 ] as const
 
 /**
- * Booking lifecycle.
+ * Booking lifecycle, in the order an enquiry moves through it.
  *
- * `pending` IS the enquiry — there is no separate enquiry type. CLAUDE.md:
- * "the booking record itself has a status field […] the public calendar just
- * reads that". Several `pending` bookings may share one date; at most one
- * `confirmed` may (see `queries/availability.ts` and the note on
- * `booking.status`).
+ * One document from first enquiry to the event: there is no separate enquiry
+ * type, so nothing is copied from one to the other. The first three statuses
+ * are an open enquiry, and the Studio lists them as Enquiries; the rest are
+ * a booking or the end of one.
  *
- * `cancelled` is distinct from `declined`: declined is Bacchus saying no to an
- * enquiry, cancelled is a confirmed booking falling through afterwards. Only
- * `cancelled` releases a date that was publicly shown as Booked, which is the
- * transition the waitlist webhook watches.
+ *   new               arrived, nobody has replied yet
+ *   in-discussion     replied to: questions, viewings, tastings, a quote
+ *   awaiting-deposit  quote accepted, deposit link sent, date held
+ *   confirmed         deposit received
+ *   completed         the event has happened (set by a scheduled job)
+ *   declined          Bacchus said no
+ *   withdrawn         the client didn't go ahead, before paying anything
+ *   cancelled         was confirmed, then fell through
+ *
+ * Several open enquiries may share one date; at most one `confirmed` may
+ * (see `queries/availability.ts` and the note on `booking.status`). Only
+ * `cancelled` releases a date that was publicly shown as Booked, which is
+ * the transition the waitlist webhook watches.
+ *
+ * What each status means for staff belongs in the staff guide written at
+ * handover, not in the Studio, so the titles stay short.
  */
 export const BOOKING_STATUSES = [
-  { title: "Pending — enquiry received, not yet answered", value: "pending" },
-  { title: "Confirmed — deposit received, date held", value: "confirmed" },
-  { title: "Declined — Bacchus could not take it", value: "declined" },
-  { title: "Cancelled — was confirmed, then fell through", value: "cancelled" },
-  { title: "Completed — event has taken place", value: "completed" },
+  { title: "New enquiry", value: "new" },
+  { title: "In discussion", value: "in-discussion" },
+  { title: "Awaiting deposit", value: "awaiting-deposit" },
+  { title: "Confirmed", value: "confirmed" },
+  { title: "Completed", value: "completed" },
+  { title: "Declined by Bacchus", value: "declined" },
+  { title: "Withdrawn by client", value: "withdrawn" },
+  { title: "Cancelled", value: "cancelled" },
 ] as const
 
+export type BookingStatus = (typeof BOOKING_STATUSES)[number]["value"]
+
+/** Open enquiries: a date with one reads as "Enquiries received". */
+export const OPEN_ENQUIRY_STATUSES = [
+  "new",
+  "in-discussion",
+  "awaiting-deposit",
+] as const satisfies readonly BookingStatus[]
+
 /** Statuses that make a date read as Booked on the public calendar. */
-export const DATE_BLOCKING_STATUSES = ["confirmed", "completed"] as const
+export const DATE_BLOCKING_STATUSES = [
+  "confirmed",
+  "completed",
+] as const satisfies readonly BookingStatus[]
 
 /**
  * Wizard step 2, `#eventStyle` option cards — `data-v` values verbatim.
@@ -95,5 +121,11 @@ export const QUOTE_LINE_CATEGORIES = [
   { title: "Other", value: "other" },
 ] as const
 
-/** Malta's standard VAT rate, as shown on the deposit page. */
+/**
+ * Malta's standard VAT rate. Staff set the live figure in Site settings; this
+ * is only used where that is empty.
+ */
 export const DEFAULT_VAT_RATE = 18
+
+/** Used for a new quote only where the wedding policy has no deposit set. */
+export const DEFAULT_DEPOSIT_PERCENT = 30

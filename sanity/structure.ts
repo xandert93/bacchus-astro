@@ -1,4 +1,9 @@
-import type { StructureResolver } from "sanity/structure"
+import type { StructureBuilder, StructureResolver } from "sanity/structure"
+import {
+  DATE_BLOCKING_STATUSES,
+  OPEN_ENQUIRY_STATUSES,
+  type BookingStatus,
+} from "./lib/constants"
 
 /**
  * Studio navigation.
@@ -11,66 +16,86 @@ import type { StructureResolver } from "sanity/structure"
  * reason that matters here: Sanity Studio is the whole of the staff admin
  * surface. A bespoke dashboard or CRM was explicitly deferred as likely overkill
  * for the expected volume, so approving and declining enquiries happens in
- * this sidebar — which makes "Enquiries & bookings" the first thing in it, and
- * the pending list the first thing inside that.
+ * this sidebar — which makes Enquiries the first thing in it, and the new,
+ * unanswered ones the first list inside that.
+ *
+ * Titled dividers name each group of the sidebar, so its order reads as
+ * sections rather than arbitrary breaks.
  *
  * `Open questions` at the foot is the one entry that is not a content type. It
  * is the working list of everything still waiting on the client, built from
  * the provenance records, and it earns its place because that list is
  * otherwise only reconstructable by re-reading a 49KB project file.
  */
+/** A list of bookings in the given statuses, soonest event first. */
+const bookingsInStatus = (
+  S: StructureBuilder,
+  title: string,
+  id: string,
+  statuses: readonly BookingStatus[],
+) =>
+  S.listItem()
+    .title(title)
+    .id(id)
+    .child(
+      S.documentList()
+        .title(title)
+        .filter('_type == "booking" && status in $statuses')
+        .params({ statuses })
+        .defaultOrdering([{ field: "event.date", direction: "asc" }]),
+    )
+
 export const structure: StructureResolver = (S) =>
   S.list()
     .title("Bacchus")
     .items([
-      // --- Enquiries ------------------------------------------------------
+      S.divider().title("Sales"),
+
+      // Enquiries and bookings are one document type that changes status, so
+      // nothing is copied when an enquiry becomes a booking. These two lists
+      // just split it at the deposit.
       S.listItem()
-        .title("Enquiries & bookings")
+        .title("Enquiries")
         .id("enquiries")
         .child(
           S.list()
-            .title("Enquiries & bookings")
+            .title("Enquiries")
             .items([
-              S.listItem()
-                .title("Pending — need a reply")
-                .id("pending")
-                .child(
-                  S.documentList()
-                    .title("Pending enquiries")
-                    .filter('_type == "booking" && status == "pending"')
-                    .defaultOrdering([{ field: "eventDate", direction: "asc" }]),
-                ),
-              S.listItem()
-                .title("Confirmed")
-                .id("confirmed")
-                .child(
-                  S.documentList()
-                    .title("Confirmed bookings")
-                    .filter('_type == "booking" && status == "confirmed"')
-                    .defaultOrdering([{ field: "eventDate", direction: "asc" }]),
-                ),
-              S.listItem()
-                .title("All bookings")
-                .id("all-bookings")
-                .child(S.documentTypeList("booking").title("All bookings")),
+              bookingsInStatus(S, "New: not replied to yet", "new", ["new"]),
+              bookingsInStatus(S, "In discussion", "in-discussion", ["in-discussion"]),
+              bookingsInStatus(S, "Awaiting deposit", "awaiting-deposit", [
+                "awaiting-deposit",
+              ]),
               S.divider(),
-              S.listItem()
-                .title("Waitlist")
-                .id("waitlist")
-                .child(
-                  S.documentList()
-                    .title("Waitlist — active")
-                    .filter('_type == "waitlistEntry" && status == "active"')
-                    .defaultOrdering([{ field: "eventDate", direction: "asc" }]),
-                ),
-              S.listItem()
-                .title("Closures & blackout dates")
-                .id("closures")
-                .child(S.documentTypeList("venueClosure").title("Closures")),
+              bookingsInStatus(S, "Declined & withdrawn", "closed-enquiries", [
+                "declined",
+                "withdrawn",
+              ]),
+              bookingsInStatus(S, "All enquiries", "all-enquiries", [
+                ...OPEN_ENQUIRY_STATUSES,
+                "declined",
+                "withdrawn",
+              ]),
+            ]),
+        ),
+      S.listItem()
+        .title("Bookings")
+        .id("bookings")
+        .child(
+          S.list()
+            .title("Bookings")
+            .items([
+              bookingsInStatus(S, "Confirmed", "confirmed", ["confirmed"]),
+              bookingsInStatus(S, "Completed", "completed", ["completed"]),
+              bookingsInStatus(S, "Cancelled", "cancelled", ["cancelled"]),
+              S.divider(),
+              bookingsInStatus(S, "All bookings", "all-bookings", [
+                ...DATE_BLOCKING_STATUSES,
+                "cancelled",
+              ]),
             ]),
         ),
 
-      // --- Quotes ---------------------------------------------------------
       // Live first, because those are the quotes someone still has to act
       // on. Accepted ones belong to a confirmed booking, and expired or
       // superseded ones are kept only as a record of what was sent.
@@ -88,7 +113,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentList()
                     .title("Live quotes")
                     .filter('_type == "quote" && status in ["draft", "sent"]')
-                    .defaultOrdering([{ field: "eventDate", direction: "asc" }]),
+                    .defaultOrdering([{ field: "event.date", direction: "asc" }]),
                 ),
               S.listItem()
                 .title("Accepted")
@@ -97,7 +122,7 @@ export const structure: StructureResolver = (S) =>
                   S.documentList()
                     .title("Accepted quotes")
                     .filter('_type == "quote" && status == "accepted"')
-                    .defaultOrdering([{ field: "eventDate", direction: "asc" }]),
+                    .defaultOrdering([{ field: "event.date", direction: "asc" }]),
                 ),
               S.listItem()
                 .title("Expired & superseded")
@@ -115,8 +140,17 @@ export const structure: StructureResolver = (S) =>
                 .child(S.documentTypeList("quote").title("All quotes")),
             ]),
         ),
+      S.listItem()
+        .title("Waitlist")
+        .id("waitlist")
+        .child(
+          S.documentList()
+            .title("Waitlist: active")
+            .filter('_type == "waitlistEntry" && status == "active"')
+            .defaultOrdering([{ field: "eventDate", direction: "asc" }]),
+        ),
 
-      S.divider(),
+      S.divider().title("Venue"),
 
       // --- Packages -------------------------------------------------------
       S.listItem()
@@ -164,8 +198,12 @@ export const structure: StructureResolver = (S) =>
         .title("Spaces")
         .id("spaces")
         .child(S.documentTypeList("venueSpace").title("Spaces")),
+      S.listItem()
+        .title("Closures & blackout dates")
+        .id("closures")
+        .child(S.documentTypeList("venueClosure").title("Closures")),
 
-      S.divider(),
+      S.divider().title("Website"),
 
       // --- Editorial ------------------------------------------------------
       S.listItem()
@@ -206,7 +244,7 @@ export const structure: StructureResolver = (S) =>
         .id("suppliers")
         .child(S.documentTypeList("supplier").title("Suppliers")),
 
-      S.divider(),
+      S.divider().title("Restaurant"),
 
       // --- Restaurant (parked) --------------------------------------------
       S.listItem()
@@ -214,7 +252,7 @@ export const structure: StructureResolver = (S) =>
         .id("restaurant-menu")
         .child(S.documentTypeList("restaurantMenuSection").title("Restaurant menu")),
 
-      S.divider(),
+      S.divider().title("Settings"),
 
       // --- Settings -------------------------------------------------------
       S.listItem()
@@ -226,7 +264,7 @@ export const structure: StructureResolver = (S) =>
         .id("site-settings")
         .child(S.document().schemaType("siteSettings").documentId("siteSettings")),
 
-      S.divider(),
+      S.divider().title("For the build team"),
 
       // --- The working list -----------------------------------------------
       S.listItem()
