@@ -1,6 +1,7 @@
 import { defineField, defineType } from "sanity"
 import { help } from "../../lib/help"
 import { timeField } from "../../lib/timeField"
+import { DEFAULT_DEPOSIT_PERCENT, DEFAULT_VAT_RATE } from "../../lib/constants"
 
 /**
  * The venue's operating facts and policies. One document, edited in place.
@@ -26,12 +27,13 @@ import { timeField } from "../../lib/timeField"
  * person publishing it, and that the oxblood disclaimers currently written by
  * hand into the markup follow the data instead.
  *
- * `depositPercent` and `balanceDueDays` are the contested pair: the catalogue
- * states 30% non-refundable with the remaining 70% due 14 days before the
- * event, while client correspondence describes the terms as flexible without
- * reaffirming that split. They are recorded, with the conflict attached, and
- * must not be wired into real deposit logic until the client says which
- * governs.
+ * The deposit terms (`depositPercent`, `balanceDueDays`, `depositHoldDays`)
+ * are not settled with Bacchus yet: the catalogue states 30% non-refundable
+ * with the rest due 14 days before the event, while their emails call the
+ * terms flexible. That is tracked outside the Studio
+ * (`docs/content/client-facts.md`), so staff don't see the dispute in their
+ * admin. Deposits run in test mode until it is settled, and settling it is a
+ * change of these numbers, not of code.
  */
 export default defineType({
   name: "weddingPolicy",
@@ -178,14 +180,26 @@ export default defineType({
 
     // --- Deposit & payment --------------------------------------------------
     defineField({
+      name: "vatRate",
+      title: "VAT rate (%)",
+      type: "number",
+      group: "money",
+      initialValue: DEFAULT_VAT_RATE,
+      description: help(
+        "Malta's standard rate. Quoted prices include VAT.",
+        "New quotes copy this when they're created. Changing it doesn't affect quotes already made.",
+      ),
+      validation: (Rule) => Rule.required().min(0).max(100),
+    }),
+    defineField({
       name: "depositPercent",
       title: "Deposit (%)",
       type: "number",
       group: "money",
-      initialValue: 30,
+      initialValue: DEFAULT_DEPOSIT_PERCENT,
       description: help(
-        "Disputed: see the source record below.",
-        "Not used for real payments until Bacchus confirms it.",
+        "The usual deposit. New quotes copy this when they're created.",
+        "It can be changed on an individual quote.",
       ),
       validation: (Rule) => Rule.min(0).max(100),
     }),
@@ -195,36 +209,15 @@ export default defineType({
       type: "number",
       group: "money",
       initialValue: 14,
-      description: "Disputed, like the deposit percentage.",
       validation: (Rule) => Rule.min(0).integer(),
-    }),
-    defineField({
-      name: "depositTermsProvenance",
-      title: "Deposit terms: source & conflict",
-      type: "provenance",
-      group: "money",
-      description: help(
-        'Expect "contested" until Bacchus settles it.',
-        "The catalogue says 30% non-refundable, with 70% due 14 days before. More recent emails describe the terms as flexible without confirming that split.",
-      ),
     }),
     defineField({
       name: "depositHoldDays",
-      title: "Date held for (days) after the deposit link is issued",
+      title: "Date held for (days) after the deposit link is sent",
       type: "number",
       group: "money",
       initialValue: 7,
-      description: help(
-        "Placeholder. The deposit page says seven days, but Bacchus hasn't confirmed it.",
-        "How long a date is held after the client is sent the deposit link.",
-      ),
       validation: (Rule) => Rule.min(0).integer(),
-    }),
-    defineField({
-      name: "depositHoldProvenance",
-      title: "Hold period: source",
-      type: "provenance",
-      group: "money",
     }),
     defineField({
       name: "bankTransferDetails",

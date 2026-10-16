@@ -71,9 +71,11 @@ export default defineType({
       name: "amount",
       title: "Line total (EUR)",
       type: "number",
+      readOnly: ({ parent }) =>
+        parent?.quantity !== undefined && parent?.unitAmount !== undefined,
       description: help(
-        "Exactly as on the quote.",
-        "It isn't worked out from the quantity and unit amount, so check it matches.",
+        "Worked out automatically from the quantity and unit amount.",
+        "For a flat fee, leave those two empty and type the total here.",
       ),
       validation: (Rule) => Rule.required().precision(2),
     }),

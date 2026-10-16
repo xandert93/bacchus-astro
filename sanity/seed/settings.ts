@@ -56,19 +56,10 @@ const weddingPolicy = {
   coordinatorIncluded: true,
   coupleSourcesThemselves:
     "Flowers, entertainment (a DJ or band, including any stage) and a photographer. A photobooth is a common extra.",
+  vatRate: 18,
   depositPercent: 30,
   balanceDueDays: 14,
-  depositTermsProvenance: provenance(
-    "contested",
-    "catalogue",
-    "30% deposit, balance 14 days out",
-    {
-      conflictingValue: "Terms described as 'quite flexible'",
-      conflictingSource: "Client correspondence, 17 September 2026",
-    },
-  ),
   depositHoldDays: 7,
-  depositHoldProvenance: invented("illustrative hold period on the deposit page"),
   bankTransferDetails: {
     accountName: "Bacchus Ltd",
     iban: "MT99 BACC 0000 0000 0000 0000 0000 000",
