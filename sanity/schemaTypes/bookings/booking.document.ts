@@ -10,6 +10,7 @@ import type { ComponentType } from "react"
 import { defineArrayMember, defineField, defineType } from "sanity"
 import {
   BOOKING_STATUSES,
+  CONTACT_PREFERENCES,
   EVENT_STYLES,
   EVENT_TYPES,
   type BookingStatus,
@@ -148,6 +149,16 @@ export default defineType({
           description:
             "As the client typed it. International formats vary, so any format is accepted.",
         }),
+        defineField({
+          name: "contactPreference",
+          title: "Prefers To Be Contacted By",
+          type: "string",
+          options: {
+            list: [...CONTACT_PREFERENCES],
+            layout: "radio",
+            direction: "horizontal",
+          },
+        }),
       ],
     }),
 
@@ -219,7 +230,7 @@ export default defineType({
           title: "Spaces of Interest",
           type: "array",
           of: [defineArrayMember({ type: "reference", to: [{ type: "venueSpace" }] })],
-          hidden: ({ parent }) => (parent as EventValue)?.type !== "wedding",
+          hidden: ({ parent }) => (parent as EventValue)?.type === "wedding",
           description:
             'Empty, with the box below ticked, means the client chose "Not sure yet".',
         }),
@@ -228,7 +239,7 @@ export default defineType({
           title: "Asked Us to Guide Them on Spaces",
           type: "boolean",
           initialValue: false,
-          hidden: ({ parent }) => (parent as EventValue)?.type !== "wedding",
+          hidden: ({ parent }) => (parent as EventValue)?.type === "wedding",
           description: help(
             'The client chose "Not sure yet" and would like us to suggest spaces.',
             "Unticked with no spaces chosen means they skipped the question.",
@@ -238,6 +249,7 @@ export default defineType({
           name: "style",
           title: "Tone",
           type: "string",
+          hidden: ({ parent }) => (parent as EventValue)?.type !== "wedding",
           options: { list: [...EVENT_STYLES] },
           description: help(
             "The feel the client is after.",

@@ -4,7 +4,8 @@
 import { reduce } from "@scripts/lib/motion.js"
 import { availabilityHooks } from "@scripts/lib/availability-hooks.js"
 import "./AvailabilityCalendar.js"
-import { CHIP_NOTES } from "@data/enquiry"
+import { CONTACT } from "@data/contact"
+import { CHIP_NOTES, NOT_SURE_OF_SPACES } from "@data/enquiry"
 
 // ---------- Enquiry form ----------
 // On pages with a calendar embedded in the "Preferred date" field (Weddings only —
@@ -267,14 +268,14 @@ if (spacesWrap) {
   spacesWrap.addEventListener("click", (e) => {
     const opt = e.target.closest(".option-card")
     if (!opt) return
-    if (opt.dataset.v === "Not sure yet") {
+    if (opt.dataset.v === NOT_SURE_OF_SPACES) {
       const was = opt.classList.contains("is-selected")
       spacesWrap.querySelectorAll(".option-card").forEach((o) => {
         o.classList.remove("is-selected")
       })
       if (!was) opt.classList.add("is-selected")
     } else {
-      const notSure = spacesWrap.querySelector('[data-v="Not sure yet"]')
+      const notSure = spacesWrap.querySelector(`[data-v="${NOT_SURE_OF_SPACES}"]`)
       if (notSure) notSure.classList.remove("is-selected")
       opt.classList.toggle("is-selected")
     }
@@ -286,6 +287,14 @@ const chosenSpaces = () => {
     .call(spacesWrap.querySelectorAll(".option-card.is-selected"))
     .map((o) => o.dataset.v)
 }
+
+// What the review step shows: each chosen card's title, not the value sent.
+const chosenTitles = (wrap) =>
+  wrap
+    ? [...wrap.querySelectorAll(".option-card.is-selected b")].map((title) =>
+        title.textContent.trim(),
+      )
+    : []
 
 // ---------- Event style (Wedding only, single-select) ----------
 const eventStyleWrap = document.getElementById("eventStyle")
@@ -334,6 +343,9 @@ if (form) {
     return cond
   }
   const defaultEventType = (document.getElementById("eventtype") || {}).value || "Wedding"
+
+  // Sent with the enquiry: the endpoint ignores one sent implausibly fast.
+  const formStartedAt = Date.now()
 
   const MONTHS_FORM = [
     "January",
@@ -508,12 +520,12 @@ if (form) {
       const bd = new Date(backup + "T00:00:00")
       if (!isNaN(bd)) backup = fmtDate(bd)
     }
-    const sp = chosenSpaces()
+    const sp = chosenTitles(spacesWrap)
     // A wedding books the whole estate regardless of guest count, so
     // there's no spaces answer to show, not even a blank "Not given" row.
     const isWedding = val("eventtype") === "Wedding"
     const specificsRows = [["Guests", val("guests") ? val("guests") + " expected" : null]]
-    if (isWedding) specificsRows.push(["Style", val("eventStyleVal")])
+    if (isWedding) specificsRows.push(["Style", chosenTitles(eventStyleWrap)[0]])
     if (!isWedding) specificsRows.push(["Spaces", sp.length ? sp.join(", ") : null])
     specificsRows.push(["Notes", val("msg")])
     const groups = [
@@ -667,6 +679,30 @@ if (form) {
     showStep(1)
   }
 
+  // Back to a blank form on pages without the "sent" panel.
+  const resetForm = () => {
+    const dt = document.getElementById("date"),
+      et = document.getElementById("eventtype")
+    form.reset()
+    // form.reset() does not clear type="hidden" inputs in practice (verified —
+    // it resets visible text/number/etc. controls but leaves hidden ones alone),
+    // so #date needs an explicit clear. availReset() also clears the calendar
+    // widget's own internal "selected" state and un-highlights its picked cell,
+    // which form.reset() has no way to touch since that's plain DOM, not a
+    // form control.
+    if (dt) {
+      dt.value = ""
+      dt.dataset.iso = ""
+    }
+    if (availabilityHooks.reset) availabilityHooks.reset()
+    if (et) et.value = defaultEventType
+    document.querySelectorAll("#chips .chip").forEach((c) => {
+      c.classList.toggle("is-selected", c.dataset.v === defaultEventType)
+    })
+    syncChipNote(true)
+    if (totalSteps) showStep(1)
+  }
+
   form.addEventListener("submit", (e) => {
     e.preventDefault()
     // Review/consent step — pages without it (not yet migrated) have no
@@ -694,32 +730,55 @@ if (form) {
     }
     const dt = document.getElementById("date"),
       et = document.getElementById("eventtype")
-    console.log("Enquiry submitted:", {
-      name: fullName(),
+    const sendError = document.getElementById("sendError")
+    const submitLabel = submitBtn ? submitBtn.querySelector("span") : null
+
+    const showSendError = (message) => {
+      if (submitBtn) submitBtn.disabled = false
+      if (submitLabel) submitLabel.textContent = "Submit"
+      if (sendError) {
+        sendError.textContent = message
+        sendError.hidden = false
+      }
+    }
+
+    if (sendError) sendError.hidden = true
+    if (submitBtn) submitBtn.disabled = true
+    if (submitLabel) submitLabel.textContent = "Sending…"
+
+    const enquiry = {
+      eventType: et ? et.value : null,
+      date: dt ? dt.dataset.iso || dt.value : null,
+      backupDate: val("backupDate"),
+      guests: Number(val("guests")),
+      spaces: chosenSpaces(),
+      style: val("eventStyleVal"),
+      message: val("msg"),
+      firstName: val("firstName"),
+      lastName: val("lastName"),
       email: val("email"),
       phone: val("phone"),
-      eventType: et ? et.value : null,
-      date: dt ? dt.value : null,
-      dateIso: dt ? dt.dataset.iso || null : null,
-      backupDate: val("backupDate"),
-      guests: val("guests"),
-      spaces: chosenSpaces(),
-      eventStyle: val("eventStyleVal"),
-      message: val("msg"),
-      contactPref: val("preferVal"),
-    })
+      contactPreference: val("preferVal"),
+      consent: consent ? consent.checked : false,
+      sourcePage: window.location.pathname,
+      startedAt: formStartedAt,
+      website: (document.getElementById("website") || {}).value || "",
+    }
 
-    const sentEl = document.getElementById("sent")
-    if (sentEl) {
-      // New review/success flow (see enquiry section markup) — send is
-      // deliberately delayed to read as real work happening, matching the
-      // sitewide "Sending…" convention.
-      if (submitBtn) {
-        submitBtn.disabled = true
-        const submitLabel = submitBtn.querySelector("span")
-        if (submitLabel) submitLabel.textContent = "Sending…"
-      }
-      setTimeout(() => {
+    fetch("/api/enquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(enquiry),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Enquiry refused: ${response.status}`)
+
+        const sentEl = document.getElementById("sent")
+        if (!sentEl) {
+          resetForm()
+          return
+        }
+
         const sentLine = document.getElementById("sentLine")
         if (sentLine) {
           sentLine.textContent =
@@ -745,32 +804,19 @@ if (form) {
           top: window.scrollY + sentTop - 90,
           behavior: reduce ? "auto" : "smooth",
         })
-      }, 900)
-      return
-    }
-
-    form.reset()
-    // form.reset() does not clear type="hidden" inputs in practice (verified —
-    // it resets visible text/number/etc. controls but leaves hidden ones alone),
-    // so #date needs an explicit clear. availReset() also clears the calendar
-    // widget's own internal "selected" state and un-highlights its picked cell,
-    // which form.reset() has no way to touch since that's plain DOM, not a
-    // form control.
-    if (dt) {
-      dt.value = ""
-      dt.dataset.iso = ""
-    }
-    if (availabilityHooks.reset) availabilityHooks.reset()
-    if (et) et.value = defaultEventType
-    document.querySelectorAll("#chips .chip").forEach((c) => {
-      c.classList.toggle("is-selected", c.dataset.v === defaultEventType)
-    })
-    syncChipNote(true)
-    if (totalSteps) showStep(1)
+      })
+      .catch(() => {
+        showSendError(
+          `Sorry, your enquiry didn't send. Please try again, or email us at ${CONTACT.email.display}.`,
+        )
+      })
   })
+
   form.querySelectorAll("input").forEach((i) => {
     i.addEventListener("input", () => {
-      i.closest(".field").classList.remove("bad")
+      // The consent box and the bot trap aren't in a .field.
+      const field = i.closest(".field")
+      if (field) field.classList.remove("bad")
     })
   })
 }
