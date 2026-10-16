@@ -7,14 +7,14 @@ export const PRICE_FIELDS = `
   amount,
   unit,
   isStartingPrice,
-  "isWithheld": provenance.blocksPublication == true
+  "isHidden": isHidden == true
 `
 
 export interface SanityPrice {
   amount: number
   unit: string
   isStartingPrice?: boolean
-  isWithheld: boolean
+  isHidden: boolean
 }
 
 interface PriceFormat {
@@ -29,7 +29,7 @@ export const formatPrice = (
   price: SanityPrice | null | undefined,
   { alwaysShowCents = false }: PriceFormat = {},
 ): string | null => {
-  if (!price || price.isWithheld) return null
+  if (!price || price.isHidden) return null
 
   const showCents = alwaysShowCents || !Number.isInteger(price.amount)
   const amount = `€${price.amount.toFixed(showCents ? 2 : 0)}`

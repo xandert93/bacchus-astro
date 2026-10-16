@@ -1,6 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
-import { help } from "../../lib/help"
-import { capitalise, joinParts, optionTitle } from "../../lib/preview"
+import { joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * One confirmed fact about the venue, in question-and-answer form.
@@ -40,18 +39,18 @@ import { capitalise, joinParts, optionTitle } from "../../lib/preview"
  * nearby arrangement nobody has yet identified.
  */
 const FAQ_TOPICS = [
-  { title: "Spaces & capacity", value: "spaces" },
-  { title: "Food & drink", value: "food" },
-  { title: "Timings & music", value: "timings" },
-  { title: "Pricing & payment", value: "pricing" },
-  { title: "Planning & suppliers", value: "planning" },
-  { title: "Access & practicalities", value: "practical" },
+  { title: "Spaces & Capacity", value: "spaces" },
+  { title: "Food & Drink", value: "food" },
+  { title: "Timings & Music", value: "timings" },
+  { title: "Pricing & Payment", value: "pricing" },
+  { title: "Planning & Suppliers", value: "planning" },
+  { title: "Access & Practicalities", value: "practical" },
   { title: "Restaurant", value: "restaurant" },
 ] as const
 
 export default defineType({
   name: "faq",
-  title: "FAQ / venue fact",
+  title: "FAQ / Venue Fact",
   type: "document",
   fields: [
     defineField({
@@ -93,18 +92,8 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "provenance",
-      title: "Source & confirmation",
-      type: "provenance",
-      description: help(
-        "The chat assistant only uses confirmed answers.",
-        "An unconfirmed answer can still appear on a page, with a warning.",
-      ),
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: "availableToAssistant",
-      title: "The chat assistant may answer with this",
+      title: "The Chat Assistant May Answer With This",
       type: "boolean",
       initialValue: true,
       description:
@@ -120,8 +109,8 @@ export default defineType({
           { title: "Weddings", value: "weddings" },
           { title: "Corporate", value: "corporate" },
           { title: "Celebrations", value: "celebrations" },
-          { title: "Package pages", value: "packages" },
-          { title: "Deposit page", value: "deposit" },
+          { title: "Package Pages", value: "packages" },
+          { title: "Deposit Page", value: "deposit" },
           { title: "Restaurant", value: "restaurant" },
         ],
         // No `layout: "tags"` here: tags are for free-form entry, and these
@@ -141,7 +130,7 @@ export default defineType({
   ],
   orderings: [
     {
-      title: "Topic, then order",
+      title: "Topic, Then Order",
       name: "topicOrder",
       by: [
         { field: "topic", direction: "asc" },
@@ -153,17 +142,13 @@ export default defineType({
     select: {
       question: "question",
       topic: "topic",
-      status: "provenance.status",
       assistant: "availableToAssistant",
     },
-    prepare: ({ question, topic, status, assistant }) => ({
+    prepare: ({ question, topic, assistant }) => ({
       title: question,
       subtitle: joinParts(
         optionTitle(FAQ_TOPICS, topic),
-        capitalise(status),
-        status === "confirmed" && assistant
-          ? "Used by assistant"
-          : "Not used by assistant",
+        assistant ? "Used by assistant" : "Not used by assistant",
       ),
     }),
   },

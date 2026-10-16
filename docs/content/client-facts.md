@@ -220,8 +220,10 @@ quirk of that one quote. Trust only the per-person and line-item prices.
 
 ## Open conflicts
 
-Two places where the catalogue and the emails disagree. Both are stored as
-`contested` in the Sanity schema. Don't publish either as settled.
+Two places where the catalogue and the emails disagree. Don't publish either
+as settled. This file is where open conflicts are tracked: the Studio stopped
+tracking them on 2026-10-16, so Bacchus's staff never see our working notes
+in their own admin.
 
 1. **Banquet pricing.** The quote says Orchid €65, Dahlia €85, Sunflower €95.
    The emails say banqueting "begins at around €135 per person", is highly
@@ -307,6 +309,34 @@ Everything below is illustrative and is labelled as such on the page.
   shortened item list (both carry an oxblood disclaimer).
 
 - **High Tea (V) marks**: which High Tea dishes are vegetarian?
+
+- **Reception stations (V) marks**: the catalogue marks none, so ours were
+  judged from the dish names. Are they right?
+
+- **Seasonal prices**: do prices change by season, and is there a rate card?
+  (The only hint so far: April runs dearer than March.)
+
+- **Minimum notice**: how soon before a date can a wedding still be booked?
+  The site assumes three months.
+
+- **Personal data**: how long should enquiry details be kept before they're
+  deleted? The Studio assumes 36 months.
+
+### Payments and bookings (asked 2026-10-16)
+
+- **How do you take deposits and balances today?** Bank transfer, card over
+  the phone, card machine, invoice?
+- **Do you already have a card provider** for online payments or your card
+  machine (Viva.com, Revolut Business, Stripe, a bank)? If so, which, and
+  roughly what do you pay per card payment?
+- **Deposit terms**: the percentage, whether it's refundable, when the balance
+  is due, and how long a date is held after the deposit link is sent (the
+  site says seven days).
+- **Bank transfer details** for the deposit page, once the terms are settled.
+- **Viewings and tastings**: would couples booking a slot online (Cal.com or
+  Calendly) help, or do you prefer to arrange them by email and phone?
+- **Declining a quote**: should a couple be able to decline online, which
+  frees their date for others, or would you rather they reply to you?
 
 - **Shopify**: do they sell, or plan to sell, products or gift vouchers through
   it? See `docs/architecture/tech-stack.md`.

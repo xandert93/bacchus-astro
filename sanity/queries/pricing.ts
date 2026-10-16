@@ -1,7 +1,7 @@
 /**
  * Resolving what something costs on a given date.
  *
- * A tier carries a base `price` and any number of `seasonalRates`, each
+ * A tier carries `pricing.base` and any number of `pricing.seasonal` rates, each
  * pointing at a `season`. This file turns that into one figure, and it is kept
  * separate from the schema because it is ordinary logic that wants unit tests
  * — Vitest, once the project has it — rather than something only exercised by
@@ -14,13 +14,10 @@
  *    Overlap is legitimate rather than a mistake — a Christmas period sitting
  *    inside a wider winter season is the obvious shape — so the resolver needs
  *    a tiebreak, not an error.
- * 3. With no matching season, the base price applies. Every tier is in this
- *    state today: Bacchus has supplied no rate card, only the single remark
- *    that April runs slightly higher than March.
- * 4. A price held back by `provenance.blocksPublication` resolves to nothing
- *    at all, never to the base price as a fallback. The withheld corkage
- *    figure is the live case, and quietly substituting a different number for
- *    a suppressed one would be worse than showing none.
+ * 3. With no matching season, the base price applies.
+ * 4. A price marked `isHidden` resolves to nothing at all, never to the base
+ *    price as a fallback: quietly substituting a different number for a
+ *    hidden one would be worse than showing none.
  *
  * A recurring season is matched on month and day with the year ignored, which
  * is what lets "April is dearer" be stated once rather than re-entered every
@@ -42,7 +39,7 @@ interface PriceInput {
   unit?: string
   isIndicative?: boolean
   vatIncluded?: boolean
-  provenance?: { blocksPublication?: boolean }
+  isHidden?: boolean
 }
 
 interface SeasonInput {
@@ -98,9 +95,9 @@ export const resolvePriceForDate = (
 
   if (!chosen || typeof chosen.amount !== "number") return null
 
-  // Rule 4: a suppressed price resolves to nothing, never to the base as a
-  // fallback, so a withheld figure can never be replaced by a different one.
-  if (chosen.provenance?.blocksPublication) return null
+  // Rule 4: a hidden price resolves to nothing, never to the base as a
+  // fallback, so a hidden figure can never be replaced by a different one.
+  if (chosen.isHidden) return null
 
   return {
     amount: chosen.amount,
@@ -119,9 +116,9 @@ export const tierPricingQuery = /* groq */ `
 *[_type == "packageTier" && slug.current == $slug][0]{
   name,
   "slug": slug.current,
-  price{amount, unit, isIndicative, vatIncluded, provenance},
-  seasonalRates[]{
-    price{amount, unit, isIndicative, vatIncluded, provenance},
+  "price": pricing.base{amount, unit, isIndicative, vatIncluded, isHidden},
+  "seasonalRates": pricing.seasonal[]{
+    price{amount, unit, isIndicative, vatIncluded, isHidden},
     season->{name, startDate, endDate, repeatsAnnually, priority}
   }
 }
@@ -135,7 +132,6 @@ export const seasonsQuery = /* groq */ `
   startDate,
   endDate,
   repeatsAnnually,
-  priority,
-  provenance
+  priority
 }
 `

@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity"
 import { help } from "../../lib/help"
+import { photoField } from "../../lib/photoField"
 import { formatDate, joinParts, optionTitle } from "../../lib/preview"
 
 /**
@@ -34,8 +35,8 @@ import { formatDate, joinParts, optionTitle } from "../../lib/preview"
  * actually distinguishes one testimonial from another.
  */
 const TESTIMONIAL_STATUSES = [
-  { title: "Submitted — awaiting review", value: "submitted" },
-  { title: "Approved — cleared, not yet live", value: "approved" },
+  { title: "Submitted — Awaiting Review", value: "submitted" },
+  { title: "Approved — Cleared, Not Yet Live", value: "approved" },
   { title: "Published", value: "published" },
   { title: "Withheld", value: "withheld" },
 ] as const
@@ -46,7 +47,7 @@ export default defineType({
   type: "document",
   groups: [
     { name: "content", title: "Content", default: true },
-    { name: "consent", title: "Consent & publication" },
+    { name: "consent", title: "Consent & Publication" },
   ],
   fields: [
     defineField({
@@ -56,25 +57,8 @@ export default defineType({
       group: "content",
       description: help(
         "The reviewer's own words, unchanged.",
-        'Highlight one phrase with "Gold emphasis" to show it in gold on the site.',
+        'Highlight one phrase with "Gold Emphasis" to show it in gold on the site.',
       ),
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "authorFullName",
-      title: "Full name (internal)",
-      type: "string",
-      group: "content",
-      description: 'For our records. The site shows "Name as published" below instead.',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "displayName",
-      title: "Name as published",
-      type: "string",
-      group: "content",
-      description:
-        'What the site shows, e.g. "Mandy & Gabriel Camenzuli", or "Marvin W" where they only gave an initial.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -86,13 +70,6 @@ export default defineType({
       initialValue: 5,
       description: "Shown as stars.",
       validation: (Rule) => Rule.required().min(1).max(5).integer(),
-    }),
-    defineField({
-      name: "location",
-      title: "Location",
-      type: "string",
-      group: "content",
-      description: "Optional.",
     }),
     defineField({
       name: "category",
@@ -111,24 +88,44 @@ export default defineType({
     }),
     defineField({
       name: "eventDate",
-      title: "Event date",
+      title: "Event Date",
       type: "date",
       group: "content",
       description: "Optional. Only if the reviewer mentioned it.",
     }),
     defineField({
-      name: "photo",
-      title: "Photograph",
-      type: "image",
+      name: "author",
+      title: "Reviewer",
+      type: "object",
       group: "content",
-      options: { hotspot: true },
-      hidden: ({ document }) => !document?.consentPhoto,
+      options: { collapsible: false },
       fields: [
         defineField({
-          name: "alt",
-          title: "Alt text",
+          name: "fullName",
+          title: "Full Name (Internal)",
           type: "string",
+          description: 'For our records. The site shows "Name as Published" instead.',
           validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: "displayName",
+          title: "Name as Published",
+          type: "string",
+          description:
+            'What the site shows, e.g. "Mandy & Gabriel Camenzuli", or "Marvin W" where they only gave an initial.',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: "location",
+          title: "Location",
+          type: "string",
+          description: "Optional.",
+        }),
+        photoField({
+          name: "photo",
+          title: "Photograph",
+          hidden: ({ document }) =>
+            !(document?.permissions as { usePhoto?: boolean } | undefined)?.usePhoto,
         }),
       ],
     }),
@@ -148,37 +145,44 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "consentName",
-      title: "Consented to name being used",
-      type: "boolean",
+      name: "permissions",
+      title: "Permissions Given",
+      type: "object",
       group: "consent",
-      initialValue: false,
-      validation: (Rule) =>
-        Rule.custom((value, context) => {
-          const doc = context.document as { status?: string } | undefined
-          if (doc?.status === "published" && !value) {
-            return "Tick this before publishing: we need their consent to use their name."
-          }
-          return true
+      options: { collapsible: false, columns: 2 },
+      description: "Separate permissions: they may agree to one and not the other.",
+      fields: [
+        defineField({
+          name: "useName",
+          title: "Their Name Being Used",
+          type: "boolean",
+          initialValue: false,
+          validation: (Rule) =>
+            Rule.custom((value, context) => {
+              const document = context.document as { status?: string } | undefined
+
+              return document?.status === "published" && !value
+                ? "Tick this before publishing: we need their consent to use their name."
+                : true
+            }),
         }),
-    }),
-    defineField({
-      name: "consentPhoto",
-      title: "Consented to photograph being used",
-      type: "boolean",
-      group: "consent",
-      initialValue: false,
-      description: "Separate from the name: they may agree to one and not the other.",
+        defineField({
+          name: "usePhoto",
+          title: "Their Photograph Being Used",
+          type: "boolean",
+          initialValue: false,
+        }),
+      ],
     }),
     defineField({
       name: "consent",
-      title: "Consent record",
+      title: "Consent Record",
       type: "consentRecord",
       group: "consent",
     }),
     defineField({
       name: "sourceBooking",
-      title: "From this booking",
+      title: "From This Booking",
       type: "reference",
       group: "consent",
       to: [{ type: "booking" }],
@@ -195,19 +199,19 @@ export default defineType({
   ],
   orderings: [
     {
-      title: "Manual order",
+      title: "Manual Order",
       name: "orderAsc",
       by: [{ field: "order", direction: "asc" }],
     },
     {
-      title: "Event date, newest",
+      title: "Event Date, Newest",
       name: "eventDesc",
       by: [{ field: "eventDate", direction: "desc" }],
     },
   ],
   preview: {
     select: {
-      name: "displayName",
+      name: "author.displayName",
       status: "status",
       rating: "rating",
       date: "eventDate",

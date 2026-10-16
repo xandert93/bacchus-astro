@@ -34,17 +34,15 @@ import { help } from "../../lib/help"
  */
 export default defineType({
   name: "menuDish",
-  title: "Menu dish",
+  title: "Menu Dish",
   type: "document",
   fields: [
     defineField({
       name: "name",
       title: "Dish",
       type: "string",
-      description: help(
+      description:
         "British English, with accents on foreign words (e.g. purée, jalapeño).",
-        'If this differs from the catalogue, record it under "Differs from the catalogue" below.',
-      ),
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -72,13 +70,6 @@ export default defineType({
       description:
         'Extra detail that belongs with the dish, e.g. "one tier per one hundred contracted guests".',
     }),
-    defineField({
-      name: "catalogueVariance",
-      title: "Differs from the catalogue",
-      type: "catalogueVariance",
-      description:
-        'Fill in when our wording differs from the catalogue. It then appears under "Copy changes awaiting approval" until Bacchus agrees.',
-    }),
   ],
   orderings: [
     { title: "Name", name: "nameAsc", by: [{ field: "name", direction: "asc" }] },
@@ -87,14 +78,10 @@ export default defineType({
     select: {
       name: "name",
       vegetarian: "isVegetarian",
-      variance: "catalogueVariance.kind",
-      approved: "catalogueVariance.clientApproved",
     },
-    prepare: ({ name, vegetarian, variance, approved }) => ({
+    prepare: ({ name, vegetarian }) => ({
       title: `${name}${vegetarian ? " (V)" : ""}`,
-      subtitle: variance
-        ? `Differs from the catalogue · ${approved ? "Approved" : "Awaiting approval"}`
-        : undefined,
+      subtitle: vegetarian ? "Vegetarian" : undefined,
     }),
   },
 })

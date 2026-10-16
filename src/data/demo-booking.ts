@@ -41,20 +41,22 @@ export const DEMO_BOOKING = {
 
   subtotal: "€27,750.00",
   discount: "−€2,400.00",
-  vat: { label: "VAT (18%)", amount: "€4,563.00" },
-  total: "€29,913.00",
-  perPerson: "€149.57 per person",
+  // Prices include VAT (confirmed by Bacchus), so VAT is the share already
+  // inside the total, shown under it, not added on top.
+  vat: { label: "Includes VAT (18%)", amount: "€3,866.95" },
+  total: "€25,350.00",
+  perPerson: "€126.75 per person",
 
   // The 30/70 split is contested (client-facts.md, "Open conflicts"), so the
   // page's oxblood note names the deposit terms as placeholder too.
   depositTerms: "Your deposit is 30% of the total and is non-refundable once received.",
   deposit: {
-    display: "€8,973.90",
+    display: "€7,605.00",
     // What the bank-transfer copy button puts on the clipboard: digits only,
     // ready to paste into a banking app's amount field.
-    plain: "8973.90",
+    plain: "7605.00",
   },
-  balanceNote: "Remaining €20,939.10 due 14 days before your event.",
+  balanceNote: "Remaining €17,745.00 due 14 days before your event.",
 
   // Fake on purpose, with a "don't send funds" warning beside them.
   bankTransfer: {

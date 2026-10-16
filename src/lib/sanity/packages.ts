@@ -71,9 +71,9 @@ const TIERS_QUERY = `
   name,
   "packageName": package->name,
   summary,
-  intro,
-  price{${PRICE_FIELDS}},
-  menuGroups[]{
+  "intro": menu.intro,
+  "price": pricing.base{${PRICE_FIELDS}},
+  "menuGroups": menu.groups[]{
     title,
     note,
     items[]{
@@ -81,7 +81,7 @@ const TIERS_QUERY = `
       _type == "wineEntry" => {"kind": "wine", name, grapes, producer, tastingNote}
     }
   },
-  signatureDishes[]{
+  "signatureDishes": menu.signatureDishes[]{
     name,
     course,
     placeholderInitials,

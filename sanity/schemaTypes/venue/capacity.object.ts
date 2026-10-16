@@ -1,6 +1,4 @@
 import { defineField, defineType } from "sanity"
-import { help } from "../../lib/help"
-import { capitalise } from "../../lib/preview"
 
 /**
  * A capacity figure, with its seating basis stated.
@@ -27,29 +25,26 @@ export default defineType({
   fields: [
     defineField({
       name: "min",
-      title: "Minimum guests",
+      title: "Minimum Guests",
       type: "number",
-      description: help(
-        "Usually empty.",
-        "Bacchus has confirmed there is no minimum guest count or minimum spend.",
-      ),
+      description: "Usually empty: there is no minimum guest count or minimum spend.",
       validation: (Rule) => Rule.min(0).integer(),
     }),
     defineField({
       name: "max",
-      title: "Maximum guests",
+      title: "Maximum Guests",
       type: "number",
       validation: (Rule) => Rule.required().min(1).integer(),
     }),
     defineField({
       name: "basis",
-      title: "Seating basis",
+      title: "Seating Basis",
       type: "string",
       options: {
         list: [
           { title: "Seated", value: "seated" },
           { title: "Standing", value: "standing" },
-          { title: "Seated or standing", value: "either" },
+          { title: "Seated or Standing", value: "either" },
         ],
         layout: "radio",
       },
@@ -58,30 +53,18 @@ export default defineType({
     }),
     defineField({
       name: "layoutNote",
-      title: "Layout note",
+      title: "Layout Note",
       type: "string",
       description:
         'How the number changes with the layout, e.g. "adjusted per guest count to stay comfortable at any size".',
     }),
-    defineField({
-      name: "provenance",
-      title: "Source & confirmation",
-      type: "provenance",
-      validation: (Rule) => Rule.required(),
-    }),
   ],
   preview: {
-    select: { min: "min", max: "max", basis: "basis", status: "provenance.status" },
-    prepare: ({ min, max, basis, status }) => {
+    select: { min: "min", max: "max", basis: "basis" },
+    prepare: ({ min, max, basis }) => {
       const range = min ? `${min}–${max}` : `Up to ${max}`
 
-      return {
-        title: `${range} ${basis === "either" ? "guests" : basis}`,
-        subtitle:
-          status === "confirmed"
-            ? "Confirmed"
-            : `${capitalise(status)}: shows a warning on the page`,
-      }
+      return { title: `${range} ${basis === "either" ? "guests" : basis}` }
     },
   },
 })

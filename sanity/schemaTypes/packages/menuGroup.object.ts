@@ -24,12 +24,12 @@ import { pluralise } from "../../lib/preview"
  */
 export default defineType({
   name: "menuGroup",
-  title: "Menu group",
+  title: "Menu Group",
   type: "object",
   fields: [
     defineField({
       name: "title",
-      title: "Group title",
+      title: "Group Title",
       type: "string",
       description: 'The heading above the list, e.g. "Cold Canapés" or "Coffee Station".',
       validation: (Rule) => Rule.required(),
@@ -46,19 +46,14 @@ export default defineType({
     }),
     defineField({
       name: "note",
-      title: "Group note",
+      title: "Group Note",
       type: "string",
       description:
         'Applies to the whole group, e.g. "Served with crackers, Grissini & freshly baked bread."',
     }),
-    defineField({
-      name: "catalogueVariance",
-      title: "Group title differs from the catalogue",
-      type: "catalogueVariance",
-    }),
   ],
   preview: {
-    select: { title: "title", items: "items" },
+    select: { title: "Title", items: "items" },
     prepare: ({ title, items }) => ({
       title,
       subtitle: pluralise(Array.isArray(items) ? items.length : 0, "item"),

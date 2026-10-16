@@ -23,7 +23,7 @@ import { formatEuros, joinParts, optionTitle } from "../../lib/preview"
  */
 export default defineType({
   name: "seasonalRate",
-  title: "Seasonal rate",
+  title: "Seasonal Rate",
   type: "object",
   fields: [
     defineField({

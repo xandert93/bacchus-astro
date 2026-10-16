@@ -29,15 +29,15 @@ import { formatDate, joinParts, optionTitle } from "../../lib/preview"
  * offered, with no reason given.
  */
 const CLOSURE_REASONS = [
-  { title: "Maintenance or repairs", value: "maintenance" },
-  { title: "Staff holiday / closed period", value: "closed" },
-  { title: "Held for a provisional booking", value: "held" },
+  { title: "Maintenance or Repairs", value: "maintenance" },
+  { title: "Staff Holiday / Closed Period", value: "closed" },
+  { title: "Held for a Provisional Booking", value: "held" },
   { title: "Other", value: "other" },
 ] as const
 
 export default defineType({
   name: "venueClosure",
-  title: "Closure / blackout",
+  title: "Closure / Blackout",
   type: "document",
   fields: [
     defineField({
@@ -55,7 +55,7 @@ export default defineType({
     }),
     defineField({
       name: "endDate",
-      title: "To (inclusive)",
+      title: "To (Inclusive)",
       type: "date",
       description: "Same as the start date for a single day.",
       validation: (Rule) =>
@@ -76,7 +76,7 @@ export default defineType({
     }),
     defineField({
       name: "spaces",
-      title: "Spaces affected",
+      title: "Spaces Affected",
       type: "array",
       of: [defineArrayMember({ type: "reference", to: [{ type: "venueSpace" }] })],
       description: help(
@@ -86,7 +86,7 @@ export default defineType({
     }),
     defineField({
       name: "blocksWeddings",
-      title: "Blocks wedding dates",
+      title: "Blocks Wedding Dates",
       type: "boolean",
       initialValue: true,
       description:
@@ -94,7 +94,7 @@ export default defineType({
     }),
     defineField({
       name: "showPublicly",
-      title: "Give a reason publicly",
+      title: "Give a Reason Publicly",
       type: "boolean",
       initialValue: false,
       description: help(
@@ -104,20 +104,20 @@ export default defineType({
     }),
     defineField({
       name: "publicNote",
-      title: "Public note",
+      title: "Public Note",
       type: "string",
       hidden: ({ parent }) => !parent?.showPublicly,
     }),
   ],
   orderings: [
     {
-      title: "Starts soonest",
+      title: "Starts Soonest",
       name: "startAsc",
       by: [{ field: "startDate", direction: "asc" }],
     },
   ],
   preview: {
-    select: { title: "title", start: "startDate", end: "endDate", reason: "reason" },
+    select: { title: "Title", start: "startDate", end: "endDate", reason: "reason" },
     prepare: ({ title, start, end, reason }) => ({
       title,
       subtitle: joinParts(

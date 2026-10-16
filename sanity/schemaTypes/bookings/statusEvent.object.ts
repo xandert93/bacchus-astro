@@ -31,15 +31,15 @@ import { formatDateTime, joinParts, optionTitle } from "../../lib/preview"
  */
 const ACTORS = [
   { title: "Staff, in Sanity Studio", value: "staff" },
-  { title: "Card payment, recorded automatically", value: "payment-webhook" },
-  { title: "Scheduled job", value: "cron" },
-  { title: "Visitor, via the site", value: "visitor" },
-  { title: "Migration or manual data fix", value: "migration" },
+  { title: "Card Payment, Recorded Automatically", value: "payment-webhook" },
+  { title: "Scheduled Job", value: "cron" },
+  { title: "Visitor, via the Site", value: "visitor" },
+  { title: "Migration or Manual Data Fix", value: "migration" },
 ] as const
 
 export default defineType({
   name: "statusEvent",
-  title: "Status change",
+  title: "Status Change",
   type: "object",
   fields: [
     defineField({
@@ -50,7 +50,7 @@ export default defineType({
     }),
     defineField({
       name: "from",
-      title: "Changed from",
+      title: "Changed From",
       type: "string",
       description: "Empty on the first entry, when the booking was created.",
     }),
@@ -69,7 +69,7 @@ export default defineType({
     }),
     defineField({
       name: "actorDetail",
-      title: "Which person or job",
+      title: "Which Person or Job",
       type: "string",
       description: "A staff name, or the job that ran.",
     }),

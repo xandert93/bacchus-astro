@@ -1,7 +1,6 @@
 import { defineField, defineType } from "sanity"
 import { InfoOutlineIcon } from "@sanity/icons/InfoOutline"
 import { WarningOutlineIcon } from "@sanity/icons/WarningOutline"
-import { help } from "../../lib/help"
 import { optionTitle } from "../../lib/preview"
 
 /**
@@ -36,14 +35,14 @@ import { optionTitle } from "../../lib/preview"
  * confirmed, the warning has nothing left to say.
  */
 const PLACEMENTS = [
-  { title: "Below the tier cards", value: "below-tier-cards" },
-  { title: "Above the menus", value: "above-menus" },
-  { title: "Foot of page", value: "page-foot" },
+  { title: "Below the Tier Cards", value: "below-tier-cards" },
+  { title: "Above the Menus", value: "above-menus" },
+  { title: "Foot of Page", value: "page-foot" },
 ] as const
 
 export default defineType({
   name: "packageNote",
-  title: "Note / callout",
+  title: "Note / Callout",
   type: "object",
   fields: [
     defineField({
@@ -52,11 +51,8 @@ export default defineType({
       type: "string",
       options: {
         list: [
-          { title: "Note: bronze, for confirmed facts", value: "note" },
-          {
-            title: "Warning: dark red, for unconfirmed or disputed facts",
-            value: "warning",
-          },
+          { title: "Note (Bronze)", value: "note" },
+          { title: "Warning (Dark Red)", value: "warning" },
         ],
         layout: "radio",
       },
@@ -78,15 +74,6 @@ export default defineType({
       options: { list: [...PLACEMENTS] },
       initialValue: "below-tier-cards",
       validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: "resolvesWith",
-      title: "Describes this unresolved fact",
-      type: "provenance",
-      description: help(
-        "Optional. Which unconfirmed fact this note is about.",
-        "Once that fact is confirmed, the warning can be removed automatically instead of someone having to remember.",
-      ),
     }),
   ],
   preview: {

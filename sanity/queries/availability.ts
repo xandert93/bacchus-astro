@@ -10,7 +10,7 @@
  * The three public states and what produces them:
  *
  *   Booked ("taken")             a confirmed or completed WEDDING on that date
- *   Enquiries received ("interest")  one or more pending wedding enquiries
+ *   Enquiries received ("interest")  one or more open wedding enquiries
  *   Available ("open")           neither
  *
  * Five rules that are not obvious from that table, each of which is a real
@@ -46,19 +46,25 @@
  *    staff to resolve, not a reason to show the date as free.
  */
 
+import {
+  DATE_BLOCKING_STATUSES,
+  OPEN_ENQUIRY_STATUSES,
+  type BookingStatus,
+} from "../lib/constants"
+
 /** The three states the calendar renders, named as the existing CSS expects. */
 export type AvailabilityStatus = "open" | "interest" | "taken"
 
 export interface AvailabilityInput {
   /** ISO date, YYYY-MM-DD. */
   date: string
-  status: "pending" | "confirmed" | "declined" | "cancelled" | "completed"
+  status: BookingStatus
 }
 
 /**
  * Every wedding booking inside the window that can affect a date's status.
  *
- * Fetches only `eventDate` and `status` — no names, no emails, no messages.
+ * Fetches only the date and `status` — no names, no emails, no messages.
  * This query's results reach the public page, and the booking documents it
  * reads are full of personal data, so the projection is the boundary. Widening
  * it to `...` would publish an enquiry list.
@@ -68,14 +74,14 @@ export interface AvailabilityInput {
 export const weddingDateStatusesQuery = /* groq */ `
 *[
   _type == "booking" &&
-  eventType == "wedding" &&
-  dateIsFlexible != true &&
-  defined(eventDate) &&
-  eventDate >= $from &&
-  eventDate <= $to &&
-  status in ["pending", "confirmed", "completed"]
+  event.type == "wedding" &&
+  event.dateIsFlexible != true &&
+  defined(event.date) &&
+  event.date >= $from &&
+  event.date <= $to &&
+  status in ${JSON.stringify([...OPEN_ENQUIRY_STATUSES, ...DATE_BLOCKING_STATUSES])}
 ]{
-  "date": eventDate,
+  "date": event.date,
   status
 }
 `
@@ -125,7 +131,7 @@ export const eachDate = (startIso: string, endIso: string): string[] => {
 /**
  * Collapse bookings and closures into one status per date.
  *
- * Confirmed beats pending, which is why this cannot be a simple last-write
+ * Confirmed beats an open enquiry, which is why this cannot be a simple last-write
  * map: a date with one confirmed booking and three pending enquiries is
  * Booked, regardless of row order. Closures are applied last and
  * unconditionally, because they outrank everything — see rule 6.
@@ -139,11 +145,14 @@ export const deriveStatuses = (
   for (const row of rows) {
     if (!row?.date) continue
 
-    const isBlocking = row.status === "confirmed" || row.status === "completed"
+    const isBlocking = (DATE_BLOCKING_STATUSES as readonly string[]).includes(row.status)
+    const isOpenEnquiry = (OPEN_ENQUIRY_STATUSES as readonly string[]).includes(
+      row.status,
+    )
 
     if (isBlocking) {
       byDate[row.date] = "taken"
-    } else if (row.status === "pending" && byDate[row.date] !== "taken") {
+    } else if (isOpenEnquiry && byDate[row.date] !== "taken") {
       byDate[row.date] = "interest"
     }
   }
@@ -185,24 +194,22 @@ export const activeWaitlistForDateQuery = /* groq */ `
 `
 
 /**
- * Other pending enquiries on a date, for the deposit race.
+ * Other open enquiries on a date, for the deposit race.
  *
- * When one pending enquiry's deposit lands, it auto-confirms and these are the
- * records to mark unavailable and notify — rather than leaving them dangling,
+ * When one enquiry's deposit lands, it auto-confirms and these are the
+ * records to decline and notify — rather than leaving them dangling,
  * which is the failure the project explicitly called out. Excludes the winner
  * by id.
  */
-export const competingPendingBookingsQuery = /* groq */ `
+export const competingEnquiriesQuery = /* groq */ `
 *[
   _type == "booking" &&
-  eventType == "wedding" &&
-  status == "pending" &&
-  eventDate == $date &&
+  event.type == "wedding" &&
+  status in ${JSON.stringify(OPEN_ENQUIRY_STATUSES)} &&
+  event.date == $date &&
   _id != $winnerId
 ]{
   _id,
-  firstName,
-  lastName,
-  email
+  client
 }
 `

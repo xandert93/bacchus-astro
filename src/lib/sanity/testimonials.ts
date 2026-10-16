@@ -17,12 +17,12 @@ export interface Testimonial {
 // to publish without it: an API write can skip validation, and this is a
 // real person's name on a real website.
 const TESTIMONIALS_QUERY = `
-*[_type == "testimonial" && status == "published" && consentName == true]
+*[_type == "testimonial" && status == "published" && permissions.useName == true]
   | order(coalesce(order, 9999) asc){
   quote,
-  displayName,
+  "displayName": author.displayName,
   rating,
-  location,
+  "location": author.location,
   category,
   eventDate
 }

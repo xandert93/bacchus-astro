@@ -1,5 +1,5 @@
 import { defineField, defineType } from "sanity"
-import { help } from "../../lib/help"
+import { photoField } from "../../lib/photoField"
 import { joinParts } from "../../lib/preview"
 
 /**
@@ -24,41 +24,19 @@ import { joinParts } from "../../lib/preview"
  */
 export default defineType({
   name: "signatureDish",
-  title: "Signature dish",
+  title: "Signature Dish",
   type: "object",
   fields: [
     defineField({
       name: "name",
-      title: "Dish name",
+      title: "Dish Name",
       type: "string",
       description: "Shown as the caption on the tile.",
       validation: (Rule) => Rule.required(),
     }),
-    defineField({
+    photoField({
       name: "image",
       title: "Photograph",
-      type: "image",
-      options: { hotspot: true },
-      fields: [
-        defineField({
-          name: "alt",
-          title: "Alt text",
-          type: "string",
-          description:
-            "Describe what's in the photo, for people who can't see it (e.g. screen reader users).",
-          validation: (Rule) => Rule.required(),
-        }),
-        defineField({
-          name: "isWebCopy",
-          title: "Web copy — the original is still to come",
-          type: "boolean",
-          initialValue: false,
-          description: help(
-            "Tick if this is a compressed copy rather than the original photo. The site then won't compress it again.",
-            "When the original arrives, upload it and untick this.",
-          ),
-        }),
-      ],
     }),
     defineField({
       name: "course",
@@ -69,7 +47,7 @@ export default defineType({
     }),
     defineField({
       name: "placeholderInitials",
-      title: "Initials on the placeholder tile",
+      title: "Initials on the Placeholder Tile",
       type: "string",
       description:
         'Shown on the black "photo to follow" tile until there is a photo, e.g. "BC" for Beef Carpaccio.',
@@ -78,13 +56,11 @@ export default defineType({
     }),
     defineField({
       name: "isPlaceholderImage",
-      title: "Placeholder image (not real Bacchus photography)",
+      title: "Not a Real Bacchus Photo",
       type: "boolean",
       initialValue: false,
-      description: help(
-        "Tick if this isn't a real Bacchus photo.",
-        'The page then shows a warning, and the image appears under "Placeholder images to replace".',
-      ),
+      description:
+        "Tick if this is a stand-in. Untick when a real Bacchus photo replaces it.",
     }),
   ],
   preview: {

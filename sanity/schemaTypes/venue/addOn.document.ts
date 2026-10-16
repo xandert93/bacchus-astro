@@ -37,7 +37,7 @@ import { PRICE_UNITS } from "../../lib/constants"
 const ADD_ON_CATEGORIES = [
   { title: "Furniture", value: "furniture" },
   { title: "Decoration", value: "decoration" },
-  { title: "Technical (sound, lighting)", value: "technical" },
+  { title: "Technical (Sound, Lighting)", value: "technical" },
   { title: "Bar", value: "bar" },
   { title: "Service", value: "service" },
   { title: "Other", value: "other" },
@@ -45,7 +45,7 @@ const ADD_ON_CATEGORIES = [
 
 export default defineType({
   name: "addOn",
-  title: "Add-on / set-up item",
+  title: "Add-On / Set-Up Item",
   type: "document",
   fields: [
     defineField({
@@ -63,11 +63,11 @@ export default defineType({
     }),
     defineField({
       name: "isIncludedAtNoCharge",
-      title: "Included in the hire fee at no extra charge",
+      title: "Included in the Hire Fee at No Extra Charge",
       type: "boolean",
       initialValue: false,
       description: help(
-        "Confirmed for catering furniture and utensils, basic decoration and the in-house coordinator.",
+        "e.g. catering furniture and utensils, basic decoration and the in-house coordinator.",
         "When ticked, this item never adds a charge to a quote.",
       ),
     }),
@@ -76,7 +76,6 @@ export default defineType({
       title: "Price",
       type: "price",
       hidden: ({ document }) => Boolean(document?.isIncludedAtNoCharge),
-      description: "Taken from a past quote. Not confirmed as the current price.",
     }),
     defineField({
       name: "description",
@@ -87,7 +86,7 @@ export default defineType({
     }),
     defineField({
       name: "availableForQuote",
-      title: "Offer on quotes",
+      title: "Offer on Quotes",
       type: "boolean",
       initialValue: true,
       description: help(
@@ -98,7 +97,7 @@ export default defineType({
   ],
   orderings: [
     {
-      title: "Category, then name",
+      title: "Category, Then Name",
       name: "categoryName",
       by: [
         { field: "category", direction: "asc" },

@@ -21,19 +21,19 @@ import { help } from "../../lib/help"
  */
 export default defineType({
   name: "stationCategory",
-  title: "Station category",
+  title: "Station Category",
   type: "document",
   fields: [
     defineField({
       name: "label",
-      title: "Full label",
+      title: "Full Label",
       type: "string",
       description: "The heading on each card, and the tab's name for screen readers.",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "shortLabel",
-      title: "Tab label",
+      title: "Tab Label",
       type: "string",
       description:
         "What the tab shows. Keep it to one short word: six tabs share a phone's width.",
@@ -56,16 +56,9 @@ export default defineType({
       type: "number",
       validation: (Rule) => Rule.required().integer(),
     }),
-    defineField({
-      name: "labelProvenance",
-      title: "Label: source & confirmation",
-      type: "provenance",
-      description:
-        "We grouped the stations into these six categories. Bacchus hasn't approved them yet.",
-    }),
   ],
   orderings: [
-    { title: "Tab order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
+    { title: "Tab Order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
   ],
   preview: {
     select: { label: "label", short: "shortLabel", order: "order" },

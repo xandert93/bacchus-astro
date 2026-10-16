@@ -34,17 +34,17 @@ import { help } from "../../lib/help"
  */
 export default defineType({
   name: "siteSettings",
-  title: "Site settings",
+  title: "Site Settings",
   type: "document",
   groups: [
     { name: "identity", title: "Identity", default: true },
-    { name: "contact", title: "Contact & social" },
-    { name: "defaults", title: "Defaults & metadata" },
+    { name: "contact", title: "Contact & Social" },
+    { name: "defaults", title: "Defaults & Metadata" },
   ],
   fields: [
     defineField({
       name: "businessName",
-      title: "Business name",
+      title: "Business Name",
       type: "string",
       group: "identity",
       initialValue: "Bacchus",
@@ -58,7 +58,7 @@ export default defineType({
     }),
     defineField({
       name: "brandBlurb",
-      title: "Footer blurb",
+      title: "Footer Blurb",
       type: "text",
       group: "identity",
       rows: 3,
@@ -73,12 +73,11 @@ export default defineType({
     }),
     defineField({
       name: "foundedYear",
-      title: "Catering business founded",
+      title: "Catering Business Founded",
       type: "number",
       group: "identity",
       initialValue: 1976,
       description: help(
-        "Confirmed: 1976, family-run.",
         'Phrases like "50+ years" on the site are worked out from this, so update it here rather than in the text.',
         "Not the same as the building's age (1657–1660).",
       ),
@@ -86,7 +85,7 @@ export default defineType({
     }),
     defineField({
       name: "buildingBuiltFrom",
-      title: "Building constructed from",
+      title: "Building Constructed From",
       type: "number",
       group: "identity",
       initialValue: 1657,
@@ -98,7 +97,7 @@ export default defineType({
     }),
     defineField({
       name: "estateNote",
-      title: "Estate facts",
+      title: "Estate Facts",
       type: "text",
       group: "identity",
       rows: 4,
@@ -110,56 +109,58 @@ export default defineType({
 
     // --- Contact ------------------------------------------------------------
     defineField({
-      name: "phone",
-      title: "Phone",
-      type: "string",
-      group: "contact",
-    }),
-    defineField({
-      name: "email",
-      title: "Email",
-      type: "string",
-      group: "contact",
-      validation: (Rule) => Rule.email(),
-    }),
-    defineField({
-      name: "address",
-      title: "Address",
-      type: "text",
-      group: "contact",
-      rows: 4,
-    }),
-    defineField({
-      name: "geo",
-      title: "Coordinates",
+      name: "contact",
+      title: "Contact Details",
       type: "object",
       group: "contact",
-      description:
-        "Helps Google place the venue on maps, and positions the map on the site.",
+      options: { collapsible: false },
       fields: [
-        defineField({ name: "lat", title: "Latitude", type: "number" }),
-        defineField({ name: "lng", title: "Longitude", type: "number" }),
+        defineField({ name: "phone", title: "Phone", type: "string" }),
+        defineField({
+          name: "email",
+          title: "Email",
+          type: "string",
+          validation: (Rule) => Rule.email(),
+        }),
+        defineField({ name: "address", title: "Address", type: "text", rows: 4 }),
+        defineField({
+          name: "geo",
+          title: "Coordinates",
+          type: "object",
+          options: { columns: 2 },
+          description:
+            "Helps Google place the venue on maps, and positions the map on the site.",
+          fields: [
+            defineField({ name: "lat", title: "Latitude", type: "number" }),
+            defineField({ name: "lng", title: "Longitude", type: "number" }),
+          ],
+        }),
       ],
     }),
     defineField({
-      name: "facebookUrl",
-      title: "Facebook",
-      type: "url",
+      name: "social",
+      title: "Social Media",
+      type: "object",
       group: "contact",
-      initialValue: "https://www.facebook.com/bacchusMdina",
-      description: "Supplied by Bacchus.",
-    }),
-    defineField({
-      name: "instagramUrl",
-      title: "Instagram",
-      type: "url",
-      group: "contact",
-      initialValue: "https://www.instagram.com/bacchus_mdina/",
-      description: "Supplied by Bacchus.",
+      options: { collapsible: false },
+      fields: [
+        defineField({
+          name: "facebook",
+          title: "Facebook",
+          type: "url",
+          initialValue: "https://www.facebook.com/bacchusMdina",
+        }),
+        defineField({
+          name: "instagram",
+          title: "Instagram",
+          type: "url",
+          initialValue: "https://www.instagram.com/bacchus_mdina/",
+        }),
+      ],
     }),
     defineField({
       name: "tableBookingUrl",
-      title: "Table booking URL (Tableo)",
+      title: "Table Booking URL (Tableo)",
       type: "url",
       group: "contact",
       description: help(
@@ -169,7 +170,7 @@ export default defineType({
     }),
     defineField({
       name: "enquiryNotificationEmails",
-      title: "Send new-enquiry notifications to",
+      title: "New-Enquiry Email Recipients",
       type: "array",
       group: "contact",
       of: [{ type: "string" }],
@@ -182,21 +183,21 @@ export default defineType({
     // --- Defaults -----------------------------------------------------------
     defineField({
       name: "defaultSeo",
-      title: "Default search & social",
+      title: "Default Search & Social",
       type: "seo",
       group: "defaults",
       description: "Used on any page that doesn't have its own.",
     }),
     defineField({
       name: "structuredData",
-      title: "Structured data",
+      title: "Structured Data",
       type: "object",
       group: "defaults",
       description: "Details that help Google show the business in search results.",
       fields: [
         defineField({
           name: "businessType",
-          title: "Schema.org type",
+          title: "Schema.org Type",
           type: "string",
           options: {
             list: [
@@ -211,10 +212,10 @@ export default defineType({
             "The restaurant and the events venue share one address, so this may change once they have separate pages.",
           ),
         }),
-        defineField({ name: "priceRange", title: "Price range", type: "string" }),
+        defineField({ name: "priceRange", title: "Price Range", type: "string" }),
         defineField({
           name: "openingHours",
-          title: "Opening hours",
+          title: "Opening Hours",
           type: "array",
           of: [{ type: "string" }],
           description: 'One line per set of days, in this format: "Mo-Sa 19:00-23:00".',
@@ -223,6 +224,6 @@ export default defineType({
     }),
   ],
   preview: {
-    prepare: () => ({ title: "Site settings" }),
+    prepare: () => ({ title: "Site Settings" }),
   },
 })

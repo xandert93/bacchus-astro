@@ -33,7 +33,7 @@ sanity/
   lib/constants.ts          Shared option lists, matched to the existing markup
   schemaTypes/
     index.ts                Registry, and the list of what is deliberately absent
-    shared/                 provenance, price, seasons, SEO, catalogue variance
+    shared/                 price, seasons, SEO
     bookings/               enquiries, the waitlist, consent, status history
     quotes/                 quotes, their line items, payments
     packages/               the four packages, tiers, dishes, stations
@@ -44,7 +44,8 @@ sanity/
   queries/
     availability.ts         The calendar, derived — replaces seededStatus()
     pricing.ts              Resolving a price for a date, through seasons
-    content.ts              Queries the site doesn't use yet, plus the open-questions list
+    content.ts              Queries the site doesn't use yet
+  migrations/               Content migrations, run with `sanity migration run`
 ```
 
 Files are grouped by feature, because that is how they are navigated when
@@ -58,32 +59,20 @@ its own.
 
 ## The three ideas worth understanding before editing anything
 
-### 1. Provenance is a first-class field, not a comment
+### 1. The Studio is for Bacchus's staff, not for our working notes
 
-`objects/provenance.ts` is attached to prices, capacities, space names, FAQs
-and policy numbers. It records where a fact came from and whether Bacchus has
-confirmed it — `confirmed`, `unconfirmed`, `contested` or `placeholder`.
+Until 2026-10-16 every price, capacity and policy figure carried a
+`provenance` record (where it came from, whether Bacchus had confirmed it)
+and catalogue edits carried a `catalogueVariance`. Both are gone, along with
+the "open questions" lists built on them: the Studio is handed to Bacchus's
+staff, and they shouldn't see our doubts about their own facts in their
+admin.
 
-The site already encodes this distinction visually in three separate places:
-`.package-menu-note` (bronze, confirmed catalogue copy) versus
-`.package-menu-note-warning` (oxblood, unconfirmed), the "illustrative only"
-labels on the availability calendar, and the deposit page's warning box. Today
-each of those is hand-written into the HTML across eleven pages, so nothing in
-the markup knows _why_ a disclaimer is there — which means nothing can remove
-it when the fact is finally signed off, and nothing stops a confirmed fact from
-keeping a stale warning.
-
-With provenance in the data, the disclaimer becomes a function of the fact. It
-also gives the two consumers that must not guess a single field to filter on:
-the FAQ assistant (confirmed only) and the quote generator (nothing contested).
-
-Two `contested` records are live right now, and the project's standing decision
-is **not** to resolve either by picking a side:
-
-- **Banquet pricing** — €65/€85/€95 in the client quote, "around €135 per
-  person" in client correspondence.
-- **Deposit terms** — 30% non-refundable with 70% due 14 days out per the
-  catalogue; "quite flexible" per correspondence, without reaffirming the split.
+What is still unconfirmed is tracked in `docs/content/client-facts.md`, and
+the notes visitors see on the site are ordinary content: each package's page
+notes, and a price's "Hide on the website" switch. Related fields are grouped
+into objects (`quote.pricing`, `booking.event`, `galleryImage.caption`), and
+every photo uses one definition (`lib/photoField.ts`).
 
 ### 2. Derive availability, snapshot money
 

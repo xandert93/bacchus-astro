@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
 import { help } from "../../lib/help"
+import { photoField } from "../../lib/photoField"
 import { formatEuros, joinParts, pluralise } from "../../lib/preview"
 
 /**
@@ -36,7 +37,7 @@ import { formatEuros, joinParts, pluralise } from "../../lib/preview"
  */
 export default defineType({
   name: "station",
-  title: "Reception station",
+  title: "Reception Station",
   type: "document",
   fields: [
     defineField({
@@ -63,7 +64,7 @@ export default defineType({
     }),
     defineField({
       name: "catalogueNumber",
-      title: "Catalogue number",
+      title: "Catalogue Number",
       type: "number",
       description: help(
         "The station's number in the catalogue.",
@@ -73,7 +74,7 @@ export default defineType({
     }),
     defineField({
       name: "order",
-      title: "Order within category",
+      title: "Order Within Category",
       type: "number",
       validation: (Rule) => Rule.required().integer(),
     }),
@@ -93,7 +94,7 @@ export default defineType({
     }),
     defineField({
       name: "servingNote",
-      title: "Serving note",
+      title: "Serving Note",
       type: "string",
       description: help(
         'How it is served, e.g. "Served with crackers, Grissini & freshly baked bread."',
@@ -102,7 +103,7 @@ export default defineType({
     }),
     defineField({
       name: "allItemsVegetarian",
-      title: "Every item is vegetarian",
+      title: "Every Item Is Vegetarian",
       type: "boolean",
       initialValue: false,
       description: help(
@@ -112,7 +113,7 @@ export default defineType({
     }),
     defineField({
       name: "isChefsPick",
-      title: "Chef's pick",
+      title: "Chef's Pick",
       type: "boolean",
       initialValue: false,
       description: help(
@@ -120,46 +121,10 @@ export default defineType({
         'It says "Chef\'s pick" rather than "popular" because we have no figures to back up popularity.',
       ),
     }),
-    defineField({
+    photoField({
       name: "image",
       title: "Photograph",
-      type: "image",
-      options: { hotspot: true },
-      fields: [
-        defineField({
-          name: "alt",
-          title: "Alt text",
-          type: "string",
-          validation: (Rule) => Rule.required(),
-        }),
-        defineField({
-          name: "isPlaceholder",
-          title: "Placeholder image (AI-generated stand-in)",
-          type: "boolean",
-          initialValue: true,
-          description: help(
-            "Ticked for all sixteen stations at the moment.",
-            "Shows a warning on the page. Untick when a real Bacchus photo replaces it.",
-          ),
-        }),
-        defineField({
-          name: "isWebCopy",
-          title: "Web copy — the original is still to come",
-          type: "boolean",
-          initialValue: false,
-          description: help(
-            "Tick if this is a compressed copy rather than the original photo. The site then won't compress it again.",
-            "When the original arrives, upload it and untick this.",
-          ),
-        }),
-      ],
-    }),
-    defineField({
-      name: "catalogueVariance",
-      title: "Name differs from the catalogue",
-      type: "catalogueVariance",
-      description:
-        'Fill in when our name differs from the catalogue\'s, e.g. "BBQ Table" for the catalogue\'s "Barbeque Table".',
+      canBeStandIn: true,
     }),
   ],
   // Own fields only — a list cannot be sorted by a field behind a reference.
@@ -167,7 +132,7 @@ export default defineType({
   // which fetches categories and nests their stations underneath.
   orderings: [
     {
-      title: "Order within category",
+      title: "Order Within Category",
       name: "orderAsc",
       by: [{ field: "order", direction: "asc" }],
     },

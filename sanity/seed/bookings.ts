@@ -15,12 +15,13 @@ import {
   keyed,
   keyedReferences,
   privateSeedId,
-  provenance,
   reference,
   saturdayInMonths,
   thursdayInMonths,
   today,
 } from "./lib"
+import type { BookingStatus } from "../lib/constants"
+import { calculateQuoteTotals } from "../lib/quoteTotals"
 import { SPACE_IDS } from "./venue"
 
 // The wording on the enquiry form's consent box (EnquiryStepReview.astro).
@@ -76,11 +77,9 @@ const TIERS = {
 
 type Tier = (typeof TIERS)[keyof typeof TIERS]
 
-type Status = "pending" | "confirmed" | "declined" | "cancelled" | "completed"
-
 interface BookingSpec {
   key: string
-  status: Status
+  status: BookingStatus
   eventType: "wedding" | "corporate" | "celebration" | "other"
   eventDate?: Date
   dateIsFlexible?: boolean
@@ -107,8 +106,8 @@ interface BookingSpec {
   // When the deposit arrived, and how.
   deposit?: { daysAgo: number; method: "card" | "bank-transfer" }
   balancePaid?: boolean
-  declineReason?: string
-  cancelReason?: string
+  // Why it ended, for a declined, withdrawn or cancelled booking.
+  closeReason?: string
   internalNotes?: string
   suggestedReply?: string
   depositHoldDays?: number
@@ -246,10 +245,10 @@ const BOOKINGS: BookingSpec[] = [
     deposit: { daysAgo: 28, method: "bank-transfer" },
   },
 
-  // --- Pending: enquiries waiting for a reply -------------------------------
+  // --- Open enquiries ---------------------------------------------------------
   {
     key: "vella-camilleri",
-    status: "pending",
+    status: "in-discussion",
     eventType: "wedding",
     eventDate: saturdayInMonths(7),
     backupDate: saturdayInMonths(8),
@@ -273,7 +272,7 @@ const BOOKINGS: BookingSpec[] = [
   },
   {
     key: "mallia",
-    status: "pending",
+    status: "new",
     eventType: "wedding",
     dateIsFlexible: true,
     guestCount: 80,
@@ -287,7 +286,7 @@ const BOOKINGS: BookingSpec[] = [
   },
   {
     key: "bonnici-team-dinner",
-    status: "pending",
+    status: "new",
     eventType: "corporate",
     eventDate: thursdayInMonths(3),
     guestCount: 60,
@@ -299,7 +298,7 @@ const BOOKINGS: BookingSpec[] = [
   },
   {
     key: "fenech-birthday",
-    status: "pending",
+    status: "new",
     eventType: "celebration",
     eventDate: saturdayInMonths(2),
     guestCount: 45,
@@ -312,7 +311,7 @@ const BOOKINGS: BookingSpec[] = [
   },
   {
     key: "hughes-walker",
-    status: "pending",
+    status: "new",
     eventType: "wedding",
     eventDate: saturdayInMonths(5),
     guestCount: 120,
@@ -328,7 +327,7 @@ const BOOKINGS: BookingSpec[] = [
   },
   {
     key: "ellis",
-    status: "pending",
+    status: "awaiting-deposit",
     eventType: "wedding",
     eventDate: saturdayInMonths(6),
     guestCount: 110,
@@ -361,8 +360,7 @@ const BOOKINGS: BookingSpec[] = [
     partnerName: "Amy Debono",
     submittedDaysAgo: 20,
     sourcePage: "/weddings",
-    declineReason:
-      "Date already confirmed for another wedding. Offered two alternatives.",
+    closeReason: "Date already confirmed for another wedding. Offered two alternatives.",
   },
   {
     key: "morgan",
@@ -375,10 +373,10 @@ const BOOKINGS: BookingSpec[] = [
     message: "Christmas Day party for the extended family.",
     submittedDaysAgo: 15,
     sourcePage: "/celebrations",
-    declineReason: "Closed over Christmas.",
+    closeReason: "Closed over Christmas.",
   },
 
-  // --- Cancelled: was confirmed, then fell through ---------------------------
+  // --- Cancelled or withdrawn -------------------------------------------------
   {
     key: "agius-spiteri",
     status: "cancelled",
@@ -393,12 +391,11 @@ const BOOKINGS: BookingSpec[] = [
     sourcePage: "/weddings",
     quote: { status: "accepted", mealFormat: TIERS.receptionLavender, sentDaysAgo: 140 },
     deposit: { daysAgo: 130, method: "card" },
-    cancelReason:
-      "Couple moved abroad. Deposit refund under discussion (terms contested).",
+    closeReason: "Couple moved abroad. Deposit refund under discussion.",
   },
   {
     key: "zarb-launch",
-    status: "cancelled",
+    status: "withdrawn",
     eventType: "corporate",
     eventDate: thursdayInMonths(4),
     guestCount: 80,
@@ -406,7 +403,7 @@ const BOOKINGS: BookingSpec[] = [
     lastName: "Zarb",
     submittedDaysAgo: 60,
     sourcePage: "/corporate",
-    cancelReason: "Product launch postponed indefinitely.",
+    closeReason: "Product launch postponed indefinitely.",
   },
 
   // --- Completed: the event has happened ------------------------------------
@@ -494,16 +491,6 @@ const emailFor = (spec: BookingSpec) =>
 const VAT_RATE = 18
 const DEPOSIT_PERCENT = 30
 
-const contestedTerms = provenance(
-  "contested",
-  "catalogue",
-  "30% deposit, balance 14 days out",
-  {
-    conflictingValue: "Terms described as 'quite flexible'",
-    conflictingSource: "Client correspondence, 17 September 2026",
-  },
-)
-
 const buildQuote = (
   spec: BookingSpec,
   quoteSpec: NonNullable<BookingSpec["quote"]>,
@@ -511,76 +498,76 @@ const buildQuote = (
   statusOverride?: string,
 ) => {
   const eventDate = spec.eventDate!
-  const lines = [
+  const lineItems = keyed([
     {
+      _type: "quoteLineItem",
       label: `${quoteSpec.mealFormat.label}, per person`,
       category: "food",
       quantity: spec.guestCount,
       unitAmount: quoteSpec.mealFormat.amount,
-      sourceRef: quoteSpec.mealFormat.id,
+      sourceRef: reference(quoteSpec.mealFormat.id),
     },
     ...(quoteSpec.beverage
       ? [
           {
+            _type: "quoteLineItem",
             label: `${quoteSpec.beverage.label}, per person`,
             category: "beverage",
             quantity: spec.guestCount,
             unitAmount: quoteSpec.beverage.amount,
-            sourceRef: quoteSpec.beverage.id,
+            sourceRef: reference(quoteSpec.beverage.id),
           },
         ]
       : []),
-    ...(quoteSpec.extras ?? []).map((extra) => ({ ...extra, sourceRef: undefined })),
-  ]
+    ...(quoteSpec.extras ?? []).map((extra) => ({ _type: "quoteLineItem", ...extra })),
+  ])
 
-  // Prices include VAT (confirmed by email), so the VAT is the share of the
-  // total, not an addition to it.
-  const totalCents = lines.reduce(
-    (sum, line) => sum + cents(line.unitAmount) * line.quantity,
-    0,
-  )
-  const vatCents = Math.round(totalCents - totalCents / (1 + VAT_RATE / 100))
+  // The same sums the Studio does, so seeded quotes read as if staff made them.
+  const totals = calculateQuoteTotals({
+    lineItems,
+    vatRate: VAT_RATE,
+    guestCount: spec.guestCount,
+    depositPercent: DEPOSIT_PERCENT,
+  })
   const sentAt = addDays(start, -(quoteSpec.sentDaysAgo ?? 0))
 
   return {
     _id: quoteId(spec.key, idSuffix),
     _type: "quote",
-    reference: `BAC-${isoDate(eventDate).replace(/-/g, "")}-${spec.key.slice(0, 4).toUpperCase()}${idSuffix}`,
+    reference: `BAC-${isoDate(sentAt).replace(/-/g, "")}-${spec.key.slice(0, 4).toUpperCase()}${idSuffix.toUpperCase()}`,
     status: statusOverride ?? quoteSpec.status,
     booking: reference(bookingId(spec.key)),
-    clientDisplayName: spec.partnerName
+    addressedTo: spec.partnerName
       ? `${spec.firstName} ${spec.lastName} & ${spec.partnerName}`
       : `${spec.firstName} ${spec.lastName}`,
-    eventDate: isoDate(eventDate),
-    startTime: spec.eventType === "wedding" ? "17:00" : "19:30",
-    endTime: spec.eventType === "wedding" ? "22:00" : "23:30",
-    guestCount: spec.guestCount,
-    ...(spec.spaces ? { spaces: keyedReferences(spec.spaces) } : {}),
-    mealFormatTier: reference(quoteSpec.mealFormat.id),
-    ...(quoteSpec.beverage
-      ? { beverageSelections: keyedReferences([quoteSpec.beverage.id]) }
-      : {}),
-    lineItems: keyed(
-      lines.map((line) => ({
-        _type: "quoteLineItem",
-        label: line.label,
-        category: line.category,
-        quantity: line.quantity,
-        unitAmount: line.unitAmount,
-        amount: euros(cents(line.unitAmount) * line.quantity),
-        ...(line.sourceRef ? { sourceRef: reference(line.sourceRef) } : {}),
+    event: {
+      date: isoDate(eventDate),
+      startTime: spec.eventType === "wedding" ? "17:00" : "19:30",
+      endTime: spec.eventType === "wedding" ? "22:00" : "23:30",
+      guestCount: spec.guestCount,
+      ...(spec.spaces ? { spaces: keyedReferences(spec.spaces) } : {}),
+    },
+    menu: {
+      mealFormat: reference(quoteSpec.mealFormat.id),
+      ...(quoteSpec.beverage
+        ? { beverages: keyedReferences([quoteSpec.beverage.id]) }
+        : {}),
+    },
+    pricing: {
+      lineItems: lineItems.map((line, index) => ({
+        ...line,
+        amount: totals.lineAmounts[index].amount,
       })),
-    ),
-    subtotal: euros(totalCents - vatCents),
-    vatRate: VAT_RATE,
-    vatAmount: euros(vatCents),
-    total: euros(totalCents),
-    perPersonAmount: euros(Math.round(totalCents / spec.guestCount)),
-    depositPercent: DEPOSIT_PERCENT,
-    depositAmount: euros(Math.round((totalCents * DEPOSIT_PERCENT) / 100)),
-    balanceDueDate: isoDate(addDays(eventDate, -14)),
-    validUntil: isoDate(addDays(sentAt, 14)),
-    termsProvenance: contestedTerms,
+      subtotal: totals.subtotal,
+      total: totals.total,
+      vat: { rate: VAT_RATE, amount: totals.vatAmount },
+      perPerson: totals.perPerson,
+      deposit: { percent: DEPOSIT_PERCENT, amount: totals.depositAmount! },
+    },
+    terms: {
+      balanceDueDate: isoDate(addDays(eventDate, -14)),
+      validUntil: isoDate(addDays(sentAt, 14)),
+    },
   }
 }
 
@@ -596,31 +583,33 @@ const buildPayments = (
     method,
     kind,
     status: "received",
-    grossAmount: amount,
-    // Card fees at roughly Stripe's rate for European cards: 1.5% + €0.25.
+    // Card fees at roughly the usual rate for European cards: 1.5% + €0.25.
     ...(method === "card"
       ? {
-          feeAmount: euros(Math.round(cents(amount) * 0.015 + 25)),
-          netAmount: euros(cents(amount) - Math.round(cents(amount) * 0.015 + 25)),
-          stripeSessionId: `cs_test_seed_${spec.key.replace(/-/g, "_")}_${kind}`,
+          amounts: {
+            gross: amount,
+            fee: euros(Math.round(cents(amount) * 0.015 + 25)),
+            net: euros(cents(amount) - Math.round(cents(amount) * 0.015 + 25)),
+          },
+          reference: `pay_test_seed_${spec.key.replace(/-/g, "_")}_${kind}`,
         }
       : {
+          amounts: { gross: amount, net: amount },
           reference: quote.reference,
-          reconciledBy: "Events team",
-          reconciledAt: isoDateTime(addDays(at, 1), 9),
+          reconciliation: { by: "Events team", at: isoDateTime(addDays(at, 1), 9) },
         }),
     receivedAt: isoDateTime(at, 11),
   })
 
   const payments = [
-    payment("deposit", quote.depositAmount, depositAt, spec.deposit.method),
+    payment("deposit", quote.pricing.deposit.amount, depositAt, spec.deposit.method),
   ]
 
   if (spec.balancePaid) {
     payments.push(
       payment(
         "balance",
-        euros(cents(quote.total) - cents(quote.depositAmount)),
+        euros(cents(quote.pricing.total) - cents(quote.pricing.deposit.amount)),
         addDays(spec.eventDate!, -14),
         "bank-transfer",
       ),
@@ -646,48 +635,60 @@ const statusEvent = (
   ...(reason ? { reason } : {}),
 })
 
+// The route each status took to get where it is.
+const STATUS_PATHS: Record<BookingStatus, BookingStatus[]> = {
+  new: ["new"],
+  "in-discussion": ["new", "in-discussion"],
+  "awaiting-deposit": ["new", "in-discussion", "awaiting-deposit"],
+  confirmed: ["new", "in-discussion", "awaiting-deposit", "confirmed"],
+  completed: ["new", "in-discussion", "awaiting-deposit", "confirmed", "completed"],
+  cancelled: ["new", "in-discussion", "awaiting-deposit", "confirmed", "cancelled"],
+  declined: ["new", "declined"],
+  withdrawn: ["new", "in-discussion", "withdrawn"],
+}
+
 const buildHistory = (spec: BookingSpec, submittedAt: Date) => {
-  const history = [statusEvent("pending", undefined, submittedAt, "visitor")]
+  const quoteSentAt =
+    spec.quote?.sentDaysAgo === undefined
+      ? addDays(submittedAt, 5)
+      : addDays(start, -spec.quote.sentDaysAgo)
   const confirmedAt = spec.deposit
     ? addDays(start, -spec.deposit.daysAgo)
     : addDays(submittedAt, 7)
-  const confirmedBy = spec.deposit?.method === "card" ? "payment-webhook" : "staff"
 
-  if (spec.status === "declined") {
-    history.push(
+  const when: Record<BookingStatus, Date> = {
+    new: submittedAt,
+    "in-discussion": addDays(submittedAt, 1),
+    "awaiting-deposit": quoteSentAt,
+    confirmed: confirmedAt,
+    completed: spec.eventDate ? addDays(spec.eventDate, 1) : start,
+    cancelled: addDays(start, -10),
+    declined: addDays(submittedAt, 1),
+    withdrawn: addDays(submittedAt, 10),
+  }
+
+  const actorFor = (status: BookingStatus) => {
+    if (status === "new") return "visitor"
+    if (status === "completed") return "cron"
+    if (status === "confirmed" && spec.deposit?.method === "card")
+      return "payment-webhook"
+
+    return "staff"
+  }
+
+  const path = STATUS_PATHS[spec.status]
+
+  return keyed(
+    path.map((status, index) =>
       statusEvent(
-        "declined",
-        "pending",
-        addDays(submittedAt, 1),
-        "staff",
-        spec.declineReason,
+        status,
+        path[index - 1],
+        when[status],
+        actorFor(status),
+        index === path.length - 1 ? spec.closeReason : undefined,
       ),
-    )
-  }
-
-  if (["confirmed", "cancelled", "completed"].includes(spec.status)) {
-    history.push(statusEvent("confirmed", "pending", confirmedAt, confirmedBy))
-  }
-
-  if (spec.status === "cancelled") {
-    history.push(
-      statusEvent(
-        "cancelled",
-        "confirmed",
-        addDays(start, -10),
-        "staff",
-        spec.cancelReason,
-      ),
-    )
-  }
-
-  if (spec.status === "completed") {
-    history.push(
-      statusEvent("completed", "confirmed", addDays(spec.eventDate!, 1), "cron"),
-    )
-  }
-
-  return keyed(history)
+    ),
+  )
 }
 
 const buildBooking = (spec: BookingSpec, quote: ReturnType<typeof buildQuote> | null) => {
@@ -701,20 +702,24 @@ const buildBooking = (spec: BookingSpec, quote: ReturnType<typeof buildQuote> | 
     _type: "booking",
     status: spec.status,
     statusHistory: buildHistory(spec, submittedAt),
-    eventType: spec.eventType,
-    ...(spec.eventDate ? { eventDate: isoDate(spec.eventDate) } : {}),
-    dateIsFlexible: spec.dateIsFlexible ?? false,
-    ...(spec.backupDate ? { backupDate: isoDate(spec.backupDate) } : {}),
-    guestCount: spec.guestCount,
-    ...(spec.spaces ? { spacesOfInterest: keyedReferences(spec.spaces) } : {}),
-    spacesGuidanceRequested: spec.spacesGuidanceRequested ?? false,
-    ...(spec.eventStyle ? { eventStyle: spec.eventStyle } : {}),
+    client: {
+      firstName: spec.firstName,
+      lastName: spec.lastName,
+      ...(spec.partnerName ? { partnerName: spec.partnerName } : {}),
+      email: emailFor(spec),
+      phone: phoneNumber(),
+    },
+    event: {
+      type: spec.eventType,
+      ...(spec.eventDate ? { date: isoDate(spec.eventDate) } : {}),
+      dateIsFlexible: spec.dateIsFlexible ?? false,
+      ...(spec.backupDate ? { backupDate: isoDate(spec.backupDate) } : {}),
+      guestCount: spec.guestCount,
+      ...(spec.spaces ? { spaces: keyedReferences(spec.spaces) } : {}),
+      spacesGuidanceRequested: spec.spacesGuidanceRequested ?? false,
+      ...(spec.eventStyle ? { style: spec.eventStyle } : {}),
+    },
     ...(spec.message ? { message: spec.message } : {}),
-    firstName: spec.firstName,
-    lastName: spec.lastName,
-    ...(spec.partnerName ? { partnerName: spec.partnerName } : {}),
-    email: emailFor(spec),
-    phone: phoneNumber(),
     consent: {
       _type: "consentRecord",
       given: true,

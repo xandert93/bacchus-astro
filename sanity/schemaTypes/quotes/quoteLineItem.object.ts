@@ -33,7 +33,7 @@ import { formatEuros, joinParts, optionTitle } from "../../lib/preview"
  */
 export default defineType({
   name: "quoteLineItem",
-  title: "Line item",
+  title: "Line Item",
   type: "object",
   fields: [
     defineField({
@@ -63,23 +63,25 @@ export default defineType({
     }),
     defineField({
       name: "unitAmount",
-      title: "Unit amount (EUR)",
+      title: "Unit Amount (€)",
       type: "number",
       validation: (Rule) => Rule.min(0).precision(2),
     }),
     defineField({
       name: "amount",
-      title: "Line total (EUR)",
+      title: "Line Total (€)",
       type: "number",
+      readOnly: ({ parent }) =>
+        parent?.quantity !== undefined && parent?.unitAmount !== undefined,
       description: help(
-        "Exactly as on the quote.",
-        "It isn't worked out from the quantity and unit amount, so check it matches.",
+        "Worked out automatically from the quantity and unit amount.",
+        "For a flat fee, leave those two empty and type the total here.",
       ),
       validation: (Rule) => Rule.required().precision(2),
     }),
     defineField({
       name: "sourceRef",
-      title: "Priced from",
+      title: "Priced From",
       type: "reference",
       to: [
         { type: "packageTier" },

@@ -1,7 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
 import { PRICE_UNITS } from "../../lib/constants"
 import { help } from "../../lib/help"
-import { capitalise, formatEuros, joinParts, optionTitle } from "../../lib/preview"
+import { formatEuros, joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * One tier or category within a package — Daisy, Lavender, Rose; Orchid,
@@ -37,7 +37,7 @@ import { capitalise, formatEuros, joinParts, optionTitle } from "../../lib/previ
  */
 export default defineType({
   name: "packageTier",
-  title: "Tier / category",
+  title: "Tier / Category",
   type: "document",
   groups: [
     { name: "content", title: "Content", default: true },
@@ -82,7 +82,7 @@ export default defineType({
     }),
     defineField({
       name: "summary",
-      title: "Card description",
+      title: "Card Description",
       type: "text",
       group: "content",
       rows: 3,
@@ -90,68 +90,74 @@ export default defineType({
         'Shown on the tier card, e.g. "An elegant opening tier: ten cold and ten hot canapés, a three-dish flying buffet, four desserts, coffee and the wedding cake."',
     }),
     defineField({
-      name: "price",
-      title: "Base price",
-      type: "price",
+      name: "pricing",
+      title: "Pricing",
+      type: "object",
       group: "content",
-      description: help(
-        "Optional. Leave empty rather than guess if the price isn't reliable.",
-        "Applies all year, unless a seasonal rate below covers the date.",
-      ),
-    }),
-    defineField({
-      name: "seasonalRates",
-      title: "Seasonal rates",
-      type: "array",
-      group: "content",
-      of: [defineArrayMember({ type: "seasonalRate" })],
-      description: help(
-        "Replaces the base price for dates inside a season.",
-        "Empty for every tier at the moment: Bacchus hasn't sent seasonal prices yet.",
-      ),
+      options: { collapsible: false },
+      fields: [
+        defineField({
+          name: "base",
+          title: "Base Price",
+          type: "price",
+          description: help(
+            "Optional. Leave empty rather than guess if the price isn't reliable.",
+            "Applies all year, unless a seasonal rate below covers the date.",
+          ),
+        }),
+        defineField({
+          name: "seasonal",
+          title: "Seasonal Rates",
+          type: "array",
+          of: [defineArrayMember({ type: "seasonalRate" })],
+          description: "Replaces the base price for dates inside a season.",
+        }),
+      ],
     }),
 
     // --- Menu ---------------------------------------------------------------
     defineField({
-      name: "menuGroups",
-      title: "Menu groups",
-      type: "array",
+      name: "menu",
+      title: "Menu",
+      type: "object",
       group: "menu",
-      of: [defineArrayMember({ type: "menuGroup" })],
-      description: help(
-        "e.g. Cold Canapés, Hot Canapés, Flying Buffet, Desserts, Coffee Station and Wedding Cake. On Beverage, the wine packages.",
-        "Copy from the catalogue by reading it, not by copying and pasting from the PDF: pasting loses accents and sometimes whole words.",
-      ),
-    }),
-    defineField({
-      name: "signatureDishes",
-      title: "Signature dishes",
-      type: "array",
-      group: "menu",
-      of: [defineArrayMember({ type: "signatureDish" })],
-      description: help(
-        "Up to three photo tiles above the menu.",
-        "Only Reception has real photos so far. The others show placeholder tiles, and Beverage has none.",
-      ),
-      validation: (Rule) => Rule.max(3),
-    }),
-    defineField({
-      name: "intro",
-      title: "Introduction",
-      type: "text",
-      group: "menu",
-      rows: 4,
-      description:
-        "Optional paragraph above the menu. Used on Beverage, not on the dining tiers.",
-    }),
-    defineField({
-      name: "includedNote",
-      title: "What the tier includes",
-      type: "text",
-      group: "menu",
-      rows: 3,
-      description:
-        "Anything that applies to the whole tier, e.g. the in-house cake being included in the Reception price.",
+      options: { collapsible: false },
+      fields: [
+        defineField({
+          name: "intro",
+          title: "Introduction",
+          type: "text",
+          rows: 4,
+          description:
+            "Optional paragraph above the menu. Used on Beverage, not on the dining tiers.",
+        }),
+        defineField({
+          name: "signatureDishes",
+          title: "Signature Dishes",
+          type: "array",
+          of: [defineArrayMember({ type: "signatureDish" })],
+          description: "Up to three photo tiles above the menu.",
+          validation: (Rule) => Rule.max(3),
+        }),
+        defineField({
+          name: "groups",
+          title: "Menu Groups",
+          type: "array",
+          of: [defineArrayMember({ type: "menuGroup" })],
+          description: help(
+            "e.g. Cold Canapés, Hot Canapés, Flying Buffet, Desserts, Coffee Station and Wedding Cake. On Beverage, the wine packages.",
+            "Copy from the catalogue by reading it, not by copying and pasting from the PDF: pasting loses accents and sometimes whole words.",
+          ),
+        }),
+        defineField({
+          name: "includedNote",
+          title: "What the Tier Includes",
+          type: "text",
+          rows: 3,
+          description:
+            "Anything that applies to the whole tier, e.g. the in-house cake being included in the Reception price.",
+        }),
+      ],
     }),
   ],
   // Orderings sort on the document's own fields only — Sanity cannot sort a
@@ -160,26 +166,24 @@ export default defineType({
   // becomes awkward, the fix is a per-package child list in `structure.ts`,
   // not a denormalised package name copied onto every tier.
   orderings: [
-    { title: "Tier order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
+    { title: "Tier Order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
   ],
   preview: {
     select: {
       name: "name",
       packageName: "package.name",
-      amount: "price.amount",
-      unit: "price.unit",
-      status: "price.provenance.status",
-      blocked: "price.provenance.blocksPublication",
+      amount: "pricing.base.amount",
+      unit: "pricing.base.unit",
+      hidden: "pricing.base.isHidden",
     },
-    prepare: ({ name, packageName, amount, unit, status, blocked }) => ({
+    prepare: ({ name, packageName, amount, unit, hidden }) => ({
       title: name,
       subtitle: joinParts(
         packageName,
         amount
           ? joinParts(formatEuros(amount), optionTitle(PRICE_UNITS, unit))
           : "No price",
-        blocked ? "Hidden from the site" : undefined,
-        status && status !== "confirmed" ? capitalise(status) : undefined,
+        hidden ? "Hidden on the website" : undefined,
       ),
     }),
   },

@@ -30,9 +30,8 @@ the client.
   `sanity/` at the repo root (34 types, Studio structure, GROQ queries) but
   not connected to a project yet. **Read its `README.md` before touching
   it.** Three decisions to know:
-  - **Every unconfirmed fact carries a `provenance`** (confirmed, unconfirmed,
-    contested, placeholder). The bronze and oxblood notes then come from the
-    data, and a disclaimer disappears when the client confirms the fact.
+  - **The Studio holds Bacchus's content, not our notes about it.** What's
+    still unconfirmed is tracked in `docs/content/client-facts.md`.
   - **Derive availability, snapshot money.** There's no availability
     document: the calendar is computed from bookings. Quotes store every
     figure as sent, since prices change by season.

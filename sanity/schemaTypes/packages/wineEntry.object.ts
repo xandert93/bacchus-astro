@@ -36,20 +36,20 @@ export default defineType({
     }),
     defineField({
       name: "grapes",
-      title: "Grape varieties",
+      title: "Grape Varieties",
       type: "string",
       description:
         'Separated by commas, as in the catalogue, e.g. "Chardonnay, Girgentina".',
     }),
     defineField({
       name: "producer",
-      title: "Producer & origin",
+      title: "Producer & Origin",
       type: "string",
       description: 'e.g. "Marsovin, Malta".',
     }),
     defineField({
       name: "tastingNote",
-      title: "Tasting note",
+      title: "Tasting Note",
       type: "text",
       rows: 3,
       description: "The catalogue's note, in British English with accents restored.",
@@ -64,16 +64,11 @@ export default defineType({
           { title: "Red", value: "red" },
           { title: "Rosé", value: "rose" },
           { title: "Sparkling", value: "sparkling" },
-          { title: "Dessert / fortified", value: "dessert" },
+          { title: "Dessert / Fortified", value: "dessert" },
         ],
       },
       description:
         "Not shown on the site yet. Will let the list be grouped by style later.",
-    }),
-    defineField({
-      name: "catalogueVariance",
-      title: "Differs from the catalogue",
-      type: "catalogueVariance",
     }),
   ],
   preview: {

@@ -1,6 +1,11 @@
 import { defineField, defineType } from "sanity"
-import { help } from "../../lib/help"
-import { capitalise, formatDate, formatEuros, joinParts } from "../../lib/preview"
+import {
+  capitalise,
+  formatDate,
+  formatEuros,
+  joinParts,
+  optionTitle,
+} from "../../lib/preview"
 
 /**
  * One payment attempt or receipt against a booking.
@@ -8,31 +13,28 @@ import { capitalise, formatDate, formatEuros, joinParts } from "../../lib/previe
  * Covers both routes the deposit page offers, which have genuinely different
  * shapes and different failure modes:
  *
- *   card — a Stripe session. Confirmation is a webhook; there is nothing for
- *   staff to do. Fees are a percentage plus a fixed amount, so the fixed part
- *   eats proportionally more of a small deposit, and non-EU cards cost more
- *   than domestic ones. That matters here because wedding clients often pay
- *   from abroad, so `feeAmount` and `netAmount` are stored rather than assumed
- *   — the gross figure on its own will not reconcile against the bank.
+ *   card — a checkout session at the card provider (Stripe or Viva, not yet
+ *   chosen). Confirmation is a webhook; there is nothing for staff to do.
+ *   Fees are a percentage plus a fixed amount, so the fixed part eats
+ *   proportionally more of a small deposit, and non-EU cards cost more than
+ *   domestic ones. That matters here because wedding clients often pay from
+ *   abroad, so `amounts.fee` and `amounts.net` are stored rather than
+ *   assumed — the gross figure on its own will not reconcile against the bank.
  *
  *   bank-transfer — IBAN and reference shown, staff match it by hand.
- *   `reconciledBy` and `reconciledAt` exist because that is a human step that
- *   can be done twice or forgotten, and the booking's auto-confirm depends on
- *   it.
- *
- * `pay-by-bank` is listed but should not be offered until verified. Stripe's
- * own product pages describe Pay by Bank as live, and Stripe is confirmed
- * generally available for Malta-registered businesses, but open-banking
- * coverage in Malta specifically appears to lag larger EU markets and Stripe's
- * availability does not by itself confirm the method works there. It is a
- * genuinely different thing from SEPA Direct Debit, which is a pull-based
- * mandate rather than open banking — the two should not be conflated when this
- * is finally checked against a real Malta-registered Stripe account.
+ *   `reconciliation` exists because that is a human step that can be done
+ *   twice or forgotten, and the booking's auto-confirm depends on it.
  *
  * Nothing in this type sets a booking's status. The webhook does that, and
  * writes a `statusEvent` saying so — which is what makes the deposit race
  * (first payment wins the date) auditable afterwards.
  */
+const PAYMENT_METHODS = [
+  { title: "Card", value: "card" },
+  { title: "Bank Transfer", value: "bank-transfer" },
+  { title: "Other", value: "other" },
+] as const
+
 export default defineType({
   name: "paymentRecord",
   title: "Payment",
@@ -42,28 +44,18 @@ export default defineType({
       name: "method",
       title: "Method",
       type: "string",
-      options: {
-        list: [
-          { title: "Card (Stripe)", value: "card" },
-          { title: "Bank transfer (manual reconciliation)", value: "bank-transfer" },
-          {
-            title: "Pay by Bank (open banking) — not yet verified for Malta",
-            value: "pay-by-bank",
-          },
-          { title: "Other / recorded retrospectively", value: "other" },
-        ],
-      },
+      options: { list: [...PAYMENT_METHODS], layout: "radio", direction: "horizontal" },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "kind",
-      title: "What this covers",
+      title: "What This Covers",
       type: "string",
       options: {
         list: [
           { title: "Deposit", value: "deposit" },
           { title: "Balance", value: "balance" },
-          { title: "Menu tasting fee", value: "tasting" },
+          { title: "Menu Tasting Fee", value: "tasting" },
           { title: "Refund", value: "refund" },
         ],
       },
@@ -76,10 +68,10 @@ export default defineType({
       type: "string",
       options: {
         list: [
-          { title: "Awaiting payment", value: "awaiting" },
+          { title: "Awaiting Payment", value: "awaiting" },
           { title: "Received", value: "received" },
           { title: "Failed", value: "failed" },
-          { title: "Expired — hold lapsed", value: "expired" },
+          { title: "Expired: The Hold Ran Out", value: "expired" },
           { title: "Refunded", value: "refunded" },
         ],
       },
@@ -87,42 +79,39 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "grossAmount",
-      title: "Gross amount (EUR)",
-      type: "number",
-      validation: (Rule) => Rule.required().precision(2),
-    }),
-    defineField({
-      name: "feeAmount",
-      title: "Processing fee (EUR)",
-      type: "number",
-      description: help(
-        "The fee actually charged, not an estimate.",
-        "Card fees are a percentage plus a fixed amount, and higher on cards from outside the EU.",
-      ),
-      validation: (Rule) => Rule.precision(2),
-    }),
-    defineField({
-      name: "netAmount",
-      title: "Net received (EUR)",
-      type: "number",
-      description:
-        "What actually arrived in the bank. Use this to check against the statement.",
-      validation: (Rule) => Rule.precision(2),
+      name: "amounts",
+      title: "Amounts (€)",
+      type: "object",
+      options: { collapsible: false, columns: 3 },
+      fields: [
+        defineField({
+          name: "gross",
+          title: "Paid",
+          type: "number",
+          validation: (Rule) => Rule.required().precision(2),
+        }),
+        defineField({
+          name: "fee",
+          title: "Processing Fee",
+          type: "number",
+          description: "As actually charged.",
+          validation: (Rule) => Rule.precision(2),
+        }),
+        defineField({
+          name: "net",
+          title: "Received",
+          type: "number",
+          description: "What arrived in the bank.",
+          validation: (Rule) => Rule.precision(2),
+        }),
+      ],
     }),
     defineField({
       name: "reference",
       title: "Reference",
       type: "string",
       description:
-        "For a bank transfer, the reference the client was given. For a card, the Stripe payment ID.",
-    }),
-    defineField({
-      name: "stripeSessionId",
-      title: "Stripe Checkout session id",
-      type: "string",
-      hidden: ({ parent }) => parent?.method !== "card",
-      readOnly: true,
+        "For a bank transfer, the reference the client was given. For a card, the payment's ID from the card provider.",
     }),
     defineField({
       name: "receivedAt",
@@ -130,17 +119,15 @@ export default defineType({
       type: "datetime",
     }),
     defineField({
-      name: "reconciledBy",
-      title: "Matched by",
-      type: "string",
-      description: "Which staff member matched this against the bank statement.",
+      name: "reconciliation",
+      title: "Matched Against the Bank Statement",
+      type: "object",
+      options: { collapsible: false, columns: 2 },
       hidden: ({ parent }) => parent?.method === "card",
-    }),
-    defineField({
-      name: "reconciledAt",
-      title: "Matched at",
-      type: "datetime",
-      hidden: ({ parent }) => parent?.method === "card",
+      fields: [
+        defineField({ name: "by", title: "By", type: "string" }),
+        defineField({ name: "at", title: "On", type: "datetime" }),
+      ],
     }),
     defineField({
       name: "note",
@@ -154,14 +141,14 @@ export default defineType({
       kind: "kind",
       method: "method",
       status: "status",
-      gross: "grossAmount",
+      gross: "amounts.gross",
       at: "receivedAt",
     },
     prepare: ({ kind, method, status, gross, at }) => ({
       title: joinParts(capitalise(kind), formatEuros(gross)),
       subtitle: joinParts(
         capitalise(status),
-        method === "bank-transfer" ? "Bank transfer" : capitalise(method),
+        optionTitle(PAYMENT_METHODS, method),
         formatDate(at),
       ),
     }),

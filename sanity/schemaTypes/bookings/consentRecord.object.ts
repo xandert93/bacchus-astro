@@ -45,7 +45,7 @@ export default defineType({
   fields: [
     defineField({
       name: "given",
-      title: "Consent given",
+      title: "Consent Given",
       type: "boolean",
       initialValue: false,
       validation: (Rule) => Rule.required(),
@@ -58,7 +58,7 @@ export default defineType({
     }),
     defineField({
       name: "wording",
-      title: "Wording shown at the time",
+      title: "Wording Shown at the Time",
       type: "text",
       rows: 3,
       description: help(
@@ -68,13 +68,13 @@ export default defineType({
     }),
     defineField({
       name: "sourcePage",
-      title: "Submitted from",
+      title: "Submitted From",
       type: "string",
       description: "The page the form was on.",
     }),
     defineField({
       name: "retentionReviewAt",
-      title: "Retention review date",
+      title: "Retention Review Date",
       type: "date",
       description: help(
         "When this person's details should be reviewed for deletion.",
