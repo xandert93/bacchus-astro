@@ -27,12 +27,14 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^14.4.0",
     "@astrojs/sitemap": "^3.7.4",
     "@sanity/client": "^8.9.0",
-    "astro": "^7.3.5"
+    "astro": "^7.4.0"
   },
   "allowScripts": {
-    "esbuild": true
+    "esbuild": true,
+    "workerd": true
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
@@ -51,6 +53,7 @@
     "prettier-plugin-astro": "^1.1.0",
     "stylelint": "^17.16.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.71.1"
+    "typescript-eslint": "^8.71.1",
+    "wrangler": "^4.151.1"
   }
 }

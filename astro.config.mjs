@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig, envField } from "astro/config"
+import cloudflare from "@astrojs/cloudflare"
 import sitemap from "@astrojs/sitemap"
 import { draftPages } from "./src/integrations/draft-pages"
 
@@ -10,6 +11,23 @@ export default defineConfig({
   // the site runs on workers.dev, where nothing is indexed (public/_headers),
   // so pointing these at the future address there does no harm.
   site: "https://bacchus.com.mt",
+  // Every page is still built ahead of time, as static HTML. The adapter
+  // only adds a Worker for the handful of routes that must run when a
+  // visitor arrives (the enquiry form's endpoint), each marked with
+  // `export const prerender = false`. Cloudflare serves the static files
+  // first and hands anything else to the Worker.
+  adapter: cloudflare({
+    // Keep the image pipeline exactly as it was: every photo resized and
+    // converted at build time, not by a Cloudflare service on each request.
+    imageService: "compile",
+    // Build the static pages in Node, as before, rather than in Cloudflare's
+    // runtime: the image pipeline needs Node.
+    prerenderEnvironment: "node",
+  }),
+  // The site keeps no per-visitor state on the server, so no session store.
+  // Without this the adapter would ask Cloudflare for a KV store to hold
+  // sessions nothing uses.
+  session: false,
   // Pages are built as weddings.html rather than weddings/index.html, and
   // addressed without a trailing slash (/weddings), which is how every link
   // on the site is written. Cloudflare serves weddings.html at /weddings
@@ -49,6 +67,15 @@ export default defineConfig({
       // Which dataset the site reads. Leave it unset everywhere except your
       // own .env, where "development" points `npm run dev` at the seed data
       // (sanity/seed/). The live site and CI always read production.
+      // Writes new enquiries into Sanity. Used only by the enquiry endpoint
+      // while it runs on Cloudflare, never by the build, so it's optional
+      // here and checked when a request arrives. A Worker secret in the
+      // Cloudflare dashboard; in .dev.vars locally (never committed).
+      SANITY_API_WRITE_TOKEN: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
       SANITY_DATASET: envField.enum({
         context: "server",
         access: "public",

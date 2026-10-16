@@ -1,6 +1,6 @@
 // Snapshot the computed styles of every element on the given pages, so a
 // CSS refactor can be checked for unintended visual changes. Serves the
-// current build (dist/) itself, at desktop and Pixel 7 sizes.
+// current build (dist/client/) itself, at desktop and Pixel 7 sizes.
 //
 //   npm run build && node scripts/style-snapshot.mjs before.json
 //   ...make the CSS change...
@@ -27,7 +27,7 @@ const TYPES = {
 }
 const server = http
   .createServer((req, res) => {
-    const f = pageFile("dist", req.url.split("?")[0].split("#")[0])
+    const f = pageFile("dist/client", req.url.split("?")[0].split("#")[0])
     if (!f) {
       res.writeHead(404)
       return res.end()
