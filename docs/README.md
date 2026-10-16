@@ -12,6 +12,7 @@ of truth for design, content facts and bugs.
 | `planning/`     | What's next?                             | `roadmap.md` — migration phases, feature order, backlog · `sanity-rollout.md` — getting the CMS live     |
 | `architecture/` | How is the code laid out, and why?       | `structure.md` — where things live · `tech-stack.md` — the stack, payments                               |
 | `operations/`   | How do we run and measure the live site? | `analytics-and-measurement.md` — Cloudflare Web Analytics, page speed, limits · `when-sanity-is-down.md` |
+| `handover/`     | How do Bacchus's staff use it?           | `staff-guide.md` — the Studio, for the Bacchus team, kept current until launch                           |
 
 ## Not in this folder
 
