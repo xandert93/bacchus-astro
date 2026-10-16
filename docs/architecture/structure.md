@@ -135,6 +135,10 @@ Every button is `<Button>` (`ui/Button.astro`).
   Only frontmatter calls these, so neither they nor the token reach the
   browser. Testimonials.js gets its list as JSON written into the page by
   `Testimonials.astro`. See `docs/planning/sanity-rollout.md`, step 3.
+- `src/lib/enquiries/`: checking an enquiry and turning it into a booking,
+  for the enquiry endpoint, `src/pages/api/enquiries.ts`. The one module
+  allowed to write to Sanity is `src/lib/sanity/write-client.ts`, which only
+  that endpoint imports.
 - `src/data/navigation.ts`: both nav menus, for the bar and the drawer.
 - `src/data/gallery.ts`: the gallery's filters (the photos are in Sanity).
 - `src/data/enquiry.ts`: event types and chip notes. Read by both

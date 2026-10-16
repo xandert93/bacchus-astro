@@ -49,6 +49,8 @@ day the site goes live on Bacchus's own domain.
 - **Remove the `noindex` header.** `public/_headers` tells search engines not
   to list any page, because the `workers.dev` address is public. Left in
   place after launch, it would keep the real site out of Google.
+- **Decide on Cloudflare Turnstile** for the enquiry form, if the hidden
+  field and the timing check (`src/pages/api/enquiries.ts`) let spam through.
 - **Submit the sitemap** (`https://bacchus.com.mt/sitemap-index.xml`) in
   Google Search Console, once the domain points here.
 
