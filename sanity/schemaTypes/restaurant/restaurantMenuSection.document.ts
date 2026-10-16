@@ -25,12 +25,12 @@ import { joinParts } from "../../lib/preview"
  */
 export default defineType({
   name: "restaurantMenuSection",
-  title: "Restaurant menu section",
+  title: "Restaurant Menu Section",
   type: "document",
   fields: [
     defineField({
       name: "title",
-      title: "Section title",
+      title: "Section Title",
       type: "string",
       description: "e.g. Starters, Pasta, Mains or Desserts.",
       validation: (Rule) => Rule.required(),
@@ -70,10 +70,10 @@ export default defineType({
     }),
   ],
   orderings: [
-    { title: "Menu order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
+    { title: "Menu Order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
   ],
   preview: {
-    select: { title: "title", dishes: "dishes", published: "isPublished" },
+    select: { title: "Title", dishes: "dishes", published: "isPublished" },
     prepare: ({ title, dishes, published }) => {
       const count = Array.isArray(dishes) ? dishes.length : 0
 

@@ -104,54 +104,17 @@ export const euros = (cents: number): number => Math.round(cents) / 100
 
 export const cents = (amount: number): number => Math.round(amount * 100)
 
-// --- Provenance ------------------------------------------------------------
+// --- Prices ----------------------------------------------------------------
 
-type ProvenanceStatus = "confirmed" | "unconfirmed" | "contested" | "placeholder"
-
-type ProvenanceSource =
-  | "catalogue"
-  | "correspondence"
-  | "quote"
-  | "live-site"
-  | "web"
-  | "assumption"
-  | "invented"
-
-export const provenance = (
-  status: ProvenanceStatus,
-  source: ProvenanceSource,
-  sourceDetail: string,
-  extra: Record<string, unknown> = {},
-) => ({
-  _type: "provenance",
-  status,
-  source,
-  sourceDetail,
-  blocksPublication: false,
-  ...extra,
-})
-
-/** Seed data that stands in for facts nobody has given us. */
-export const invented = (detail: string) =>
-  provenance("placeholder", "invented", `Development seed data: ${detail}`)
-
-/** A price, which the schema requires to carry its source. */
 export const price = (
   amount: number,
   unit: "per-person" | "per-bottle" | "each" | "per-hour" | "flat",
-  source: ReturnType<typeof provenance>,
 ) => ({
   _type: "price",
   amount,
   unit,
   isIndicative: true,
   isStartingPrice: false,
+  isHidden: false,
   vatIncluded: true,
-  provenance: source,
 })
-
-export const fromQuote = (detail = "The single shared client quote (PDF)") =>
-  provenance("unconfirmed", "quote", detail)
-
-export const fromEmails = (detail: string) =>
-  provenance("confirmed", "correspondence", detail, { confirmedOn: "2026-09-17" })

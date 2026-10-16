@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
 import { help } from "../../lib/help"
+import { photoField } from "../../lib/photoField"
 import { joinParts } from "../../lib/preview"
 
 /**
@@ -43,12 +44,12 @@ import { joinParts } from "../../lib/preview"
  */
 export default defineType({
   name: "weddingPackage",
-  title: "Wedding package",
+  title: "Wedding Package",
   type: "document",
   groups: [
     { name: "content", title: "Content", default: true },
     { name: "structure", title: "Structure" },
-    { name: "seo", title: "Search & social" },
+    { name: "seo", title: "Search & Social" },
   ],
   fields: [
     defineField({
@@ -78,8 +79,8 @@ export default defineType({
       group: "structure",
       options: {
         list: [
-          { title: "Meal format — mutually exclusive, pick one", value: "meal-format" },
-          { title: "Additive — chosen alongside a meal format", value: "additive" },
+          { title: "Meal Format — Mutually Exclusive, Pick One", value: "meal-format" },
+          { title: "Additive — Chosen Alongside a Meal Format", value: "additive" },
         ],
         layout: "radio",
       },
@@ -91,13 +92,13 @@ export default defineType({
     }),
     defineField({
       name: "tierStyle",
-      title: "How the options relate",
+      title: "How the Options Relate",
       type: "string",
       group: "structure",
       options: {
         list: [
-          { title: "Ranked tiers — one is chosen", value: "ranked-tiers" },
-          { title: "Categories — they combine freely", value: "combinable-categories" },
+          { title: "Ranked Tiers — One Is Chosen", value: "ranked-tiers" },
+          { title: "Categories — They Combine Freely", value: "combinable-categories" },
         ],
         layout: "radio",
       },
@@ -105,17 +106,17 @@ export default defineType({
     }),
     defineField({
       name: "dietaryMarking",
-      title: "Vegetarian marking in the source",
+      title: "Vegetarian Marking in the Source",
       type: "string",
       group: "structure",
       options: {
         list: [
-          { title: "Marked — (V) appears in the catalogue", value: "marked" },
+          { title: "Marked — (V) Appears in the Catalogue", value: "marked" },
           {
-            title: "Not marked in the source — suppress badges and legend",
+            title: "Not Marked in the Source — Suppress Badges and Legend",
             value: "not-marked-in-source",
           },
-          { title: "Not applicable — no dishes", value: "not-applicable" },
+          { title: "Not Applicable — No Dishes", value: "not-applicable" },
         ],
         layout: "radio",
       },
@@ -139,60 +140,52 @@ export default defineType({
     // --- Page content -------------------------------------------------------
     defineField({
       name: "cardSummary",
-      title: "Card summary",
+      title: "Card Summary",
       type: "text",
       group: "content",
       rows: 3,
       description: "The short paragraph on the package card on the weddings page.",
     }),
     defineField({
-      name: "heroHeading",
-      title: "Page heading",
-      type: "string",
+      name: "hero",
+      title: "Top of the Page",
+      type: "object",
       group: "content",
-    }),
-    defineField({
-      name: "heroIntro",
-      title: "Page intro",
-      type: "text",
-      group: "content",
-      rows: 4,
-      description: "One paragraph under the page heading.",
-    }),
-    defineField({
-      name: "heroImage",
-      title: "Hero image",
-      type: "image",
-      group: "content",
-      options: { hotspot: true },
-      description: help(
-        "The large photo at the top of the page. It needs a high-resolution original.",
-        "Most of the current event photos are too small and look blurry at this size. Ask Bacchus for the original first.",
-      ),
+      options: { collapsible: false },
       fields: [
         defineField({
-          name: "alt",
-          title: "Alt text",
+          name: "heading",
+          title: "Heading",
           type: "string",
-          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: "intro",
+          title: "Intro",
+          type: "text",
+          rows: 4,
+          description: "One paragraph under the heading.",
+        }),
+        photoField({
+          name: "image",
+          title: "Photograph",
+          description: help(
+            "The large photo at the top of the page. It needs a high-resolution original.",
+            "Most of the current event photos are too small and look blurry at this size. Ask Bacchus for the original first.",
+          ),
         }),
       ],
     }),
     defineField({
       name: "notes",
-      title: "Page notes & callouts",
+      title: "Page Notes & Callouts",
       type: "array",
       group: "content",
       of: [defineArrayMember({ type: "packageNote" })],
-      description: help(
-        "The bronze and dark red notes on the page.",
-        "Three matter right now: the Banquet pricing conflict, the High Tea vegetarian explanation and the Beverage pricing source.",
-        "Don't remove one until Bacchus has confirmed the fact behind it: it is the only thing telling visitors the figure isn't settled.",
-      ),
+      description: "The bronze and dark red notes on the page.",
     }),
     defineField({
       name: "allergenNote",
-      title: "Allergen note",
+      title: "Allergen Note",
       type: "text",
       group: "content",
       rows: 3,
@@ -203,14 +196,14 @@ export default defineType({
     }),
     defineField({
       name: "seo",
-      title: "Search & social",
+      title: "Search & Social",
       type: "seo",
       group: "seo",
     }),
   ],
   orderings: [
     {
-      title: "Package order",
+      title: "Package Order",
       name: "orderAsc",
       by: [{ field: "order", direction: "asc" }],
     },

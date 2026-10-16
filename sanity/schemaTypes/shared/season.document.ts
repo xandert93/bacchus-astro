@@ -55,7 +55,7 @@ export default defineType({
     }),
     defineField({
       name: "endDate",
-      title: "To (inclusive)",
+      title: "To (Inclusive)",
       type: "date",
       description: help(
         "The last day of the season.",
@@ -79,7 +79,7 @@ export default defineType({
     }),
     defineField({
       name: "repeatsAnnually",
-      title: "Repeats every year",
+      title: "Repeats Every Year",
       type: "boolean",
       initialValue: false,
       description:
@@ -96,17 +96,10 @@ export default defineType({
       ),
       validation: (Rule) => Rule.required().integer(),
     }),
-    defineField({
-      name: "provenance",
-      title: "Source & confirmation",
-      type: "provenance",
-      description: 'Expect "unconfirmed" until Bacchus sends their real season dates.',
-      validation: (Rule) => Rule.required(),
-    }),
   ],
   orderings: [
     {
-      title: "Start date",
+      title: "Start Date",
       name: "startAsc",
       by: [{ field: "startDate", direction: "asc" }],
     },
@@ -122,9 +115,8 @@ export default defineType({
       startDate: "startDate",
       endDate: "endDate",
       repeats: "repeatsAnnually",
-      status: "provenance.status",
     },
-    prepare: ({ name, startDate, endDate, repeats, status }) => {
+    prepare: ({ name, startDate, endDate, repeats }) => {
       const format = (value?: string) =>
         value
           ? new Date(value).toLocaleDateString("en-GB", {
@@ -139,7 +131,6 @@ export default defineType({
         subtitle: joinParts(
           `${format(startDate)} – ${format(endDate)}`,
           repeats ? "Every year" : "One-off",
-          status === "confirmed" ? undefined : "Unconfirmed",
         ),
       }
     },

@@ -2,17 +2,13 @@
  * The venue: its spaces, closures, add-ons and pricing seasons.
  *
  * Spaces and add-ons use the real names and figures we have (catalogue,
- * quote and emails), with the same provenance the production documents will
- * need. Capacities, seasons and closures are invented, and say so.
+ * quote and emails). Capacities, seasons and closures are invented.
  */
 import {
   addDays,
-  fromQuote,
-  invented,
   isoDate,
   keyedReferences,
   price,
-  provenance,
   saturdayInMonths,
   seedId,
   today,
@@ -25,8 +21,6 @@ export const SPACE_IDS = {
   smallTerrace: seedId("space-small-terrace"),
 }
 
-const fromCatalogue = (detail: string) => provenance("unconfirmed", "catalogue", detail)
-
 const spaces = [
   {
     _id: SPACE_IDS.hall,
@@ -34,9 +28,6 @@ const spaces = [
     name: "Prince De Redin Hall",
     slug: { _type: "slug", current: "prince-de-redin-hall" },
     aliases: ["De Redin Ballroom", "the ballroom"],
-    nameProvenance: fromCatalogue(
-      "Named in the catalogue; the quote says 'De Redin Ballroom'",
-    ),
     shortDescription:
       "The banquet hall, named after the Grand Master who built the estate.",
     description:
@@ -46,16 +37,11 @@ const spaces = [
       _type: "capacity",
       max: 250,
       basis: "seated",
-      provenance: invented("no seated capacity has been given"),
     },
     includedInStandardPackage: true,
     inclusionNote:
       "Always included alongside the outdoor space, not just as a wet-weather fallback.",
-    exclusivityFee: price(
-      500,
-      "flat",
-      fromQuote("Quote line: exclusive use, De Redin Ballroom"),
-    ),
+    exclusivityFee: price(500, "flat"),
     curfewNote: "Indoor music until 4am.",
     images: keyedReferences([
       "galleryImage-venue-hall-chandeliers-banquet",
@@ -68,7 +54,6 @@ const spaces = [
     _type: "venueSpace",
     name: "Terrace",
     slug: { _type: "slug", current: "terrace" },
-    nameProvenance: fromCatalogue("Named in the catalogue"),
     shortDescription: "The open-air terrace for receptions and long-table dinners.",
     description:
       "The outdoor terrace, included in the standard wedding package, for drinks receptions, canapés and dinners under the sky.",
@@ -77,7 +62,6 @@ const spaces = [
       _type: "capacity",
       max: 300,
       basis: "standing",
-      provenance: invented("no terrace capacity has been given"),
     },
     includedInStandardPackage: true,
     curfewNote: "Outdoor music until 11pm.",
@@ -92,7 +76,6 @@ const spaces = [
     _type: "venueSpace",
     name: "Secret Garden",
     slug: { _type: "slug", current: "secret-garden" },
-    nameProvenance: fromCatalogue("Named in the catalogue"),
     shortDescription: "A walled garden with 1st-century Roman and Arab remains.",
     description:
       "A walled garden on the estate, with Roman and Arab remains from the 1st century. Not part of the standard package; Bacchus suggests it as a chill-out or shisha area.",
@@ -101,15 +84,10 @@ const spaces = [
       _type: "capacity",
       max: 120,
       basis: "standing",
-      provenance: invented("no garden capacity has been given"),
     },
     includedInStandardPackage: false,
     inclusionNote: "Not included by default. Suggested as a chill-out or shisha area.",
-    exclusivityFee: price(
-      500,
-      "flat",
-      fromQuote("Quote line: exclusive use, Secret Garden"),
-    ),
+    exclusivityFee: price(500, "flat"),
     curfewNote: "Outdoor music until 11pm.",
     images: keyedReferences(["galleryImage-weddings-guest-portrait"]),
     order: 3,
@@ -119,15 +97,10 @@ const spaces = [
     _type: "venueSpace",
     name: "Small Terrace",
     slug: { _type: "slug", current: "small-terrace" },
-    nameProvenance: provenance("unconfirmed", "quote", "Appears only as a quote line"),
     shortDescription: "A smaller terrace, priced separately on the quote.",
     setting: "outdoor",
     includedInStandardPackage: false,
-    exclusivityFee: price(
-      500,
-      "flat",
-      fromQuote("Quote line: exclusive use, Small Terrace"),
-    ),
+    exclusivityFee: price(500, "flat"),
     order: 4,
   },
 ]
@@ -196,7 +169,7 @@ const addOn = (
   isIncludedAtNoCharge: details.included ?? false,
   ...(details.amount === undefined
     ? {}
-    : { price: price(details.amount, details.unit ?? "each", fromQuote()) }),
+    : { price: price(details.amount, details.unit ?? "each") }),
   ...(details.description ? { description: details.description } : {}),
   availableForQuote: true,
 })
@@ -237,7 +210,6 @@ const season = (
   endDate: `${start.getUTCFullYear()}-${endMonthDay}`,
   repeatsAnnually: true,
   priority,
-  provenance: invented("Bacchus has said only that April runs dearer than March"),
 })
 
 export const SEASON_IDS = { peak: seedId("season-peak-summer") }

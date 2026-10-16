@@ -1,5 +1,4 @@
 import { defineField, defineType } from "sanity"
-import { help } from "../../lib/help"
 
 /**
  * One component of a reception station — "Parma ham", "Bresaola", "Chorizo".
@@ -18,7 +17,7 @@ import { help } from "../../lib/help"
  */
 export default defineType({
   name: "stationItem",
-  title: "Station item",
+  title: "Station Item",
   type: "object",
   fields: [
     defineField({
@@ -32,10 +31,7 @@ export default defineType({
       title: "Vegetarian (V)",
       type: "boolean",
       initialValue: false,
-      description: help(
-        "The catalogue doesn't mark stations (V), so we judged these from the dish names. Bacchus hasn't confirmed them.",
-        "This is the one place we guess. On package menus, only tick (V) where the catalogue does.",
-      ),
+      description: "Tick if the item is vegetarian.",
     }),
   ],
   preview: {

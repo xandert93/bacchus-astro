@@ -38,7 +38,7 @@ export default defineType({
       marks: {
         decorators: [
           {
-            title: "Gold emphasis",
+            title: "Gold Emphasis",
             value: "emphasis",
           },
         ],

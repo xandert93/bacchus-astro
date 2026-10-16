@@ -1,7 +1,7 @@
 import { defineField, defineType } from "sanity"
 import { PRICE_UNITS } from "../../lib/constants"
 import { help } from "../../lib/help"
-import { capitalise, formatEuros, joinParts, optionTitle } from "../../lib/preview"
+import { formatEuros, joinParts, optionTitle } from "../../lib/preview"
 
 /**
  * A money figure, its unit, and whether we are allowed to show it.
@@ -44,7 +44,7 @@ export default defineType({
   fields: [
     defineField({
       name: "amount",
-      title: "Amount (EUR)",
+      title: "Amount (€)",
       type: "number",
       validation: (Rule) => Rule.required().min(0).precision(2),
     }),
@@ -58,24 +58,28 @@ export default defineType({
     }),
     defineField({
       name: "isIndicative",
-      title: "Indicative — may vary by season",
+      title: "Indicative — May Vary by Season",
       type: "boolean",
       initialValue: true,
-      description: help(
-        "Leave ticked unless Bacchus has confirmed this price applies all year.",
-        "Their prices usually change with the season.",
-      ),
+      description: "Leave ticked unless this price applies all year.",
     }),
     defineField({
       name: "vatIncluded",
-      title: "VAT included",
+      title: "VAT Included",
       type: "boolean",
       initialValue: true,
-      description: "Bacchus has confirmed quoted prices include VAT.",
+      description: "Bacchus's prices include VAT.",
+    }),
+    defineField({
+      name: "isHidden",
+      title: "Hide on the Website",
+      type: "boolean",
+      initialValue: false,
+      description: 'The website shows "On request" instead of the price.',
     }),
     defineField({
       name: "isStartingPrice",
-      title: 'Starting price — shows "from" on the page',
+      title: 'Starting Price — Shows "From" on the Page',
       type: "boolean",
       initialValue: false,
       description: help(
@@ -83,29 +87,20 @@ export default defineType({
         'Not for seasonal changes: "Indicative" covers those.',
       ),
     }),
-    defineField({
-      name: "provenance",
-      title: "Source & confirmation",
-      type: "provenance",
-      validation: (Rule) => Rule.required(),
-    }),
   ],
   preview: {
     select: {
       amount: "amount",
       unit: "unit",
       startingPrice: "isStartingPrice",
-      status: "provenance.status",
+      hidden: "isHidden",
     },
-    prepare: ({ amount, unit, startingPrice, status }) => ({
+    prepare: ({ amount, unit, startingPrice, hidden }) => ({
       title: joinParts(
         `${startingPrice ? "From " : ""}${formatEuros(amount) ?? "No amount"}`,
         optionTitle(PRICE_UNITS, unit),
       ),
-      subtitle:
-        status === "confirmed"
-          ? "Confirmed"
-          : `${capitalise(status)}: shows a warning on the page`,
+      subtitle: hidden ? "Hidden on the website" : undefined,
     }),
   },
 })

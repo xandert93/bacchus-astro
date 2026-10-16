@@ -41,21 +41,21 @@ import { formatDate, joinParts, optionTitle } from "../../lib/preview"
  * offering both on one cell would be two competing calls to action.
  */
 const WAITLIST_STATUSES = [
-  { title: "Active — waiting", value: "active" },
-  { title: "Notified — date freed up, email sent", value: "notified" },
-  { title: "Converted — became an enquiry", value: "converted" },
-  { title: "Lapsed — date has passed", value: "lapsed" },
+  { title: "Active — Waiting", value: "active" },
+  { title: "Notified — Date Freed Up, Email Sent", value: "notified" },
+  { title: "Converted — Became an Enquiry", value: "converted" },
+  { title: "Lapsed — Date Has Passed", value: "lapsed" },
   { title: "Unsubscribed", value: "unsubscribed" },
 ] as const
 
 export default defineType({
   name: "waitlistEntry",
-  title: "Waitlist entry",
+  title: "Waitlist Entry",
   type: "document",
   fields: [
     defineField({
       name: "eventDate",
-      title: "Date wanted",
+      title: "Date Wanted",
       type: "date",
       validation: (Rule) => Rule.required(),
     }),
@@ -81,7 +81,7 @@ export default defineType({
     }),
     defineField({
       name: "verifiedAt",
-      title: "Email verified at",
+      title: "Email Verified",
       type: "datetime",
       description: help(
         "Set when the person clicks the link in their confirmation email.",
@@ -96,7 +96,7 @@ export default defineType({
     }),
     defineField({
       name: "convertedBooking",
-      title: "Became this enquiry",
+      title: "Became This Enquiry",
       type: "reference",
       to: [{ type: "booking" }],
       description:
@@ -109,14 +109,14 @@ export default defineType({
     }),
     defineField({
       name: "sourcePage",
-      title: "Joined from",
+      title: "Joined From",
       type: "string",
       readOnly: true,
     }),
   ],
   orderings: [
     {
-      title: "Date wanted, soonest first",
+      title: "Date Wanted, Soonest First",
       name: "eventDateAsc",
       by: [{ field: "eventDate", direction: "asc" }],
     },

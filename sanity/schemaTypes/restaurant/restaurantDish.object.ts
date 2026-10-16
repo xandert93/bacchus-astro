@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity"
+import { photoField } from "../../lib/photoField"
 import { formatEuros, joinParts } from "../../lib/preview"
 
 /**
@@ -43,19 +44,9 @@ export default defineType({
       type: "boolean",
       initialValue: false,
     }),
-    defineField({
+    photoField({
       name: "image",
       title: "Photograph",
-      type: "image",
-      options: { hotspot: true },
-      fields: [
-        defineField({
-          name: "alt",
-          title: "Alt text",
-          type: "string",
-          validation: (Rule) => Rule.required(),
-        }),
-      ],
     }),
   ],
   preview: {

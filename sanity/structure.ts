@@ -1,6 +1,7 @@
 import type { StructureBuilder, StructureResolver } from "sanity/structure"
 import {
   DATE_BLOCKING_STATUSES,
+  GALLERY_CATEGORIES,
   OPEN_ENQUIRY_STATUSES,
   type BookingStatus,
 } from "./lib/constants"
@@ -20,13 +21,30 @@ import {
  * unanswered ones the first list inside that.
  *
  * Titled dividers name each group of the sidebar, so its order reads as
- * sections rather than arbitrary breaks.
- *
- * `Open questions` at the foot is the one entry that is not a content type. It
- * is the working list of everything still waiting on the client, built from
- * the provenance records, and it earns its place because that list is
- * otherwise only reconstructable by re-reading a 49KB project file.
+ * sections rather than arbitrary breaks. Within a section, a type with a
+ * status or category is split into one list per stage, in the order work
+ * moves through them, with "All" last.
  */
+
+type Ordering = { field: string; direction: "asc" | "desc" }
+
+/** A list of one type's documents matching a GROQ filter. */
+const filteredList = (
+  S: StructureBuilder,
+  title: string,
+  id: string,
+  filter: string,
+  params: Record<string, unknown> = {},
+  ordering?: Ordering[],
+) => {
+  const list = S.documentList().title(title).filter(filter).params(params)
+
+  return S.listItem()
+    .title(title)
+    .id(id)
+    .child(ordering ? list.defaultOrdering(ordering) : list)
+}
+
 /** A list of bookings in the given statuses, soonest event first. */
 const bookingsInStatus = (
   S: StructureBuilder,
@@ -34,15 +52,46 @@ const bookingsInStatus = (
   id: string,
   statuses: readonly BookingStatus[],
 ) =>
+  filteredList(S, title, id, '_type == "booking" && status in $statuses', { statuses }, [
+    { field: "event.date", direction: "asc" },
+  ])
+
+/** A list of one type's documents in the given statuses. */
+const typeInStatus = (
+  S: StructureBuilder,
+  type: string,
+  title: string,
+  id: string,
+  statuses: string[],
+) =>
+  filteredList(S, title, id, "_type == $type && status in $statuses", { type, statuses })
+
+/**
+ * Pick a parent, then see its children: tiers by package, stations by
+ * category. Sanity can't sort or group a list by a field behind a reference,
+ * so this is how the tiers stop being one flat list of thirteen.
+ */
+const childrenByParent = (
+  S: StructureBuilder,
+  title: string,
+  id: string,
+  parentType: string,
+  childType: string,
+  referenceField: string,
+) =>
   S.listItem()
     .title(title)
     .id(id)
     .child(
-      S.documentList()
+      S.documentTypeList(parentType)
         .title(title)
-        .filter('_type == "booking" && status in $statuses')
-        .params({ statuses })
-        .defaultOrdering([{ field: "event.date", direction: "asc" }]),
+        .child((parentId) =>
+          S.documentList()
+            .title(title)
+            .filter(`_type == $childType && ${referenceField}._ref == $parentId`)
+            .params({ childType, parentId })
+            .defaultOrdering([{ field: "order", direction: "asc" }]),
+        ),
     )
 
 export const structure: StructureResolver = (S) =>
@@ -61,7 +110,7 @@ export const structure: StructureResolver = (S) =>
           S.list()
             .title("Enquiries")
             .items([
-              bookingsInStatus(S, "New: not replied to yet", "new", ["new"]),
+              bookingsInStatus(S, "New", "new", ["new"]),
               bookingsInStatus(S, "In discussion", "in-discussion", ["in-discussion"]),
               bookingsInStatus(S, "Awaiting deposit", "awaiting-deposit", [
                 "awaiting-deposit",
@@ -97,8 +146,8 @@ export const structure: StructureResolver = (S) =>
         ),
 
       // Live first, because those are the quotes someone still has to act
-      // on. Accepted ones belong to a confirmed booking, and expired or
-      // superseded ones are kept only as a record of what was sent.
+      // on. Accepted ones belong to a confirmed booking, and the rest are
+      // kept only as a record of what was sent.
       S.listItem()
         .title("Quotes")
         .id("quotes")
@@ -106,68 +155,73 @@ export const structure: StructureResolver = (S) =>
           S.list()
             .title("Quotes")
             .items([
-              S.listItem()
-                .title("Live: drafts & sent")
-                .id("live-quotes")
-                .child(
-                  S.documentList()
-                    .title("Live quotes")
-                    .filter('_type == "quote" && status in ["draft", "sent"]')
-                    .defaultOrdering([{ field: "event.date", direction: "asc" }]),
-                ),
-              S.listItem()
-                .title("Accepted")
-                .id("accepted-quotes")
-                .child(
-                  S.documentList()
-                    .title("Accepted quotes")
-                    .filter('_type == "quote" && status == "accepted"')
-                    .defaultOrdering([{ field: "event.date", direction: "asc" }]),
-                ),
-              S.listItem()
-                .title("Expired & superseded")
-                .id("past-quotes")
-                .child(
-                  S.documentList()
-                    .title("Expired & superseded quotes")
-                    .filter('_type == "quote" && status in ["expired", "superseded"]')
-                    .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
-                ),
+              filteredList(
+                S,
+                "Live: drafts & sent",
+                "live-quotes",
+                '_type == "quote" && status in ["draft", "sent"]',
+                {},
+                [{ field: "event.date", direction: "asc" }],
+              ),
+              typeInStatus(S, "quote", "Accepted", "accepted-quotes", ["accepted"]),
+              typeInStatus(S, "quote", "Declined, expired & superseded", "past-quotes", [
+                "declined",
+                "expired",
+                "superseded",
+              ]),
               S.divider(),
               S.listItem()
-                .title("All quotes")
+                .title("All Quotes")
                 .id("all-quotes")
-                .child(S.documentTypeList("quote").title("All quotes")),
+                .child(S.documentTypeList("quote").title("All Quotes")),
             ]),
         ),
       S.listItem()
         .title("Waitlist")
         .id("waitlist")
         .child(
-          S.documentList()
-            .title("Waitlist: active")
-            .filter('_type == "waitlistEntry" && status == "active"')
-            .defaultOrdering([{ field: "eventDate", direction: "asc" }]),
+          S.list()
+            .title("Waitlist")
+            .items([
+              typeInStatus(S, "waitlistEntry", "Waiting", "waiting", ["active"]),
+              typeInStatus(S, "waitlistEntry", "Told the date is free", "notified", [
+                "notified",
+              ]),
+              typeInStatus(S, "waitlistEntry", "Finished", "finished-waitlist", [
+                "converted",
+                "lapsed",
+                "unsubscribed",
+              ]),
+              S.divider(),
+              S.listItem()
+                .title("Whole Waitlist")
+                .id("all-waitlist")
+                .child(S.documentTypeList("waitlistEntry").title("Whole Waitlist")),
+            ]),
         ),
 
       S.divider().title("Venue"),
 
       // --- Packages -------------------------------------------------------
       S.listItem()
-        .title("Packages & menus")
+        .title("Packages & Menus")
         .id("packages-and-menus")
         .child(
           S.list()
-            .title("Packages & menus")
+            .title("Packages & Menus")
             .items([
               S.listItem()
                 .title("Packages")
                 .id("packages")
                 .child(S.documentTypeList("weddingPackage").title("Packages")),
-              S.listItem()
-                .title("Tiers & categories")
-                .id("tiers")
-                .child(S.documentTypeList("packageTier").title("Tiers & categories")),
+              childrenByParent(
+                S,
+                "Tiers by package",
+                "tiers",
+                "weddingPackage",
+                "packageTier",
+                "package",
+              ),
               S.listItem()
                 .title("Dishes")
                 .id("dishes")
@@ -177,19 +231,23 @@ export const structure: StructureResolver = (S) =>
                 .id("seasons")
                 .child(S.documentTypeList("season").title("Seasons")),
               S.divider(),
+              childrenByParent(
+                S,
+                "Stations by category",
+                "stations",
+                "stationCategory",
+                "station",
+                "category",
+              ),
               S.listItem()
-                .title("Stations")
-                .id("stations")
-                .child(S.documentTypeList("station").title("Stations")),
-              S.listItem()
-                .title("Station categories")
+                .title("Station Categories")
                 .id("station-categories")
-                .child(S.documentTypeList("stationCategory").title("Station categories")),
+                .child(S.documentTypeList("stationCategory").title("Station Categories")),
               S.divider(),
               S.listItem()
-                .title("Add-ons & set-up")
+                .title("Add-Ons & Set-Up")
                 .id("add-ons")
-                .child(S.documentTypeList("addOn").title("Add-ons & set-up")),
+                .child(S.documentTypeList("addOn").title("Add-Ons & Set-Up")),
             ]),
         ),
 
@@ -199,9 +257,9 @@ export const structure: StructureResolver = (S) =>
         .id("spaces")
         .child(S.documentTypeList("venueSpace").title("Spaces")),
       S.listItem()
-        .title("Closures & blackout dates")
+        .title("Closures & Blackout Dates")
         .id("closures")
-        .child(S.documentTypeList("venueClosure").title("Closures")),
+        .child(S.documentTypeList("venueClosure").title("Closures & Blackout Dates")),
 
       S.divider().title("Website"),
 
@@ -209,7 +267,33 @@ export const structure: StructureResolver = (S) =>
       S.listItem()
         .title("Gallery")
         .id("gallery")
-        .child(S.documentTypeList("galleryImage").title("Gallery")),
+        .child(
+          S.list()
+            .title("Gallery")
+            .items([
+              ...GALLERY_CATEGORIES.map((category) =>
+                filteredList(
+                  S,
+                  category.title,
+                  category.value,
+                  '_type == "galleryImage" && category == $category && image.isPlaceholder != true',
+                  { category: category.value },
+                  [{ field: "order", direction: "asc" }],
+                ),
+              ),
+              filteredList(
+                S,
+                "Stand-ins, not shown",
+                "stand-ins",
+                '_type == "galleryImage" && image.isPlaceholder == true',
+              ),
+              S.divider(),
+              S.listItem()
+                .title("Whole Gallery")
+                .id("all-gallery")
+                .child(S.documentTypeList("galleryImage").title("Whole Gallery")),
+            ]),
+        ),
       S.listItem()
         .title("Testimonials")
         .id("testimonials")
@@ -217,24 +301,43 @@ export const structure: StructureResolver = (S) =>
           S.list()
             .title("Testimonials")
             .items([
+              typeInStatus(S, "testimonial", "Awaiting review", "awaiting-review", [
+                "submitted",
+              ]),
+              typeInStatus(S, "testimonial", "Approved, not yet live", "approved", [
+                "approved",
+              ]),
+              typeInStatus(S, "testimonial", "Published", "published-testimonials", [
+                "published",
+              ]),
+              typeInStatus(S, "testimonial", "Withheld", "withheld", ["withheld"]),
+              S.divider(),
               S.listItem()
-                .title("Awaiting review")
-                .id("awaiting-review")
-                .child(
-                  S.documentList()
-                    .title("Awaiting review")
-                    .filter('_type == "testimonial" && status == "submitted"'),
-                ),
-              S.listItem()
-                .title("All testimonials")
+                .title("All Testimonials")
                 .id("all-testimonials")
-                .child(S.documentTypeList("testimonial").title("All testimonials")),
+                .child(S.documentTypeList("testimonial").title("All Testimonials")),
             ]),
         ),
       S.listItem()
-        .title("Guide articles")
+        .title("Guide Articles")
         .id("guide-articles")
-        .child(S.documentTypeList("guideArticle").title("Guide articles")),
+        .child(
+          S.list()
+            .title("Guide Articles")
+            .items([
+              typeInStatus(S, "guideArticle", "Ideas", "ideas", ["idea"]),
+              typeInStatus(S, "guideArticle", "Drafts", "article-drafts", ["draft"]),
+              typeInStatus(S, "guideArticle", "Blocked", "blocked", ["blocked"]),
+              typeInStatus(S, "guideArticle", "Published", "published-articles", [
+                "published",
+              ]),
+              S.divider(),
+              S.listItem()
+                .title("All Guide Articles")
+                .id("all-guide-articles")
+                .child(S.documentTypeList("guideArticle").title("All Guide Articles")),
+            ]),
+        ),
       S.listItem()
         .title("FAQs")
         .id("faqs")
@@ -242,90 +345,47 @@ export const structure: StructureResolver = (S) =>
       S.listItem()
         .title("Suppliers")
         .id("suppliers")
-        .child(S.documentTypeList("supplier").title("Suppliers")),
+        .child(
+          S.list()
+            .title("Suppliers")
+            .items([
+              filteredList(
+                S,
+                "On the website",
+                "listed-suppliers",
+                '_type == "supplier" && isPublished == true',
+              ),
+              filteredList(
+                S,
+                "Not on the website",
+                "unlisted-suppliers",
+                '_type == "supplier" && isPublished != true',
+              ),
+              S.divider(),
+              S.listItem()
+                .title("All Suppliers")
+                .id("all-suppliers")
+                .child(S.documentTypeList("supplier").title("All Suppliers")),
+            ]),
+        ),
 
       S.divider().title("Restaurant"),
 
       // --- Restaurant (parked) --------------------------------------------
       S.listItem()
-        .title("Restaurant menu (parked)")
+        .title("Restaurant Menu (Parked)")
         .id("restaurant-menu")
-        .child(S.documentTypeList("restaurantMenuSection").title("Restaurant menu")),
+        .child(S.documentTypeList("restaurantMenuSection").title("Restaurant Menu")),
 
       S.divider().title("Settings"),
 
       // --- Settings -------------------------------------------------------
       S.listItem()
-        .title("Wedding policy & venue facts")
+        .title("Wedding Policy & Venue Facts")
         .id("wedding-policy")
         .child(S.document().schemaType("weddingPolicy").documentId("weddingPolicy")),
       S.listItem()
-        .title("Site settings")
+        .title("Site Settings")
         .id("site-settings")
         .child(S.document().schemaType("siteSettings").documentId("siteSettings")),
-
-      S.divider().title("For the build team"),
-
-      // --- The working list -----------------------------------------------
-      S.listItem()
-        .title("Open questions for Bacchus")
-        .id("open-questions")
-        .child(
-          S.list()
-            .title("Open questions for Bacchus")
-            .items([
-              S.listItem()
-                .title("Contested prices")
-                .id("contested-prices")
-                .child(
-                  S.documentList()
-                    .title("Contested prices")
-                    .filter(
-                      '_type == "packageTier" && price.provenance.status == "contested"',
-                    ),
-                ),
-              S.listItem()
-                .title("Unconfirmed space names")
-                .id("unconfirmed-space-names")
-                .child(
-                  S.documentList()
-                    .title("Unconfirmed space names")
-                    .filter(
-                      '_type == "venueSpace" && nameProvenance.status != "confirmed"',
-                    ),
-                ),
-              S.listItem()
-                .title("Placeholder images to replace")
-                .id("placeholder-images")
-                .child(
-                  S.documentList()
-                    .title("Placeholder images")
-                    .filter(
-                      '(_type == "galleryImage" && isPlaceholder == true) || (_type == "station" && image.isPlaceholder == true)',
-                    ),
-                ),
-              S.listItem()
-                .title("Copy changes awaiting approval")
-                .id("copy-changes")
-                .child(
-                  // Dishes being their own documents is what lets this be one
-                  // flat filter. While they were nested inside each tier's
-                  // menu groups it took a traversal, and the station names
-                  // were the only part a plain filter could reach.
-                  S.documentList()
-                    .title("Copy changes awaiting approval")
-                    .filter(
-                      '_type in ["menuDish", "station"] && defined(catalogueVariance) && catalogueVariance.clientApproved != true',
-                    ),
-                ),
-              S.listItem()
-                .title("Blocked articles")
-                .id("blocked-articles")
-                .child(
-                  S.documentList()
-                    .title("Blocked articles")
-                    .filter('_type == "guideArticle" && status == "blocked"'),
-                ),
-            ]),
-        ),
     ])

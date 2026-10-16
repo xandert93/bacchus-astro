@@ -25,13 +25,13 @@ import { help } from "../../lib/help"
  */
 export default defineType({
   name: "seo",
-  title: "Search & social",
+  title: "Search & Social",
   type: "object",
   options: { collapsible: true, collapsed: true },
   fields: [
     defineField({
       name: "metaTitle",
-      title: "Search-result title override",
+      title: "Search-Result Title Override",
       type: "string",
       description: help(
         "Only if it should differ from the page title.",
@@ -42,7 +42,7 @@ export default defineType({
     }),
     defineField({
       name: "metaDescription",
-      title: "Meta description",
+      title: "Meta Description",
       type: "text",
       rows: 3,
       description: help(
@@ -58,7 +58,7 @@ export default defineType({
     }),
     defineField({
       name: "socialImage",
-      title: "Social share image",
+      title: "Social Share Image",
       type: "image",
       options: { hotspot: true },
       description: help(
@@ -68,13 +68,13 @@ export default defineType({
     }),
     defineField({
       name: "canonicalUrl",
-      title: "Canonical URL override",
+      title: "Canonical URL Override",
       type: "url",
       description: "Leave empty. Only for when two pages show the same content.",
     }),
     defineField({
       name: "noIndex",
-      title: "Hide from search engines",
+      title: "Hide From Search Engines",
       type: "boolean",
       initialValue: false,
       description: help(

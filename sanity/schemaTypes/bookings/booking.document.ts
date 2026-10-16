@@ -74,13 +74,13 @@ type EventValue = { type?: string; date?: string; dateIsFlexible?: boolean } | u
 
 export default defineType({
   name: "booking",
-  title: "Enquiry / booking",
+  title: "Enquiry / Booking",
   type: "document",
   groups: [
     { name: "enquiry", title: "Enquiry", default: true },
-    { name: "history", title: "Status history" },
-    { name: "money", title: "Quote & payment" },
-    { name: "admin", title: "Notes & admin" },
+    { name: "history", title: "Status History" },
+    { name: "money", title: "Quote & Payment" },
+    { name: "admin", title: "Notes & Admin" },
   ],
   fields: [
     // --- Status -------------------------------------------------------------
@@ -95,7 +95,7 @@ export default defineType({
     }),
     defineField({
       name: "statusHistory",
-      title: "Status history",
+      title: "Status History",
       type: "array",
       group: "history",
       of: [defineArrayMember({ type: "statusEvent" })],
@@ -115,19 +115,19 @@ export default defineType({
       fields: [
         defineField({
           name: "firstName",
-          title: "First name",
+          title: "First Name",
           type: "string",
           validation: (Rule) => Rule.required(),
         }),
         defineField({
           name: "lastName",
-          title: "Last name",
+          title: "Last Name",
           type: "string",
           validation: (Rule) => Rule.required(),
         }),
         defineField({
           name: "partnerName",
-          title: "Partner name",
+          title: "Partner Name",
           type: "string",
           hidden: ({ document }) => (document?.event as EventValue)?.type !== "wedding",
           description: help(
@@ -154,14 +154,14 @@ export default defineType({
     // --- The event ----------------------------------------------------------
     defineField({
       name: "event",
-      title: "The event",
+      title: "The Event",
       type: "object",
       group: "enquiry",
       options: { collapsible: false },
       fields: [
         defineField({
           name: "type",
-          title: "Event type",
+          title: "Event Type",
           type: "string",
           options: { list: [...EVENT_TYPES], layout: "radio", direction: "horizontal" },
           description:
@@ -170,7 +170,7 @@ export default defineType({
         }),
         defineField({
           name: "date",
-          title: "Preferred date",
+          title: "Preferred Date",
           type: "date",
           description: help(
             "Only one wedding can be booked per day, so only weddings affect the public calendar.",
@@ -181,7 +181,7 @@ export default defineType({
               const event = context.parent as EventValue
 
               if (!value && event?.type === "wedding" && !event?.dateIsFlexible) {
-                return 'A wedding enquiry needs a date, or "date is flexible" ticked.'
+                return 'A wedding enquiry needs a date, or "Date Is Flexible" ticked.'
               }
 
               return true
@@ -189,7 +189,7 @@ export default defineType({
         }),
         defineField({
           name: "dateIsFlexible",
-          title: "Date is flexible / not yet chosen",
+          title: "Date Is Flexible / Not Yet Chosen",
           type: "boolean",
           initialValue: false,
           description:
@@ -197,7 +197,7 @@ export default defineType({
         }),
         defineField({
           name: "backupDate",
-          title: "Alternative date",
+          title: "Alternative Date",
           type: "date",
           description: help(
             "For reference only.",
@@ -206,7 +206,7 @@ export default defineType({
         }),
         defineField({
           name: "guestCount",
-          title: "Expected guests",
+          title: "Expected Guests",
           type: "number",
           description: help(
             "The client's estimate.",
@@ -216,7 +216,7 @@ export default defineType({
         }),
         defineField({
           name: "spaces",
-          title: "Spaces of interest",
+          title: "Spaces of Interest",
           type: "array",
           of: [defineArrayMember({ type: "reference", to: [{ type: "venueSpace" }] })],
           hidden: ({ parent }) => (parent as EventValue)?.type !== "wedding",
@@ -225,7 +225,7 @@ export default defineType({
         }),
         defineField({
           name: "spacesGuidanceRequested",
-          title: "Asked us to guide them on spaces",
+          title: "Asked Us to Guide Them on Spaces",
           type: "boolean",
           initialValue: false,
           hidden: ({ parent }) => (parent as EventValue)?.type !== "wedding",
@@ -248,7 +248,7 @@ export default defineType({
     }),
     defineField({
       name: "message",
-      title: "Anything else we should know",
+      title: "Anything Else We Should Know",
       type: "text",
       group: "enquiry",
       rows: 5,
@@ -284,7 +284,7 @@ export default defineType({
     }),
     defineField({
       name: "depositHoldExpiresAt",
-      title: "Deposit hold expires",
+      title: "Deposit Hold Expires",
       type: "datetime",
       group: "money",
       description: "Set automatically when the deposit link is sent.",
@@ -293,7 +293,7 @@ export default defineType({
     // --- Notes & admin ------------------------------------------------------
     defineField({
       name: "internalNotes",
-      title: "Internal notes",
+      title: "Internal Notes",
       type: "text",
       group: ["enquiry", "admin"],
       rows: 5,
@@ -301,7 +301,7 @@ export default defineType({
     }),
     defineField({
       name: "suggestedReply",
-      title: "Suggested reply (draft)",
+      title: "Suggested Reply (Draft)",
       type: "text",
       group: "admin",
       rows: 8,
@@ -319,7 +319,7 @@ export default defineType({
     }),
     defineField({
       name: "sourcePage",
-      title: "Submitted from",
+      title: "Submitted From",
       type: "string",
       group: "admin",
       readOnly: true,
@@ -363,12 +363,12 @@ export default defineType({
 
   orderings: [
     {
-      title: "Event date, soonest first",
+      title: "Event Date, Soonest First",
       name: "eventDateAsc",
       by: [{ field: "event.date", direction: "asc" }],
     },
     {
-      title: "Recently received",
+      title: "Recently Received",
       name: "createdDesc",
       by: [{ field: "_createdAt", direction: "desc" }],
     },

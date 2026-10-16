@@ -1,5 +1,5 @@
 import { defineArrayMember, defineField, defineType } from "sanity"
-import { help } from "../../lib/help"
+import { photoField } from "../../lib/photoField"
 import { joinParts, optionTitle } from "../../lib/preview"
 
 /**
@@ -42,25 +42,25 @@ import { joinParts, optionTitle } from "../../lib/preview"
  */
 const ARTICLE_CATEGORIES = [
   { title: "Weddings", value: "weddings" },
-  { title: "Mdina & the estate", value: "mdina" },
+  { title: "Mdina & the Estate", value: "mdina" },
   { title: "Restaurant", value: "restaurant" },
 ] as const
 
 const ARTICLE_STATUSES = [
-  { title: "Idea — agreed, not written", value: "idea" },
+  { title: "Idea — Agreed, Not Written", value: "idea" },
   { title: "Draft", value: "draft" },
-  { title: "Blocked — cannot be written yet", value: "blocked" },
+  { title: "Blocked — Cannot Be Written Yet", value: "blocked" },
   { title: "Published", value: "published" },
 ] as const
 
 export default defineType({
   name: "guideArticle",
-  title: "Guide article",
+  title: "Guide Article",
   type: "document",
   groups: [
     { name: "content", title: "Content", default: true },
     { name: "publication", title: "Publication" },
-    { name: "seo", title: "Search & social" },
+    { name: "seo", title: "Search & Social" },
   ],
   fields: [
     defineField({
@@ -87,20 +87,10 @@ export default defineType({
       description: "Shown on the article's card. Two sentences at most.",
       validation: (Rule) => Rule.max(300),
     }),
-    defineField({
+    photoField({
       name: "heroImage",
-      title: "Hero image",
-      type: "image",
+      title: "Hero Image",
       group: "content",
-      options: { hotspot: true },
-      fields: [
-        defineField({
-          name: "alt",
-          title: "Alt text",
-          type: "string",
-          validation: (Rule) => Rule.required(),
-        }),
-      ],
     }),
     defineField({
       name: "body",
@@ -114,7 +104,7 @@ export default defineType({
             { title: "Paragraph", value: "normal" },
             { title: "Heading", value: "h2" },
             { title: "Subheading", value: "h3" },
-            { title: "Pull quote", value: "blockquote" },
+            { title: "Pull Quote", value: "blockquote" },
           ],
           marks: {
             decorators: [
@@ -137,7 +127,7 @@ export default defineType({
           fields: [
             defineField({
               name: "alt",
-              title: "Alt text",
+              title: "Alt Text",
               type: "string",
               validation: (Rule) => Rule.required(),
             }),
@@ -157,14 +147,14 @@ export default defineType({
     }),
     defineField({
       name: "relatedSpaces",
-      title: "Related spaces",
+      title: "Related Spaces",
       type: "array",
       group: "content",
       of: [defineArrayMember({ type: "reference", to: [{ type: "venueSpace" }] })],
     }),
     defineField({
       name: "relatedPackages",
-      title: "Related packages",
+      title: "Related Packages",
       type: "array",
       group: "content",
       of: [defineArrayMember({ type: "reference", to: [{ type: "weddingPackage" }] })],
@@ -182,15 +172,12 @@ export default defineType({
     }),
     defineField({
       name: "blockedReason",
-      title: "Why it is blocked",
+      title: "Why It Is Blocked",
       type: "text",
       group: "publication",
       rows: 4,
       hidden: ({ document }) => document?.status !== "blocked",
-      description: help(
-        "What has to be settled first.",
-        "For example, the cost guide is waiting on the Banquet pricing conflict, seasonal pricing and the real capacity figures.",
-      ),
+      description: "What has to be settled first.",
       validation: (Rule) =>
         Rule.custom((value, context) => {
           const doc = context.document as { status?: string } | undefined
@@ -208,7 +195,7 @@ export default defineType({
     }),
     defineField({
       name: "order",
-      title: "Priority order",
+      title: "Priority Order",
       type: "number",
       group: "publication",
       description: "The order to write them in. 1 is the ultimate guide.",
@@ -216,25 +203,25 @@ export default defineType({
     }),
     defineField({
       name: "seo",
-      title: "Search & social",
+      title: "Search & Social",
       type: "seo",
       group: "seo",
     }),
   ],
   orderings: [
     {
-      title: "Priority order",
+      title: "Priority Order",
       name: "orderAsc",
       by: [{ field: "order", direction: "asc" }],
     },
     {
-      title: "Published, newest first",
+      title: "Published, Newest First",
       name: "publishedDesc",
       by: [{ field: "publishedAt", direction: "desc" }],
     },
   ],
   preview: {
-    select: { title: "title", status: "status", category: "category", order: "order" },
+    select: { title: "Title", status: "status", category: "category", order: "order" },
     prepare: ({ title, status, category, order }) => ({
       title: order ? `${order}. ${title}` : title,
       subtitle: joinParts(

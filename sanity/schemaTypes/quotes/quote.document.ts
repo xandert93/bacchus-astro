@@ -1,5 +1,6 @@
 import { CheckmarkCircleIcon } from "@sanity/icons/CheckmarkCircle"
 import { ClockIcon } from "@sanity/icons/Clock"
+import { CloseCircleIcon } from "@sanity/icons/CloseCircle"
 import { EditIcon } from "@sanity/icons/Edit"
 import { EnvelopeIcon } from "@sanity/icons/Envelope"
 import { RestoreIcon } from "@sanity/icons/Restore"
@@ -52,14 +53,16 @@ export const QUOTE_STATUSES = [
   { title: "Draft", value: "draft" },
   { title: "Sent", value: "sent" },
   { title: "Accepted", value: "accepted" },
+  { title: "Declined by Client", value: "declined" },
   { title: "Expired", value: "expired" },
-  { title: "Superseded by a newer quote", value: "superseded" },
+  { title: "Superseded by a Newer Quote", value: "superseded" },
 ] as const
 
 const STATUS_ICONS: Record<string, ComponentType> = {
   draft: EditIcon,
   sent: EnvelopeIcon,
   accepted: CheckmarkCircleIcon,
+  declined: CloseCircleIcon,
   expired: ClockIcon,
   superseded: RestoreIcon,
 }
@@ -99,7 +102,7 @@ export default defineType({
     }>(
       `{
         "vatRate": *[_id == "weddingPolicy"][0].vatRate,
-        "depositPercent": *[_id == "weddingPolicy"][0].depositPercent
+        "depositPercent": *[_id == "weddingPolicy"][0].deposit.percent
       }`,
     )
 
@@ -117,7 +120,7 @@ export default defineType({
     // --- Summary ------------------------------------------------------------
     defineField({
       name: "reference",
-      title: "Quote reference",
+      title: "Quote Reference",
       type: "string",
       group: "summary",
       readOnly: true,
@@ -159,7 +162,7 @@ export default defineType({
     }),
     defineField({
       name: "internalNotes",
-      title: "Internal notes",
+      title: "Internal Notes",
       type: "text",
       group: "summary",
       rows: 6,
@@ -168,7 +171,7 @@ export default defineType({
 
     defineField({
       name: "event",
-      title: "The event",
+      title: "The Event",
       type: "object",
       group: "summary",
       readOnly: isLocked,
@@ -176,17 +179,17 @@ export default defineType({
       fields: [
         defineField({
           name: "date",
-          title: "Event date",
+          title: "Event Date",
           type: "date",
           validation: (Rule) => Rule.required(),
         }),
         timeField({
           name: "startTime",
-          title: "Start time",
+          title: "Start Time",
         }),
         timeField({
           name: "endTime",
-          title: "End time",
+          title: "End Time",
           description: help(
             "A standard package runs about five hours. Some extend to six or eight.",
             "Bacchus advises against going beyond eight.",
@@ -211,7 +214,7 @@ export default defineType({
                 (await context
                   .getClient({ apiVersion: "2024-10-01" })
                   .fetch<number | null>(
-                    `*[_id == "weddingPolicy"][0].maxAdvisedDurationHours`,
+                    `*[_id == "weddingPolicy"][0].eventLength.maxAdvisedHours`,
                   )) ?? FALLBACK_LONGEST_ADVISED_HOURS
 
               return lengthInMinutes > longestAdvisedHours * 60
@@ -221,7 +224,7 @@ export default defineType({
         }),
         defineField({
           name: "guestCount",
-          title: "Guests quoted",
+          title: "Guests Quoted",
           type: "number",
           description: "Used to work out the per-person price.",
           validation: (Rule) => Rule.required().min(1).integer(),
@@ -245,7 +248,7 @@ export default defineType({
       fields: [
         defineField({
           name: "mealFormat",
-          title: "Meal format & tier",
+          title: "Meal Format & Tier",
           type: "reference",
           to: [{ type: "packageTier" }],
           description: help(
@@ -280,14 +283,14 @@ export default defineType({
       fields: [
         defineField({
           name: "lineItems",
-          title: "Line items",
+          title: "Line Items",
           type: "array",
           of: [defineArrayMember({ type: "quoteLineItem" })],
           validation: (Rule) => Rule.required().min(1),
         }),
         defineField({
           name: "subtotal",
-          title: "Subtotal (EUR)",
+          title: "Subtotal (€)",
           type: "number",
           readOnly: true,
           description: "All the lines added up.",
@@ -300,7 +303,7 @@ export default defineType({
           fields: [
             defineField({
               name: "amount",
-              title: "Amount (EUR)",
+              title: "Amount (€)",
               type: "number",
               description: "A positive number. The quote shows it as a minus.",
               validation: (Rule) => Rule.min(0).precision(2),
@@ -315,14 +318,14 @@ export default defineType({
         }),
         defineField({
           name: "total",
-          title: "Total (EUR)",
+          title: "Total (€)",
           type: "number",
           readOnly: true,
           description: "Subtotal minus any discount. Includes VAT.",
         }),
         defineField({
           name: "vat",
-          title: "VAT included in the total",
+          title: "VAT Included in the Total",
           type: "object",
           options: { collapsible: false, columns: 2 },
           fields: [
@@ -335,7 +338,7 @@ export default defineType({
             }),
             defineField({
               name: "amount",
-              title: "Amount (EUR)",
+              title: "Amount (€)",
               type: "number",
               readOnly: true,
             }),
@@ -343,7 +346,7 @@ export default defineType({
         }),
         defineField({
           name: "perPerson",
-          title: "Per person (EUR)",
+          title: "Per Person (€)",
           type: "number",
           readOnly: true,
           description: "The total divided by the guests quoted.",
@@ -364,7 +367,7 @@ export default defineType({
             }),
             defineField({
               name: "amount",
-              title: "Amount due (EUR)",
+              title: "Amount Due (€)",
               type: "number",
               readOnly: true,
             }),
@@ -384,12 +387,12 @@ export default defineType({
       fields: [
         defineField({
           name: "balanceDueDate",
-          title: "Balance due",
+          title: "Balance Due",
           type: "date",
         }),
         defineField({
           name: "validUntil",
-          title: "Quote valid until",
+          title: "Quote Valid Until",
           type: "date",
           description: help(
             "Prices change by season, so every quote should have an end date.",
@@ -414,17 +417,17 @@ export default defineType({
 
   orderings: [
     {
-      title: "Newest first",
+      title: "Newest First",
       name: "createdDesc",
       by: [{ field: "_createdAt", direction: "desc" }],
     },
     {
-      title: "Event date",
+      title: "Event Date",
       name: "eventDateAsc",
       by: [{ field: "event.date", direction: "asc" }],
     },
     {
-      title: "Highest value",
+      title: "Highest Value",
       name: "totalDesc",
       by: [{ field: "pricing.total", direction: "desc" }],
     },

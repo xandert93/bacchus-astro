@@ -44,13 +44,13 @@ export const EVENT_TYPES = [
  * handover, not in the Studio, so the titles stay short.
  */
 export const BOOKING_STATUSES = [
-  { title: "New enquiry", value: "new" },
-  { title: "In discussion", value: "in-discussion" },
-  { title: "Awaiting deposit", value: "awaiting-deposit" },
+  { title: "New Enquiry", value: "new" },
+  { title: "In Discussion", value: "in-discussion" },
+  { title: "Awaiting Deposit", value: "awaiting-deposit" },
   { title: "Confirmed", value: "confirmed" },
   { title: "Completed", value: "completed" },
   { title: "Declined by Bacchus", value: "declined" },
-  { title: "Withdrawn by client", value: "withdrawn" },
+  { title: "Withdrawn by Client", value: "withdrawn" },
   { title: "Cancelled", value: "cancelled" },
 ] as const
 
@@ -75,10 +75,10 @@ export const DATE_BLOCKING_STATUSES = [
  * on the form says as much ("a starting point, not a package").
  */
 export const EVENT_STYLES = [
-  { title: "Candlelit & ceremonial", value: "candlelit-ceremonial" },
-  { title: "Garden & golden hour", value: "garden-golden-hour" },
-  { title: "Formal & refined", value: "formal-refined" },
-  { title: "Still exploring", value: "still-exploring" },
+  { title: "Candlelit & Ceremonial", value: "candlelit-ceremonial" },
+  { title: "Garden & Golden Hour", value: "garden-golden-hour" },
+  { title: "Formal & Refined", value: "formal-refined" },
+  { title: "Still Exploring", value: "still-exploring" },
 ] as const
 
 /**
@@ -114,10 +114,10 @@ export const PRICE_UNITS = [
 
 /** Quote line-item groupings — the labels used in `secure-booking.html`. */
 export const QUOTE_LINE_CATEGORIES = [
-  { title: "Exclusive use", value: "exclusivity" },
+  { title: "Exclusive Use", value: "exclusivity" },
   { title: "Food", value: "food" },
   { title: "Beverage", value: "beverage" },
-  { title: "Set-up", value: "setup" },
+  { title: "Set-Up", value: "setup" },
   { title: "Other", value: "other" },
 ] as const
 

@@ -1,5 +1,6 @@
 import { defineField, defineType } from "sanity"
 import { help } from "../../lib/help"
+import { photoField } from "../../lib/photoField"
 import { joinParts, optionTitle } from "../../lib/preview"
 
 /**
@@ -10,7 +11,7 @@ import { joinParts, optionTitle } from "../../lib/preview"
  * for a reason that is easy to miss — a supplier directory is a LINK EXCHANGE
  * in disguise. Photographers and florists linking back from their own sites is
  * worth more than any quantity of on-site copy, and that is what
- * `websiteUrl` + `linksBackUrl` are for: the second field makes "who has
+ * `links.website` + `links.linksBack` are for: the second field makes "who has
  * actually reciprocated" a query rather than a spreadsheet.
  *
  * The categories follow what Bacchus confirmed couples still source
@@ -31,7 +32,7 @@ const SUPPLIER_CATEGORIES = [
   { title: "Band", value: "band" },
   { title: "DJ", value: "dj" },
   { title: "Photobooth", value: "photobooth" },
-  { title: "Hair & make-up", value: "hair-makeup" },
+  { title: "Hair & Make-Up", value: "hair-makeup" },
   { title: "Transport", value: "transport" },
   { title: "Other", value: "other" },
 ] as const
@@ -69,52 +70,42 @@ export default defineType({
       description: "Write it in our own words. Don't copy the supplier's own marketing.",
     }),
     defineField({
-      name: "websiteUrl",
-      title: "Website",
-      type: "url",
-    }),
-    defineField({
-      name: "instagramUrl",
-      title: "Instagram",
-      type: "url",
-    }),
-    defineField({
-      name: "contactEmail",
-      title: "Contact email",
-      type: "string",
-      description: "For staff only. Never shown on the site.",
-      validation: (Rule) => Rule.email(),
-    }),
-    defineField({
-      name: "logo",
-      title: "Logo or portrait",
-      type: "image",
-      options: { hotspot: true },
+      name: "links",
+      title: "Links",
+      type: "object",
+      options: { collapsible: false },
       fields: [
+        defineField({ name: "website", title: "Website", type: "url" }),
+        defineField({ name: "instagram", title: "Instagram", type: "url" }),
         defineField({
-          name: "alt",
-          title: "Alt text",
-          type: "string",
-          validation: (Rule) => Rule.required(),
+          name: "linksBack",
+          title: "Where They Link Back From",
+          type: "url",
+          description:
+            "The page on their site that links to Bacchus, so we can check it's still there. For staff only.",
         }),
       ],
     }),
     defineField({
+      name: "contactEmail",
+      title: "Contact Email",
+      type: "string",
+      description: "For staff only. Never shown on the site.",
+      validation: (Rule) => Rule.email(),
+    }),
+    photoField({
+      name: "logo",
+      title: "Logo or Portrait",
+    }),
+    defineField({
       name: "isPreferred",
-      title: "Preferred: Bacchus actively recommends them",
+      title: "Preferred: Bacchus Actively Recommends Them",
       type: "boolean",
       initialValue: false,
       description: help(
         "Only tick if Bacchus has said they recommend this supplier.",
         "Listing a supplier shouldn't suggest Bacchus vouches for them.",
       ),
-    }),
-    defineField({
-      name: "linksBackUrl",
-      title: "Where they link back from",
-      type: "url",
-      description:
-        "The page on their site that links to Bacchus, so we can check it's still there. For staff only.",
     }),
     defineField({
       name: "isPublished",
@@ -131,7 +122,7 @@ export default defineType({
   ],
   orderings: [
     {
-      title: "Category, then name",
+      title: "Category, Then Name",
       name: "categoryName",
       by: [
         { field: "category", direction: "asc" },

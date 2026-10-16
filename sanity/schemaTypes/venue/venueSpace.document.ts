@@ -38,17 +38,17 @@ import { joinParts, optionTitle } from "../../lib/preview"
 const SETTINGS = [
   { title: "Indoor", value: "indoor" },
   { title: "Outdoor", value: "outdoor" },
-  { title: "Covered outdoor", value: "covered-outdoor" },
+  { title: "Covered Outdoor", value: "covered-outdoor" },
 ] as const
 
 export default defineType({
   name: "venueSpace",
-  title: "Venue space",
+  title: "Venue Space",
   type: "document",
   groups: [
     { name: "content", title: "Content", default: true },
-    { name: "facts", title: "Facts & pricing" },
-    { name: "seo", title: "Search & social" },
+    { name: "facts", title: "Facts & Pricing" },
+    { name: "seo", title: "Search & Social" },
   ],
   fields: [
     defineField({
@@ -68,7 +68,7 @@ export default defineType({
     }),
     defineField({
       name: "aliases",
-      title: "Also known as",
+      title: "Also Known As",
       type: "array",
       group: "content",
       of: [defineArrayMember({ type: "string" })],
@@ -78,15 +78,8 @@ export default defineType({
       ),
     }),
     defineField({
-      name: "nameProvenance",
-      title: "Name: source & confirmation",
-      type: "provenance",
-      group: "content",
-      description: 'Expect "unconfirmed" until the naming is settled with Bacchus.',
-    }),
-    defineField({
       name: "shortDescription",
-      title: "Short description",
+      title: "Short Description",
       type: "string",
       group: "content",
       description:
@@ -113,25 +106,22 @@ export default defineType({
       title: "Capacity",
       type: "capacity",
       group: "facts",
-      description: help(
-        "Every capacity on the site is currently a placeholder, shown with a warning.",
-        "The confirmed range for the whole venue is 50 to 800 standing. That doesn't tell us how many each space seats.",
-      ),
+      description: "How many guests this space holds.",
     }),
     defineField({
       name: "includedInStandardPackage",
-      title: "Included in the standard package",
+      title: "Included in the Standard Package",
       type: "boolean",
       group: "facts",
       initialValue: false,
       description: help(
-        "Confirmed: the Terrace and ballroom are included, the Secret Garden isn't.",
+        "The Terrace and ballroom are included, the Secret Garden isn't.",
         "Anything written about a space that isn't included must say so clearly.",
       ),
     }),
     defineField({
       name: "inclusionNote",
-      title: "Inclusion note",
+      title: "Inclusion Note",
       type: "text",
       group: "facts",
       rows: 3,
@@ -140,18 +130,17 @@ export default defineType({
     }),
     defineField({
       name: "exclusivityFee",
-      title: "Exclusivity fee",
+      title: "Exclusivity Fee",
       type: "price",
       group: "facts",
-      description: "Not yet confirmed how this changes with guest numbers.",
     }),
     defineField({
       name: "curfewNote",
-      title: "Music curfew",
+      title: "Music Curfew",
       type: "string",
       group: "facts",
       description: help(
-        "Confirmed: outdoor entertainment until 11pm, indoor until 4am.",
+        "Outdoor entertainment until 11pm, indoor until 4am.",
         "Set for each space, so the right time shows on the right page.",
       ),
     }),
@@ -175,7 +164,7 @@ export default defineType({
     }),
     defineField({
       name: "seo",
-      title: "Search & social",
+      title: "Search & Social",
       type: "seo",
       group: "seo",
     }),

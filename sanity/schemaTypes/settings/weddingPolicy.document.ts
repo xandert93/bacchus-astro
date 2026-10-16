@@ -27,7 +27,7 @@ import { DEFAULT_DEPOSIT_PERCENT, DEFAULT_VAT_RATE } from "../../lib/constants"
  * person publishing it, and that the oxblood disclaimers currently written by
  * hand into the markup follow the data instead.
  *
- * The deposit terms (`depositPercent`, `balanceDueDays`, `depositHoldDays`)
+ * The deposit terms (`deposit.percent`, `.balanceDueDays`, `.holdDays`)
  * are not settled with Bacchus yet: the catalogue states 30% non-refundable
  * with the rest due 14 days before the event, while their emails call the
  * terms flexible. That is tracked outside the Studio
@@ -37,20 +37,20 @@ import { DEFAULT_DEPOSIT_PERCENT, DEFAULT_VAT_RATE } from "../../lib/constants"
  */
 export default defineType({
   name: "weddingPolicy",
-  title: "Wedding policy & venue facts",
+  title: "Wedding Policy & Venue Facts",
   type: "document",
   groups: [
-    { name: "booking", title: "Booking & availability", default: true },
-    { name: "event", title: "On the day" },
-    { name: "money", title: "Deposit & payment" },
-    { name: "food", title: "Food & tasting" },
+    { name: "booking", title: "Booking & Availability", default: true },
+    { name: "event", title: "On the Day" },
+    { name: "money", title: "Deposit & Payment" },
+    { name: "food", title: "Food & Tasting" },
     { name: "practical", title: "Practicalities" },
   ],
   fields: [
     // --- Booking & availability --------------------------------------------
     defineField({
       name: "bookingHorizonMonths",
-      title: "Booking horizon (months)",
+      title: "Booking Horizon (Months)",
       type: "number",
       group: "booking",
       initialValue: 24,
@@ -60,25 +60,16 @@ export default defineType({
     }),
     defineField({
       name: "minNoticeMonths",
-      title: "Minimum notice (months)",
+      title: "Minimum Notice (Months)",
       type: "number",
       group: "booking",
       initialValue: 3,
-      description: help(
-        "Placeholder: three months is our estimate, not Bacchus's policy.",
-        "How soon before the date an enquiry can still be taken.",
-      ),
+      description: help("How soon before the date an enquiry can still be taken."),
       validation: (Rule) => Rule.required().min(0).integer(),
     }),
     defineField({
-      name: "minNoticeProvenance",
-      title: "Minimum notice: source",
-      type: "provenance",
-      group: "booking",
-    }),
-    defineField({
       name: "weddingsPerDay",
-      title: "Weddings per day",
+      title: "Weddings per Day",
       type: "number",
       group: "booking",
       initialValue: 1,
@@ -90,7 +81,7 @@ export default defineType({
     }),
     defineField({
       name: "waitlistCapPerEmail",
-      title: "Waitlist cap per email address",
+      title: "Waitlist Cap per Email Address",
       type: "number",
       group: "booking",
       initialValue: 8,
@@ -102,78 +93,77 @@ export default defineType({
     }),
     defineField({
       name: "estateCapacity",
-      title: "Estate capacity",
+      title: "Estate Capacity",
       type: "capacity",
       group: "booking",
       description: help(
-        "Confirmed: 50 to 800 guests standing, with the layout adjusted to the guest count.",
-        "This is a standing figure, so it doesn't tell us seated numbers.",
+        "50 to 800 guests standing, with the layout adjusted to the guest count.",
       ),
     }),
 
     // --- On the day ---------------------------------------------------------
     defineField({
-      name: "standardDurationHours",
-      title: "Standard duration (hours)",
-      type: "number",
+      name: "eventLength",
+      title: "Event Length (Hours)",
+      type: "object",
       group: "event",
-      initialValue: 5,
-      description: "Confirmed. Some events extend to six or eight.",
-      validation: (Rule) => Rule.min(1),
+      options: { collapsible: false, columns: 2 },
+      fields: [
+        defineField({
+          name: "standardHours",
+          title: "Standard",
+          type: "number",
+          initialValue: 5,
+          description: "Some events extend to six or eight.",
+          validation: (Rule) => Rule.min(1),
+        }),
+        defineField({
+          name: "maxAdvisedHours",
+          title: "Longest Advised",
+          type: "number",
+          initialValue: 8,
+          description: "Bacchus advises against going beyond this.",
+          validation: (Rule) => Rule.min(1),
+        }),
+      ],
     }),
     defineField({
-      name: "maxAdvisedDurationHours",
-      title: "Maximum advised duration (hours)",
-      type: "number",
+      name: "musicCurfew",
+      title: "Entertainment Until",
+      type: "object",
       group: "event",
-      initialValue: 8,
-      description: "Confirmed: Bacchus advises against going beyond this.",
-      validation: (Rule) => Rule.min(1),
+      options: { collapsible: false, columns: 2 },
+      fields: [
+        { ...timeField({ name: "outdoor", title: "Outdoors" }), initialValue: "23:00" },
+        { ...timeField({ name: "indoor", title: "Indoors" }), initialValue: "04:00" },
+      ],
     }),
-    {
-      ...timeField({
-        name: "outdoorMusicCurfew",
-        title: "Outdoor entertainment until",
-        group: "event",
-        description: "Confirmed: 11pm outdoors.",
-      }),
-      initialValue: "23:00",
-    },
-    {
-      ...timeField({
-        name: "indoorMusicCurfew",
-        title: "Indoor entertainment until",
-        group: "event",
-        description: "Confirmed: 4am indoors.",
-      }),
-      initialValue: "04:00",
-    },
     defineField({
       name: "restaurantClosesAboveGuests",
-      title: "Restaurant closes to the public above",
+      title: "Restaurant Closes to the Public Above",
       type: "number",
       group: "event",
       initialValue: 150,
       description:
-        "Confirmed: above this many guests, the downstairs à la carte restaurant closes to the public.",
+        "Above this many guests, the downstairs à la carte restaurant closes to the public.",
       validation: (Rule) => Rule.min(1).integer(),
     }),
     defineField({
       name: "coordinatorIncluded",
-      title: "In-house coordinator included",
+      title: "In-House Coordinator Included",
       type: "boolean",
       group: "event",
       initialValue: true,
-      description: "Confirmed: a Bacchus staff member, not an outside planner.",
+      description: "A Bacchus staff member, not an outside planner.",
     }),
     defineField({
       name: "coupleSourcesThemselves",
-      title: "What couples typically source themselves",
+      title: "What Couples Typically Source Themselves",
       type: "text",
       group: "event",
       rows: 3,
       description: help(
-        "Confirmed: flowers, entertainment (DJ or band, including the stage) and a photographer.",
+        "Flowers, entertainment (DJ or band, including the stage) and a photographer.",
         "A photobooth is a common extra. Bacchus advises against much beyond that.",
       ),
     }),
@@ -181,7 +171,7 @@ export default defineType({
     // --- Deposit & payment --------------------------------------------------
     defineField({
       name: "vatRate",
-      title: "VAT rate (%)",
+      title: "VAT Rate (%)",
       type: "number",
       group: "money",
       initialValue: DEFAULT_VAT_RATE,
@@ -192,36 +182,42 @@ export default defineType({
       validation: (Rule) => Rule.required().min(0).max(100),
     }),
     defineField({
-      name: "depositPercent",
-      title: "Deposit (%)",
-      type: "number",
+      name: "deposit",
+      title: "Deposit",
+      type: "object",
       group: "money",
-      initialValue: DEFAULT_DEPOSIT_PERCENT,
-      description: help(
-        "The usual deposit. New quotes copy this when they're created.",
-        "It can be changed on an individual quote.",
-      ),
-      validation: (Rule) => Rule.min(0).max(100),
-    }),
-    defineField({
-      name: "balanceDueDays",
-      title: "Balance due (days before the event)",
-      type: "number",
-      group: "money",
-      initialValue: 14,
-      validation: (Rule) => Rule.min(0).integer(),
-    }),
-    defineField({
-      name: "depositHoldDays",
-      title: "Date held for (days) after the deposit link is sent",
-      type: "number",
-      group: "money",
-      initialValue: 7,
-      validation: (Rule) => Rule.min(0).integer(),
+      options: { collapsible: false },
+      fields: [
+        defineField({
+          name: "percent",
+          title: "Deposit (%)",
+          type: "number",
+          initialValue: DEFAULT_DEPOSIT_PERCENT,
+          description: help(
+            "The usual deposit. New quotes copy this when they're created.",
+            "It can be changed on an individual quote.",
+          ),
+          validation: (Rule) => Rule.min(0).max(100),
+        }),
+        defineField({
+          name: "balanceDueDays",
+          title: "Balance Due (Days Before the Event)",
+          type: "number",
+          initialValue: 14,
+          validation: (Rule) => Rule.min(0).integer(),
+        }),
+        defineField({
+          name: "holdDays",
+          title: "Date Held for (Days) After the Deposit Link Is Sent",
+          type: "number",
+          initialValue: 7,
+          validation: (Rule) => Rule.min(0).integer(),
+        }),
+      ],
     }),
     defineField({
       name: "bankTransferDetails",
-      title: "Bank transfer details",
+      title: "Bank Transfer Details",
       type: "object",
       group: "money",
       description: help(
@@ -229,13 +225,13 @@ export default defineType({
         "Enter Bacchus's real details here when they arrive.",
       ),
       fields: [
-        defineField({ name: "accountName", title: "Account name", type: "string" }),
+        defineField({ name: "accountName", title: "Account Name", type: "string" }),
         defineField({ name: "iban", title: "IBAN", type: "string" }),
         defineField({ name: "bic", title: "BIC / SWIFT", type: "string" }),
         defineField({ name: "bankName", title: "Bank", type: "string" }),
         defineField({
           name: "areReal",
-          title: "These are real details",
+          title: "These Are Real Details",
           type: "boolean",
           initialValue: false,
           description: help(
@@ -249,7 +245,7 @@ export default defineType({
     // --- Food & tasting -----------------------------------------------------
     defineField({
       name: "tastingFee",
-      title: "Menu tasting fee",
+      title: "Menu Tasting Fee",
       type: "price",
       group: "food",
       description: help(
@@ -259,14 +255,12 @@ export default defineType({
     }),
     defineField({
       name: "tastingNote",
-      title: "Tasting note",
+      title: "Tasting Note",
       type: "text",
       group: "food",
       rows: 4,
       description: help(
-        "Confirmed: six cold dishes, six hot dishes and four desserts, all chosen by the couple from their package. Stations can't be tasted.",
-        "Still to confirm: whether a tasting needs its own booking, and whether the full menu is available on any day.",
-        "Until then, couples can only ask for a tasting in the enquiry form's message box.",
+        "Six cold dishes, six hot dishes and four desserts, all chosen by the couple from their package. Stations can't be tasted.",
       ),
     }),
     defineField({
@@ -276,7 +270,7 @@ export default defineType({
       group: "food",
       rows: 4,
       description: help(
-        "Confirmed: the in-house cake is included in the Reception package price.",
+        "The in-house cake is included in the Reception package price.",
         'The catalogue says "one tier per 100 guests", but in practice it is always a three-tier display cake. Once it is cut, the celebratory drink and cake are served straight away.',
         "Couples can bring their own cake, but slices aren't served from it.",
       ),
@@ -288,17 +282,16 @@ export default defineType({
       group: "food",
       rows: 3,
       description: help(
-        "Confirmed: only charged if a couple brings their own wine or Champagne, since packages already include drinks.",
-        "The catalogue's corkage fee isn't shown on the site, because it doesn't say whether it is per bottle or per person.",
+        "Only charged if a couple brings their own wine or Champagne, since packages already include drinks.",
       ),
     }),
     defineField({
       name: "dietaryNote",
-      title: "Dietary requirements",
+      title: "Dietary Requirements",
       type: "text",
       group: "food",
       rows: 2,
-      description: "Confirmed: vegetarian, vegan and gluten-free are catered for.",
+      description: "Vegetarian, vegan and gluten-free are catered for.",
     }),
 
     // --- Practicalities ----------------------------------------------------
@@ -308,8 +301,7 @@ export default defineType({
       type: "text",
       group: "practical",
       rows: 2,
-      description:
-        "Confirmed: there is a stairlift, and staff help guests with any needs.",
+      description: "There is a stairlift, and staff help guests with any needs.",
     }),
     defineField({
       name: "parkingNote",
@@ -317,20 +309,11 @@ export default defineType({
       type: "text",
       group: "practical",
       rows: 2,
-      description: help(
-        'Not confirmed. Bacchus says guests can book "the Tomba", but we don\'t yet know exactly what that is.',
-        "Don't mention parking on the site until that's confirmed.",
-      ),
-    }),
-    defineField({
-      name: "parkingProvenance",
-      title: "Parking: source",
-      type: "provenance",
-      group: "practical",
+      description: help('Guests can book "the Tomba".'),
     }),
     defineField({
       name: "venueConditionNote",
-      title: "Venue condition (internal)",
+      title: "Venue Condition (Internal)",
       type: "text",
       group: "practical",
       rows: 4,
@@ -342,18 +325,18 @@ export default defineType({
     }),
     defineField({
       name: "retentionMonths",
-      title: "Personal-data retention (months)",
+      title: "Personal-Data Retention (Months)",
       type: "number",
       group: "practical",
       initialValue: 36,
       description: help(
         "How long we keep people's personal details before reviewing them for deletion.",
-        "Bacchus's decision to make. 36 months is our starting suggestion.",
+        "Bacchus's decision to make.",
       ),
       validation: (Rule) => Rule.min(1).integer(),
     }),
   ],
   preview: {
-    prepare: () => ({ title: "Wedding policy & venue facts" }),
+    prepare: () => ({ title: "Wedding Policy & Venue Facts" }),
   },
 })

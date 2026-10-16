@@ -31,7 +31,7 @@ import {
  */
 const PAYMENT_METHODS = [
   { title: "Card", value: "card" },
-  { title: "Bank transfer", value: "bank-transfer" },
+  { title: "Bank Transfer", value: "bank-transfer" },
   { title: "Other", value: "other" },
 ] as const
 
@@ -49,13 +49,13 @@ export default defineType({
     }),
     defineField({
       name: "kind",
-      title: "What this covers",
+      title: "What This Covers",
       type: "string",
       options: {
         list: [
           { title: "Deposit", value: "deposit" },
           { title: "Balance", value: "balance" },
-          { title: "Menu tasting fee", value: "tasting" },
+          { title: "Menu Tasting Fee", value: "tasting" },
           { title: "Refund", value: "refund" },
         ],
       },
@@ -68,10 +68,10 @@ export default defineType({
       type: "string",
       options: {
         list: [
-          { title: "Awaiting payment", value: "awaiting" },
+          { title: "Awaiting Payment", value: "awaiting" },
           { title: "Received", value: "received" },
           { title: "Failed", value: "failed" },
-          { title: "Expired: the hold ran out", value: "expired" },
+          { title: "Expired: The Hold Ran Out", value: "expired" },
           { title: "Refunded", value: "refunded" },
         ],
       },
@@ -80,7 +80,7 @@ export default defineType({
     }),
     defineField({
       name: "amounts",
-      title: "Amounts (EUR)",
+      title: "Amounts (€)",
       type: "object",
       options: { collapsible: false, columns: 3 },
       fields: [
@@ -92,7 +92,7 @@ export default defineType({
         }),
         defineField({
           name: "fee",
-          title: "Processing fee",
+          title: "Processing Fee",
           type: "number",
           description: "As actually charged.",
           validation: (Rule) => Rule.precision(2),
@@ -120,7 +120,7 @@ export default defineType({
     }),
     defineField({
       name: "reconciliation",
-      title: "Matched against the bank statement",
+      title: "Matched Against the Bank Statement",
       type: "object",
       options: { collapsible: false, columns: 2 },
       hidden: ({ parent }) => parent?.method === "card",

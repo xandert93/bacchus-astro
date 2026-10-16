@@ -1,12 +1,10 @@
 import type { SchemaTypeDefinition } from "sanity"
 
 // Shared — used across more than one feature.
-import provenance from "./shared/provenance.object"
 import price from "./shared/price.object"
 import season from "./shared/season.document"
 import seasonalRate from "./shared/seasonalRate.object"
 import seo from "./shared/seo.object"
-import catalogueVariance from "./shared/catalogueVariance.object"
 
 // Bookings and the waitlist.
 import booking from "./bookings/booking.document"
@@ -92,12 +90,10 @@ import weddingPolicy from "./settings/weddingPolicy.document"
  *                   made a wording fix silently miss half its occurrences.
  */
 export const schemaTypes: SchemaTypeDefinition[] = [
-  provenance,
   price,
   season,
   seasonalRate,
   seo,
-  catalogueVariance,
 
   booking,
   waitlistEntry,
