@@ -12,11 +12,16 @@
   // never automatically.
   "compatibility_date": "2026-10-07",
 
-  // The site is fully static: Cloudflare serves Astro's build output as is,
-  // with the rules in public/_headers applied.
-  "assets": {
-    "directory": "./dist",
-  },
+  // The Worker that runs the on-demand routes (the enquiry endpoint). Every
+  // page is still static: Cloudflare serves a matching file first, with the
+  // rules in public/_headers applied, and only hands the Worker what no file
+  // answers. The build writes the final config (dist/server/wrangler.json)
+  // from this one, and `wrangler deploy` picks that up.
+  "main": "@astrojs/cloudflare/entrypoints/server",
+
+  // Lets the Worker read process.env and Node's built-ins, which
+  // @sanity/client relies on.
+  "compatibility_flags": ["nodejs_compat"],
 
   // Required by `wrangler preview`, even when empty. Branch previews need no
   // settings of their own yet; their build variables (INCLUDE_DRAFTS) are set

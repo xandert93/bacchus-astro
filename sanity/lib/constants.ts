@@ -63,6 +63,16 @@ export const OPEN_ENQUIRY_STATUSES = [
   "awaiting-deposit",
 ] as const satisfies readonly BookingStatus[]
 
+/**
+ * How an enquirer asked to be contacted: the chips on the form's details
+ * step (`CONTACT_METHODS` in src/data/enquiry.ts, which adds their icons).
+ */
+export const CONTACT_PREFERENCES = [
+  { title: "Email", value: "Email" },
+  { title: "Phone", value: "Phone" },
+  { title: "WhatsApp", value: "WhatsApp" },
+] as const
+
 /** Statuses that make a date read as Booked on the public calendar. */
 export const DATE_BLOCKING_STATUSES = [
   "confirmed",

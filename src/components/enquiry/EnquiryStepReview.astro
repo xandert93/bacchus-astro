@@ -2,6 +2,7 @@
 // Wizard step 4, "Review": the enquiry exactly as it will arrive, and the
 // consent box. The review list itself is built by EnquiryForm.js from the
 // answers, so its rows are script-made and their rules are :global().
+import { CONSENT_WORDING } from "@data/enquiry"
 ---
 
 <div class="review-note">
@@ -43,10 +44,7 @@
       <path d="m5 12 5 5L19 7" />
     </svg>
   </span>
-  <span>
-    I'm happy for the Bacchus events team to contact me about this enquiry. Held
-    privately, never shared, deleted on request.
-  </span>
+  <span>{CONSENT_WORDING}</span>
 </label>
 
 <style>

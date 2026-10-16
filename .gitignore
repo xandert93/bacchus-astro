@@ -45,3 +45,8 @@ playwright-report/
 # Exports made by `npm run sanity:copy-production` on the way to the
 # development dataset: a full copy of the client's content, never committed.
 /sanity/exports/
+
+# Cloudflare: local Worker secrets and wrangler's working files.
+.dev.vars
+.dev.vars.*
+.wrangler/

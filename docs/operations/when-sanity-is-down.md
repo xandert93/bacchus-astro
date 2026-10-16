@@ -57,7 +57,7 @@ That includes a code-only fix. The options, in order:
 1. **Wait.** The live site is unaffected meanwhile.
 2. **Patch a built copy by hand**, for something that can't wait (a wrong
    price, say). Any `npm run build` from before the outage leaves the whole
-   site in `dist/`. Edit the page's HTML there, then deploy that folder with
+   site in `dist/client/`. Edit the page's HTML there, then deploy it with
    `npx wrangler deploy` from the repo root (it asks you to log in to
    Cloudflare the first time). Make the same change in Sanity once it's
    back, or the next build undoes it.

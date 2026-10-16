@@ -97,6 +97,18 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
         <span>Submit</span>
       </Button>
     </div>
+
+    {/* Shown when sending fails, with what to do next. */}
+    <p class="wizard-send-error" id="sendError" role="alert" hidden></p>
+
+    {/* A field people never see but form-filling bots do: the enquiry
+        endpoint quietly ignores any enquiry that has it filled in. */}
+    <div class="wizard-trap" aria-hidden="true">
+      <label>
+        Leave this empty
+        <input type="text" id="website" tabindex="-1" autocomplete="off" />
+      </label>
+    </div>
   </form>
 
   <EnquirySentPanel />
@@ -315,6 +327,25 @@ const STEPS = ["Occasion", "Specifics", "Your details", "Review"]
 
   .wizard-nav .wizard-spacer {
     flex: 1;
+  }
+
+  .wizard-send-error {
+    flex: 1 1 100%;
+    margin: 0;
+
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--oxblood);
+  }
+
+  /* Off-screen rather than display: none, which some bots skip. */
+  .wizard-trap {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
 
   /* .wizard-back-hidden (toggled by main.js instead of inline style.visibility —

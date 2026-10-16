@@ -97,9 +97,26 @@ Builds) has two tabs:
   branch on its own preview address without touching the live site. Its
   build variables set `INCLUDE_DRAFTS=true`, so previews show the draft pages.
 
-Both commands read `wrangler.jsonc` at the repo root: the Worker's name, the
-folder to serve (`dist/`), and the `previews` block that `wrangler preview`
-refuses to run without. Commands and build variables stay in the dashboard.
+Both commands read the config the build writes (`dist/server/wrangler.json`,
+made from `wrangler.jsonc` at the repo root): the Worker's name, its entry
+point, the static files (`dist/client/`) and the `previews` block that
+`wrangler preview` refuses to run without. Commands and build variables stay
+in the dashboard.
+
+**Static pages, plus a small Worker** (since 2026-10-16). Every page is still
+built ahead of time. The Cloudflare adapter (`@astrojs/cloudflare`) adds a
+Worker for the routes that must run when a visitor arrives, each marked
+`export const prerender = false`: so far only `src/pages/api/enquiries.ts`.
+Cloudflare serves a matching static file first and only hands the Worker
+what no file answers. Two settings keep the build as it was: images are
+still made at build time (`imageService: "compile"`), and the static pages
+are still built in Node (`prerenderEnvironment: "node"`).
+
+**Build variables and Worker secrets are different places.** A build
+variable (Settings, Builds) is only there while the site builds:
+`SANITY_API_READ_TOKEN` lives there. A Worker secret (Settings, Variables and
+Secrets) is only there while the Worker answers a visitor:
+`SANITY_API_WRITE_TOKEN` lives there.
 
 A build takes about ten minutes, nearly all of it encoding photos: unlike
 GitHub's checks, the Cloudflare builds checked so far (2026-10-07) re-encoded
@@ -199,9 +216,25 @@ sells high-value weddings.
 
 ## Payments
 
-**Deposits are taken by card (Stripe) and bank transfer.** Building them is
-step 4 of the roadmap, and is blocked on the deposit-terms conflict in
-`docs/content/client-facts.md`.
+**Bank transfer is the main route, card the convenient option** (decided
+2026-10-16). Bank transfer costs Bacchus almost nothing; a card fee on a
+deposit of several thousand euros is real money, and EU rules don't allow it
+to be passed on to the couple. The deposit system is built first as a mock
+(no real money), then switched to live keys once the terms are settled.
+
+**Stripe for card payments, for now**, for its test mode and documentation.
+**Other providers may be cheaper, so revisit before going live**: Viva.com
+(widely used in Malta, also for card machines) and Revolut Business both take
+online card payments in Malta, and Bacchus may already have an account with
+one of them (asked, `docs/content/client-facts.md`). The code talks to the
+card provider through one file, so switching is contained.
+
+**The deposit page stays.** The quote email is the notification: a short
+summary and one "Review and pay" button. The page is where paying, and
+declining, happen. An email can't run a payment, can't show what's true
+now (a hold that has expired, a quote replaced, a date taken by another
+couple), and is frozen at the moment it was sent; the page reads the quote
+when it's opened.
 
 **Stripe**
 

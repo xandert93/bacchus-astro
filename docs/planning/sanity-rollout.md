@@ -235,8 +235,31 @@ The client then sees a change live a minute or two after pressing publish.
 
 ## Step 4 — take enquiries
 
-The first genuinely new behaviour, and where the adapter from the decision
-above gets added.
+**Built, 2026-10-16.** The form posts to `src/pages/api/enquiries.ts`, which
+runs on Cloudflare: it checks the enquiry (`src/lib/enquiries/validate.ts`)
+and stores it as a booking with status "new" (`to-booking.ts`), so it appears
+in the Studio under Enquiries, New. The venue spaces it links to were added
+to production the same day (Prince De Redin Hall, the Terrace, the Secret
+Garden: names, settings and inclusion only).
+
+**To switch it on**, a write token, which never goes in the repository:
+
+1. sanity.io/manage → the project → API → Tokens → Add API token. Name it
+   `enquiry-endpoint`, permissions **Editor**. Copy it: Sanity shows it once.
+2. Locally: add `SANITY_API_WRITE_TOKEN=<the token>` to `.env`. With
+   `SANITY_DATASET=development` there too, test enquiries go to development.
+3. Live: Cloudflare → the Worker → Settings → Variables and Secrets → Add,
+   type **Secret**, name `SANITY_API_WRITE_TOKEN`. Not under Builds: the
+   build never uses it.
+
+Without the token the endpoint answers "can't be received right now" and the
+form tells the visitor to email instead.
+
+**Spam**: a hidden field only bots fill in, and a minimum time to fill the
+form; either one gets a fake "sent" and nothing is stored. Cloudflare
+Turnstile is the next step if spam gets through.
+
+What the plan asked for:
 
 - An API route receives the wizard's submission, validates it, and writes a
   booking with status `pending`.

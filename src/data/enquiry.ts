@@ -23,47 +23,54 @@ export const CHIP_NOTES: Record<EventType, string> = {
 // Step 2's two option-card questions. Only one shows at a time: tone for a
 // wedding, spaces for everything else (EnquiryForm.js swaps them per type).
 export interface EnquiryOption {
-  // What the enquiry records, and what the review step shows.
+  // What the enquiry records in Sanity. The review step shows the title.
   value: string
   title: string
   description: string
 }
 
+// Each space's value is its slug in Sanity, so the enquiry endpoint can link
+// the enquiry to the space. "Not sure yet" is a request for guidance, not a
+// space.
+export const NOT_SURE_OF_SPACES = "not-sure"
+
 // Capacity figures here are placeholders until Bacchus confirms them; the
 // field's own note says so on the page.
 export const SPACE_OPTIONS: EnquiryOption[] = [
   {
-    value: "Prince De Redin Hall",
+    value: "prince-de-redin-hall",
     title: "Prince De Redin Hall",
     description: "Indoor, seats up to 180",
   },
-  { value: "The Terrace", title: "The Terrace", description: "Open air, bastion views" },
+  { value: "terrace", title: "The Terrace", description: "Open air, bastion views" },
   {
-    value: "The Secret Garden",
+    value: "secret-garden",
     title: "Secret Garden",
     description: "Walled, seats up to 70",
   },
-  { value: "Not sure yet", title: "Not sure yet", description: "Guide us on this" },
+  { value: NOT_SURE_OF_SPACES, title: "Not sure yet", description: "Guide us on this" },
 ]
 
+// Values match the booking schema's EVENT_STYLES (sanity/lib/constants.ts),
+// which the enquiry endpoint checks them against.
 export const EVENT_STYLE_OPTIONS: EnquiryOption[] = [
   {
-    value: "Candlelit & ceremonial",
+    value: "candlelit-ceremonial",
     title: "Candlelit & ceremonial",
     description: "Long tables, warm light and a slow evening.",
   },
   {
-    value: "Garden & golden hour",
+    value: "garden-golden-hour",
     title: "Garden & golden hour",
     description: "Open air, relaxed drinks and sunset portraits.",
   },
   {
-    value: "Formal & refined",
+    value: "formal-refined",
     title: "Formal & refined",
     description: "A seated service with considered timing.",
   },
   {
-    value: "Still exploring",
+    value: "still-exploring",
     title: "Still exploring",
     description: "Let our events team help shape the day.",
   },
@@ -106,3 +113,9 @@ export const CONTACT_METHODS: { value: string; icon: ChipIcon }[] = [
     },
   },
 ]
+
+// The consent box's wording on the review step. The enquiry endpoint stores
+// this exact text with each enquiry, so consent stays provable after the
+// wording changes: edit it here, and both follow.
+export const CONSENT_WORDING =
+  "I'm happy for the Bacchus events team to contact me about this enquiry. Held privately, never shared, deleted on request."
