@@ -2,6 +2,7 @@ import { defineConfig, type WorkspaceOptions } from "sanity"
 import { structureTool } from "sanity/structure"
 import { visionTool } from "@sanity/vision"
 
+import { ReadOnlyInput } from "./components/ReadOnlyInput"
 import { schemaTypes, singletonTypes } from "./schemaTypes"
 import { structure } from "./structure"
 import {
@@ -52,6 +53,10 @@ const workspace = (dataset: Dataset, title: string): WorkspaceOptions => ({
     // there is one site settings document and one policy document, and a
     // second of either is a silent source of "why did my edit not show up".
     templates: (prev) => prev.filter(({ schemaType }) => !singletonTypes.has(schemaType)),
+  },
+
+  form: {
+    components: { input: ReadOnlyInput },
   },
 
   document: {
