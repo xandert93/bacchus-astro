@@ -30,8 +30,9 @@ itself (what we chose, why, and how payments work) is in
    Bacchus). Every photo is built from its original where one exists; see
    `docs/engineering/images.md`.
 3. **Sanity** (under way). The project is live and the site reads its
-   packages, stations, gallery and testimonials from it (2026-10-08). Next:
-   the rebuild-on-publish webhook, then enquiries. The route is
+   packages, stations, gallery and testimonials from it (2026-10-08), and
+   rebuilds on publish (2026-10-16). Next: enquiries, then live availability,
+   then deposits in test mode. The route is
    `sanity-rollout.md`, which also carries the one decision it needs: the
    site is static, so the enquiry endpoint and the availability feed need the
    Cloudflare adapter on those routes alone.

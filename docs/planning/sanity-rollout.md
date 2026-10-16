@@ -44,8 +44,8 @@ the route from here to a working system.
   dataset.
 - **The content migration** (step 2): run, and then retired. Sanity is now the
   only copy of the packages, stations, gallery and testimonials.
-- **The site reads from Sanity** (step 3), apart from the webhook that
-  rebuilds it when something is published.
+- **The site reads from Sanity** (step 3), and rebuilds itself when
+  something is published.
 
 ---
 
@@ -191,7 +191,7 @@ to type straight into the Studio.
 
 ## Step 3 — read from Sanity
 
-**Built, 2026-10-08, apart from the rebuild webhook.**
+**Built, 2026-10-08. Rebuild on publish added 2026-10-16.**
 
 The package pages, Reception's stations, the gallery and the testimonials
 read from Sanity. Each content type has one module in `src/lib/sanity/` that
@@ -213,7 +213,7 @@ queries Sanity in a visitor's browser.
 - **Photos** uploaded in the Studio go through the same pipeline as the rest
   (`docs/engineering/images.md`).
 
-**Still to do: rebuild on publish.** Two settings, both in dashboards:
+**Rebuild on publish** (set up 2026-10-16). Two settings, both in dashboards:
 
 1. **Cloudflare**: the Worker → Settings → Builds → Deploy Hooks → create one
    for `main`, and copy its URL. A POST to it starts a production build.
