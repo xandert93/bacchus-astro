@@ -47,8 +47,9 @@ export default defineConfig({
     draftPages(),
     // sitemap-index.xml: every page, for search engines to find them by
     // (listed in /robots.txt, src/pages/robots.txt.ts). Drafts aren't built
-    // for the live site, so they're never in it.
-    sitemap(),
+    // for the live site, so they're never in it. Nor is /waitlist, which is
+    // only for people arriving from a waitlist email and is noindex.
+    sitemap({ filter: (page) => !page.endsWith("/waitlist") }),
   ],
   image: {
     // Photos the client manages in Sanity (the gallery, the signature dishes,
@@ -115,6 +116,14 @@ export default defineConfig({
       // (src/pages/api/email-events.ts). From Resend's webhook page; a
       // Worker secret on Cloudflare.
       RESEND_WEBHOOK_SECRET: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
+      // Checks that a booking change really came from Sanity
+      // (src/pages/api/booking-events.ts). The secret set on that webhook in
+      // sanity.io/manage; a Worker secret on Cloudflare.
+      SANITY_WEBHOOK_SECRET: envField.string({
         context: "server",
         access: "secret",
         optional: true,

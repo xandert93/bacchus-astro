@@ -15,6 +15,7 @@ import { enquiryAlertEmail } from "@lib/email/enquiry-alert"
 import { enquiryConfirmationEmail } from "@lib/email/enquiry-confirmation"
 import { sendEmail } from "@lib/email/send"
 import { getWriteClient } from "@lib/sanity/write-client"
+import { json, looksLikeABot, readFormPost } from "@lib/api/requests"
 import { CONTACT } from "@data/contact"
 
 export const prerender = false
@@ -22,41 +23,12 @@ export const prerender = false
 /** Nobody genuine fills in four steps faster than this. */
 const MINIMUM_SECONDS_TO_FILL = 3
 
-/** An enquiry is a few hundred bytes; anything this big isn't one. */
-const MAXIMUM_BODY_BYTES = 10_000
-
-const json = (status: number, body: Record<string, unknown>) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { "Content-Type": "application/json" },
-  })
-
-const looksLikeABot = (body: Record<string, unknown>) => {
-  const startedAt = Number(body.startedAt)
-  const secondsTaken = (Date.now() - startedAt) / 1000
-
-  return Boolean(body.website) || !startedAt || secondsTaken < MINIMUM_SECONDS_TO_FILL
-}
-
 export const POST: APIRoute = async ({ request }) => {
-  // Only this site's own pages may send enquiries.
-  const origin = request.headers.get("origin")
-  if (origin && origin !== new URL(request.url).origin) {
-    return json(403, { error: "Not allowed." })
-  }
+  const post = await readFormPost(request)
+  if ("refusal" in post) return post.refusal
+  const { body } = post
 
-  if (Number(request.headers.get("content-length") ?? 0) > MAXIMUM_BODY_BYTES) {
-    return json(413, { error: "That enquiry is too large." })
-  }
-
-  let body: Record<string, unknown>
-  try {
-    body = await request.json()
-  } catch {
-    return json(400, { error: "That enquiry couldn't be read." })
-  }
-
-  if (looksLikeABot(body)) return json(201, { ok: true })
+  if (looksLikeABot(body, MINIMUM_SECONDS_TO_FILL)) return json(201, { ok: true })
 
   const result = validateEnquiry(body)
   if (!result.ok) return json(400, { errors: result.errors })

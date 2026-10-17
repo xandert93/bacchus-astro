@@ -1,0 +1,16 @@
+---
+// /waitlist: where the links in waitlist emails land, to confirm a place or
+// leave the list (WaitlistAction). Reached only from an email, so it stays
+// out of search results.
+import BaseLayout from "@layouts/BaseLayout.astro"
+import WaitlistAction from "@components/waitlist/WaitlistAction.astro"
+---
+
+<BaseLayout
+  title="Waitlist — Bacchus, Mdina"
+  description="Confirm or leave the Bacchus wedding waitlist."
+  noIndex
+  showVisitSection={false}
+>
+  <WaitlistAction />
+</BaseLayout>

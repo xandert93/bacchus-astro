@@ -7,6 +7,7 @@
 // email or which booking made a date busy.
 
 import type { APIRoute } from "astro"
+import { json } from "@lib/api/requests"
 import { getLiveClient } from "@lib/sanity/live-client"
 import {
   availabilityPolicyQuery,
@@ -31,12 +32,6 @@ const monthsFrom = (date: Date, months: number) => {
 
   return later
 }
-
-const json = (status: number, body: Record<string, unknown>, headers = {}) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { "Content-Type": "application/json", ...headers },
-  })
 
 export const GET: APIRoute = async () => {
   const client = getLiveClient()

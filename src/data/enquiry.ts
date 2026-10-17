@@ -119,3 +119,8 @@ export const CONTACT_METHODS: { value: string; icon: ChipIcon }[] = [
 // wording changes: edit it here, and both follow.
 export const CONSENT_WORDING =
   "I'm happy for the Bacchus events team to contact me about this enquiry. Held privately, never shared, deleted on request."
+
+// What the waitlist popover says beside its form. Stored with each sign-up as
+// the wording the person agreed to, like CONSENT_WORDING above.
+export const WAITLIST_WORDING =
+  "This date is booked. Leave your email and we'll let you know if it opens up. We'll send a link to confirm first."
