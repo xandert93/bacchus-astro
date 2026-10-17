@@ -96,6 +96,16 @@ export default defineConfig({
     // Check every secret's format before the build starts.
     validateSecrets: true,
   },
+  vite: {
+    // The dev server runs the enquiry endpoint in Cloudflare's runtime, and
+    // Vite bundles its dependencies the first time something needs them.
+    // Left to find @sanity/client on the first enquiry, it re-bundles while
+    // the server is running and the endpoint then asks for a file that isn't
+    // there yet ("The file does not exist at .vite/deps_ssr/
+    // @sanity_client.js"). Bundling it as the server starts avoids that
+    // (docs/engineering/known-bugs.md, 4).
+    ssr: { optimizeDeps: { include: ["@sanity/client"] } },
+  },
   redirects: {
     // The package pages live under /weddings/packages/<leaf>, but there is no
     // packages overview page: Weddings' own packages section already is one.
