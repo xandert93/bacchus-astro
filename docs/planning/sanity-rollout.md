@@ -276,12 +276,23 @@ be approved or declined there.
 
 ## Step 5 — real availability
 
-Replace the fake seeded statuses with the derivation that already exists.
+**Built, 2026-10-17.** The calendar fetches current statuses from
+`src/pages/api/availability.ts` when the page opens, so what a visitor sees is
+what is true now rather than what was true at the last deploy. The endpoint
+works them out with the rules in `sanity/queries/availability.ts` and returns
+dates and statuses only (no names, no emails), because its answers are public.
+It also sends the wedding policy's booking horizon and minimum notice, so the
+calendar's window follows the policy.
 
-The calendar fetches current statuses from a small JSON endpoint when it
-loads, so what a visitor sees is what is true now rather than what was true at
-the last deploy. The endpoint returns dates and statuses only — no names, no
-emails — because its results are public.
+- **The Worker needs the read token too**, as a secret (Settings, Variables
+  and Secrets), as well as the build variable it already was. Set on
+  2026-10-17 with `npx wrangler secret put SANITY_API_READ_TOKEN`.
+- **Reads go through Sanity's CDN**, a few seconds behind, and browsers may
+  reuse an answer for a minute.
+- **If it can't load**, every date shows as available and a note under the
+  calendar says Bacchus will confirm the date.
+- **Days can't be picked until the statuses arrive**, so nobody picks a date
+  that's about to turn out booked.
 
 Then the waitlist can be wired up: a booked date offers to notify someone if
 it frees up.

@@ -244,8 +244,9 @@ Everything below is illustrative and is labelled as such on the page.
 - **Capacity figures** ("Up to 120 seated" and similar) carry an inline
   disclaimer. Keep it until the client signs off which figure to publish.
 
-- **The availability calendar** uses fake statuses generated from the date,
-  labelled "illustrative only".
+- **The availability calendar** is live since 2026-10-17 (real bookings
+  from Sanity). Its minimum notice (three months) and horizon (two years)
+  come from the wedding policy and are still our assumptions.
 
 - **The deposit page** (`secure-booking`): the whole booking summary (quote
   reference, couple's name, date, time, guests, package, line items, deposit)

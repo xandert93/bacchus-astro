@@ -1,12 +1,16 @@
-// The illustrative availability calendar (every .availability instance on
-// the page), the weddings quick-pick modal, and the waitlist popover for
-// booked dates. Imported by EnquiryForm.js and by the weddings page.
+// The wedding availability calendar (every .availability instance on the
+// page), the weddings quick-pick modal, and the waitlist popover for booked
+// dates. Imported by EnquiryForm.js and by the weddings page.
+//
+// The statuses are live: fetched from /api/availability
+// (src/pages/api/availability.ts) when the page opens, worked out there from
+// the bookings in Sanity.
 
 import { availabilityHooks } from "@scripts/lib/availability-hooks.js"
 import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
 import { hover } from "@lib/media-queries.js"
 
-// ---------- Mock wedding-date availability widget (illustrative concept — not live data) ----------
+// ---------- Wedding-date availability widget ----------
 // A page can have more than one instance (e.g. a showcase calendar plus a compact one
 // embedded in the enquiry form). Browsing months is independent per instance, but picking
 // a date is shared: every instance re-syncs to show the same selected date, and all of
@@ -34,19 +38,31 @@ import { hover } from "@lib/media-queries.js"
   ]
   const today = new Date()
   const minMonth = new Date(today.getFullYear(), today.getMonth(), 1)
-  const maxMonth = new Date(today.getFullYear(), today.getMonth() + 24, 1) // ~2yr wedding-booking horizon
-  // Minimum lead time before a wedding date can be booked at all — a
-  // single-wedding-a-day exclusive venue can't turn around catering,
-  // staffing and supplier coordination overnight. 3 months is a
-  // reasonable placeholder, not a confirmed Bacchus policy — same
-  // "illustrative only" status as the rest of this mock data, flag for
-  // the client before treating it as real (docs/content/client-facts.md).
-  const WEDDING_MIN_NOTICE_MONTHS = 3
-  const minBookableDate = new Date(
-    today.getFullYear(),
-    today.getMonth() + WEDDING_MIN_NOTICE_MONTHS,
-    today.getDate(),
-  )
+
+  // How far ahead the calendar goes, and the minimum notice before a wedding
+  // date can be booked at all. Both come from the wedding policy in Sanity,
+  // with the live statuses; these are what the calendar uses until they
+  // arrive.
+  let horizonMonths = 24
+  let minNoticeMonths = 3
+  let maxMonth
+  let minBookableDate
+  const applyBookingWindow = () => {
+    maxMonth = new Date(today.getFullYear(), today.getMonth() + horizonMonths, 1)
+    minBookableDate = new Date(
+      today.getFullYear(),
+      today.getMonth() + minNoticeMonths,
+      today.getDate(),
+    )
+  }
+  applyBookingWindow()
+
+  // "loading" until /api/availability answers, then "ready". "failed" shows
+  // every date as available, with a note saying we'll confirm: better than
+  // a calendar nobody can use.
+  let availabilityState = "loading"
+  // Only busy dates are listed ("taken" or "interest"); the rest are open.
+  let busyDates = {}
   let selected = null // { iso, status, dd, yy, mm }
   const instances = []
   // Set only while the quick-pick modal is open and its pick hasn't been
@@ -57,12 +73,7 @@ import { hover } from "@lib/media-queries.js"
   // button label) until the client actually clicks "Use this date".
   let modalPending
 
-  const seededStatus = (y, m, d) => {
-    const seed = (y * 421 + (m + 1) * 37 + d * 13) % 10
-    if (seed <= 5) return "open"
-    if (seed <= 7) return "interest"
-    return "taken"
-  }
+  const statusOf = (iso) => busyDates[iso] || "open"
   const isoOf = (y, m, d) =>
     y + "-" + String(m + 1).padStart(2, "0") + "-" + String(d).padStart(2, "0")
   const sameMonth = (a, b) =>
@@ -544,6 +555,8 @@ import { hover } from "@lib/media-queries.js"
 
     const render = () => {
       const view = state.view
+      el.classList.toggle("is-loading", availabilityState === "loading")
+      el.setAttribute("aria-busy", String(availabilityState === "loading"))
       monthEl.textContent = names[view.getMonth()] + " " + view.getFullYear()
       gridEl.innerHTML = ""
       const first = new Date(view.getFullYear(), view.getMonth(), 1)
@@ -561,10 +574,8 @@ import { hover } from "@lib/media-queries.js"
         // 3-month wedding lead-time window in one comparison.
         const isBeforeMinNotice =
           new Date(view.getFullYear(), view.getMonth(), d) <= minBookableDate
-        const status = isBeforeMinNotice
-          ? "taken"
-          : seededStatus(view.getFullYear(), view.getMonth(), d)
         const iso = isoOf(view.getFullYear(), view.getMonth(), d)
+        const status = isBeforeMinNotice ? "taken" : statusOf(iso)
         cell.className = "availability-cell " + status
         // Exposed on every cell regardless of status (not just the ones that get a
         // click listener below) so other code — e.g. the waitlist-prompt sandbox —
@@ -578,7 +589,9 @@ import { hover } from "@lib/media-queries.js"
           cell.classList.add("today")
         if (selected && selected.iso === iso) cell.classList.add("picked")
         cell.textContent = d
-        if (!isBeforeMinNotice && status !== "taken") {
+        // No picking until the live statuses arrive: a date that looks
+        // available for a moment might not be.
+        if (!isBeforeMinNotice && status !== "taken" && availabilityState !== "loading") {
           cell.addEventListener(
             "click",
             ((ymIso, st, dd, yy, mm, el) => () => {
@@ -608,12 +621,14 @@ import { hover } from "@lib/media-queries.js"
     if (prevBtn)
       prevBtn.addEventListener("click", () => {
         if (prevBtn.disabled) return
+        state.touched = true
         state.view.setMonth(state.view.getMonth() - 1)
         render()
       })
     if (nextBtn)
       nextBtn.addEventListener("click", () => {
         if (nextBtn.disabled) return
+        state.touched = true
         state.view.setMonth(state.view.getMonth() + 1)
         render()
       })
@@ -624,6 +639,39 @@ import { hover } from "@lib/media-queries.js"
   instances.forEach((inst) => {
     inst.render()
   })
+
+  fetch("/api/availability")
+    .then((response) => {
+      if (!response.ok) throw new Error("Availability refused: " + response.status)
+      return response.json()
+    })
+    .then((availability) => {
+      busyDates = availability.statuses || {}
+      horizonMonths = availability.horizonMonths || horizonMonths
+      minNoticeMonths = availability.minNoticeMonths ?? minNoticeMonths
+      applyBookingWindow()
+      availabilityState = "ready"
+    })
+    .catch(() => {
+      availabilityState = "failed"
+      document.querySelectorAll(".availability-error").forEach((note) => {
+        note.hidden = false
+      })
+    })
+    .finally(() => {
+      instances.forEach((inst) => {
+        // Open on the first bookable month, unless the visitor has already
+        // paged somewhere: the notice period may have moved it.
+        if (!inst.state.touched) {
+          inst.state.view = new Date(
+            minBookableDate.getFullYear(),
+            minBookableDate.getMonth(),
+            1,
+          )
+        }
+        inst.render()
+      })
+    })
 
   const goToFormBtn = document.getElementById("goToFormBtn")
   if (goToFormBtn) {

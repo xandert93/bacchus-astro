@@ -28,10 +28,9 @@ const isoOfDate = (d) =>
   String(d.getMonth() + 1).padStart(2, "0") +
   "-" +
   String(d.getDate()).padStart(2, "0")
-// Minimum-notice floors on the native date fields, mirroring the wedding
-// calendar's own 3-month minimum below (WEDDING_MIN_NOTICE_MONTHS) —
-// placeholders, not confirmed Bacchus policy, same "illustrative only"
-// status as the rest of this mock data (docs/content/client-facts.md). Corporate/
+// Minimum-notice floors on the native date fields, matching the wedding
+// calendar's default 3-month minimum (the calendar itself takes the live
+// figure from the wedding policy, AvailabilityCalendar.js). Corporate/
 // Celebration/Other enquiries use the plain dateNative field and get a
 // shorter 2-week floor instead, since they don't take over the whole
 // estate the way a wedding does. A backup date is still a wedding date,
