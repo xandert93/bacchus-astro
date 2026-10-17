@@ -351,6 +351,13 @@ import { hover } from "@lib/media-queries.js"
     const wlEmailOut = document.getElementById("wlPopoverEmailOut")
     const wlForm = document.getElementById("wlPopoverForm")
     const wlCloseBtn = document.getElementById("wlPopoverClose")
+    const wlErrorEl = document.getElementById("wlPopoverError")
+    const wlSuccessText = document.getElementById("wlPopoverSuccessText")
+    const wlWebsiteInput = document.getElementById("wlPopWebsite")
+    const wlSubmitBtn = wlForm ? wlForm.querySelector('button[type="submit"]') : null
+    // When the popover opened: sent with a sign-up, so one made implausibly
+    // fast can be ignored as a bot (src/pages/api/waitlist/index.ts).
+    let wlOpenedAt = 0
     let wlActiveCell = null
     let wlCloseTimer = null
     // Hover-capable pointers (mouse/trackpad) open the popover as a preview on
@@ -411,6 +418,8 @@ import { hover } from "@lib/media-queries.js"
       wlSuccessEl.hidden = true
       wlEmailInput.value = ""
       wlNameInput.value = ""
+      if (wlErrorEl) wlErrorEl.hidden = true
+      wlOpenedAt = Date.now()
       wlPop.classList.add("show")
       // Position after "show" so width/height reflect the real (unclamped)
       // rendered size — opacity:0 still lays the box out at full size, but
@@ -496,13 +505,50 @@ import { hover } from "@lib/media-queries.js"
     if (wlForm) {
       wlForm.addEventListener("submit", (e) => {
         // Native constraint validation (required + type="email" on the field
-        // itself) already ran before this event could even fire — nothing
-        // left to check here, just stop the actual (non-existent) form
-        // navigation.
+        // itself) already ran before this event could even fire, so this only
+        // sends it (src/pages/api/waitlist/index.ts).
         e.preventDefault()
-        wlEmailOut.textContent = wlEmailInput.value
-        wlBodyEl.hidden = true
-        wlSuccessEl.hidden = false
+        if (!wlActiveCell) return
+
+        const showError = (message) => {
+          if (wlSubmitBtn) wlSubmitBtn.disabled = false
+          if (!wlErrorEl) return
+          wlErrorEl.textContent = message
+          wlErrorEl.hidden = false
+          wlPosition()
+        }
+
+        if (wlSubmitBtn) wlSubmitBtn.disabled = true
+        if (wlErrorEl) wlErrorEl.hidden = true
+
+        fetch("/api/waitlist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            date: wlActiveCell.dataset.iso,
+            name: wlNameInput.value,
+            email: wlEmailInput.value,
+            sourcePage: window.location.pathname,
+            startedAt: wlOpenedAt,
+            website: wlWebsiteInput ? wlWebsiteInput.value : "",
+          }),
+        })
+          .then((response) => response.json().then((result) => ({ response, result })))
+          .then(({ response, result }) => {
+            if (!response.ok) {
+              showError(result.error || "Sorry, that didn't work. Please try again.")
+              return
+            }
+            if (wlSubmitBtn) wlSubmitBtn.disabled = false
+            wlEmailOut.textContent = wlEmailInput.value
+            if (wlSuccessText && result.alreadyOnList) {
+              wlSuccessText.textContent = "You're already on the list for this date."
+            }
+            wlBodyEl.hidden = true
+            wlSuccessEl.hidden = false
+            wlPosition()
+          })
+          .catch(() => showError("Sorry, that didn't work. Please try again."))
       })
     }
     document.addEventListener("click", (e) => {

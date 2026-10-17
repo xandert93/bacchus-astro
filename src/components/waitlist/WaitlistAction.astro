@@ -1,0 +1,71 @@
+---
+// The /waitlist page's one card: where the links in a waitlist email land.
+// ?action=confirm shows "Confirm my place"; ?action=leave shows "Take me off
+// the list". The button, not the link, does it (WaitlistAction.js), since
+// some email services open every link in an email to scan it.
+import Button from "@components/ui/Button.astro"
+---
+
+<section class="waitlist-action">
+  <div class="wrap">
+    <div class="waitlist-card" id="waitlistAction">
+      <p class="eyebrow">Waitlist</p>
+      <h1 id="waitlistTitle">One moment…</h1>
+      <p class="lead" id="waitlistText"></p>
+      <p class="waitlist-error" id="waitlistError" role="alert" hidden></p>
+      <div class="waitlist-buttons">
+        <Button variant="gradient" id="waitlistButton" hidden>
+          <span id="waitlistButtonLabel"></span>
+        </Button>
+        <Button href="/weddings" variant="ghost" id="waitlistBack" hidden arrow>
+          <span>Back to weddings</span>
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import "./WaitlistAction.js"
+</script>
+
+<style>
+  /* Clear of the fixed nav, with the card centred in what's left. */
+  .waitlist-action {
+    padding: clamp(140px, 20vh, 220px) 0 clamp(80px, 11vw, 150px);
+  }
+
+  .waitlist-card {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 48px);
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.12);
+    border-radius: var(--radius-card);
+    background: var(--paper);
+
+    text-align: center;
+  }
+
+  .waitlist-card h1 {
+    margin: 14px 0 16px;
+
+    font-size: clamp(30px, 4.5vw, 44px);
+    line-height: 1.15;
+  }
+
+  .waitlist-error {
+    margin: 0 0 16px;
+
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 15px;
+    color: var(--oxblood);
+  }
+
+  .waitlist-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+  }
+</style>

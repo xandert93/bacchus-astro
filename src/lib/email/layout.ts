@@ -58,6 +58,14 @@ export const paragraph = (html: string) =>
 export const highlight = (text: string) =>
   `<span style="color: ${BRONZE};">${escapeHtml(text)}</span>`
 
+/** A link inside a paragraph. */
+export const textLink = (label: string, href: string) =>
+  `<a href="${escapeHtml(href)}" style="color: ${BRONZE};">${escapeHtml(label)}</a>`
+
+/** Small, muted text: an aside, or the line that lets people opt out. */
+export const smallPrint = (html: string) =>
+  `<p style="margin: 0 0 16px; font-family: ${SERIF}; font-size: 13px; line-height: 1.6; color: ${MUTED};">${html}</p>`
+
 /** A section heading with a short gold rule above it. */
 export const heading = (text: string) => `
   <div style="margin: 36px 0 16px;">

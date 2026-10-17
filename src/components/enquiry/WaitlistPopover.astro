@@ -5,6 +5,7 @@
 import FormField from "@components/forms/FormField.astro"
 import TextInput from "@components/forms/TextInput.astro"
 import Button from "@components/ui/Button.astro"
+import { WAITLIST_WORDING } from "@data/enquiry"
 ---
 
 <div class="wl-popover" id="wlPopover" role="dialog" aria-label="Join the waitlist">
@@ -25,9 +26,7 @@ import Button from "@components/ui/Button.astro"
   <div class="wl-popover-eyebrow">Notify me</div>
   <h4 id="wlPopoverDate">—</h4>
   <div class="wl-popover-body">
-    <p class="wl-popover-copy">
-      This date is booked. Leave your email and we'll let you know if it opens up.
-    </p>
+    <p class="wl-popover-copy">{WAITLIST_WORDING}</p>
     <form class="wl-form" id="wlPopoverForm">
       <FormField label="Name" for="wlPopName">
         <TextInput id="wlPopName" placeholder="Your name" underline={false} />
@@ -41,6 +40,14 @@ import Button from "@components/ui/Button.astro"
           underline={false}
         />
       </FormField>
+      <p class="wl-form-error" id="wlPopoverError" role="alert" hidden></p>
+      {/* A field people never see but form-filling bots do (see EnquiryForm). */}
+      <div class="wl-trap" aria-hidden="true">
+        <label>
+          Leave this empty
+          <input type="text" id="wlPopWebsite" tabindex="-1" autocomplete="off" />
+        </label>
+      </div>
       <div class="wl-form-actions">
         <Button type="submit" variant="gradient" small>
           <span>Join the waitlist</span>
@@ -64,9 +71,9 @@ import Button from "@components/ui/Button.astro"
           <path d="m4 12 5 5L20 6" />
         </svg>
       </span>
-      <p>
-        You're on the list. We'll email <b id="wlPopoverEmailOut"></b> the moment this
-        date opens up.
+      <p id="wlPopoverSuccessText">
+        Nearly there: we've emailed <b id="wlPopoverEmailOut"></b> a link to confirm. Once
+        you click it, we'll tell you the moment this date opens up.
       </p>
     </div>
   </div>
@@ -84,6 +91,24 @@ import Button from "@components/ui/Button.astro"
        its specificity, since form.wl-form is already more specific than the
        plain element selector.
   */
+  .wl-form-error {
+    margin: 0 0 10px;
+
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--oxblood);
+  }
+
+  /* Off-screen rather than display: none, which some bots skip. */
+  .wl-trap {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
   form.wl-form {
     background: none;
     border: none;

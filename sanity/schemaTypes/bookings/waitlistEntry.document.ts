@@ -89,6 +89,15 @@ export default defineType({
       ),
     }),
     defineField({
+      // A hash of the secret in this person's email links ("confirm", "take
+      // me off"), never the secret itself. Set and checked by the site.
+      name: "tokenHash",
+      title: "Link Check",
+      type: "string",
+      hidden: true,
+      readOnly: true,
+    }),
+    defineField({
       name: "notifiedAt",
       title: "Notified at",
       type: "datetime",

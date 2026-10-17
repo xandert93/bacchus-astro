@@ -295,8 +295,29 @@ calendar's window follows the policy.
 - **Days can't be picked until the statuses arrive**, so nobody picks a date
   that's about to turn out booked.
 
-Then the waitlist can be wired up: a booked date offers to notify someone if
-it frees up.
+**The waitlist, built 2026-10-17.** A booked date's "notify me" popover posts
+to `src/pages/api/waitlist/index.ts`, which refuses a date that isn't booked
+and more sign-ups per address than the wedding policy allows, stores the
+person unconfirmed, and emails a link to confirm. The links in every
+waitlist email open `/waitlist`, whose button (not the link itself, since
+email scanners open links) confirms or removes them
+(`api/waitlist/confirm.ts`, `leave.ts`). Only a hash of each link's secret
+is stored. When a confirmed wedding is cancelled, Sanity calls
+`src/pages/api/booking-events.ts`, which checks the date really is free and
+emails everyone confirmed on its list, marking them Notified.
+
+**To switch on the cancellation emails**, once emails send from the live
+site: sanity.io/manage → the project → API → Webhooks → Create webhook:
+
+- Name `Notify the waitlist`; URL `https://<site>/api/booking-events`;
+  dataset `production`; trigger on **Update**; method POST; API version
+  `v2025-02-19`; drafts off.
+- Filter:
+  `_type == "booking" && event.type == "wedding" && before().status in ["confirmed", "completed"] && after().status == "cancelled"`
+- Projection:
+  `{"date": event.date, "type": event.type, "before": before().status, "after": after().status}`
+- Secret: any long random string, also set as the Worker secret
+  `SANITY_WEBHOOK_SECRET`.
 
 ## Step 6 — the automatic parts
 

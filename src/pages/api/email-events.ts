@@ -9,7 +9,7 @@
 
 import type { APIRoute } from "astro"
 import { RESEND_WEBHOOK_SECRET } from "astro:env/server"
-import { verifyResendWebhook } from "@lib/email/verify-webhook"
+import { verifyResendWebhook } from "@lib/webhooks/resend"
 import { getWriteClient } from "@lib/sanity/write-client"
 
 export const prerender = false

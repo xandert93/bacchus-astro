@@ -13,4 +13,6 @@ export const PAGES = [
   // Reached only from a private link, so kept out of search results.
   { path: "/secure-booking", title: /Secure Your Booking/, noIndex: true },
   { path: "/menu", title: /Menu/ },
+  // Reached only from a waitlist email's link.
+  { path: "/waitlist", title: /Waitlist/, noIndex: true },
 ]
