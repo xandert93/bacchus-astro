@@ -126,9 +126,14 @@ arrived.
 an enquiry, restarting the server through a config change, and sending
 another.
 
+**Still happens** (2026-10-17) after a change to the `env` settings in
+`astro.config.mjs` while the dev server is running: the server restarts
+itself, but the endpoint keeps asking for the old bundled files (this time
+`astro_env_runtime.js`). Stopping and starting the dev server clears it.
+
 **Test**: none automated: the tests run against a production build, which
-doesn't use Vite's dev bundling. If it comes back, stop the dev server,
-delete `node_modules/.vite` and start it again.
+doesn't use Vite's dev bundling. If it comes back, stop the dev server and
+start it again; if that isn't enough, delete `node_modules/.vite` as well.
 
 **Rule**: a package the Worker code imports should be listed in
 `vite.ssr.optimizeDeps.include`, so the dev server never re-bundles mid-run.
