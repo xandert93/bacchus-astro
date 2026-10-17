@@ -12,6 +12,8 @@ export const PAGES = [
   { path: "/weddings/packages/beverage", title: /Beverage/ },
   // Reached only from a private link, so kept out of search results.
   { path: "/secure-booking", title: /Secure Your Booking/, noIndex: true },
+  // Card payments' stand-in checkout while they're in test mode.
+  { path: "/secure-booking/test-checkout", title: /Test Card Payment/, noIndex: true },
   { path: "/menu", title: /Menu/ },
   // Reached only from a waitlist email's link.
   { path: "/waitlist", title: /Waitlist/, noIndex: true },

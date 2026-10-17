@@ -1,0 +1,68 @@
+---
+// /secure-booking/test-checkout: the pretend card checkout used while card
+// payments are in test mode (src/lib/payments/card.ts). It stands where a
+// real provider's checkout page will: the deposit page sends the client here,
+// and "Pay" does what the provider's "payment succeeded" will, then returns
+// them to their deposit page. No card details, no money.
+import BaseLayout from "@layouts/BaseLayout.astro"
+import Button from "@components/ui/Button.astro"
+import SecureCheckoutBadge from "@components/secure-booking/SecureCheckoutBadge.astro"
+import "../_secure-booking.css"
+---
+
+<BaseLayout
+  title="Test Card Payment — Bacchus, Mdina"
+  description="A pretend card payment, for testing the deposit page."
+  checkout
+  noIndex
+  showVisitSection={false}
+>
+  <SecureCheckoutBadge slot="header" />
+
+  <section class="secure-booking-status-section test-checkout">
+    <div class="secure-booking-container-large">
+      <div class="secure-booking-status test-checkout-card">
+        <div>
+          <p class="secure-booking-eyebrow-plain">Test mode: no money is taken</p>
+          <h2>
+            Pay <span id="testCheckoutAmount">your deposit</span> by card
+          </h2>
+          <p>
+            This stands in for the card provider's checkout while payments are in test
+            mode. Pressing Pay records a test payment and confirms the booking, exactly as
+            a real payment will.
+          </p>
+          <p
+            class="secure-booking-pay-error"
+            id="testCheckoutError"
+            role="alert"
+            hidden
+          ></p>
+          <div class="secure-booking-decline-buttons">
+            <Button variant="ghost" id="testCheckoutBack">
+              <span>Back without paying</span>
+            </Button>
+            <Button variant="gradient" id="testCheckoutPay" arrow>
+              <span>Pay (test)</span>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import "./_test-checkout.js"
+</script>
+
+<style>
+  .test-checkout {
+    padding: clamp(140px, 20vh, 220px) 0 clamp(80px, 11vw, 150px);
+  }
+
+  .test-checkout-card {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+</style>

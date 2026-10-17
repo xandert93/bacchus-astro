@@ -1,30 +1,32 @@
 ---
 // One line of the bank-transfer details: label, value and a button that
 // copies it. The copy button swaps its icon for a tick for a moment once the
-// text is on the clipboard (BankDetailRow.js).
+// text is on the clipboard (BankDetailRow.js). The page's script fills in
+// the value and what's copied (src/pages/_secure-booking.js), from the fields named here.
 import SecureBookingIcon from "./SecureBookingIcon.astro"
 
 interface Props {
   label: string
-  value: string
-  // What goes on the clipboard, when it differs from what's shown (the
-  // amount copies as plain digits).
-  copyText?: string
+  // The deposit-page field the value comes from, e.g. "bank.iban".
+  field: string
+  // The field to copy, when it differs from what's shown (the amount copies
+  // as plain digits).
+  copyField?: string
   // The copy button's accessible name, e.g. "Copy IBAN".
   copyLabel: string
 }
-const { label, value, copyText = value, copyLabel } = Astro.props
+const { label, field, copyField = field, copyLabel } = Astro.props
 ---
 
 <div class="secure-booking-bank-row">
   <div>
     <p class="secure-booking-bank-label">{label}</p>
-    <p class="secure-booking-bank-value">{value}</p>
+    <p class="secure-booking-bank-value" data-deposit={field}></p>
   </div>
   <button
     type="button"
     class="secure-booking-copy-button"
-    data-copy={copyText}
+    data-deposit-copy={copyField}
     aria-label={copyLabel}
   >
     <SecureBookingIcon name="copy" class="secure-booking-copy-icon" strokeWidth={1.8} />

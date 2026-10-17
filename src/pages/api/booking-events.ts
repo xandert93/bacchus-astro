@@ -1,30 +1,31 @@
-// POST /api/booking-events: Sanity calls this when a confirmed wedding is
-// cancelled (a webhook set up in sanity.io/manage; see
-// docs/planning/sanity-rollout.md, step 6). If that frees the date, everyone
-// confirmed on its waitlist is emailed at once, and marked Notified.
+// POST /api/booking-events: Sanity calls this when a booking changes in one
+// of two ways that need the site to act (a webhook set up in
+// sanity.io/manage; see docs/planning/sanity-rollout.md, steps 6 and 7):
 //
-// "Frees the date" is checked, not assumed: another confirmed wedding or a
-// closure can still hold it, and then nobody is told.
+//   - a confirmed wedding is cancelled: if that frees the date, everyone
+//     confirmed on its waitlist is told (src/lib/waitlist/notify.ts);
+//   - staff mark a deposit Received (a bank transfer reached the account):
+//     the booking is confirmed and everyone told (src/lib/deposits/confirm.ts).
 
 import type { APIRoute } from "astro"
 import { SANITY_WEBHOOK_SECRET } from "astro:env/server"
-import { DATE_BLOCKING_STATUSES } from "@studio/lib/constants"
-import { activeWaitlistForDateQuery } from "@studio/queries/availability"
-import { statusOnDate } from "@lib/availability/status-on-date"
-import { sendEmail } from "@lib/email/send"
-import { waitlistDateFreeEmail } from "@lib/email/waitlist-emails"
+import { DATE_BLOCKING_STATUSES, OPEN_ENQUIRY_STATUSES } from "@studio/lib/constants"
+import { confirmDeposit } from "@lib/deposits/confirm"
+import { loadDepositByBookingId } from "@lib/deposits/load"
 import { getWriteClient } from "@lib/sanity/write-client"
-import { newToken } from "@lib/waitlist/tokens"
+import { notifyWaitlist } from "@lib/waitlist/notify"
 import { verifySanityWebhook } from "@lib/webhooks/sanity"
 
 export const prerender = false
 
 /** The webhook's projection, set in Sanity's dashboard. */
 interface BookingChange {
+  _id?: string
   date?: string
   type?: string
   before?: string
   after?: string
+  depositReceived?: boolean
 }
 
 const respond = (status: number, body?: Record<string, unknown>) =>
@@ -32,6 +33,8 @@ const respond = (status: number, body?: Record<string, unknown>) =>
     status,
     headers: body ? { "Content-Type": "application/json" } : {},
   })
+
+const isOneOf = (list: readonly string[], value?: string) => list.includes(value ?? "")
 
 export const POST: APIRoute = async ({ request }) => {
   if (!SANITY_WEBHOOK_SECRET) {
@@ -46,67 +49,45 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const change = JSON.parse(rawBody) as BookingChange
-  const wasBooked = (DATE_BLOCKING_STATUSES as readonly string[]).includes(
-    change.before ?? "",
-  )
+  const siteOrigin = new URL(request.url).origin
 
-  // The webhook's filter should only send these, but check: anything else
-  // is acknowledged and ignored, so Sanity doesn't retry it.
-  if (
-    change.type !== "wedding" ||
-    change.after !== "cancelled" ||
-    !wasBooked ||
-    !change.date
-  ) {
-    return respond(204)
-  }
+  const weddingCancelled =
+    change.type === "wedding" &&
+    change.after === "cancelled" &&
+    isOneOf(DATE_BLOCKING_STATUSES, change.before) &&
+    change.date
+
+  const depositArrived =
+    change.depositReceived && isOneOf(OPEN_ENQUIRY_STATUSES, change.after) && change._id
+
+  // The webhook's filter should only send these two, but check: anything
+  // else is acknowledged and ignored, so Sanity doesn't retry it.
+  if (!weddingCancelled && !depositArrived) return respond(204)
 
   const client = getWriteClient()
   if (!client) return respond(503)
 
   try {
-    if ((await statusOnDate(client, change.date)) === "taken") {
-      return respond(200, { notified: 0, reason: "The date is still booked." })
+    if (weddingCancelled) {
+      const notified = await notifyWaitlist(client, {
+        date: change.date as string,
+        siteOrigin,
+      })
+      return respond(200, { notified })
     }
 
-    const waiting = await client.fetch<{ _id: string; email: string; name?: string }[]>(
-      activeWaitlistForDateQuery,
-      { date: change.date },
-    )
-    const siteOrigin = new URL(request.url).origin
-
-    // One by one, each with a fresh "take me off" link. A failed email
-    // leaves that person Active, so they aren't wrongly marked as told.
-    let notified = 0
-    for (const entry of waiting) {
-      const { token, hash } = await newToken()
-      const result = await sendEmail(
-        waitlistDateFreeEmail({
-          to: entry.email,
-          name: entry.name,
-          date: change.date,
-          token,
-          siteOrigin,
-        }),
-      )
-      if (!result.sent) continue
-
-      await client
-        .patch(entry._id)
-        .set({
-          status: "notified",
-          notifiedAt: new Date().toISOString(),
-          tokenHash: hash,
-        })
-        .commit()
-      notified++
+    const record = await loadDepositByBookingId(client, change._id as string)
+    if (!record) {
+      console.error(`Deposit received for ${change._id}, which has no sent quote.`)
+      return respond(204)
     }
 
-    return respond(200, { notified })
+    const outcome = await confirmDeposit(client, record, { actor: "staff", siteOrigin })
+    return respond(200, { outcome })
   } catch (error) {
-    // A 500 makes Sanity retry later; those already told are Notified and
-    // won't be emailed twice.
-    console.error("Waitlist not notified: Sanity refused a request.", error)
+    // A 500 makes Sanity retry later. Both actions are safe to repeat: those
+    // already told are Notified, and a confirmed booking isn't confirmed twice.
+    console.error("Booking change not handled: Sanity refused a request.", error)
     return respond(500)
   }
 }

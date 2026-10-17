@@ -1,0 +1,302 @@
+// Every email in the deposit flow, to the client and to staff. One file, as
+// each is short and they share their facts (a quote's couple, date, sums).
+
+import { euros } from "@lib/money"
+import { longDate } from "./enquiry-details"
+import {
+  button,
+  detailsCard,
+  emailLayout,
+  escapeHtml,
+  highlight,
+  paragraph,
+  smallPrint,
+} from "./layout"
+import type { Email } from "./send"
+import { studioLink } from "./staff"
+
+const HERO = {
+  photo: "secret-garden-table.jpg",
+  alt: "A long table laid for dinner in the Secret Garden, lit by candles and fairy lights",
+}
+
+const SIGN_OFF = paragraph("Warm regards,<br><em>The Bacchus events team</em>")
+
+/** The facts every deposit email can draw on. */
+export interface DepositFacts {
+  couple: string
+  firstName: string
+  email: string
+  date: string
+  reference: string
+  total: number
+  deposit: number
+  bookingId: string
+}
+
+/** The text version: the same lines without the HTML. */
+const plain = (lines: (string | undefined)[]) =>
+  lines.filter((line) => line !== undefined).join("\n")
+
+const staffButton = (bookingId: string) => {
+  const link = studioLink(bookingId, "booking")
+  return link ? button("Open in the Studio", link) : ""
+}
+
+// --- To the client ------------------------------------------------------------
+
+/** The quote, with the link to the deposit page. Sent when staff mark it Sent. */
+export const quoteEmail = (
+  facts: DepositFacts,
+  { depositLink, holdUntil }: { depositLink: string; holdUntil?: string },
+): Email => {
+  const day = longDate(facts.date)
+  const rows: [string, string | undefined][] = [
+    ["Date", day],
+    ["Quote reference", facts.reference],
+    ["Total", euros(facts.total)],
+    ["Deposit to secure it", euros(facts.deposit)],
+    ["Date held until", holdUntil ? longDate(holdUntil) : undefined],
+  ]
+
+  return {
+    to: facts.email,
+    subject: `Your quote for ${day}`,
+    html: emailLayout({
+      preview: `Your quote is ready: review it and secure ${day}.`,
+      eyebrow: "Your quote",
+      title: "Your date, <em>held for you</em>",
+      hero: HERO,
+      body: [
+        paragraph(`Dear ${escapeHtml(facts.firstName)},`),
+        paragraph(
+          `Your quote for ${highlight(day)} is ready. Everything is on your booking page: the details, the full price breakdown, and the deposit that confirms your date.`,
+        ),
+        detailsCard(rows),
+        button("Review and pay your deposit", depositLink),
+        smallPrint(
+          "The page is private to you: please don't share the link. Questions? Just reply to this email.",
+        ),
+        SIGN_OFF,
+      ].join(""),
+    }),
+    text: plain([
+      `Dear ${facts.firstName},`,
+      "",
+      `Your quote for ${day} is ready. Everything is on your booking page: the details, the full price breakdown, and the deposit that confirms your date.`,
+      "",
+      ...rows.filter(([, value]) => value).map(([label, value]) => `${label}: ${value}`),
+      "",
+      `Review and pay your deposit: ${depositLink}`,
+      "",
+      "The page is private to you: please don't share the link. Questions? Just reply to this email.",
+      "",
+      "Warm regards,",
+      "The Bacchus events team",
+    ]),
+    kind: "quote",
+  }
+}
+
+/** Once the deposit has arrived: the date is theirs. */
+export const depositConfirmedEmail = (facts: DepositFacts): Email => {
+  const day = longDate(facts.date)
+  const balance = facts.total - facts.deposit
+
+  return {
+    to: facts.email,
+    subject: `${day} is yours`,
+    html: emailLayout({
+      preview: `Your deposit has arrived and ${day} is confirmed.`,
+      eyebrow: "Booking confirmed",
+      title: "Your date is <em>confirmed</em>",
+      hero: HERO,
+      body: [
+        paragraph(`Dear ${escapeHtml(facts.firstName)},`),
+        paragraph(
+          `Your deposit of ${highlight(euros(facts.deposit))} has arrived, and ${highlight(day)} is now yours. Thank you.`,
+        ),
+        detailsCard([
+          ["Quote reference", facts.reference],
+          ["Deposit received", euros(facts.deposit)],
+          ["Remaining balance", balance > 0 ? euros(balance) : undefined],
+        ]),
+        paragraph(
+          "We'll be in touch soon to start planning the day with you. In the meantime, just reply to this email with any questions.",
+        ),
+        SIGN_OFF,
+      ].join(""),
+    }),
+    text: plain([
+      `Dear ${facts.firstName},`,
+      "",
+      `Your deposit of ${euros(facts.deposit)} has arrived, and ${day} is now yours. Thank you.`,
+      "",
+      `Quote reference: ${facts.reference}`,
+      balance > 0 ? `Remaining balance: ${euros(balance)}` : undefined,
+      "",
+      "We'll be in touch soon to start planning the day with you. In the meantime, just reply to this email with any questions.",
+      "",
+      "Warm regards,",
+      "The Bacchus events team",
+    ]),
+    kind: "deposit-confirmed",
+  }
+}
+
+/** To others who'd enquired about the same wedding date, once it's taken. */
+export const dateTakenEmail = ({
+  to,
+  firstName,
+  date,
+  enquireLink,
+}: {
+  to: string
+  firstName: string
+  date: string
+  enquireLink: string
+}): Email => {
+  const day = longDate(date)
+
+  return {
+    to,
+    subject: `${day} is no longer available`,
+    html: emailLayout({
+      preview: `We're sorry: ${day} has now been booked.`,
+      eyebrow: "About your enquiry",
+      title: `${escapeHtml(day)} has been <em>booked</em>`,
+      body: [
+        paragraph(`Dear ${escapeHtml(firstName)},`),
+        paragraph(
+          `We're sorry to tell you that ${highlight(day)}, the date you enquired about, has now been booked by another couple. We host only one wedding a day, so it's no longer available.`,
+        ),
+        paragraph(
+          "We'd love to find you another date. Reply to this email, or look at the calendar for the dates still open.",
+        ),
+        button("See available dates", enquireLink),
+        SIGN_OFF,
+      ].join(""),
+    }),
+    text: plain([
+      `Dear ${firstName},`,
+      "",
+      `We're sorry to tell you that ${day}, the date you enquired about, has now been booked by another couple. We host only one wedding a day, so it's no longer available.`,
+      "",
+      `We'd love to find you another date. Reply to this email, or look at the calendar for the dates still open: ${enquireLink}`,
+      "",
+      "Warm regards,",
+      "The Bacchus events team",
+    ]),
+    kind: "date-taken",
+  }
+}
+
+// --- To staff -----------------------------------------------------------------
+
+const staffEmail = ({
+  to,
+  subject,
+  eyebrow,
+  title,
+  lines,
+  facts,
+  replyTo,
+  kind,
+}: {
+  to: string[]
+  subject: string
+  eyebrow: string
+  title: string
+  lines: string[]
+  facts: DepositFacts
+  replyTo?: string
+  kind: string
+}): Email => {
+  const rows: [string, string][] = [
+    ["Client", facts.couple],
+    ["Date", longDate(facts.date)],
+    ["Quote reference", facts.reference],
+    ["Deposit", euros(facts.deposit)],
+  ]
+
+  return {
+    to,
+    subject,
+    html: emailLayout({
+      preview: lines[0],
+      eyebrow,
+      title,
+      body: [
+        ...lines.map((line) => paragraph(escapeHtml(line))),
+        staffButton(facts.bookingId),
+        detailsCard(rows),
+      ].join(""),
+    }),
+    text: plain([...lines, "", ...rows.map(([label, value]) => `${label}: ${value}`)]),
+    kind,
+    replyTo,
+  }
+}
+
+/** The client says they've sent the transfer: someone should look for it. */
+export const transferNoticeEmail = (facts: DepositFacts, to: string[]) =>
+  staffEmail({
+    to,
+    facts,
+    replyTo: facts.email,
+    subject: `Deposit transfer sent: ${facts.couple}, ref ${facts.reference}`,
+    eyebrow: "Deposit transfer",
+    title: "A transfer is <em>on its way</em>",
+    lines: [
+      `${facts.couple} says they've sent their deposit by bank transfer, with the reference ${facts.reference}.`,
+      "When it reaches the account, open their booking, set the payment to Received and publish. That confirms the booking, and they're emailed.",
+    ],
+    kind: "transfer-notice",
+  })
+
+/** The deposit arrived and the booking is confirmed. */
+export const depositReceivedStaffEmail = (facts: DepositFacts, to: string[]) =>
+  staffEmail({
+    to,
+    facts,
+    replyTo: facts.email,
+    subject: `Booking confirmed: ${facts.couple}, ${longDate(facts.date)}`,
+    eyebrow: "Booking confirmed",
+    title: "Deposit <em>received</em>",
+    lines: [
+      `${facts.couple}'s deposit has arrived, so their booking is confirmed and they've been emailed.`,
+    ],
+    kind: "deposit-received",
+  })
+
+/** A deposit arrived for a date someone else had already secured. */
+export const paidButTakenEmail = (facts: DepositFacts, to: string[]) =>
+  staffEmail({
+    to,
+    facts,
+    replyTo: facts.email,
+    subject: `Refund needed: ${facts.couple} paid for a taken date`,
+    eyebrow: "Needs attention",
+    title: "Paid for a date <em>already taken</em>",
+    lines: [
+      `${facts.couple} paid their deposit, but another wedding was confirmed for ${longDate(facts.date)} first. Their booking has not been confirmed.`,
+      "Please contact them about another date or a refund.",
+    ],
+    kind: "paid-but-taken",
+  })
+
+/** The client declined the quote. */
+export const quoteDeclinedEmail = (facts: DepositFacts, to: string[], reason?: string) =>
+  staffEmail({
+    to,
+    facts,
+    replyTo: facts.email,
+    subject: `Quote declined: ${facts.couple}, ${longDate(facts.date)}`,
+    eyebrow: "Quote declined",
+    title: "The quote was <em>declined</em>",
+    lines: [
+      `${facts.couple} declined their quote on the booking page. Their enquiry is now Withdrawn, and the date is free for others.`,
+      reason ? `Their reason: "${reason}"` : "They didn't give a reason.",
+    ],
+    kind: "quote-declined",
+  })

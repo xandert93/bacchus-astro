@@ -1,0 +1,62 @@
+---
+// The message at the top of the deposit page for every state but "pay": while
+// it loads, a link that doesn't work, a transfer on its way, a confirmed
+// booking, a closed quote. The page's script (src/pages/_secure-booking.js) shows the one that matches.
+import { CONTACT } from "@data/contact"
+import SecureBookingIcon from "./SecureBookingIcon.astro"
+import type { SecureBookingIconName } from "./SecureBookingIcon.astro"
+
+const MESSAGES: {
+  state: string
+  icon: SecureBookingIconName
+  title: string
+  body: string
+}[] = [
+  {
+    state: "loading",
+    icon: "calendar",
+    title: "One moment",
+    body: "Loading your booking…",
+  },
+  {
+    state: "invalid",
+    icon: "warning",
+    title: "This link isn't working",
+    body: `It may be incomplete, or the quote may have changed. Please use the button in your latest email from us, or call ${CONTACT.phone.display}.`,
+  },
+  {
+    state: "transfer-sent",
+    icon: "bank",
+    title: "Thank you: we're looking out for your transfer",
+    body: "We'll email you as soon as it arrives and your date is confirmed. Transfers usually take one or two working days.",
+  },
+  {
+    state: "confirmed",
+    icon: "shield-check",
+    title: "Your date is confirmed",
+    body: "Your deposit has arrived, and we've emailed you a confirmation. We'll be in touch soon to start planning.",
+  },
+  {
+    state: "closed",
+    icon: "warning",
+    title: "This quote is closed",
+    body: `It was declined, replaced by a newer quote, or has expired. If you'd like to talk about your date, call ${CONTACT.phone.display} or email ${CONTACT.email.display}.`,
+  },
+]
+---
+
+<section class="secure-booking-status-section">
+  <div class="secure-booking-container-large">
+    {MESSAGES.map((message) => (
+      <div class="secure-booking-status" data-deposit-show={message.state} hidden>
+        <span class="secure-booking-icon-badge secure-booking-pay-icon-cream">
+          <SecureBookingIcon name={message.icon} size={22} />
+        </span>
+        <div>
+          <h2>{message.title}</h2>
+          <p>{message.body}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

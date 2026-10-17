@@ -16,7 +16,7 @@ import { enquiryConfirmationEmail } from "@lib/email/enquiry-confirmation"
 import { sendEmail } from "@lib/email/send"
 import { getWriteClient } from "@lib/sanity/write-client"
 import { json, looksLikeABot, readFormPost } from "@lib/api/requests"
-import { CONTACT } from "@data/contact"
+import { STAFF_RECIPIENTS_GROQ, staffRecipientsOrDefault } from "@lib/email/staff"
 
 export const prerender = false
 
@@ -51,16 +51,13 @@ export const POST: APIRoute = async ({ request }) => {
       `{
         "spaceIds": *[_type == "venueSpace" && slug.current in $slugs && !(_id in path("drafts.**"))]._id,
         "retentionMonths": *[_id == "weddingPolicy"][0].retentionMonths,
-        "staffRecipients": *[_id == "siteSettings"][0].enquiryNotificationEmails
+        "staffRecipients": ${STAFF_RECIPIENTS_GROQ}
       }`,
       { slugs: result.enquiry.spaces },
     )
 
     booking = toBooking(result.enquiry, settings)
-    // Site settings name who's told; until they do, the events inbox.
-    staffRecipients = settings.staffRecipients?.length
-      ? settings.staffRecipients
-      : [CONTACT.email.display]
+    staffRecipients = staffRecipientsOrDefault(settings.staffRecipients)
 
     await client.create(booking)
   } catch (error) {

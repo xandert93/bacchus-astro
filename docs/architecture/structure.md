@@ -15,9 +15,12 @@ version is in `CLAUDE.md`; this is the full map.
   `menuBackgroundImage`, `showVisitSection`, `checkout` (SiteHeader's
   checkout bar, filled from the `header` slot, and no drawer) and `noIndex`.
   Has a named slot `after-footer` for page overlays.
-- `/secure-booking`, the deposit page (a draft), is a checkout: brand-only bar, no
-  drawer, kept out of search results, never linked from the site. It reads
-  the placeholder booking in `src/data/demo-booking.ts`.
+- `/secure-booking`, the deposit page, is a checkout: brand-only bar, no
+  drawer, kept out of search results, never linked from the site. It is
+  reached only from a quote email's private link, and its script
+  (`_secure-booking.js`) loads the quote through `/api/deposits/view` and
+  shows one state at a time (`[data-deposit-show]`). The flow is in
+  `docs/planning/sanity-rollout.md`, step 7.
 - **Pages compose; components hold the markup.** A page file is frontmatter
   plus a list of sections (the homepage is about 45 lines). Content the
   client edits comes from Sanity, through `src/lib/sanity/`; other content
@@ -95,7 +98,8 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   `WeddingsAvailability`, `MenuCourseTabs`, `MenuEnquireCall`, …).
 - `secure-booking/`: the deposit page's sections (`SecureBookingHero`,
   `BookingSummary`, `DepositPaymentOptions` with its `BankDetailRow`s,
-  `PaymentSupport`, `PaymentFaq`, `BookingAssurances`, `PaymentHelpButton`),
+  `PaymentSupport`, `PaymentFaq`, `BookingAssurances`, `PaymentHelpButton`,
+  `DepositStatus`, `DeclineQuote`),
   the `SecureBookingIntro` heading block they share, `SecureCheckoutBadge`
   for the bar, and `SecureBookingIcon`, the page's line icons.
 
@@ -149,8 +153,6 @@ Every button is `<Button>` (`ui/Button.astro`).
   `EnquirySection.astro` and `EnquiryForm.js`: one list.
 - `src/data/contact.ts`: the venue's phone and email, for the Visit section
   and the deposit page's support cards.
-- `src/data/demo-booking.ts`: the deposit page's placeholder booking, in
-  the shape a real one will take.
 - `src/lib/media-queries.js`: every breakpoint and media query, for CSS,
   scripts and `<img sizes>` (see `docs/design/design-system.md`).
 - `src/lib/images.ts`: every photo, by key (see
@@ -175,7 +177,7 @@ Every button is `<Button>` (`ui/Button.astro`).
   owner sits beside that owner and is named after it
   (`packages/PackageTierSection.css` beside `PackageTierSection.astro`). A
   page's own file sits beside the page with a leading underscore
-  (`_beverage.css`, `_gallery.js`; a draft's `_secure-booking.css`), which Astro never
+  (`_beverage.css`, `_gallery.js`, `_secure-booking.css`), which Astro never
   treats as a route. `src/styles/` holds only files with no single owner:
   `global.css` and the shared `tabs.css`, `gallery-grid.css` and
   `enquire-background.css` (the parchment band behind `EnquirySection` and

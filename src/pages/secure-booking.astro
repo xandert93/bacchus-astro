@@ -1,16 +1,17 @@
 ---
-// /secure-booking: the deposit page, front end only (roadmap step 4). A draft
-// (src/drafts/registry.ts): built in dev and draft builds, not yet for the
-// live site. In real
-// use a couple reaches it from a unique link emailed once staff approve their
-// enquiry, so it's never linked from the site and stays out of search
-// results. Until bookings exist it shows the placeholder booking in
-// src/data/demo-booking.ts.
+// /secure-booking: the deposit page. A couple reaches it from the private link
+// in their quote email (?token=…), so it's never linked from the site and
+// stays out of search results. The page itself is static; _secure-booking.js
+// asks /api/deposits/view for the quote behind the link and fills it in,
+// which keeps the photos going through the build's image pipeline.
+// docs/planning/sanity-rollout.md, step 7.
 import BaseLayout from "@layouts/BaseLayout.astro"
 import SecureCheckoutBadge from "@components/secure-booking/SecureCheckoutBadge.astro"
 import SecureBookingHero from "@components/secure-booking/SecureBookingHero.astro"
+import DepositStatus from "@components/secure-booking/DepositStatus.astro"
 import BookingSummary from "@components/secure-booking/BookingSummary.astro"
 import DepositPaymentOptions from "@components/secure-booking/DepositPaymentOptions.astro"
+import DeclineQuote from "@components/secure-booking/DeclineQuote.astro"
 import PaymentSupport from "@components/secure-booking/PaymentSupport.astro"
 import PaymentFaq from "@components/secure-booking/PaymentFaq.astro"
 import PaymentHelpButton from "@components/secure-booking/PaymentHelpButton.astro"
@@ -27,11 +28,19 @@ import "./_secure-booking.css"
 >
   <SecureCheckoutBadge slot="header" />
 
-  <SecureBookingHero />
-  <BookingSummary />
-  <DepositPaymentOptions />
-  <PaymentSupport />
-  <PaymentFaq />
-  <PaymentHelpButton />
-  <BookingAssurances />
+  <div id="depositPage" data-deposit-state="loading">
+    <SecureBookingHero />
+    <DepositStatus />
+    <BookingSummary />
+    <DepositPaymentOptions />
+    <DeclineQuote />
+    <PaymentSupport />
+    <PaymentFaq />
+    <PaymentHelpButton />
+    <BookingAssurances />
+  </div>
 </BaseLayout>
+
+<script>
+  import "./_secure-booking.js"
+</script>

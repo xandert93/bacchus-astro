@@ -2,7 +2,7 @@
 // "confirm" and "take me off" endpoints.
 
 import type { SanityClient } from "@sanity/client"
-import { hashToken } from "./tokens"
+import { hashToken } from "@lib/tokens"
 
 export interface WaitlistEntryRef {
   _id: string

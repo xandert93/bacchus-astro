@@ -563,22 +563,146 @@
   transition: transform 0.3s var(--ease);
 }
 
-.secure-booking-pay-caption {
-  margin-top: 24px;
+.secure-booking-pay-note {
+  margin-top: 12px;
+
   font-family: "Newsreader", Georgia, serif;
-  font-size: 12px;
-  color: rgba(var(--muted-ink-rgb), 0.5);
-  display: none;
-  opacity: 0;
-  transition: opacity 0.3s var(--ease);
+  font-size: 13px;
+  color: rgba(var(--muted-ink-rgb), 0.7);
 }
 
-.secure-booking-pay-caption.show {
-  display: block;
+/* Bank transfer is the way we'd rather be paid, so it says so. */
+.secure-booking-recommended {
+  margin-left: auto;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--gold-rgb), 0.18);
+
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bronze);
 }
 
-.secure-booking-pay-caption.is-revealed {
-  opacity: 1;
+.secure-booking-pay-error {
+  margin: 20px 0 0;
+
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 15px;
+  color: var(--oxblood);
+}
+
+/* ---------- State messages (DepositStatus) ---------- */
+
+.secure-booking-status-section {
+  padding: clamp(32px, 6vw, 56px) 0 0;
+}
+
+.secure-booking-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: clamp(24px, 3vw, 36px);
+  border: 1px solid rgba(var(--ink-rgb), 0.1);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+}
+
+.secure-booking-status h2 {
+  margin: 0 0 8px;
+
+  font-size: clamp(24px, 3vw, 32px);
+}
+
+.secure-booking-status p {
+  margin: 0;
+
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--muted-ink);
+}
+
+/* ---------- Declining the quote (DeclineQuote) ---------- */
+
+.secure-booking-decline-section {
+  background: var(--limestone-2);
+  padding: 0 0 calc(var(--secure-booking-section-gap) / 2);
+}
+
+.secure-booking-decline-line {
+  margin: 0;
+
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 15px;
+  color: var(--muted-ink);
+}
+
+.secure-booking-decline-open {
+  padding: 0;
+  border: 0;
+  background: none;
+
+  font: inherit;
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.secure-booking-decline-dialog {
+  width: min(520px, calc(100vw - 32px));
+  padding: clamp(24px, 4vw, 36px);
+  border: 1px solid rgba(var(--ink-rgb), 0.12);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.secure-booking-decline-dialog::backdrop {
+  background: rgba(var(--ink-rgb), 0.45);
+}
+
+.secure-booking-decline-dialog h2 {
+  margin: 0 0 12px;
+
+  font-size: clamp(24px, 3vw, 30px);
+}
+
+.secure-booking-decline-dialog p {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.secure-booking-decline-reason {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 14px;
+  color: var(--muted-ink);
+}
+
+.secure-booking-decline-reason textarea {
+  padding: 12px;
+  border: 1px solid rgba(var(--ink-rgb), 0.15);
+  border-radius: var(--radius-card);
+  background: #fff;
+
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  resize: vertical;
+}
+
+.secure-booking-decline-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
 }
 
 .secure-booking-bank-details {

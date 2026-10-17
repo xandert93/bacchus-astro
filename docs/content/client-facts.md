@@ -248,12 +248,12 @@ Everything below is illustrative and is labelled as such on the page.
   from Sanity). Its minimum notice (three months) and horizon (two years)
   come from the wedding policy and are still our assumptions.
 
-- **The deposit page** (`secure-booking`): the whole booking summary (quote
-  reference, couple's name, date, time, guests, package, line items, deposit)
-  is fictional and flagged. The flag names the deposit terms too, since the
-  30/70 split shown is the contested one. The IBAN, account name and reference are fake, with
-  a "do not send funds to this account" warning. "Held for 7 days" is also
-  illustrative: kept as a specific number on the user's call, but it is not a
+- **The deposit page** (`secure-booking`) now shows the real quote it was
+  sent for, in test mode (flagged; card payments take no money). The deposit
+  split comes from the quote's terms, which inherit the contested 30/70. The
+  bank details are the wedding policy's example ones, with a "do not send
+  funds to this account" warning until Bacchus supplies theirs. The hold (7
+  days unless the wedding policy says otherwise) is our assumption, not a
   real policy.
 
 - **The 16 Reception station images** are AI-generated stand-ins, added on the

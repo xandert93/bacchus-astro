@@ -1,0 +1,43 @@
+---
+// "Not going ahead?" under the payment options: declining the quote, after
+// confirming in a dialog, with an optional reason. Declining frees the date
+// for other couples, so it can't be undone from here. Wired in
+// the page's script (src/pages/_secure-booking.js).
+import Button from "@components/ui/Button.astro"
+---
+
+<section class="secure-booking-decline-section" data-deposit-show="pay" hidden>
+  <div class="secure-booking-container-large">
+    <p class="secure-booking-decline-line">
+      Not going ahead?
+      <button type="button" class="secure-booking-decline-open" id="declineOpen">
+        Decline this quote
+      </button>
+    </p>
+  </div>
+
+  <dialog
+    class="secure-booking-decline-dialog"
+    id="declineDialog"
+    aria-labelledby="declineTitle"
+  >
+    <h2 id="declineTitle">Decline this quote?</h2>
+    <p>
+      Your date will no longer be held, and other couples will be able to book it. This
+      can't be undone here, though you're always welcome to enquire again.
+    </p>
+    <label class="secure-booking-decline-reason">
+      <span>Would you tell us why? (optional)</span>
+      <textarea id="declineReason" rows="3" maxlength="500"></textarea>
+    </label>
+    <p class="secure-booking-pay-error" id="declineError" role="alert" hidden></p>
+    <div class="secure-booking-decline-buttons">
+      <Button variant="ghost" id="declineCancel">
+        <span>Keep my quote</span>
+      </Button>
+      <Button variant="dark" id="declineConfirm">
+        <span>Decline the quote</span>
+      </Button>
+    </div>
+  </dialog>
+</section>
