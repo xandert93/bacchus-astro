@@ -246,7 +246,9 @@ Garden: names, settings and inclusion only).
 
 1. sanity.io/manage → the project → API → Tokens → Add API token. Name it
    `enquiry-endpoint`, permissions **Editor**. Copy it: Sanity shows it once.
-2. Locally: add `SANITY_API_WRITE_TOKEN=<the token>` to `.env`. With
+2. Locally: add `SANITY_API_WRITE_TOKEN=<the token>` to `.env` at the repo
+   root (`.env.example` lists every setting). Not `sanity/.env.development`:
+   that file is the Studio's, and it's committed. With
    `SANITY_DATASET=development` there too, test enquiries go to development.
 3. Live: Cloudflare → the Worker → Settings → Variables and Secrets → Add,
    type **Secret**, name `SANITY_API_WRITE_TOKEN`. Not under Builds: the
