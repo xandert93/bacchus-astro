@@ -51,6 +51,9 @@ day the site goes live on Bacchus's own domain.
   place after launch, it would keep the real site out of Google.
 - **Decide on Cloudflare Turnstile** for the enquiry form, if the hidden
   field and the timing check (`src/pages/api/enquiries.ts`) let spam through.
+- **Point emails at the real domain**: set `EMAIL_SITE_ORIGIN` to
+  `https://bacchus.com.mt` (`astro.config.mjs`), so their pictures and links
+  stop using the `workers.dev` address.
 - **Submit the sitemap** (`https://bacchus.com.mt/sitemap-index.xml`) in
   Google Search Console, once the domain points here.
 
