@@ -135,10 +135,27 @@ export default defineType({
       group: "summary",
       options: { list: [...QUOTE_STATUSES], layout: "radio" },
       description: help(
-        "Once a quote is sent, everything else on it locks, so it always matches what the client received.",
-        "To change a sent quote, create a new one and mark this one superseded.",
+        "Set it to Sent and publish to email the client their quote, with a private link to pay the deposit. Their date is then held for them.",
+        "Once a quote is sent, everything else on it locks, so it always matches what the client received. To change it, create a new one and mark this one superseded.",
       ),
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "sentAt",
+      title: "Emailed to the Client",
+      type: "datetime",
+      group: "summary",
+      readOnly: true,
+      hidden: ({ document }) => !document?.sentAt,
+    }),
+    defineField({
+      // A hash of the secret in the deposit page's link, never the secret
+      // itself (src/lib/tokens.ts). Set by the site when the quote is sent.
+      name: "depositTokenHash",
+      title: "Deposit Link Check",
+      type: "string",
+      hidden: true,
+      readOnly: true,
     }),
     defineField({
       name: "booking",

@@ -47,9 +47,12 @@ export default defineConfig({
     draftPages(),
     // sitemap-index.xml: every page, for search engines to find them by
     // (listed in /robots.txt, src/pages/robots.txt.ts). Drafts aren't built
-    // for the live site, so they're never in it. Nor is /waitlist, which is
-    // only for people arriving from a waitlist email and is noindex.
-    sitemap({ filter: (page) => !page.endsWith("/waitlist") }),
+    // for the live site, so they're never in it. Nor are the pages reached
+    // only from a private emailed link (the waitlist, the deposit page and
+    // its test checkout), which are noindex too.
+    sitemap({
+      filter: (page) => !/\/(waitlist|secure-booking)(\/|$)/.test(new URL(page).pathname),
+    }),
   ],
   image: {
     // Photos the client manages in Sanity (the gallery, the signature dishes,

@@ -210,6 +210,7 @@ export const competingEnquiriesQuery = /* groq */ `
   _id != $winnerId
 ]{
   _id,
+  status,
   client
 }
 `

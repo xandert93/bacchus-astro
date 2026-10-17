@@ -1,15 +1,15 @@
 ---
 // The three reassurances at the foot of the deposit page: the date is held,
-// someone is there to help, and the page is private. "Held for 7 days" is
-// illustrative, and says so (docs/content/client-facts.md).
+// someone is there to help, and the page is private. How long the date is
+// held comes from the wedding policy, and is shown in the payment section.
 import SecureBookingIcon from "./SecureBookingIcon.astro"
 import type { SecureBookingIconName } from "./SecureBookingIcon.astro"
 
 const ASSURANCES: { icon: SecureBookingIconName; title: string; body: string }[] = [
   {
     icon: "calendar",
-    title: "Held for 7 days",
-    body: "Your date is reserved while we receive and match your deposit. This hold period is illustrative — we'll confirm the real figure with Bacchus before we go live.",
+    title: "Your date is held",
+    body: "We hold your date for you while your deposit arrives, until the date shown above.",
   },
   {
     icon: "phone",
