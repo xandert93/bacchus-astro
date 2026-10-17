@@ -13,7 +13,7 @@ import { statusOnDate } from "@lib/availability/status-on-date"
 import { sendEmail } from "@lib/email/send"
 import { waitlistConfirmEmail } from "@lib/email/waitlist-emails"
 import { getWriteClient } from "@lib/sanity/write-client"
-import { newToken } from "@lib/waitlist/tokens"
+import { newToken } from "@lib/tokens"
 import { validateWaitlistSignup } from "@lib/waitlist/validate"
 
 export const prerender = false

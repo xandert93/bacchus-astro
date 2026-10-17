@@ -1,6 +1,6 @@
-// The secret in a waitlist email's links ("confirm", "take me off"). Only a
+// The secret in an emailed link (a waitlist place, a deposit page). Only a
 // hash of it is stored, so even someone who could read the dataset couldn't
-// confirm or remove anyone: they'd need the link from that person's inbox.
+// use one: they'd need the link from that person's inbox.
 
 const toHex = (bytes: ArrayBuffer) =>
   [...new Uint8Array(bytes)].map((byte) => byte.toString(16).padStart(2, "0")).join("")

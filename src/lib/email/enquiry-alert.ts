@@ -2,7 +2,6 @@
 // what, when, and a button straight to it in the Studio. Replying to it
 // replies to the enquirer, so a quick answer is one click away.
 
-import { STUDIO_URL } from "astro:env/server"
 import type { EnquiryInput } from "@lib/enquiries/validate"
 import { capitalise, enquiryDetails, longDate } from "./enquiry-details"
 import {
@@ -14,10 +13,7 @@ import {
   paragraph,
 } from "./layout"
 import type { Email } from "./send"
-
-/** The booking in the Studio, through Sanity's "open this document" link. */
-const studioLink = (bookingId: string) =>
-  STUDIO_URL ? `${STUDIO_URL}/intent/edit/id=${bookingId};type=booking` : undefined
+import { studioLink } from "./staff"
 
 export const enquiryAlertEmail = (
   enquiry: EnquiryInput,
@@ -27,7 +23,7 @@ export const enquiryAlertEmail = (
   const name = `${enquiry.firstName} ${enquiry.lastName}`
   const occasion = capitalise(enquiry.eventType)
   const details = enquiryDetails(enquiry)
-  const link = studioLink(bookingId)
+  const link = studioLink(bookingId, "booking")
 
   const body = [
     paragraph(
