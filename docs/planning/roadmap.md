@@ -64,7 +64,8 @@ Restaurant features (gift vouchers and so on) wait until these are done.
 
 - The calendar reads booking statuses. Decisions are in
   `docs/design/decisions.md`.
-- **Next**: replace the fake statuses with a real query.
+- **Live** since 2026-10-17: the statuses come from the bookings in Sanity
+  when the page opens (`docs/planning/sanity-rollout.md`, step 5).
 - **Waitlist**: store waiting leads in Sanity (date, email, active or
   notified). When a booking is cancelled, a Sanity webhook calls a function
   that emails everyone waiting on that date.

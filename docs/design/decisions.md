@@ -78,8 +78,9 @@ A four-step wizard: **the occasion** (event type, date) → **the specifics**
 
 ## Availability calendar and waitlist
 
-- **One source of truth**: the calendar reads each booking's status (pending,
-  confirmed, declined, completed). Nobody maintains a separate calendar.
+- **One source of truth**: the calendar reads each booking's status (open
+  enquiries show as Enquiries received; confirmed and completed weddings as
+  Booked). Nobody maintains a separate calendar.
 - **Labels: Available / Enquiries received / Booked.** "Enquiries received"
   informs without pressuring; urgency counters clash with an exclusive venue,
   but hiding the information entirely doesn't help the visitor.

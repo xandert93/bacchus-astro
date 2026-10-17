@@ -135,6 +135,10 @@ Every button is `<Button>` (`ui/Button.astro`).
   Only frontmatter calls these, so neither they nor the token reach the
   browser. Testimonials.js gets its list as JSON written into the page by
   `Testimonials.astro`. See `docs/planning/sanity-rollout.md`, step 3.
+- `src/lib/sanity/create-client.ts`: how every Sanity client is made.
+  `client.ts` is the build's; `live-client.ts` reads for the availability
+  endpoint (`src/pages/api/availability.ts`) when a visitor opens the
+  calendar; `write-client.ts` writes for the enquiry endpoint.
 - `src/lib/enquiries/`: checking an enquiry and turning it into a booking,
   for the enquiry endpoint, `src/pages/api/enquiries.ts`. The one module
   allowed to write to Sanity is `src/lib/sanity/write-client.ts`, which only
