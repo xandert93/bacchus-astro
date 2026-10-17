@@ -7,6 +7,15 @@ import { createClient } from "@sanity/client"
 import { SANITY_API_READ_TOKEN, SANITY_DATASET } from "astro:env/server"
 import { SANITY_PROJECT_ID } from "@studio/lib/project"
 
+// Without the token every query comes back empty, so stop the build here,
+// before the first page, rather than part-way through. Checked here rather
+// than by making the setting required: astro.config.mjs explains why.
+if (!SANITY_API_READ_TOKEN) {
+  throw new Error(
+    "SANITY_API_READ_TOKEN is not set. Add it to .env (see .env.example), or to the build's variables on GitHub and Cloudflare.",
+  )
+}
+
 const client = createClient({
   projectId: SANITY_PROJECT_ID,
   // Production, unless .env says otherwise (astro.config.mjs).

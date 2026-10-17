@@ -63,7 +63,17 @@ export default defineConfig({
       // can only be imported by server code, so it can't end up in a page's
       // JavaScript. Set in .env locally, and as a secret on GitHub and in
       // the Cloudflare dashboard (docs/planning/sanity-rollout.md, step 3).
-      SANITY_API_READ_TOKEN: envField.string({ context: "server", access: "secret" }),
+      //
+      // Optional here, but required by the build all the same: the Sanity
+      // client refuses to start without it (src/lib/sanity/client.ts). Every
+      // secret in this schema is also checked whenever the Worker handles a
+      // request, and the Worker never has this one, so marking it required
+      // made every enquiry fail (docs/engineering/known-bugs.md, 3).
+      SANITY_API_READ_TOKEN: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
       // Which dataset the site reads. Leave it unset everywhere except your
       // own .env, where "development" points `npm run dev` at the seed data
       // (sanity/seed/). The live site and CI always read production.
@@ -83,8 +93,7 @@ export default defineConfig({
         default: "production",
       }),
     },
-    // Without the token every query comes back empty, so fail at the start
-    // of the build rather than part-way through it.
+    // Check every secret's format before the build starts.
     validateSecrets: true,
   },
   redirects: {
