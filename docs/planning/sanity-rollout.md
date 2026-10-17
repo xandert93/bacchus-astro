@@ -366,17 +366,67 @@ order.
 
 ## Step 7 — quotes and deposits
 
-The largest remaining piece and the one with the most unknowns.
+**Deposits in test mode, built 2026-10-17.** Bank transfer is the main route,
+card the convenient one. No real money moves yet: card payments go to a
+pretend checkout, and the bank details are the wedding policy's (example ones
+until Bacchus supplies theirs, with a "do not send funds" warning).
 
-Quote generation is deterministic templating to PDF — never a language model;
-it is a pricing document. The deposit page already exists as a front end. The
-real work is the Stripe session, bank transfer reconciliation, and the race
-where several enquiries hold the same date and the first deposit wins.
+1. **Staff send a quote**: set its status to Sent and publish. Sanity calls
+   `src/pages/api/quote-events.ts`, which makes the quote a private link
+   (only its hash is stored, as for the waitlist), holds the date for the
+   wedding policy's hold days, moves the booking to Awaiting Deposit and
+   emails the client a summary with one button to `/secure-booking?token=…`.
+2. **The deposit page** loads the quote by that link (`api/deposits/view.ts`;
+   loading and shaping in `src/lib/deposits/`). The client can:
+   - **say they've sent the transfer** (`transfer-sent.ts`): records an
+     Awaiting bank-transfer payment on the booking and emails staff to look
+     out for it;
+   - **pay by card** (`card.ts`): sends them to the provider's checkout,
+     which is `/secure-booking/test-checkout` while `CARD_PROVIDER` in
+     `src/lib/payments/card.ts` is `"test"`. Its Pay button (`test-card.ts`)
+     records a received test payment and confirms the booking, as a real
+     provider's webhook will;
+   - **decline the quote** (`decline.ts`), after a confirmation dialog: the
+     quote becomes Declined, the booking Withdrawn, and staff are emailed.
+3. **Staff mark the transfer Received** on the booking's payment and publish.
+   Sanity calls `api/booking-events.ts`, which confirms the booking.
+4. **Confirming** (`src/lib/deposits/confirm.ts`), whichever way the money
+   came: the booking becomes Confirmed and the quote Accepted. For a wedding,
+   every other open enquiry for the date is declined and emailed that the
+   date has gone; if the date was already taken, staff are emailed to refund
+   instead. Client and staff both get a confirmation email.
 
-**Blocked on the client** for the deposit terms, which are contested: the
-catalogue says 30% non-refundable with the balance 14 days out, and
-correspondence calls the terms flexible without confirming that split. Do not
-wire real money against an unresolved policy.
+**To switch on**, once emails send from the live site: sanity.io/manage → the
+project → API → Webhooks → Create webhook, with the same secret
+(`SANITY_WEBHOOK_SECRET`) as the waitlist's:
+
+- Name `Quote sent`; URL `https://<site>/api/quote-events`; dataset
+  `production`; trigger on **Update**; method POST; API
+  version `v2025-02-19`; drafts off.
+- Filter: `_type == "quote" && before().status == "draft" && after().status == "sent"`
+- Projection: `{_id, "before": before().status, "after": after().status}`
+
+And widen the `Notify the waitlist` webhook (step 5), renaming it `Booking
+changes`, so it also fires when a deposit is marked received:
+
+- Filter:
+  `_type == "booking" && ((event.type == "wedding" && before().status in ["confirmed", "completed"] && after().status == "cancelled") || count(after().payments[kind == "deposit" && status == "received"]) > count(before().payments[kind == "deposit" && status == "received"]))`
+- Projection:
+  `{_id, "date": event.date, "type": event.type, "before": before().status, "after": after().status, "depositReceived": count(after().payments[kind == "deposit" && status == "received"]) > count(before().payments[kind == "deposit" && status == "received"])}`
+
+**Still to do before real money:**
+
+- **The deposit terms**, which are contested: the catalogue says 30%
+  non-refundable with the balance 14 days out, and correspondence calls the
+  terms flexible without confirming that split. Do not take real money
+  against an unresolved policy.
+- **Bacchus's real bank details** in the wedding policy.
+- **A real card provider**: Stripe for now, with Viva and Revolut worth
+  comparing on fees (`docs/architecture/tech-stack.md`). Swapping means
+  `src/lib/payments/card.ts` plus the provider's own webhook.
+- **Hold expiry**: a scheduled job to release dates whose hold has passed
+  unpaid. Today the hold date is shown and stored but nothing acts on it.
+- Quote PDFs: deterministic templating, never a language model.
 
 ## Step 8 — hand it to the client
 
