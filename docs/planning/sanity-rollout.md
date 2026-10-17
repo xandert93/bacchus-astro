@@ -287,8 +287,9 @@ calendar's window follows the policy.
 - **The Worker needs the read token too**, as a secret (Settings, Variables
   and Secrets), as well as the build variable it already was. Set on
   2026-10-17 with `npx wrangler secret put SANITY_API_READ_TOKEN`.
-- **Reads go through Sanity's CDN**, a few seconds behind, and browsers may
-  reuse an answer for a minute.
+- **Always fresh**: straight from Sanity's database, never its CDN, and never
+  reused by the browser, so a date shows as taken as soon as the enquiry is
+  stored (known bug 5).
 - **If it can't load**, every date shows as available and a note under the
   calendar says Bacchus will confirm the date.
 - **Days can't be picked until the statuses arrive**, so nobody picks a date
