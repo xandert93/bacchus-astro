@@ -11,9 +11,11 @@
 import type { APIRoute } from "astro"
 import { toBooking } from "@lib/enquiries/to-booking"
 import { validateEnquiry } from "@lib/enquiries/validate"
+import { enquiryAlertEmail } from "@lib/email/enquiry-alert"
 import { enquiryConfirmationEmail } from "@lib/email/enquiry-confirmation"
 import { sendEmail } from "@lib/email/send"
 import { getWriteClient } from "@lib/sanity/write-client"
+import { CONTACT } from "@data/contact"
 
 export const prerender = false
 
@@ -65,19 +67,30 @@ export const POST: APIRoute = async ({ request }) => {
     return json(503, { error: "Enquiries can't be received right now." })
   }
 
+  let booking: ReturnType<typeof toBooking>
+  let staffRecipients: string[]
+
   try {
-    const { spaceIds, retentionMonths } = await client.fetch<{
+    const settings = await client.fetch<{
       spaceIds: string[]
       retentionMonths?: number
+      staffRecipients?: string[]
     }>(
       `{
         "spaceIds": *[_type == "venueSpace" && slug.current in $slugs && !(_id in path("drafts.**"))]._id,
-        "retentionMonths": *[_id == "weddingPolicy"][0].retentionMonths
+        "retentionMonths": *[_id == "weddingPolicy"][0].retentionMonths,
+        "staffRecipients": *[_id == "siteSettings"][0].enquiryNotificationEmails
       }`,
       { slugs: result.enquiry.spaces },
     )
 
-    await client.create(toBooking(result.enquiry, { spaceIds, retentionMonths }))
+    booking = toBooking(result.enquiry, settings)
+    // Site settings name who's told; until they do, the events inbox.
+    staffRecipients = settings.staffRecipients?.length
+      ? settings.staffRecipients
+      : [CONTACT.email.display]
+
+    await client.create(booking)
   } catch (error) {
     console.error("Enquiry not stored: Sanity refused it.", error)
     return json(502, { error: "Your enquiry couldn't be sent. Please try again." })
@@ -86,7 +99,33 @@ export const POST: APIRoute = async ({ request }) => {
   // After it's stored, never before: a confirmation must mean the enquiry
   // really is with Bacchus. A failed email doesn't undo the enquiry; the
   // form just doesn't promise a copy.
-  const emailSent = await sendEmail(enquiryConfirmationEmail(result.enquiry))
+  const [confirmation] = await Promise.all([
+    sendEmail(
+      enquiryConfirmationEmail(result.enquiry, booking._id.replace(/^booking\./, "")),
+    ),
+    sendEmail(
+      enquiryAlertEmail(result.enquiry, {
+        bookingId: booking._id,
+        recipients: staffRecipients,
+      }),
+    ),
+  ])
 
-  return json(201, { ok: true, emailSent })
+  // Shown on the enquiry in the Studio. A bounce reported later
+  // (src/pages/api/email-events.ts) overwrites it.
+  try {
+    await client
+      .patch(booking._id)
+      .set({
+        confirmationEmail: {
+          status: confirmation.sent ? "sent" : "failed",
+          at: new Date().toISOString(),
+        },
+      })
+      .commit()
+  } catch (error) {
+    console.error("Confirmation status not recorded.", error)
+  }
+
+  return json(201, { ok: true, emailSent: confirmation.sent })
 }

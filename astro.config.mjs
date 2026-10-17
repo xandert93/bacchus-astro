@@ -111,6 +111,23 @@ export default defineConfig({
         access: "public",
         default: "https://bacchus-astro.xandert-93.workers.dev",
       }),
+      // Checks that a bounce report really came from Resend
+      // (src/pages/api/email-events.ts). From Resend's webhook page; a
+      // Worker secret on Cloudflare.
+      RESEND_WEBHOOK_SECRET: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
+      // The Studio's address, including the workspace, for the "Open in the
+      // Studio" button in the staff alert, e.g.
+      // https://bacchus.sanity.studio/production. Locally,
+      // http://localhost:3333/development. Without it, no button.
+      STUDIO_URL: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
       // When set, every email goes to this address instead of its real
       // recipient, so testing locally can never email a real person. Set it
       // in your own .env; never on the live site.

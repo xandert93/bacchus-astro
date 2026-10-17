@@ -259,6 +259,34 @@ export default defineType({
       ],
     }),
     defineField({
+      name: "confirmationEmail",
+      title: "Confirmation Email",
+      type: "object",
+      group: ["enquiry", "admin"],
+      readOnly: true,
+      options: { collapsible: false, columns: 2 },
+      description: help(
+        "The email the client got when they enquired. Recorded automatically.",
+        "If it bounced, their email address doesn't work: phone them instead.",
+      ),
+      fields: [
+        defineField({
+          name: "status",
+          title: "Status",
+          type: "string",
+          options: {
+            list: [
+              { title: "Sent", value: "sent" },
+              { title: "Couldn't Be Sent", value: "failed" },
+              { title: "Bounced: Address Doesn't Work", value: "bounced" },
+            ],
+          },
+        }),
+        defineField({ name: "at", title: "When", type: "datetime" }),
+        defineField({ name: "note", title: "Reason Given", type: "string" }),
+      ],
+    }),
+    defineField({
       name: "message",
       title: "Anything Else We Should Know",
       type: "text",
@@ -398,6 +426,7 @@ export default defineType({
       status: "status",
       type: "event.type",
       guests: "event.guestCount",
+      emailStatus: "confirmationEmail.status",
     },
     prepare: ({
       firstName,
@@ -408,6 +437,7 @@ export default defineType({
       status,
       type,
       guests,
+      emailStatus,
     }) => {
       const name = `${firstName ?? ""} ${lastName ?? ""}`.trim()
 
@@ -415,6 +445,8 @@ export default defineType({
         title: (partnerName ? `${name} & ${partnerName}` : name) || "Unnamed enquiry",
         subtitle: joinParts(
           optionTitle(EVENT_TYPES, type),
+          // Flagged on the card, so staff see it without opening the enquiry.
+          emailStatus === "bounced" ? "Email bounced: phone them" : undefined,
           formatDate(date) ?? (flexible ? "Date flexible" : "No date"),
           pluralise(guests, "guest"),
         ),

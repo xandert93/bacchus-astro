@@ -302,9 +302,24 @@ it frees up.
 
 **Email, started 2026-10-17.** Every email goes through `src/lib/email/send.ts`
 to Resend (resend.com), with a shared frame (`layout.ts`) and one file per
-email. Built so far: the **enquiry confirmation** (`enquiry-confirmation.ts`),
-sent once the enquiry is stored. An email that fails never undoes the
-enquiry; the sent panel then says no copy could be emailed.
+email. An email that fails never undoes the enquiry it's about.
+
+- **Enquiry confirmation** (`enquiry-confirmation.ts`), to the enquirer once
+  the enquiry is stored. If it fails, the sent panel says no copy could be
+  emailed.
+- **Staff alert** (`enquiry-alert.ts`), to the addresses in Site Settings
+  ("New-Enquiry Email Recipients"; events@bacchus.com.mt until set), with an
+  "Open in the Studio" button (`STUDIO_URL`). Replying to it replies to the
+  enquirer. The AI-drafted reply is still to come (it needs an Anthropic API
+  key).
+- **Bounces**: each enquiry records whether its confirmation was sent
+  ("Confirmation Email" in the Studio). If the address turns out not to
+  exist, Resend reports the bounce to `src/pages/api/email-events.ts`, which
+  marks the enquiry "Bounced" and its card "Email bounced: phone them". The
+  report is checked against Resend's signature, so it can't be faked.
+  **To switch on**, once emails send from the live site: Resend → Webhooks →
+  Add endpoint `https://<site>/api/email-events`, event `email.bounced`; then
+  put its signing secret in the Worker secret `RESEND_WEBHOOK_SECRET`.
 
 - **Settings** (`.env.example`): `RESEND_API_KEY`, a Worker secret on the
   live site; `EMAIL_TEST_RECIPIENT`, set only locally, which sends every email

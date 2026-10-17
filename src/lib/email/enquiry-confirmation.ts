@@ -3,9 +3,8 @@
 // sent panel promises it (EnquirySentPanel.astro), and the next steps match
 // that panel's, so the two never say different things.
 
-import { EVENT_STYLE_OPTIONS, NOT_SURE_OF_SPACES, SPACE_OPTIONS } from "@data/enquiry"
 import type { EnquiryInput } from "@lib/enquiries/validate"
-import type { Email } from "./send"
+import { enquiryDetails, longDate } from "./enquiry-details"
 import {
   button,
   detailsCard,
@@ -17,6 +16,7 @@ import {
   siteUrl,
   stepsList,
 } from "./layout"
+import type { Email } from "./send"
 
 const NEXT_STEPS: [string, string][] = [
   [
@@ -29,42 +29,13 @@ const NEXT_STEPS: [string, string][] = [
   ],
 ]
 
-/** "Saturday 20 January 2027", from "2027-01-20". */
-const longDate = (isoDate: string) =>
-  new Date(`${isoDate}T12:00:00Z`).toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  })
-
-const titleOf = (options: { value: string; title: string }[], value?: string) =>
-  options.find((option) => option.value === value)?.title
-
-const capitalise = (value: string) => value.charAt(0).toUpperCase() + value.slice(1)
-
-export const enquiryConfirmationEmail = (enquiry: EnquiryInput): Email => {
+export const enquiryConfirmationEmail = (
+  enquiry: EnquiryInput,
+  /** Tags the email, so a bounce can be traced back to the enquiry. */
+  bookingKey: string,
+): Email => {
   const date = longDate(enquiry.date)
-
-  const spaces = [
-    ...enquiry.spaces.map((space) => titleOf(SPACE_OPTIONS, space) ?? space),
-    ...(enquiry.guidanceOnSpaces ? [titleOf(SPACE_OPTIONS, NOT_SURE_OF_SPACES)] : []),
-  ].join(", ")
-
-  const details: [string, string | undefined][] = [
-    ["Occasion", capitalise(enquiry.eventType)],
-    ["Preferred date", date],
-    ["Alternative date", enquiry.backupDate ? longDate(enquiry.backupDate) : undefined],
-    ["Guests", `${enquiry.guests} expected`],
-    ["Spaces", spaces || undefined],
-    ["Style", titleOf(EVENT_STYLE_OPTIONS, enquiry.style)],
-    ["Your message", enquiry.message],
-    ["Name", `${enquiry.firstName} ${enquiry.lastName}`],
-    ["Email", enquiry.email],
-    ["Phone", enquiry.phone],
-    ["Contact by", enquiry.contactPreference],
-  ]
+  const details = enquiryDetails(enquiry, { messageLabel: "Your message" })
 
   const body = [
     paragraph(`Dear ${escapeHtml(enquiry.firstName)},`),
@@ -111,5 +82,6 @@ export const enquiryConfirmationEmail = (enquiry: EnquiryInput): Email => {
     }),
     text,
     kind: "enquiry-confirmation",
+    tags: { booking: bookingKey },
   }
 }
