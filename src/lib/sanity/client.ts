@@ -3,9 +3,8 @@
 // never in a visitor's browser, so neither this module nor the token is
 // ever sent to one. The content is baked into the HTML; publishing in the
 // Studio triggers a rebuild (docs/planning/sanity-rollout.md, step 3).
-import { createClient } from "@sanity/client"
-import { SANITY_API_READ_TOKEN, SANITY_DATASET } from "astro:env/server"
-import { SANITY_PROJECT_ID } from "@studio/lib/project"
+import { SANITY_API_READ_TOKEN } from "astro:env/server"
+import { createSanityClient } from "./create-client"
 
 // Without the token every query comes back empty, so stop the build here,
 // before the first page, rather than part-way through. Checked here rather
@@ -16,21 +15,9 @@ if (!SANITY_API_READ_TOKEN) {
   )
 }
 
-const client = createClient({
-  projectId: SANITY_PROJECT_ID,
-  // Production, unless .env says otherwise (astro.config.mjs).
-  dataset: SANITY_DATASET,
-  // Pinned, so a change on Sanity's side can't change what a query returns
-  // without a commit here.
-  apiVersion: "2025-02-19",
-  // The dataset is private: without a token every query comes back empty.
-  token: SANITY_API_READ_TOKEN,
-  // Straight from the database, not the CDN's cache: a build should see what
-  // was published a moment ago, and it only makes a handful of requests.
-  useCdn: false,
-  // Published documents only, never an editor's unsaved draft.
-  perspective: "published",
-})
+// Straight from the database, not the CDN's cache: a build should see what
+// was published a moment ago, and it only makes a handful of requests.
+const client = createSanityClient(SANITY_API_READ_TOKEN)
 
 // Runs a query and refuses an empty answer. A missing document would
 // otherwise build a page with a hole in it and deploy it; failing the build

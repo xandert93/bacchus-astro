@@ -12,6 +12,11 @@ on:
 # Actions, and only ever appears in the logs as ***.
 env:
   SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+  # The tests run the built Worker locally (`astro preview`), which only sees
+  # secrets the build copies into dist/server/.dev.vars. By default that's
+  # just what's in a .env file, and CI has none, so this tells the build to
+  # copy the token above too: the availability endpoint needs it to answer.
+  CLOUDFLARE_INCLUDE_PROCESS_ENV: "true"
 
 # A newer push to the same branch cancels the run still going for the old one.
 concurrency:

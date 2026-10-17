@@ -1,6 +1,7 @@
 ---
 // The wedding availability calendar: month header, weekday row, the grid of
-// days, the legend, the waitlist hint and the "illustrative only" notice.
+// days, the legend, the waitlist hint, an optional note, and the message
+// shown if the live statuses can't be loaded.
 // Three instances on the site, all the same widget:
 //   • "diary"   — the weddings page's showcase calendar (#avail) and the
 //                 quick-pick modal's copy of it (#availModalGrid)
@@ -18,7 +19,7 @@ interface Props {
   id?: string
   // Makes the calendar a modal dialog with this accessible name.
   dialogLabel?: string
-  // Appended to the "illustrative only" notice.
+  // A note under the calendar, e.g. the minimum notice.
   noticeSuffix?: string
 }
 
@@ -92,87 +93,24 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
        text as one toggled group (display: contents), so a touch visitor
        never sees a mouse-pointer glyph next to "Tap it...". 
 */}
-  <div class="availability-note">
-    <span class="wl-hint-hover">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+  {noticeSuffix && (
+    <div class="availability-note">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.3" />
         <path
-          d="M4 4l7.07 16.97 2.51-7.39 7.39-2.51L4 4Z"
-          stroke="currentColor"
-          stroke-width="1.3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M13.5 13.5 19 19"
+          d="M12 11v5M12 8h.01"
           stroke="currentColor"
           stroke-width="1.3"
           stroke-linecap="round"
         />
       </svg>
-      <span>
-        Date unavailable? Click it to join the waitlist — we'll email you if it opens up.
-      </span>
-    </span>
-    <span class="wl-hint-touch">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.3" />
-        <circle
-          cx="12"
-          cy="12"
-          r="6"
-          stroke="currentColor"
-          stroke-width="1.3"
-          opacity="0.6"
-        />
-        <circle
-          cx="12"
-          cy="12"
-          r="9.5"
-          stroke="currentColor"
-          stroke-width="1.1"
-          opacity="0.35"
-        />
-      </svg>
-      <span>
-        Date unavailable? Tap it to join the waitlist — we'll email you if it opens up.
-      </span>
-    </span>
-  </div>
-  {isCompact ? (
-    <div class="availability-foot-label" id="availPicked">
-      <span class="availability-foot-label-date"></span>
-      <span class="availability-picked-status"></span>
+      <span>{noticeSuffix}</span>
     </div>
-  ) : (
-    <>
-      <div class="availability-foot">
-        <span class="availability-foot-label">
-          <span class="availability-foot-label-date">No date selected</span>
-          <span class="availability-picked-status"></span>
-        </span>
-        <slot name="foot-action" />
-      </div>
-      <p class="availability-foot-note">
-        The Prince De Redin Hall, Terrace and Secret Garden are reserved together for your
-        day. Your date stays unconfirmed until we reply.
-      </p>
-    </>
   )}
-  <div class="availability-note">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M12 9v4m0 4h.01M10.3 3.9 2.5 17.5A1.5 1.5 0 0 0 3.8 20h16.4a1.5 1.5 0 0 0 1.3-2.5L13.7 3.9a1.5 1.5 0 0 0-2.6 0Z"
-        stroke="currentColor"
-        stroke-width="1.3"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-    <span>
-      Illustrative only — the dates shown are placeholder data. We'll connect this to real
-      availability with Bacchus before we go live.{noticeSuffix && ` ${noticeSuffix}`}
-    </span>
-  </div>
+  <p class="availability-error" role="status" hidden>
+    We couldn't load live availability just now, so every date shows as available. Pick
+    your preferred date and we'll confirm it.
+  </p>
 </div>
 
 <script>
@@ -368,6 +306,21 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     gap: 10px;
     align-items: flex-start;
     font-family: "Newsreader", Georgia, serif;
+  }
+
+  .availability-error {
+    margin: 18px 0 0;
+    padding-top: 16px;
+    border-top: 1px dashed rgba(var(--muted-ink-rgb), 0.14);
+
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 12px;
+    color: var(--oxblood);
+  }
+
+  /* While the live statuses load, the days are dimmed and can't be picked. */
+  .availability.is-loading .availability-grid {
+    opacity: 0.55;
   }
 
   .availability-note :global(svg) {
