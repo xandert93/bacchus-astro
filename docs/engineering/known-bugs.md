@@ -79,3 +79,29 @@ JavaScript. The build doesn't run this scan, so only the dev server hit it.
 **Rule**: never write a tag's name with its angle bracket in a comment in an
 `.astro` file. Say "script element", or put it in backticks without the
 bracket.
+
+---
+
+## 3. Every enquiry failed on the live site
+
+**Symptom**: on the live site (2026-10-17), every enquiry showed "Sorry, your
+enquiry didn't send", with the write token set. The Worker's log said
+`EnvInvalidVariables: SANITY_API_READ_TOKEN is missing`. Locally, in
+`npm run dev` and `astro preview`, enquiries went through.
+
+**Cause**: Astro reads and checks **every** secret in the `env.schema`
+whenever the Worker handles a request, not only the one the code asks for.
+`SANITY_API_READ_TOKEN` was declared required. It only exists while the
+site builds, never in the Worker, so the check threw before the endpoint ran.
+Locally the token was always to hand, which hid it.
+
+**Fix**: the read token is optional in the schema (`astro.config.mjs`), and
+the Sanity client stops the build itself if it's missing
+(`src/lib/sanity/client.ts`), so a build without it still fails at once.
+
+**Test**: none automated: the test build always has the token, so it can't
+reproduce the Worker lacking one. Checked by posting to the live endpoint
+after the deploy.
+
+**Rule**: a secret that only the build has must be optional in
+`env.schema`. Only secrets every Worker request can see may be required.
