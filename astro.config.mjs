@@ -102,6 +102,15 @@ export default defineConfig({
         access: "public",
         default: "Bacchus <onboarding@resend.dev>",
       }),
+      // Where emails load their pictures and links from (public/email/).
+      // Email apps fetch them from the open internet, so it must be the live
+      // site, even when testing locally. Becomes https://bacchus.com.mt at
+      // launch (docs/planning/roadmap.md, launch checklist).
+      EMAIL_SITE_ORIGIN: envField.string({
+        context: "server",
+        access: "public",
+        default: "https://bacchus-astro.xandert-93.workers.dev",
+      }),
       // When set, every email goes to this address instead of its real
       // recipient, so testing locally can never email a real person. Set it
       // in your own .env; never on the live site.

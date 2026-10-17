@@ -7,11 +7,14 @@ import { EVENT_STYLE_OPTIONS, NOT_SURE_OF_SPACES, SPACE_OPTIONS } from "@data/en
 import type { EnquiryInput } from "@lib/enquiries/validate"
 import type { Email } from "./send"
 import {
-  detailsTable,
+  button,
+  detailsCard,
   emailLayout,
   escapeHtml,
   heading,
+  highlight,
   paragraph,
+  siteUrl,
   stepsList,
 } from "./layout"
 
@@ -66,13 +69,15 @@ export const enquiryConfirmationEmail = (enquiry: EnquiryInput): Email => {
   const body = [
     paragraph(`Dear ${escapeHtml(enquiry.firstName)},`),
     paragraph(
-      `Thank you for your enquiry for ${escapeHtml(date)}. It's with our events team, and here's everything you sent us, for your records.`,
+      `Thank you for your enquiry for ${highlight(date)}. It's with our events team, and here's everything you sent us, for your records.`,
     ),
-    detailsTable(details),
+    heading("Your enquiry"),
+    detailsCard(details),
     heading("What happens next"),
     stepsList(NEXT_STEPS),
     paragraph("If anything has changed, just reply to this email."),
-    paragraph("Warm regards,<br>The Bacchus events team"),
+    button("Back to Bacchus", siteUrl(enquiry.sourcePage)),
+    paragraph("Warm regards,<br><em>The Bacchus events team</em>"),
   ].join("")
 
   const text = [
@@ -96,6 +101,12 @@ export const enquiryConfirmationEmail = (enquiry: EnquiryInput): Email => {
     subject: `Your enquiry for ${date}`,
     html: emailLayout({
       preview: `Your enquiry for ${date} is with our events team.`,
+      eyebrow: "Enquiry received",
+      title: "Your enquiry is <em>with us</em>",
+      hero: {
+        photo: "secret-garden-table.jpg",
+        alt: "A long table laid for dinner in the Secret Garden, lit by candles and fairy lights",
+      },
       body,
     }),
     text,
