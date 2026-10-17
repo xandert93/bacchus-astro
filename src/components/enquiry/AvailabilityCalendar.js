@@ -539,6 +539,14 @@ import { hover } from "@lib/media-queries.js"
               showError(result.error || "Sorry, that didn't work. Please try again.")
               return
             }
+            // Joined, but the confirming email didn't go: without it they'd
+            // never be told, so don't say they're on the list.
+            if (result.emailSent === false) {
+              showError(
+                "We couldn't send your confirmation email just now. Please try again later.",
+              )
+              return
+            }
             if (wlSubmitBtn) wlSubmitBtn.disabled = false
             wlEmailOut.textContent = wlEmailInput.value
             if (wlSuccessText && result.alreadyOnList) {
