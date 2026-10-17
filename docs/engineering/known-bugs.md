@@ -105,3 +105,30 @@ after the deploy.
 
 **Rule**: a secret that only the build has must be optional in
 `env.schema`. Only secrets every Worker request can see may be required.
+
+---
+
+## 4. Enquiries failed on the dev server after it restarted
+
+**Symptom**: on `npm run dev` (2026-10-17), the enquiry form showed "Sorry,
+your enquiry didn't send". The endpoint answered with a 500: "The file does
+not exist at `.vite/deps_ssr/@sanity_client.js`". Pages still loaded.
+
+**Cause**: the dev server runs the endpoint in Cloudflare's runtime, and Vite
+bundles a dependency the first time something asks for it. `@sanity/client`
+was first asked for by the first enquiry, so Vite re-bundled while the server
+was running, and the endpoint asked for the new file before it existed. A
+restart (a changed config, say) could leave it pointing at a file that never
+arrived.
+
+**Fix**: `@sanity/client` is bundled as the dev server starts
+(`vite.ssr.optimizeDeps.include` in `astro.config.mjs`). Checked by sending
+an enquiry, restarting the server through a config change, and sending
+another.
+
+**Test**: none automated: the tests run against a production build, which
+doesn't use Vite's dev bundling. If it comes back, stop the dev server,
+delete `node_modules/.vite` and start it again.
+
+**Rule**: a package the Worker code imports should be listed in
+`vite.ssr.optimizeDeps.include`, so the dev server never re-bundles mid-run.
