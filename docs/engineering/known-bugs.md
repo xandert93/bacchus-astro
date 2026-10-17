@@ -132,3 +132,27 @@ delete `node_modules/.vite` and start it again.
 
 **Rule**: a package the Worker code imports should be listed in
 `vite.ssr.optimizeDeps.include`, so the dev server never re-bundles mid-run.
+
+---
+
+## 5. A new enquiry took minutes to show on the calendar
+
+**Symptom**: on the live site (2026-10-17), after sending a wedding enquiry,
+refreshing the page didn't mark the date "Enquiries received". A few minutes
+later it did.
+
+**Cause**: two caches added on purpose, both too slow for this. The
+availability endpoint read Sanity through its CDN, which can lag the database
+by a minute or more, and told browsers they could reuse its answer for 60
+seconds. (Not a rebuild: the rebuild-on-publish webhook ignores bookings, and
+the calendar fetches live data on every visit.)
+
+**Fix**: the endpoint reads straight from the database
+(`src/lib/sanity/live-client.ts`) and answers with `Cache-Control: no-store`
+(`src/pages/api/availability.ts`). Its two queries are now one request.
+
+**Test**: none automated: caching only shows against the live Sanity CDN.
+Checked on the live site by enquiring and refreshing.
+
+**Rule**: anything a visitor expects to see change straight after their own
+action is read uncached.

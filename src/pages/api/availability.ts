@@ -23,13 +23,6 @@ export const prerender = false
 const DEFAULT_HORIZON_MONTHS = 24
 const DEFAULT_MIN_NOTICE_MONTHS = 3
 
-/**
- * How long a browser may reuse an answer. Short, since a date can be booked
- * at any moment, but long enough that paging through months or reopening the
- * page doesn't ask Sanity again each time.
- */
-const CACHE_SECONDS = 60
-
 const isoDate = (date: Date) => date.toISOString().slice(0, 10)
 
 const monthsFrom = (date: Date, months: number) => {
@@ -65,10 +58,14 @@ export const GET: APIRoute = async () => {
     const from = isoDate(today)
     const to = isoDate(monthsFrom(today, horizonMonths))
 
-    const [bookings, closures] = await Promise.all([
-      client.fetch<AvailabilityInput[]>(weddingDateStatusesQuery, { from, to }),
-      client.fetch<ClosureRange[]>(closureRangesQuery, { from, to }),
-    ])
+    // Both in one request.
+    const { bookings, closures } = await client.fetch<{
+      bookings: AvailabilityInput[]
+      closures: ClosureRange[]
+    }>(`{ "bookings": ${weddingDateStatusesQuery}, "closures": ${closureRangesQuery} }`, {
+      from,
+      to,
+    })
 
     return json(
       200,
@@ -80,7 +77,9 @@ export const GET: APIRoute = async () => {
         // Only busy dates: any date not listed is available.
         statuses: deriveStatuses(bookings, closures),
       },
-      { "Cache-Control": `public, max-age=${CACHE_SECONDS}` },
+      // Never reused: a date can be booked at any moment, and the page asks
+      // only once per visit anyway.
+      { "Cache-Control": "no-store" },
     )
   } catch (error) {
     console.error("Availability not loaded: Sanity refused the query.", error)
