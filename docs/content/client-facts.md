@@ -323,6 +323,13 @@ Everything below is illustrative and is labelled as such on the page.
 - **Personal data**: how long should enquiry details be kept before they're
   deleted? The Studio assumes 36 months.
 
+### Email (asked 2026-10-17)
+
+- **Who manages the `bacchus.com.mt` domain** (its DNS)? The site's emails
+  (enquiry confirmations, deposit links) should come from a Bacchus address,
+  which needs a few records added there. Which address should they come
+  from, e.g. `events@bacchus.com.mt`?
+
 ### Payments and bookings (asked 2026-10-16)
 
 - **How do you take deposits and balances today?** Bank transfer, card over

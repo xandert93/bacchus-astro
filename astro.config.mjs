@@ -86,6 +86,30 @@ export default defineConfig({
         access: "secret",
         optional: true,
       }),
+      // Sends email through Resend (src/lib/email/send.ts). A Worker secret
+      // on Cloudflare, in .env locally. Without it nothing is emailed, and
+      // enquiries are still stored.
+      RESEND_API_KEY: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
+      // Who emails come from. Resend's shared test address until Bacchus's
+      // own domain is verified with Resend (docs/planning/sanity-rollout.md,
+      // step 6); that address can only deliver to the Resend account's owner.
+      EMAIL_FROM: envField.string({
+        context: "server",
+        access: "public",
+        default: "Bacchus <onboarding@resend.dev>",
+      }),
+      // When set, every email goes to this address instead of its real
+      // recipient, so testing locally can never email a real person. Set it
+      // in your own .env; never on the live site.
+      EMAIL_TEST_RECIPIENT: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
       SANITY_DATASET: envField.enum({
         context: "server",
         access: "public",

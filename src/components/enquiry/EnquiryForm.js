@@ -771,7 +771,9 @@ if (form) {
     })
       .then((response) => {
         if (!response.ok) throw new Error(`Enquiry refused: ${response.status}`)
-
+        return response.json()
+      })
+      .then((result) => {
         const sentEl = document.getElementById("sent")
         if (!sentEl) {
           resetForm()
@@ -789,8 +791,9 @@ if (form) {
         }
         const sentCopyLine = document.getElementById("sentCopyLine")
         if (sentCopyLine)
-          sentCopyLine.textContent =
-            "A copy is on its way to " + (val("email") || "your inbox") + "."
+          sentCopyLine.textContent = result.emailSent
+            ? "A copy is on its way to " + (val("email") || "your inbox") + "."
+            : "We couldn't email you a copy just now, but your enquiry has reached us."
         form.style.display = "none"
         sentEl.classList.add("show")
         // Not scrollIntoView({block:"center"}) — on mobile the success

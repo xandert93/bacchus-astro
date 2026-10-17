@@ -11,6 +11,8 @@
 import type { APIRoute } from "astro"
 import { toBooking } from "@lib/enquiries/to-booking"
 import { validateEnquiry } from "@lib/enquiries/validate"
+import { enquiryConfirmationEmail } from "@lib/email/enquiry-confirmation"
+import { sendEmail } from "@lib/email/send"
 import { getWriteClient } from "@lib/sanity/write-client"
 
 export const prerender = false
@@ -81,5 +83,10 @@ export const POST: APIRoute = async ({ request }) => {
     return json(502, { error: "Your enquiry couldn't be sent. Please try again." })
   }
 
-  return json(201, { ok: true })
+  // After it's stored, never before: a confirmation must mean the enquiry
+  // really is with Bacchus. A failed email doesn't undo the enquiry; the
+  // form just doesn't promise a copy.
+  const emailSent = await sendEmail(enquiryConfirmationEmail(result.enquiry))
+
+  return json(201, { ok: true, emailSent })
 }

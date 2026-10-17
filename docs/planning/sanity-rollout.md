@@ -300,6 +300,21 @@ it frees up.
 
 ## Step 6 — the automatic parts
 
+**Email, started 2026-10-17.** Every email goes through `src/lib/email/send.ts`
+to Resend (resend.com), with a shared frame (`layout.ts`) and one file per
+email. Built so far: the **enquiry confirmation** (`enquiry-confirmation.ts`),
+sent once the enquiry is stored. An email that fails never undoes the
+enquiry; the sent panel then says no copy could be emailed.
+
+- **Settings** (`.env.example`): `RESEND_API_KEY`, a Worker secret on the
+  live site; `EMAIL_TEST_RECIPIENT`, set only locally, which sends every email
+  to you instead of its real recipient; `EMAIL_FROM`.
+- **Until Bacchus's domain is verified with Resend**, emails come from
+  Resend's shared test address, which only delivers to the Resend account's
+  owner. Verifying means adding a few DNS records to `bacchus.com.mt`
+  (asked, `docs/content/client-facts.md`); then `EMAIL_FROM` becomes a
+  Bacchus address.
+
 Each is small on its own and they are independent, so they can land in any
 order.
 
