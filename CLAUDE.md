@@ -38,6 +38,8 @@ code they cover.
   the read token, the rebuild webhook, what's next.
 - `docs/architecture/tech-stack.md`: the chosen stack and why, the live
   Shopify site, payments.
+- `docs/architecture/services.md`: how Sanity, Cloudflare and Resend call
+  each other, flow by flow, locally and live.
 
 ## Rules that apply everywhere
 
