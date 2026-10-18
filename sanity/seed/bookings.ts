@@ -265,6 +265,23 @@ const BOOKINGS: BookingSpec[] = [
       status: "draft",
       mealFormat: TIERS.receptionRose,
       beverage: TIERS.localWine,
+      extras: [
+        {
+          label: "Secret Garden ceremony set-up",
+          category: "setup",
+          quantity: 1,
+          unitAmount: 650,
+        },
+        { label: "Welcome prosecco", category: "beverage", quantity: 160, unitAmount: 9 },
+        { label: "Round family tables", category: "setup", quantity: 16, unitAmount: 15 },
+        { label: "Sound system", category: "setup", quantity: 1, unitAmount: 500 },
+        {
+          label: "Late bar, one hour",
+          category: "beverage",
+          quantity: 1,
+          unitAmount: 900,
+        },
+      ],
     },
     suggestedReply:
       "Dear Laura and Karl,\n\nThank you for thinking of Bacchus for your wedding. Your date is currently available. The Secret Garden isn't part of our standard package, but it can be added for your ceremony; vegetarian menus are no trouble at all.\n\nWould you like to come for a viewing? We hold them Monday to Friday, by appointment.\n\nWarm regards,\nThe Bacchus events team",
@@ -342,6 +359,12 @@ const BOOKINGS: BookingSpec[] = [
       status: "sent",
       mealFormat: TIERS.receptionDaisy,
       beverage: TIERS.localWine,
+      extras: [
+        { label: "Welcome prosecco", category: "beverage", quantity: 110, unitAmount: 9 },
+        { label: "Round family tables", category: "setup", quantity: 11, unitAmount: 15 },
+        { label: "Chair bows", category: "setup", quantity: 110, unitAmount: 3 },
+        { label: "Sound system", category: "setup", quantity: 1, unitAmount: 500 },
+      ],
       sentDaysAgo: 2,
     },
   },

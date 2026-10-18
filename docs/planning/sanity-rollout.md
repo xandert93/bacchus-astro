@@ -382,7 +382,8 @@ deposit to arrive secures it, and the client is told so.
      (`transfer-sent.ts`): records an Awaiting bank-transfer payment on the
      booking and emails staff to look out for it;
    - **decline the quote** (`decline.ts`), after a confirmation dialog: the
-     quote becomes Declined, the booking Withdrawn, and staff are emailed.
+     quote becomes Declined, the booking Withdrawn, staff are emailed, and
+     the client gets a short email confirming it.
 3. **Staff mark the transfer Received** on the booking's payment and publish.
    Sanity calls `api/booking-events.ts`, which confirms the booking.
 4. **Confirming** (`src/lib/deposits/confirm.ts`), whichever way the money

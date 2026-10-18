@@ -1,61 +1,131 @@
 ---
-// The message at the top of the deposit page for every state but "pay": while
-// it loads, a link that doesn't work, a transfer on its way, a confirmed
-// booking, a closed quote. The page's script (src/pages/_secure-booking.js) shows the one that matches.
+// The deposit page's outcome panel, for every state but "pay": while it
+// loads, a link that doesn't work, a transfer on its way, a confirmed
+// booking and a closed quote. Each is a full card under the hero, with what
+// happens next and somewhere to go, and the page hides everything about
+// paying around it, so the outcome is what the page is about. The page's
+// script (src/pages/_secure-booking.js) shows the one that matches.
+import Button from "@components/ui/Button.astro"
 import { CONTACT } from "@data/contact"
 import SecureBookingIcon from "./SecureBookingIcon.astro"
 import type { SecureBookingIconName } from "./SecureBookingIcon.astro"
 
-const MESSAGES: {
+interface Outcome {
   state: string
   icon: SecureBookingIconName
+  eyebrow: string
+  /** May hold an <em> for the gold italic, as in every heading on the site. */
   title: string
   body: string
-}[] = [
-  {
-    state: "loading",
-    icon: "calendar",
-    title: "One moment",
-    body: "Loading your booking…",
-  },
+  /** What happens next. A `field` step's detail is filled in by the script. */
+  steps?: { title: string; detail?: string; field?: string }[]
+  actions?: { label: string; href: string; variant?: "gradient" }[]
+}
+
+const CONTACT_ACTIONS = [
+  { label: `Call ${CONTACT.phone.display}`, href: CONTACT.phone.href },
+  { label: "Email us", href: CONTACT.email.href },
+]
+
+const OUTCOMES: Outcome[] = [
   {
     state: "invalid",
     icon: "warning",
-    title: "This link isn't working",
-    body: `It may be incomplete, or the quote may have changed. Please use the button in your latest email from us, or call ${CONTACT.phone.display}.`,
+    eyebrow: "Link not working",
+    title: "This link isn't <em>working</em>",
+    body: "It may be incomplete, or the quote may have changed. Please use the button in your latest email from us, or get in touch and we'll send you a new one.",
+    actions: CONTACT_ACTIONS,
   },
   {
     state: "transfer-sent",
     icon: "bank",
-    title: "Thank you: we're looking out for your transfer",
+    eyebrow: "Transfer on its way",
+    title: "Thank you: we're looking out for your <em>transfer</em>",
     body: "We'll email you as soon as it arrives and your date is confirmed. Transfers usually take one or two working days.",
   },
   {
     state: "confirmed",
     icon: "shield-check",
-    title: "Your date is confirmed",
-    body: "Your deposit has arrived, and we've emailed you a confirmation. We'll be in touch soon to start planning.",
+    eyebrow: "Booking confirmed",
+    title: "See you at <em>Bacchus</em>",
+    body: "Your deposit has arrived and your date is yours. Here's what happens next.",
+    steps: [
+      {
+        title: "Your confirmation is in your inbox",
+        detail: "It has everything on this page, for your records.",
+      },
+      {
+        title: "We'll be in touch to start planning",
+        detail: "Your events manager will contact you about the details.",
+      },
+      { title: "The balance", field: "balanceNote" },
+    ],
+    actions: [{ label: "Back to Bacchus", href: "/", variant: "gradient" }],
   },
   {
     state: "closed",
-    icon: "warning",
-    title: "This quote is closed",
-    body: `It was declined, replaced by a newer quote, or has expired. If you'd like to talk about your date, call ${CONTACT.phone.display} or email ${CONTACT.email.display}.`,
+    icon: "calendar",
+    eyebrow: "Quote closed",
+    title: "This quote is <em>closed</em>",
+    body: "It was declined, replaced by a newer quote, or has run out. If you'd like to talk about your date, or another one, we'd love to hear from you.",
+    actions: [
+      { label: "Enquire about a date", href: "/weddings#enquire", variant: "gradient" },
+      ...CONTACT_ACTIONS,
+    ],
   },
 ]
 ---
 
-<section class="secure-booking-status-section">
+<section
+  class="secure-booking-status-section"
+  data-deposit-show="loading invalid transfer-sent confirmed closed"
+>
   <div class="secure-booking-container-large">
-    {MESSAGES.map((message) => (
-      <div class="secure-booking-status" data-deposit-show={message.state} hidden>
-        <span class="secure-booking-icon-badge secure-booking-pay-icon-cream">
-          <SecureBookingIcon name={message.icon} size={22} />
+    <p class="secure-booking-status-loading" data-deposit-show="loading">
+      Loading your booking…
+    </p>
+
+    {OUTCOMES.map((outcome) => (
+      <div
+        class="secure-booking-card secure-booking-status"
+        data-deposit-show={outcome.state}
+        hidden
+      >
+        <span class="secure-booking-icon-badge secure-booking-pay-icon-gold">
+          <SecureBookingIcon name={outcome.icon} size={24} />
         </span>
-        <div>
-          <h2>{message.title}</h2>
-          <p>{message.body}</p>
-        </div>
+        <p class="secure-booking-eyebrow-plain">{outcome.eyebrow}</p>
+        <h2 set:html={outcome.title} />
+        <p class="secure-booking-status-body">{outcome.body}</p>
+
+        {outcome.steps && (
+          <ol class="secure-booking-status-steps">
+            {outcome.steps.map((step) => (
+              <li data-deposit-row={step.field}>
+                <strong>{step.title}</strong>
+                {step.field ? (
+                  <span data-deposit={step.field} />
+                ) : (
+                  <span>{step.detail}</span>
+                )}
+              </li>
+            ))}
+          </ol>
+        )}
+
+        {outcome.actions && (
+          <div class="secure-booking-status-actions">
+            {outcome.actions.map((action) => (
+              <Button
+                href={action.href}
+                variant={action.variant}
+                arrow={!!action.variant}
+              >
+                <span>{action.label}</span>
+              </Button>
+            ))}
+          </div>
+        )}
       </div>
     ))}
   </div>

@@ -1,43 +1,53 @@
 ---
-// "Not going ahead?" under the payment options: declining the quote, after
-// confirming in a dialog, with an optional reason. Declining frees the date
-// for other couples, so it can't be undone from here. Wired in
-// the page's script (src/pages/_secure-booking.js).
+// "Not going ahead?" under the payment options: a quiet card whose button
+// opens a dialog to decline the quote, with an optional reason. It can't be
+// undone from here, hence the dialog. The confirm button is wired in the
+// page's script (src/pages/_secure-booking.js); opening and closing are the
+// Dialog's own.
 import Button from "@components/ui/Button.astro"
+import Dialog from "@components/ui/Dialog.astro"
+import FormField from "@components/forms/FormField.astro"
+import TextInput from "@components/forms/TextInput.astro"
 ---
 
 <section class="secure-booking-decline-section" data-deposit-show="pay" hidden>
   <div class="secure-booking-container-large">
-    <p class="secure-booking-decline-line">
-      Not going ahead?
-      <button type="button" class="secure-booking-decline-open" id="declineOpen">
-        Decline this quote
-      </button>
-    </p>
-  </div>
-
-  <dialog
-    class="secure-booking-decline-dialog"
-    id="declineDialog"
-    aria-labelledby="declineTitle"
-  >
-    <h2 id="declineTitle">Decline this quote?</h2>
-    <p>
-      We'll close this quote and let the events team know. This can't be undone here,
-      though you're always welcome to enquire again.
-    </p>
-    <label class="secure-booking-decline-reason">
-      <span>Would you tell us why? (optional)</span>
-      <textarea id="declineReason" rows="3" maxlength="500"></textarea>
-    </label>
-    <p class="secure-booking-pay-error" id="declineError" role="alert" hidden></p>
-    <div class="secure-booking-decline-buttons">
-      <Button variant="ghost" id="declineCancel">
-        <span>Keep my quote</span>
-      </Button>
-      <Button variant="dark" id="declineConfirm">
-        <span>Decline the quote</span>
+    <div class="secure-booking-card secure-booking-decline-card">
+      <div>
+        <h3>Not going ahead?</h3>
+        <p>
+          If your plans have changed, let us know and we'll close this quote. You're
+          always welcome to enquire again.
+        </p>
+      </div>
+      <Button data-dialog-open="declineDialog">
+        <span>Decline this quote</span>
       </Button>
     </div>
-  </dialog>
+  </div>
+
+  <Dialog id="declineDialog" labelledBy="declineTitle">
+    <div class="secure-booking-decline-dialog">
+      <p class="secure-booking-eyebrow-plain">Not going ahead</p>
+      <h2 id="declineTitle">
+        Decline this <em>quote?</em>
+      </h2>
+      <p>
+        We'll close this quote and let the events team know. This can't be undone here,
+        though you're always welcome to enquire again.
+      </p>
+      <FormField label="Would you tell us why? (optional)" for="declineReason">
+        <TextInput id="declineReason" multiline maxlength="500" />
+      </FormField>
+      <p class="secure-booking-pay-error" id="declineError" role="alert" hidden></p>
+      <div class="secure-booking-button-row">
+        <Button data-dialog-close>
+          <span>Keep my quote</span>
+        </Button>
+        <Button variant="dark" id="declineConfirm">
+          <span>Decline the quote</span>
+        </Button>
+      </div>
+    </div>
+  </Dialog>
 </section>

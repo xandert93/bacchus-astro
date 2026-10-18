@@ -71,7 +71,10 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   `GalleryTile`, `Lightbox`, `CheckList`, `SocialLinks`, `ArrowIcon`,
   `Particles`, `ProposedBadge` (the pill on every link to an unbuilt page),
   `FaqAccordion` (the questions and answers inside `FaqSection`, also used
-  on its own).
+  on its own), `Dialog` (a modal on the browser's own `<dialog>`: centred,
+  a close button, Escape or a click outside closes it; first used to
+  decline a quote. The weddings quick-pick calendar's modal predates it and
+  is its own).
 - `forms/`: form controls. `FormField` (label, error, notes), `TextInput`
   (every input and the textarea), `ChipGroup`, `OptionCardGroup`. Used by the
   enquiry wizard and the waitlist popover.

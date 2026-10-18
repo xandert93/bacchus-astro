@@ -345,9 +345,11 @@ Everything below is illustrative and is labelled as such on the page.
 - **Do you already have a card provider** for online payments or your card
   machine (Viva.com, Revolut Business, Stripe, a bank)? If so, which, and
   roughly what do you pay per card payment?
-- **Deposit terms**: the percentage, whether it's refundable, when the balance
-  is due, and how long a date is held after the deposit link is sent (the
-  site says seven days).
+- **Deposit terms**: the percentage, whether it's refundable, and when the
+  balance is due.
+- **How long a quote stays valid** once it's sent. We've assumed seven days;
+  it's a setting in the Studio (Wedding Policy, "Days a Quote Stays Valid"),
+  and staff can set a different end date on any one quote.
 - **The 30/60/10 schedule** we discussed in person: can you confirm it in
   writing? Is the 30% due when the couple books, however far ahead, and
   when exactly are the 60% and the last 10% due?

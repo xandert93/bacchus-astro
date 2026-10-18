@@ -3,9 +3,10 @@
 // the page in: each element's `data-deposit` names its field, and
 // `data-deposit-show` lists the states it appears in (src/lib/deposits/
 // view.ts). Then wires up the buttons: pay by bank, card, "I've sent the
-// transfer", and declining the quote.
+// transfer", and declining the quote; and greets a confirmed booking with a
+// short rise of gold through the hero.
 
-import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
+import { reducedMotion } from "@lib/media-queries.js"
 
 const page = document.getElementById("depositPage")
 
@@ -48,6 +49,7 @@ if (page) {
       discount: Boolean(view.discount),
       vat: Boolean(view.vat),
       validUntil: Boolean(view.validUntil),
+      balanceNote: Boolean(view.balanceNote),
       testMode: view.testMode,
       exampleBank: !view.bank.areReal,
     }
@@ -76,11 +78,30 @@ if (page) {
     }
   }
 
+  // A one-off rise of gold specks through the hero, like bubbles in a glass,
+  // when the page opens on a confirmed booking. The hero's own particles
+  // drift slowly for ever; these are brighter, quicker and gone in seconds.
+  const celebrate = () => {
+    const layer = document.getElementById("particles")
+    if (!layer || window.matchMedia(reducedMotion).matches) return
+
+    for (let index = 0; index < 40; index++) {
+      const speck = document.createElement("div")
+      speck.className = "particle secure-booking-celebration-speck"
+      speck.style.left = `${Math.random() * 100}%`
+      speck.style.animationDuration = `${3 + Math.random() * 3}s`
+      speck.style.animationDelay = `${Math.random() * 1.5}s`
+      speck.addEventListener("animationend", () => speck.remove())
+      layer.appendChild(speck)
+    }
+  }
+
   const load = () =>
     post("view")
       .then(({ view }) => {
         fill(view)
         setState(view.state)
+        if (view.state === "confirmed") celebrate()
       })
       .catch(() => setState("invalid"))
 
@@ -125,32 +146,24 @@ if (page) {
   })
 
   // --- Declining the quote ------------------------------------------------------
+  // The Dialog opens and closes itself (src/components/ui/Dialog.js); this
+  // sends the decline.
 
   const dialog = document.getElementById("declineDialog")
-  const openButton = document.getElementById("declineOpen")
-  const cancelButton = document.getElementById("declineCancel")
   const confirmButton = document.getElementById("declineConfirm")
   const reasonField = document.getElementById("declineReason")
   const declineError = document.getElementById("declineError")
 
-  if (dialog && openButton && cancelButton && confirmButton) {
-    const closeDialog = () => {
-      dialog.close()
-    }
-
-    openButton.addEventListener("click", () => {
+  if (dialog && confirmButton) {
+    dialog.addEventListener("close", () => {
       declineError.hidden = true
-      dialog.showModal()
-      lockScroll("decline-dialog")
     })
-    dialog.addEventListener("close", () => unlockScroll("decline-dialog"))
-    cancelButton.addEventListener("click", closeDialog)
 
     confirmButton.addEventListener("click", () => {
       confirmButton.disabled = true
       post("decline", { reason: reasonField ? reasonField.value : "" })
         .then(() => {
-          closeDialog()
+          dialog.close()
           setState("closed")
           window.scrollTo({ top: 0, behavior: "smooth" })
         })

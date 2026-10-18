@@ -37,7 +37,7 @@ const TEST_BANKS = [
 
   <section class="secure-booking-status-section test-checkout">
     <div class="secure-booking-container-large">
-      <div class="secure-booking-status test-checkout-card" id="testCheckout">
+      <div class="secure-booking-card test-checkout-card" id="testCheckout">
         <div>
           <p class="secure-booking-eyebrow-plain">Test mode: no money is taken</p>
 
@@ -50,8 +50,8 @@ const TEST_BANKS = [
               mode. Pressing Pay records a test payment and confirms the booking, exactly
               as a real payment will.
             </p>
-            <div class="secure-booking-decline-buttons">
-              <Button variant="ghost" data-test-back>
+            <div class="secure-booking-button-row">
+              <Button data-test-back>
                 <span>Back without paying</span>
               </Button>
               <Button variant="gradient" arrow data-test-pay>
@@ -71,18 +71,14 @@ const TEST_BANKS = [
             <ul class="test-checkout-banks">
               {TEST_BANKS.map((bank) => (
                 <li>
-                  <Button
-                    variant="ghost"
-                    class="test-checkout-bank"
-                    data-test-bank={bank}
-                  >
+                  <Button class="test-checkout-bank" data-test-bank={bank} arrow>
                     <span>{bank}</span>
                   </Button>
                 </li>
               ))}
             </ul>
-            <div class="secure-booking-decline-buttons">
-              <Button variant="ghost" data-test-back>
+            <div class="secure-booking-button-row">
+              <Button data-test-back>
                 <span>My bank isn't listed</span>
               </Button>
             </div>
@@ -98,8 +94,8 @@ const TEST_BANKS = [
               real life this is your bank's own app or website, where you'd confirm with
               your fingerprint, face or PIN.
             </p>
-            <div class="secure-booking-decline-buttons">
-              <Button variant="ghost" id="testCheckoutCancel">
+            <div class="secure-booking-button-row">
+              <Button id="testCheckoutCancel">
                 <span>Cancel</span>
               </Button>
               <Button variant="gradient" arrow data-test-pay>
@@ -132,6 +128,21 @@ const TEST_BANKS = [
   .test-checkout-card {
     max-width: 640px;
     margin: 0 auto;
+    padding: clamp(28px, 5vw, 48px);
+  }
+
+  .test-checkout-card h2 {
+    margin: 10px 0 12px;
+
+    font-size: clamp(26px, 3.5vw, 34px);
+    line-height: 1.2;
+  }
+
+  .test-checkout-card p:not([class]) {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--muted-ink);
   }
 
   .test-checkout-banks {
@@ -141,8 +152,9 @@ const TEST_BANKS = [
     list-style: none;
   }
 
+  /* Full-width rows, the bank's name on the left and the arrow on the right. */
   .test-checkout-banks :global(.test-checkout-bank) {
     width: 100%;
-    justify-content: flex-start;
+    justify-content: space-between;
   }
 </style>
