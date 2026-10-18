@@ -22,9 +22,11 @@ const MUTED = "#6b6457"
 const RULE = "#e6dfcf"
 const GOLD_GRADIENT = "linear-gradient(135deg, #dfc167, #dab53f 55%, #b8902c)"
 
-// Newsreader is the site's serif. Apple Mail and some others load it; the
-// rest fall back to Georgia, which is close.
+// The site's two typefaces. Newsreader for reading; Inter for capitals and
+// buttons, as on the site. Apple Mail and some others load them; the rest
+// fall back to Georgia and Helvetica or Arial, which are close.
 const SERIF = "Newsreader, Georgia, 'Times New Roman', serif"
+const SANS = "Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif"
 
 // Shared by every label and its value in a details card, so their first
 // lines sit on the same baseline whatever their font sizes.
@@ -32,9 +34,10 @@ const ROW_LINE_HEIGHT = "22px"
 
 // A details card's label and answer widths. With the 16px gap between them
 // they fit side by side in the 600px email; on a narrow screen, an answer
-// that can't fit beside its label drops beneath it.
-const DETAIL_LABEL_WIDTH = 150
-const DETAIL_VALUE_WIDTH = 300
+// that can't fit beside its label drops beneath it. A label never wraps, so
+// it always shares its answer's baseline: keep labels to about 20 letters.
+const DETAIL_LABEL_WIDTH = 180
+const DETAIL_VALUE_WIDTH = 280
 
 /** An absolute address on the live site, e.g. for a picture or a link. */
 export const siteUrl = (path: string) => `${EMAIL_SITE_ORIGIN}${path}`
@@ -84,7 +87,9 @@ export const heading = (text: string) => `
  * where there's room; on a phone each answer drops beneath its label. Done
  * with widths that wrap rather than a phone-width style rule, because some
  * email apps (Gmail showing an Outlook or other non-Google account, for one)
- * ignore style rules entirely.
+ * ignore style rules entirely. The same 24px above and below it: the
+ * margins of neighbouring blocks overlap rather than add up, so it's 24px
+ * whatever sits either side (a heading's larger gap still wins).
  */
 export const detailsCard = (rows: [label: string, value: string | undefined][]) => {
   const cells = rows
@@ -98,13 +103,13 @@ export const detailsCard = (rows: [label: string, value: string | undefined][]) 
       return `
         <tr>
           <td style="padding: 12px 20px; ${divider}">
-            <div style="display: inline-block; width: ${DETAIL_LABEL_WIDTH}px; padding-right: 16px; vertical-align: baseline; font-family: ${SERIF}; font-size: 11px; line-height: ${ROW_LINE_HEIGHT}; letter-spacing: 0.12em; text-transform: uppercase; color: ${BRONZE};">${escapeHtml(label)}</div><div style="display: inline-block; width: ${DETAIL_VALUE_WIDTH}px; max-width: 100%; vertical-align: baseline; font-family: ${SERIF}; font-size: 15px; line-height: ${ROW_LINE_HEIGHT}; color: ${INK}; white-space: pre-line;">${escapeHtml(value as string)}</div>
+            <div style="display: inline-block; width: ${DETAIL_LABEL_WIDTH}px; padding-right: 16px; vertical-align: baseline; white-space: nowrap; font-family: ${SANS}; font-size: 10px; line-height: ${ROW_LINE_HEIGHT}; letter-spacing: 0.14em; text-transform: uppercase; color: ${BRONZE};">${escapeHtml(label)}</div><div style="display: inline-block; width: ${DETAIL_VALUE_WIDTH}px; max-width: 100%; vertical-align: baseline; font-family: ${SERIF}; font-size: 15px; line-height: ${ROW_LINE_HEIGHT}; color: ${INK}; white-space: pre-line;">${escapeHtml(value as string)}</div>
           </td>
         </tr>`
     })
     .join("")
 
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse: separate; border: 1px solid ${RULE}; border-radius: 10px; background: ${PAPER}; margin: 4px 0 8px;">${cells}</table>`
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse: separate; border: 1px solid ${RULE}; border-radius: 10px; background: ${PAPER}; margin: 24px 0;">${cells}</table>`
 }
 
 /** Numbered steps, each number in a gold circle. */
@@ -136,7 +141,7 @@ export const button = (label: string, href: string) => `
   <table role="presentation" align="center" width="100%" cellpadding="0" cellspacing="0" style="max-width: 280px; margin: 12px auto 28px;">
     <tr>
       <td align="center" style="border-radius: 999px; background: ${GOLD}; background-image: ${GOLD_GRADIENT};">
-        <a href="${escapeHtml(href)}" style="display: block; padding: 15px 24px; font-family: ${SERIF}; font-size: 15px; letter-spacing: 0.04em; color: ${INK}; text-align: center; text-decoration: none;">${escapeHtml(label)}</a>
+        <a href="${escapeHtml(href)}" style="display: block; padding: 16px 24px; font-family: ${SANS}; font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: ${INK}; text-align: center; text-decoration: none;">${escapeHtml(label)}</a>
       </td>
     </tr>
   </table>`
@@ -177,7 +182,7 @@ export const emailLayout = ({
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light">
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>
       @supports (-webkit-background-clip: text) {
         .gold-text {
@@ -201,7 +206,7 @@ export const emailLayout = ({
                   <img src="${siteUrl("/email/bacchus-logo.png")}" width="72" height="75" alt="Bacchus" style="display: block; border: 0; margin: 0 auto 14px;">
                   <span style="display: block; font-family: ${SERIF}; font-size: 24px; letter-spacing: 0.32em;">${goldText("BACCHUS")}</span>
                 </a>
-                <span style="display: block; margin-top: 6px; font-family: ${SERIF}; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: ${MUTED};">Mdina · Malta</span>
+                <span style="display: block; margin-top: 6px; font-family: ${SANS}; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: ${MUTED};">Mdina · Malta</span>
               </td>
             </tr>
             ${
@@ -215,7 +220,7 @@ export const emailLayout = ({
             }
             <tr>
               <td style="padding: 36px 36px 12px;">
-                <p style="margin: 0 0 10px; font-family: ${SERIF}; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: ${BRONZE};">${escapeHtml(eyebrow)}</p>
+                <p style="margin: 0 0 10px; font-family: ${SANS}; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: ${BRONZE};">${escapeHtml(eyebrow)}</p>
                 <h1 style="margin: 0 0 24px; font-family: ${SERIF}; font-size: 30px; line-height: 1.2; font-weight: normal; color: ${INK};">${styleEm(title)}</h1>
                 ${body}
               </td>
