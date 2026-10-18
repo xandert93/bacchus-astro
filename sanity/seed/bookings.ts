@@ -110,7 +110,6 @@ interface BookingSpec {
   closeReason?: string
   internalNotes?: string
   suggestedReply?: string
-  depositHoldDays?: number
 }
 
 const start = today()
@@ -345,7 +344,6 @@ const BOOKINGS: BookingSpec[] = [
       beverage: TIERS.localWine,
       sentDaysAgo: 2,
     },
-    depositHoldDays: 5,
   },
 
   // --- Declined -------------------------------------------------------------
@@ -730,9 +728,6 @@ const buildBooking = (spec: BookingSpec, quote: ReturnType<typeof buildQuote> | 
     },
     ...(quote ? { quote: reference(quote._id) } : {}),
     ...(payments ? { payments } : {}),
-    ...(spec.depositHoldDays
-      ? { depositHoldExpiresAt: isoDateTime(addDays(start, spec.depositHoldDays), 17) }
-      : {}),
     sourcePage: spec.sourcePage,
     ...(spec.suggestedReply ? { suggestedReply: spec.suggestedReply } : {}),
     ...(spec.internalNotes ? { internalNotes: spec.internalNotes } : {}),

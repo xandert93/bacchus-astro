@@ -15,9 +15,9 @@ import { DEFAULT_DEPOSIT_PERCENT, DEFAULT_VAT_RATE } from "../../lib/constants"
  *   - `WEDDING_MIN_NOTICE_MONTHS = 3` in `main.js` carries a comment saying in
  *     so many words that it is a reasonable placeholder and not a confirmed
  *     Bacchus policy. A visitor reading the calendar cannot see that comment.
- *   - The deposit page states a 7-day hold. Kept as a specific number on the
- *     user's explicit call, but it is illustrative and was never verified as a
- *     hold-period policy.
+ *   - A quote stays valid for 7 days. Kept as a specific number on the
+ *     user's explicit call, but it is illustrative and was never verified as
+ *     Bacchus's policy.
  *   - The homepage's "35+ years" stat is wrong rather than merely unconfirmed:
  *     the catering business has operated since 1976, which the real site frames
  *     as 50+ years.
@@ -27,7 +27,7 @@ import { DEFAULT_DEPOSIT_PERCENT, DEFAULT_VAT_RATE } from "../../lib/constants"
  * person publishing it, and that the oxblood disclaimers currently written by
  * hand into the markup follow the data instead.
  *
- * The deposit terms (`deposit.percent`, `.balanceDueDays`, `.holdDays`)
+ * The deposit terms (`deposit.percent`, `.balanceDueDays`, `.quoteValidDays`)
  * are not settled with Bacchus yet: the catalogue states 30% non-refundable
  * with the rest due 14 days before the event, while their emails call the
  * terms flexible. That is tracked outside the Studio
@@ -207,11 +207,15 @@ export default defineType({
           validation: (Rule) => Rule.min(0).integer(),
         }),
         defineField({
-          name: "holdDays",
-          title: "Date Held for (Days) After the Deposit Link Is Sent",
+          name: "quoteValidDays",
+          title: "Days a Quote Stays Valid",
           type: "number",
           initialValue: 7,
-          validation: (Rule) => Rule.min(0).integer(),
+          description: help(
+            "Counted from the day it's sent, unless the quote sets its own end date.",
+            "The date isn't held meanwhile: the first deposit to arrive secures it.",
+          ),
+          validation: (Rule) => Rule.min(1).integer(),
         }),
       ],
     }),

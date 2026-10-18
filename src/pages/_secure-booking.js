@@ -47,7 +47,7 @@ if (page) {
     const rowShown = {
       discount: Boolean(view.discount),
       vat: Boolean(view.vat),
-      holdUntil: Boolean(view.holdUntil),
+      validUntil: Boolean(view.validUntil),
       testMode: view.testMode,
       exampleBank: !view.bank.areReal,
     }
