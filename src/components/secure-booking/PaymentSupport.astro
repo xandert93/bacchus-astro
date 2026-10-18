@@ -51,7 +51,12 @@ const CHANNELS: SupportChannel[] = [
 ]
 ---
 
-<section class="secure-booking-support-section" id="payment-support">
+<section
+  class="secure-booking-support-section"
+  id="payment-support"
+  data-deposit-show="pay transfer-sent"
+  hidden
+>
   <div class="secure-booking-container-large">
     <SecureBookingIntro eyebrow="Here to help">
       Having trouble <em>paying?</em>
@@ -64,7 +69,7 @@ const CHANNELS: SupportChannel[] = [
       {CHANNELS.map((channel) => (
         <a
           href={channel.href}
-          class="secure-booking-hover-card secure-booking-support-card"
+          class="secure-booking-card secure-booking-hover-card secure-booking-support-card"
           target={channel.opensNewTab ? "_blank" : undefined}
           rel={channel.opensNewTab ? "noopener" : undefined}
         >

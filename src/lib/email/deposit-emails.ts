@@ -191,6 +191,42 @@ export const dateTakenEmail = ({
   }
 }
 
+/** The client declined their quote: a record of it, and the door left open. */
+export const quoteDeclinedClientEmail = (facts: DepositFacts): Email => {
+  const day = longDate(facts.date)
+
+  return {
+    to: facts.email,
+    subject: `Your quote for ${day} is closed`,
+    html: emailLayout({
+      preview: `We've closed your quote for ${day}, as you asked.`,
+      eyebrow: "Your quote",
+      title: "We've closed your <em>quote</em>",
+      body: [
+        paragraph(`Dear ${escapeHtml(facts.firstName)},`),
+        paragraph(
+          `As you asked, we've closed your quote for ${highlight(day)} (reference ${escapeHtml(facts.reference)}). Nothing has been charged, and there's nothing more you need to do.`,
+        ),
+        paragraph(
+          "Thank you for thinking of Bacchus. If your plans change, or you'd like to talk about another date, just reply to this email: we'd love to hear from you.",
+        ),
+        SIGN_OFF,
+      ].join(""),
+    }),
+    text: plain([
+      `Dear ${facts.firstName},`,
+      "",
+      `As you asked, we've closed your quote for ${day} (reference ${facts.reference}). Nothing has been charged, and there's nothing more you need to do.`,
+      "",
+      "Thank you for thinking of Bacchus. If your plans change, or you'd like to talk about another date, just reply to this email: we'd love to hear from you.",
+      "",
+      "Warm regards,",
+      "The Bacchus events team",
+    ]),
+    kind: "quote-declined-client",
+  }
+}
+
 // --- To staff -----------------------------------------------------------------
 
 const staffEmail = ({

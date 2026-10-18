@@ -1,7 +1,7 @@
 // POST /api/deposits/decline: the client declines the quote on the deposit
 // page, after confirming they mean it. The quote becomes Declined by Client,
-// the enquiry Withdrawn (which frees the date for others), and staff are told,
-// with the reason if one was given.
+// the enquiry Withdrawn, and staff are told, with the reason if one was
+// given. The client gets a short email confirming it.
 
 import type { APIRoute } from "astro"
 import { json } from "@lib/api/requests"
@@ -9,7 +9,7 @@ import { changeStatus } from "@lib/bookings/status"
 import { depositFacts } from "@lib/deposits/load"
 import { findDeposit } from "@lib/deposits/request"
 import { toDepositView } from "@lib/deposits/view"
-import { quoteDeclinedEmail } from "@lib/email/deposit-emails"
+import { quoteDeclinedClientEmail, quoteDeclinedEmail } from "@lib/email/deposit-emails"
 import { sendEmail } from "@lib/email/send"
 import { fetchStaffRecipients } from "@lib/email/staff"
 
@@ -41,13 +41,11 @@ export const POST: APIRoute = async ({ request }) => {
       )
       .commit()
 
-    await sendEmail(
-      quoteDeclinedEmail(
-        depositFacts(record),
-        await fetchStaffRecipients(client),
-        reason,
-      ),
-    )
+    const facts = depositFacts(record)
+    await Promise.all([
+      sendEmail(quoteDeclinedEmail(facts, await fetchStaffRecipients(client), reason)),
+      sendEmail(quoteDeclinedClientEmail(facts)),
+    ])
 
     return json(200, { ok: true })
   } catch (error) {

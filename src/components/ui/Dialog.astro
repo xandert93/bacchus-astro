@@ -1,0 +1,125 @@
+---
+// A modal dialog in the site's style: centred over the darkened page, with a
+// round close button in its corner, and closed by that button, Escape or a
+// click outside it. It's the browser's own <dialog>, so focus stays inside
+// while it's open and returns to the button that opened it. A button with
+// data-dialog-open="<id>" opens it, and anything inside with
+// data-dialog-close closes it (Dialog.js); a page's script can also call
+// .showModal() and .close() on it directly.
+//
+// The content comes through the default slot, so it carries the caller's
+// scoping attribute: style it in the caller.
+interface Props {
+  id: string
+  /** The id of the heading that names the dialog, for screen readers. */
+  labelledBy: string
+}
+
+const { id, labelledBy } = Astro.props
+---
+
+<dialog class="dialog" id={id} aria-labelledby={labelledBy}>
+  <button type="button" class="dialog-close" data-dialog-close aria-label="Close">
+    <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+      <path
+        d="M2 2l14 14M16 2 2 16"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+      ></path>
+    </svg>
+  </button>
+  <slot />
+</dialog>
+
+<script>
+  import "./Dialog.js"
+</script>
+
+<style>
+  .dialog {
+    width: min(540px, calc(100vw - 32px));
+    max-height: calc(100dvh - 48px);
+
+    /* The browser centres a dialog with margin: auto, which the global
+       reset's margin: 0 would otherwise undo, leaving it top left. */
+    margin: auto;
+    padding: clamp(32px, 5vw, 44px) clamp(24px, 5vw, 44px);
+    overflow-y: auto;
+    border: 1px solid rgba(var(--ink-rgb), 0.08);
+    border-radius: var(--radius-card);
+    background: var(--paper);
+    box-shadow: 0 40px 100px -30px rgba(10, 9, 6, 0.55);
+
+    color: var(--ink);
+  }
+
+  .dialog::backdrop {
+    background: rgba(10, 9, 6, 0.7);
+  }
+
+  .dialog[open] {
+    animation: dialog-rise 0.4s var(--ease);
+  }
+
+  .dialog[open]::backdrop {
+    animation: dialog-fade 0.4s var(--ease);
+  }
+
+  @keyframes dialog-rise {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+
+  @keyframes dialog-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (--reduced-motion) {
+    .dialog[open],
+    .dialog[open]::backdrop {
+      animation: none;
+    }
+  }
+
+  .dialog-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(var(--ink-rgb), 0.18);
+    border-radius: 50%;
+    background: transparent;
+
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      background 0.3s var(--ease),
+      color 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+
+  @media (--hover) {
+    .dialog-close:hover {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--limestone-2);
+    }
+  }
+
+  @media (--no-hover) {
+    .dialog-close:active {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--limestone-2);
+    }
+  }
+</style>

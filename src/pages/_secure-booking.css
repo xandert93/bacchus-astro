@@ -487,10 +487,16 @@
   }
 }
 
-.secure-booking-hover-card {
+/* The page's white card. Only cards that are links (the support channels)
+   add .secure-booking-hover-card: a lift on hover says "press me", so a card
+   you can't press doesn't get one. */
+.secure-booking-card {
   border-radius: var(--radius-card);
   border: 1px solid rgba(var(--ink-rgb), 0.1);
   background: #fff;
+}
+
+.secure-booking-hover-card {
   transition:
     opacity 0.9s var(--ease),
     transform 1s var(--ease),
@@ -615,35 +621,113 @@
   color: var(--muted-ink);
 }
 
-/* ---------- State messages (DepositStatus) ---------- */
+/* ---------- Outcomes (DepositStatus) ---------- */
 
 .secure-booking-status-section {
-  padding: clamp(32px, 6vw, 56px) 0 0;
+  padding: clamp(40px, 7vw, 72px) 0 0;
+}
+
+.secure-booking-status-loading {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 17px;
+  color: var(--muted-ink);
+  text-align: center;
 }
 
 .secure-booking-status {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  padding: clamp(24px, 3vw, 36px);
-  border: 1px solid rgba(var(--ink-rgb), 0.1);
-  border-radius: var(--radius-card);
-  background: var(--paper);
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(36px, 6vw, 64px) clamp(24px, 6vw, 72px);
+  box-shadow: 0 30px 80px -40px rgba(var(--ink-rgb), 0.25);
+
+  text-align: center;
 }
 
 .secure-booking-status h2 {
-  margin: 0 0 8px;
-
-  font-size: clamp(24px, 3vw, 32px);
+  font-size: clamp(30px, 4.5vw, 46px);
+  line-height: 1.15;
 }
 
-.secure-booking-status p {
-  margin: 0;
+.secure-booking-status-body {
+  max-width: 52ch;
 
   font-family: "Newsreader", Georgia, serif;
-  font-size: 17px;
+  font-size: clamp(17px, 1.8vw, 19px);
   line-height: 1.6;
   color: var(--muted-ink);
+}
+
+/* What happens next: numbered in gold circles, as in the emails. */
+.secure-booking-status-steps {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  max-width: 520px;
+  margin-top: 14px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(var(--ink-rgb), 0.1);
+  list-style: none;
+  counter-reset: status-step;
+
+  text-align: left;
+}
+
+.secure-booking-status-steps li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  column-gap: 16px;
+  counter-increment: status-step;
+}
+
+.secure-booking-status-steps li::before {
+  content: counter(status-step);
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gold-gradient);
+
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.secure-booking-status-steps strong {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.secure-booking-status-steps span {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 15px;
+  color: var(--muted-ink);
+}
+
+.secure-booking-status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* The one-off rise of gold through the hero when a booking is confirmed
+   (the page's script adds these to the hero's particle layer, never under
+   reduced motion, where the particle rules hide them anyway). */
+.particle.secure-booking-celebration-speck {
+  width: 5px;
+  height: 5px;
+  background: rgba(var(--gold-rgb), 0.95);
+  box-shadow: 0 0 10px rgba(var(--gold-rgb), 0.7);
+  animation-iteration-count: 1;
+  animation-timing-function: var(--ease);
 }
 
 /* ---------- Declining the quote (DeclineQuote) ---------- */
@@ -653,79 +737,64 @@
   padding: 0 0 calc(var(--secure-booking-section-gap) / 2);
 }
 
-.secure-booking-decline-line {
-  margin: 0;
+/* Quieter than the payment cards above it: no fill, so it reads as an
+   aside rather than a third way to pay. */
+.secure-booking-decline-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+  padding: clamp(24px, 3vw, 32px) clamp(24px, 3vw, 40px);
+  background: transparent;
+}
+
+.secure-booking-decline-card h3 {
+  font-size: clamp(20px, 3vw, 24px);
+  font-weight: 400;
+}
+
+.secure-booking-decline-card p {
+  max-width: 52ch;
+  margin-top: 6px;
 
   font-family: "Newsreader", Georgia, serif;
-  font-size: 15px;
   color: var(--muted-ink);
-}
-
-.secure-booking-decline-open {
-  padding: 0;
-  border: 0;
-  background: none;
-
-  font: inherit;
-  color: var(--ink);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-}
-
-.secure-booking-decline-dialog {
-  width: min(520px, calc(100vw - 32px));
-  padding: clamp(24px, 4vw, 36px);
-  border: 1px solid rgba(var(--ink-rgb), 0.12);
-  border-radius: var(--radius-card);
-  background: var(--paper);
-  color: var(--ink);
-}
-
-.secure-booking-decline-dialog::backdrop {
-  background: rgba(var(--ink-rgb), 0.45);
 }
 
 .secure-booking-decline-dialog h2 {
-  margin: 0 0 12px;
+  margin: 10px 0 12px;
+  padding-right: 40px;
 
-  font-size: clamp(24px, 3vw, 30px);
+  font-size: clamp(28px, 4vw, 36px);
+  line-height: 1.15;
 }
 
-.secure-booking-decline-dialog p {
+.secure-booking-decline-dialog p:not([class]) {
   font-family: "Newsreader", Georgia, serif;
-  font-size: 16px;
-  line-height: 1.55;
-}
-
-.secure-booking-decline-reason {
-  display: grid;
-  gap: 8px;
-  margin-top: 16px;
-
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 14px;
+  font-size: 17px;
+  line-height: 1.6;
   color: var(--muted-ink);
 }
 
-.secure-booking-decline-reason textarea {
-  padding: 12px;
-  border: 1px solid rgba(var(--ink-rgb), 0.15);
-  border-radius: var(--radius-card);
-  background: #fff;
-
-  font: inherit;
-  font-size: 15px;
-  color: var(--ink);
-  resize: vertical;
+.secure-booking-decline-dialog .field {
+  margin-top: 24px;
 }
 
-.secure-booking-decline-buttons {
+/* A row of buttons at the foot of a dialog or the test checkout. */
+.secure-booking-button-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 24px;
+  margin-top: 28px;
+}
+
+@media (--below-secure-booking-small) {
+  .secure-booking-button-row > * {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
 }
 
 .secure-booking-bank-details {
