@@ -161,3 +161,26 @@ Checked on the live site by enquiring and refreshing.
 
 **Rule**: anything a visitor expects to see change straight after their own
 action is read uncached.
+
+---
+
+## 6. The deposit page showed every state message at once
+
+**Symptom**: opening a deposit link (2026-10-18) showed "One moment",
+"This link isn't working", "Thank you", "Your date is confirmed" and "This
+quote is closed" stacked together.
+
+**Cause**: each message is hidden with the `hidden` attribute until the page
+picks one, but the message's own class sets `display: flex`. The browser's
+rule for `hidden` is a plain `display: none` with the lowest priority of all,
+so any author rule that sets `display` beats it. Four elements on the
+Reception stations page had already been patched one by one for the same
+reason.
+
+**Fix**: one rule in `src/styles/global.css`,
+`[hidden] { display: none !important; }`, and the four patches removed.
+
+**Test**: none automated (no new tests this session, at the user's call).
+
+**Rule**: `hidden` always means hidden. To show and hide something with a
+transition, use a class, not the attribute.

@@ -290,20 +290,6 @@
   color: rgba(var(--limestone-rgb), 0.66);
 }
 
-/* The toggle look (once pressed, takes .button-ghost's values) now
-   lives sitewide in styles.css as .button-gradient[aria-pressed
-   ="true"] (2026-09-30) — this button was the first toggle-style
-   .button-gradient on the site, so a real bug found here (hovering/
-   tapping a pressed button showed invisible dark-on-transparent
-   text — a specificity collision between that rule's unconditional
-   background:transparent and .button:hover/:active's own
-   background-color) was fixed once, sitewide, rather than patched
-   only for this page. See that rule's own comment for the full
-   root cause. */
-.package-station-add-button[hidden] {
-  display: none; /* .button sets display, which would beat [hidden] */
-}
-
 .package-station-add-button-icon {
   flex: none;
 }
@@ -635,10 +621,6 @@
   background: var(--station-card-surface);
   border: 1px solid var(--station-card-edge);
   color: var(--limestone-2);
-}
-
-.package-station-card[hidden] {
-  display: none;
 }
 
 .package-station-card-figure {
@@ -1768,10 +1750,6 @@
   stroke-width: 2.6;
 }
 
-.package-stations-index-row-added-marker[hidden] {
-  display: none;
-}
-
 .package-stations-index-row-spacer {
   flex-grow: 1;
 }
@@ -2325,10 +2303,6 @@
     margin: clamp(18px, 2.6vw, 22px) 0 0;
     padding: 0;
   }
-}
-
-.package-stations-thumbnails li[hidden] {
-  display: none;
 }
 
 .package-stations-thumbnail {
