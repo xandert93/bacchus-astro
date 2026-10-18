@@ -306,18 +306,8 @@ is stored. When a confirmed wedding is cancelled, Sanity calls
 `src/pages/api/booking-events.ts`, which checks the date really is free and
 emails everyone confirmed on its list, marking them Notified.
 
-**To switch on the cancellation emails**, once emails send from the live
-site: sanity.io/manage → the project → API → Webhooks → Create webhook:
-
-- Name `Notify the waitlist`; URL `https://<site>/api/booking-events`;
-  dataset `production`; trigger on **Update**; method POST; API version
-  `v2025-02-19`; drafts off.
-- Filter:
-  `_type == "booking" && event.type == "wedding" && before().status in ["confirmed", "completed"] && after().status == "cancelled"`
-- Projection:
-  `{"date": event.date, "type": event.type, "before": before().status, "after": after().status}`
-- Secret: any long random string, also set as the Worker secret
-  `SANITY_WEBHOOK_SECRET`.
+**To switch on the cancellation emails**, set up Sanity's webhooks (step 7,
+"Sanity's webhooks").
 
 ## Step 6 — the automatic parts
 
@@ -396,23 +386,30 @@ until Bacchus supplies theirs, with a "do not send funds" warning).
    date has gone; if the date was already taken, staff are emailed to refund
    instead. Client and staff both get a confirmation email.
 
-**To switch on**, once emails send from the live site: sanity.io/manage → the
-project → API → Webhooks → Create webhook, with the same secret
-(`SANITY_WEBHOOK_SECRET`) as the waitlist's:
+**Sanity's webhooks.** A webhook is Sanity's server calling one of the
+site's API routes when a published document changes. Two drive the site:
+**Booking changes** (a deposit marked received, a wedding cancelled) and
+**Quote sent**. Both are defined once, in `sanity/webhooks/definitions.ts`.
 
-- Name `Quote sent`; URL `https://<site>/api/quote-events`; dataset
-  `production`; trigger on **Update**; method POST; API
-  version `v2025-02-19`; drafts off.
-- Filter: `_type == "quote" && before().status == "draft" && after().status == "sent"`
-- Projection: `{_id, "before": before().status, "after": after().status}`
+- **Locally**, Sanity can't call your computer, so run
+  `npm run dev:webhooks` beside `npm run dev`. It watches the development
+  dataset and makes the same calls to `localhost:3000`, signed with
+  `SANITY_WEBHOOK_SECRET` from `.env`. Without it, sending a quote or
+  marking a deposit received in the Studio does nothing on the site.
+- **On the live site**, once emails send from it: sanity.io/manage → the
+  project → API → Webhooks → Create webhook, once for each. Dataset
+  `production`; trigger on **Update** only; method POST; API version
+  `v2025-02-19`; drafts off; the same long random secret on both, also set
+  as the Worker secret `SANITY_WEBHOOK_SECRET`. The name, URL, filter and
+  projection to paste are printed by `npm run dev:webhooks -- --print`.
 
-And widen the `Notify the waitlist` webhook (step 5), renaming it `Booking
-changes`, so it also fires when a deposit is marked received:
-
-- Filter:
-  `_type == "booking" && ((event.type == "wedding" && before().status in ["confirmed", "completed"] && after().status == "cancelled") || count(after().payments[kind == "deposit" && status == "received"]) > count(before().payments[kind == "deposit" && status == "received"]))`
-- Projection:
-  `{_id, "date": event.date, "type": event.type, "before": before().status, "after": after().status, "depositReceived": count(after().payments[kind == "deposit" && status == "received"]) > count(before().payments[kind == "deposit" && status == "received"])}`
+**Trying the whole flow yourself**, on the development dataset: run
+`npm run dev`, `npm run sanity:dev` and `npm run dev:webhooks`, each in its
+own terminal. In the Studio, open a seeded booking's quote, set it to Sent
+and publish; the quote email arrives at `EMAIL_TEST_RECIPIENT`, and its
+button opens the deposit page. Pay by test card, or press "I've sent the
+transfer" and then, in the Studio, set that payment on the booking to
+Received and publish. `npm run sanity:seed` puts everything back.
 
 **Still to do before real money:**
 

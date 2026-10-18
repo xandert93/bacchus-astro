@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev --port 3000",
     "dev:host": "astro dev --port 3000 --host 0.0.0.0",
+    "dev:webhooks": "node sanity/webhooks/relay.ts",
     "build": "astro build",
     "preview": "astro preview",
     "preview:host": "npm run build && astro preview --host",
