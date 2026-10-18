@@ -216,6 +216,11 @@ quirk of that one quote. Trust only the per-person and line-item prices.
 - **Emails**: terms are "quite flexible... mostly after the commitment",
   without restating the 30/70 split. **Conflict**: see below.
 
+- **The organiser, in person** (as the user remembers it, 2026-10-18): 30%
+  due six months before the wedding, 60% within the following five months,
+  and the last 10% one month before. A third version, not confirmed in
+  writing. It doesn't say what, if anything, secures the date at booking.
+
 ---
 
 ## Open conflicts
@@ -233,7 +238,8 @@ in their own admin.
    contested.
 
 2. **Deposit and cancellation.** 30/70 (catalogue) against "quite flexible"
-   (emails). Settle this before building any real deposit logic.
+   (emails) against 30/60/10 staged over the last six months (the
+   organiser, verbally). Settle this before taking any real money.
 
 ---
 
@@ -340,6 +346,12 @@ Everything below is illustrative and is labelled as such on the page.
 - **Deposit terms**: the percentage, whether it's refundable, when the balance
   is due, and how long a date is held after the deposit link is sent (the
   site says seven days).
+- **The 30/60/10 schedule** we discussed in person: can you confirm it in
+  writing? If a couple books a year or more ahead, do they pay anything to
+  secure the date when they book, or nothing until six months before? And
+  what happens when someone books less than six months out?
+- **Holding a date**: while one couple has a quote, can another couple pay
+  and take the date first, or is it held for the first couple only?
 - **Bank transfer details** for the deposit page, once the terms are settled.
 - **Viewings and tastings**: would couples booking a slot online (Cal.com or
   Calendly) help, or do you prefer to arrange them by email and phone?
