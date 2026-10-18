@@ -9,6 +9,7 @@
 
 import { EMAIL_SITE_ORIGIN } from "astro:env/server"
 import { ADDRESS_LINE, CONTACT } from "@data/contact"
+import { breakpoints } from "@lib/media-queries"
 
 // The site's palette (src/styles/global.css), written out: emails can't read
 // CSS variables. GOLD is too pale for text on white, so text that would be
@@ -29,6 +30,12 @@ const SERIF = "Newsreader, Georgia, 'Times New Roman', serif"
 // Shared by every label and its value in a details card, so their first
 // lines sit on the same baseline whatever their font sizes.
 const ROW_LINE_HEIGHT = "22px"
+
+// Phones, as on the site. Written as max-width because email apps don't
+// understand the site's range syntax. Its rules get a style block of their
+// own: Gmail throws away a whole block if any of it is unfamiliar, so the
+// gradient's block can't take this one down with it.
+const PHONE_QUERY = `(max-width: ${breakpoints.tablet - 1}px)`
 
 /** An absolute address on the live site, e.g. for a picture or a link. */
 export const siteUrl = (path: string) => `${EMAIL_SITE_ORIGIN}${path}`
@@ -73,7 +80,11 @@ export const heading = (text: string) => `
     <h2 style="margin: 0; font-family: ${SERIF}; font-size: 21px; font-weight: normal; color: ${INK};">${escapeHtml(text)}</h2>
   </div>`
 
-/** A boxed list of label and answer, e.g. an enquiry's details. */
+/**
+ * A boxed list of label and answer, e.g. an enquiry's details. Side by side,
+ * or on a phone each label above its answer (the style block below), where
+ * two columns leave the answers too narrow.
+ */
 export const detailsCard = (rows: [label: string, value: string | undefined][]) => {
   const cells = rows
     .filter(([, value]) => value)
@@ -84,8 +95,8 @@ export const detailsCard = (rows: [label: string, value: string | undefined][]) 
       // then share one baseline instead of the label sitting high.
       return `
         <tr>
-          <td style="padding: 12px 16px 12px 20px; ${divider} vertical-align: baseline; width: 36%; font-family: ${SERIF}; font-size: 11px; line-height: ${ROW_LINE_HEIGHT}; letter-spacing: 0.12em; text-transform: uppercase; color: ${BRONZE};">${escapeHtml(label)}</td>
-          <td style="padding: 12px 20px 12px 0; ${divider} vertical-align: baseline; font-family: ${SERIF}; font-size: 15px; line-height: ${ROW_LINE_HEIGHT}; color: ${INK}; white-space: pre-line;">${escapeHtml(value as string)}</td>
+          <td class="details-label" style="padding: 12px 16px 12px 20px; ${divider} vertical-align: baseline; width: 36%; font-family: ${SERIF}; font-size: 11px; line-height: ${ROW_LINE_HEIGHT}; letter-spacing: 0.12em; text-transform: uppercase; color: ${BRONZE};">${escapeHtml(label)}</td>
+          <td class="details-value" style="padding: 12px 20px 12px 0; ${divider} vertical-align: baseline; font-family: ${SERIF}; font-size: 15px; line-height: ${ROW_LINE_HEIGHT}; color: ${INK}; white-space: pre-line;">${escapeHtml(value as string)}</td>
         </tr>`
     })
     .join("")
@@ -171,6 +182,24 @@ export const emailLayout = ({
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
+        }
+      }
+    </style>
+    <style>
+      @media ${PHONE_QUERY} {
+        .details-label,
+        .details-value {
+          display: block !important;
+          width: auto !important;
+        }
+
+        .details-label {
+          padding: 14px 20px 2px !important;
+        }
+
+        .details-value {
+          padding: 0 20px 14px !important;
+          border-top: 0 !important;
         }
       }
     </style>
