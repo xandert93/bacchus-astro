@@ -356,26 +356,31 @@ order.
 
 ## Step 7 — quotes and deposits
 
-**Deposits in test mode, built 2026-10-17.** Bank transfer is the main route,
-card the convenient one. No real money moves yet: card payments go to a
-pretend checkout, and the bank details are the wedding policy's (example ones
-until Bacchus supplies theirs, with a "do not send funds" warning).
+**Deposits in test mode, built 2026-10-17.** Paying by bank is the main
+route, card the convenient one. No real money moves yet: both go to a
+pretend provider, and the bank details for a transfer by hand are the
+wedding policy's (example ones until Bacchus supplies theirs, with a "do not
+send funds" warning). **Nothing holds a date before a deposit**: the first
+deposit to arrive secures it, and the client is told so.
 
 1. **Staff send a quote**: set its status to Sent and publish. Sanity calls
    `src/pages/api/quote-events.ts`, which makes the quote a private link
-   (only its hash is stored, as for the waitlist), holds the date for the
-   wedding policy's hold days, moves the booking to Awaiting Deposit and
-   emails the client a summary with one button to `/secure-booking?token=…`.
+   (only its hash is stored, as for the waitlist), gives the quote an end
+   date if staff didn't (the wedding policy's "Days a Quote Stays Valid"),
+   moves the booking to Awaiting Deposit and emails the client a summary
+   with one button to `/secure-booking?token=…`. After that end date the
+   page shows the quote as closed.
 2. **The deposit page** loads the quote by that link (`api/deposits/view.ts`;
    loading and shaping in `src/lib/deposits/`). The client can:
-   - **say they've sent the transfer** (`transfer-sent.ts`): records an
-     Awaiting bank-transfer payment on the booking and emails staff to look
-     out for it;
-   - **pay by card** (`card.ts`): sends them to the provider's checkout,
-     which is `/secure-booking/test-checkout` while `CARD_PROVIDER` in
-     `src/lib/payments/card.ts` is `"test"`. Its Pay button (`test-card.ts`)
-     records a received test payment and confirms the booking, as a real
-     provider's webhook will;
+   - **pay by bank or by card** (`checkout.ts`): sends them to the payment
+     provider's checkout, which is `/secure-booking/test-checkout` while
+     `PAYMENT_PROVIDER` in `src/lib/payments/checkout.ts` is `"test"`. For
+     pay by bank, that page asks which bank, then plays the bank asking
+     them to approve. Paying (`test-payment.ts`) records a received test
+     payment and confirms the booking, as a real provider's webhook will;
+   - **transfer it themselves** (folded away under Pay by bank) and say so
+     (`transfer-sent.ts`): records an Awaiting bank-transfer payment on the
+     booking and emails staff to look out for it;
    - **decline the quote** (`decline.ts`), after a confirmation dialog: the
      quote becomes Declined, the booking Withdrawn, and staff are emailed.
 3. **Staff mark the transfer Received** on the booking's payment and publish.
@@ -407,9 +412,10 @@ site's API routes when a published document changes. Two drive the site:
 `npm run dev`, `npm run sanity:dev` and `npm run dev:webhooks`, each in its
 own terminal. In the Studio, open a seeded booking's quote, set it to Sent
 and publish; the quote email arrives at `EMAIL_TEST_RECIPIENT`, and its
-button opens the deposit page. Pay by test card, or press "I've sent the
-transfer" and then, in the Studio, set that payment on the booking to
-Received and publish. `npm run sanity:seed` puts everything back.
+button opens the deposit page. Pay by bank or by card through the pretend
+provider, or press "I've sent the transfer" and then, in the Studio, set
+that payment on the booking to Received and publish. `npm run sanity:seed`
+puts everything back.
 
 **Still to do before real money:**
 
@@ -418,11 +424,13 @@ Received and publish. `npm run sanity:seed` puts everything back.
   terms flexible without confirming that split. Do not take real money
   against an unresolved policy.
 - **Bacchus's real bank details** in the wedding policy.
-- **A real card provider**: Stripe for now, with Viva and Revolut worth
-  comparing on fees (`docs/architecture/tech-stack.md`). Swapping means
-  `src/lib/payments/card.ts` plus the provider's own webhook.
-- **Hold expiry**: a scheduled job to release dates whose hold has passed
-  unpaid. Today the hold date is shown and stored but nothing acts on it.
+- **A real payment provider** for card and pay by bank: Stripe for now,
+  with Viva and Revolut worth comparing on fees, and pay by bank's reach
+  in Malta to confirm (`docs/architecture/tech-stack.md`). Swapping means
+  `src/lib/payments/checkout.ts` plus the provider's own webhook.
+- **Expired quotes in the Studio**: a page past its end date already shows
+  as closed, but nothing yet sets the quote to Expired or the booking back,
+  so staff see it as still awaiting a deposit. A daily scheduled job.
 - Quote PDFs: deterministic templating, never a language model.
 
 ## Step 8 — hand it to the client

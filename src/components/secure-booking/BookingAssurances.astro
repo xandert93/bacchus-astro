@@ -1,15 +1,14 @@
 ---
-// The three reassurances at the foot of the deposit page: the date is held,
-// someone is there to help, and the page is private. How long the date is
-// held comes from the wedding policy, and is shown in the payment section.
+// The three reassurances at the foot of the deposit page: what secures the
+// date, someone is there to help, and the page is private.
 import SecureBookingIcon from "./SecureBookingIcon.astro"
 import type { SecureBookingIconName } from "./SecureBookingIcon.astro"
 
 const ASSURANCES: { icon: SecureBookingIconName; title: string; body: string }[] = [
   {
     icon: "calendar",
-    title: "Your date is held",
-    body: "We hold your date for you while your deposit arrives, until the date shown above.",
+    title: "Your date, secured",
+    body: "Your date is yours the moment your deposit arrives. Until then it's still open to other couples.",
   },
   {
     icon: "phone",
@@ -19,7 +18,7 @@ const ASSURANCES: { icon: SecureBookingIconName; title: string; body: string }[]
   {
     icon: "shield-check",
     title: "Secure details",
-    body: "This page is unique to your enquiry. Card payments are processed securely.",
+    body: "This page is unique to your enquiry. Card and bank payments are processed securely.",
   },
 ]
 ---

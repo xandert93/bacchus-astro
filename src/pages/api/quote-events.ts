@@ -1,9 +1,10 @@
 // POST /api/quote-events: Sanity calls this when staff set a quote from Draft
 // to Sent and publish (a webhook set up in sanity.io/manage; see
 // docs/planning/sanity-rollout.md, step 7). It makes the quote's private
-// deposit-page link, holds the date (the booking becomes Awaiting Deposit,
-// held for the wedding policy's hold period), and emails the client their
-// quote with the link.
+// deposit-page link, gives the quote an end date if staff didn't (the
+// wedding policy's days from today), moves the booking to Awaiting Deposit,
+// and emails the client their quote with the link. Nothing holds the date:
+// the first deposit to arrive secures it (src/lib/deposits/confirm.ts).
 
 import type { APIRoute } from "astro"
 import { SANITY_WEBHOOK_SECRET } from "astro:env/server"
@@ -18,7 +19,7 @@ import { verifySanityWebhook } from "@lib/webhooks/sanity"
 export const prerender = false
 
 /** Used where the wedding policy doesn't say. */
-const DEFAULT_HOLD_DAYS = 7
+const DEFAULT_QUOTE_VALID_DAYS = 7
 
 /** The webhook's projection, set in Sanity's dashboard. */
 interface QuoteChange {
@@ -54,33 +55,36 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(null, { status: 204 })
     }
 
-    const holdDays =
+    const validDays =
       (await client.fetch<number | null>(
-        `*[_id == "weddingPolicy"][0].deposit.holdDays`,
-      )) ?? DEFAULT_HOLD_DAYS
-    const holdUntil = new Date(Date.now() + holdDays * 24 * 60 * 60 * 1000).toISOString()
+        `*[_id == "weddingPolicy"][0].deposit.quoteValidDays`,
+      )) ?? DEFAULT_QUOTE_VALID_DAYS
+    const validUntil =
+      record.terms?.validUntil ??
+      new Date(Date.now() + validDays * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
     const { token, hash } = await newToken()
     const openStatuses = ["new", "in-discussion"]
 
     await client
       .transaction()
       .patch(record._id, (patch) =>
-        patch.set({ depositTokenHash: hash, sentAt: new Date().toISOString() }),
+        patch.set({
+          depositTokenHash: hash,
+          sentAt: new Date().toISOString(),
+          "terms.validUntil": validUntil,
+        }),
       )
       .patch(record.booking._id, (patch) => {
-        const held = patch.set({
-          quote: { _type: "reference", _ref: record._id },
-          depositHoldExpiresAt: holdUntil,
-        })
+        const linked = patch.set({ quote: { _type: "reference", _ref: record._id } })
 
         return openStatuses.includes(record.booking.status)
-          ? changeStatus(held, {
+          ? changeStatus(linked, {
               from: record.booking.status,
               to: "awaiting-deposit",
               actor: "staff",
               reason: `Quote ${record.reference} sent.`,
             })
-          : held
+          : linked
       })
       .commit()
 
@@ -88,7 +92,7 @@ export const POST: APIRoute = async ({ request }) => {
     const result = await sendEmail(
       quoteEmail(depositFacts(record), {
         depositLink,
-        holdUntil: holdUntil.slice(0, 10),
+        validUntil,
       }),
     )
 

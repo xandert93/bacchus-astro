@@ -1,18 +1,34 @@
 ---
-// /secure-booking/test-checkout: the pretend card checkout used while card
-// payments are in test mode (src/lib/payments/card.ts). It stands where a
-// real provider's checkout page will: the deposit page sends the client here,
-// and "Pay" does what the provider's "payment succeeded" will, then returns
-// them to their deposit page. No card details, no money.
+// /secure-booking/test-checkout: the pretend payment provider used while
+// payments are in test mode (src/lib/payments/checkout.ts). It stands where
+// a real provider's checkout will, for both online ways to pay (?method=):
+//
+//   card         one step: "Pay".
+//   pay-by-bank  two: the provider asks which bank, then "the bank" asks the
+//                client to approve the payment, as their banking app would.
+//
+// Paying does what the provider's "payment succeeded" will, then returns the
+// client to their deposit page. No card, no bank, no money.
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/ui/Button.astro"
 import SecureCheckoutBadge from "@components/secure-booking/SecureCheckoutBadge.astro"
 import "../_secure-booking.css"
+
+// Illustrative only: which Maltese banks a real provider reaches is
+// unconfirmed (docs/architecture/tech-stack.md, "Bank transfer").
+const TEST_BANKS = [
+  "Bank of Valletta",
+  "HSBC Malta",
+  "APS Bank",
+  "BNF Bank",
+  "Lombard Bank",
+  "Revolut",
+]
 ---
 
 <BaseLayout
-  title="Test Card Payment — Bacchus, Mdina"
-  description="A pretend card payment, for testing the deposit page."
+  title="Test Payment — Bacchus, Mdina"
+  description="A pretend payment, for testing the deposit page."
   checkout
   noIndex
   showVisitSection={false}
@@ -21,31 +37,83 @@ import "../_secure-booking.css"
 
   <section class="secure-booking-status-section test-checkout">
     <div class="secure-booking-container-large">
-      <div class="secure-booking-status test-checkout-card">
+      <div class="secure-booking-status test-checkout-card" id="testCheckout">
         <div>
           <p class="secure-booking-eyebrow-plain">Test mode: no money is taken</p>
-          <h2>
-            Pay <span id="testCheckoutAmount">your deposit</span> by card
-          </h2>
-          <p>
-            This stands in for the card provider's checkout while payments are in test
-            mode. Pressing Pay records a test payment and confirms the booking, exactly as
-            a real payment will.
-          </p>
+
+          <div data-test-step="card" hidden>
+            <h2>
+              Pay <span data-test-amount>your deposit</span> by card
+            </h2>
+            <p>
+              This stands in for the card provider's checkout while payments are in test
+              mode. Pressing Pay records a test payment and confirms the booking, exactly
+              as a real payment will.
+            </p>
+            <div class="secure-booking-decline-buttons">
+              <Button variant="ghost" data-test-back>
+                <span>Back without paying</span>
+              </Button>
+              <Button variant="gradient" arrow data-test-pay>
+                <span>Pay (test)</span>
+              </Button>
+            </div>
+          </div>
+
+          <div data-test-step="choose-bank" hidden>
+            <h2>
+              Pay <span data-test-amount>your deposit</span> by bank
+            </h2>
+            <p>
+              Choose your bank. You'll approve the payment in its own app or website, and
+              Bacchus never sees your banking details.
+            </p>
+            <ul class="test-checkout-banks">
+              {TEST_BANKS.map((bank) => (
+                <li>
+                  <Button
+                    variant="ghost"
+                    class="test-checkout-bank"
+                    data-test-bank={bank}
+                  >
+                    <span>{bank}</span>
+                  </Button>
+                </li>
+              ))}
+            </ul>
+            <div class="secure-booking-decline-buttons">
+              <Button variant="ghost" data-test-back>
+                <span>My bank isn't listed</span>
+              </Button>
+            </div>
+          </div>
+
+          <div data-test-step="approve" hidden>
+            <h2>
+              <span data-test-bank-name></span>: approve a payment of{" "}
+              <span data-test-amount>your deposit</span>
+            </h2>
+            <p>
+              To Bacchus, Mdina, with the reference <span data-test-reference></span>. In
+              real life this is your bank's own app or website, where you'd confirm with
+              your fingerprint, face or PIN.
+            </p>
+            <div class="secure-booking-decline-buttons">
+              <Button variant="ghost" id="testCheckoutCancel">
+                <span>Cancel</span>
+              </Button>
+              <Button variant="gradient" arrow data-test-pay>
+                <span>Approve (test)</span>
+              </Button>
+            </div>
+          </div>
+
           <p
             class="secure-booking-pay-error"
             id="testCheckoutError"
             role="alert"
             hidden
           ></p>
-          <div class="secure-booking-decline-buttons">
-            <Button variant="ghost" id="testCheckoutBack">
-              <span>Back without paying</span>
-            </Button>
-            <Button variant="gradient" id="testCheckoutPay" arrow>
-              <span>Pay (test)</span>
-            </Button>
-          </div>
         </div>
       </div>
     </div>
@@ -64,5 +132,17 @@ import "../_secure-booking.css"
   .test-checkout-card {
     max-width: 640px;
     margin: 0 auto;
+  }
+
+  .test-checkout-banks {
+    display: grid;
+    gap: 10px;
+    margin-top: 24px;
+    list-style: none;
+  }
+
+  .test-checkout-banks :global(.test-checkout-bank) {
+    width: 100%;
+    justify-content: flex-start;
   }
 </style>

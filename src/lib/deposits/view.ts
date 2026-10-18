@@ -5,14 +5,14 @@
 
 import { longDate } from "@lib/email/enquiry-details"
 import { euros, plainAmount } from "@lib/money"
-import { CARD_PROVIDER } from "@lib/payments/card"
+import { PAYMENT_PROVIDER } from "@lib/payments/checkout"
 import { coupleName, depositPayment, type DepositRecord } from "./load"
 
 /**
- * pay              the deposit is due: the summary and both ways to pay
+ * pay              the deposit is due: the summary and the ways to pay
  * transfer-sent    the client says they've sent a transfer; waiting for it
  * confirmed        the deposit has arrived and the date is theirs
- * closed           the quote was declined, replaced or has expired
+ * closed           the quote was declined, replaced or has run out
  */
 export type DepositState = "pay" | "transfer-sent" | "confirmed" | "closed"
 
@@ -26,6 +26,10 @@ const OCCASIONS: Record<string, string> = {
 const listInWords = (items: string[]) =>
   items.length > 1 ? `${items.slice(0, -1).join(", ")} and ${items.at(-1)}` : items[0]
 
+/** Today in Malta, as "2026-10-18". */
+const todayInMalta = () =>
+  new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Malta" })
+
 const stateOf = (record: DepositRecord): DepositState => {
   const closedQuote = ["declined", "expired", "superseded"].includes(record.status)
   const closedBooking = ["declined", "withdrawn", "cancelled"].includes(
@@ -37,6 +41,11 @@ const stateOf = (record: DepositRecord): DepositState => {
   if (confirmed || depositPayment(record, "received")) return "confirmed"
 
   if (depositPayment(record, "awaiting")) return "transfer-sent"
+
+  // Past its last day, a quote can't be paid. One whose transfer is on its
+  // way (above) stays open, since the money may already have left.
+  const validUntil = record.terms?.validUntil
+  if (validUntil && validUntil < todayInMalta()) return "closed"
 
   return "pay"
 }
@@ -50,7 +59,7 @@ export const toDepositView = (record: DepositRecord) => {
 
   return {
     state: stateOf(record),
-    testMode: CARD_PROVIDER === "test" || !record.bank?.areReal,
+    testMode: PAYMENT_PROVIDER === "test" || !record.bank?.areReal,
     couple: coupleName(record),
     firstName: booking.client.firstName,
     reference: record.reference,
@@ -103,9 +112,7 @@ export const toDepositView = (record: DepositRecord) => {
               : "before your event"
           }.`
         : "",
-    holdUntil: booking.depositHoldExpiresAt
-      ? longDate(booking.depositHoldExpiresAt.slice(0, 10))
-      : undefined,
+    validUntil: terms?.validUntil ? longDate(terms.validUntil) : undefined,
     bank: {
       accountName: record.bank?.accountName ?? "",
       iban: record.bank?.iban ?? "",

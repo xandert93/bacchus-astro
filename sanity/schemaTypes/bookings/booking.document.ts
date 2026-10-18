@@ -319,15 +319,8 @@ export default defineType({
       of: [defineArrayMember({ type: "paymentRecord" })],
       description: help(
         "Recorded automatically when a payment arrives.",
-        "The first deposit received confirms the booking and holds the date.",
+        "The first deposit received confirms the booking and secures the date.",
       ),
-    }),
-    defineField({
-      name: "depositHoldExpiresAt",
-      title: "Deposit Hold Expires",
-      type: "datetime",
-      group: "money",
-      description: "Set automatically when the deposit link is sent.",
     }),
 
     // --- Notes & admin ------------------------------------------------------

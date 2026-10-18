@@ -21,6 +21,10 @@ import {
  *   abroad, so `amounts.fee` and `amounts.net` are stored rather than
  *   assumed — the gross figure on its own will not reconcile against the bank.
  *
+ *   pay-by-bank — open banking: the client approves the payment in their
+ *   own banking app, through the same provider as card, and its webhook
+ *   confirms it. Nothing for staff to do.
+ *
  *   bank-transfer — IBAN and reference shown, staff match it by hand.
  *   `reconciliation` exists because that is a human step that can be done
  *   twice or forgotten, and the booking's auto-confirm depends on it.
@@ -31,6 +35,7 @@ import {
  */
 const PAYMENT_METHODS = [
   { title: "Card", value: "card" },
+  { title: "Pay by Bank", value: "pay-by-bank" },
   { title: "Bank Transfer", value: "bank-transfer" },
   { title: "Other", value: "other" },
 ] as const
@@ -71,7 +76,7 @@ export default defineType({
           { title: "Awaiting Payment", value: "awaiting" },
           { title: "Received", value: "received" },
           { title: "Failed", value: "failed" },
-          { title: "Expired: The Hold Ran Out", value: "expired" },
+          { title: "Expired: The Quote Ran Out", value: "expired" },
           { title: "Refunded", value: "refunded" },
         ],
       },
@@ -123,7 +128,8 @@ export default defineType({
       title: "Matched Against the Bank Statement",
       type: "object",
       options: { collapsible: false, columns: 2 },
-      hidden: ({ parent }) => parent?.method === "card",
+      // Online payments are matched by the provider, not by staff.
+      hidden: ({ parent }) => ["card", "pay-by-bank"].includes(parent?.method),
       fields: [
         defineField({ name: "by", title: "By", type: "string" }),
         defineField({ name: "at", title: "On", type: "datetime" }),

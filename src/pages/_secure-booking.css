@@ -571,7 +571,7 @@
   color: rgba(var(--muted-ink-rgb), 0.7);
 }
 
-/* Bank transfer is the way we'd rather be paid, so it says so. */
+/* Paying by bank is the way we'd rather be paid, so it says so. */
 .secure-booking-recommended {
   margin-left: auto;
   padding: 4px 10px;
@@ -590,6 +590,29 @@
   font-family: "Newsreader", Georgia, serif;
   font-size: 15px;
   color: var(--oxblood);
+}
+
+/* "Or transfer it yourself": the bank details, folded away under Pay by
+   bank for a bank that can't approve a payment online. */
+.secure-booking-manual-transfer {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(var(--ink-rgb), 0.1);
+}
+
+.secure-booking-manual-transfer summary {
+  cursor: pointer;
+
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 17px;
+  color: var(--bronze);
+}
+
+.secure-booking-manual-transfer > p {
+  margin-top: 16px;
+
+  font-family: "Newsreader", Georgia, serif;
+  color: var(--muted-ink);
 }
 
 /* ---------- State messages (DepositStatus) ---------- */

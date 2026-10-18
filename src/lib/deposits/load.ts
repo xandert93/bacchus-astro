@@ -30,7 +30,6 @@ export interface DepositRecord {
   booking: {
     _id: string
     status: string
-    depositHoldExpiresAt?: string
     event: { type: string; date?: string }
     client: { firstName: string; lastName: string; partnerName?: string; email: string }
     payments?: { _key: string; kind: string; status: string; method: string }[]
@@ -50,7 +49,6 @@ const DEPOSIT_PROJECTION = /* groq */ `{
   "booking": booking->{
     _id,
     status,
-    depositHoldExpiresAt,
     event{type, date},
     client{firstName, lastName, partnerName, email},
     payments[]{_key, kind, status, method}

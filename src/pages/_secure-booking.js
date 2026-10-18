@@ -2,8 +2,8 @@
 // the emailed link (?token=), asks /api/deposits/view what to show, and fills
 // the page in: each element's `data-deposit` names its field, and
 // `data-deposit-show` lists the states it appears in (src/lib/deposits/
-// view.ts). Then wires up the buttons: "I've sent the transfer", card, and
-// declining the quote.
+// view.ts). Then wires up the buttons: pay by bank, card, "I've sent the
+// transfer", and declining the quote.
 
 import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
 
@@ -47,7 +47,7 @@ if (page) {
     const rowShown = {
       discount: Boolean(view.discount),
       vat: Boolean(view.vat),
-      holdUntil: Boolean(view.holdUntil),
+      validUntil: Boolean(view.validUntil),
       testMode: view.testMode,
       exampleBank: !view.bank.areReal,
     }
@@ -84,7 +84,7 @@ if (page) {
       })
       .catch(() => setState("invalid"))
 
-  // --- The two ways to pay ----------------------------------------------------
+  // --- The ways to pay ------------------------------------------------------
 
   const actionError = document.getElementById("depositActionError")
   const showActionError = (message) => {
@@ -109,20 +109,20 @@ if (page) {
     })
   }
 
-  const cardButton = document.getElementById("payCardButton")
-  if (cardButton) {
-    cardButton.addEventListener("click", () => {
-      cardButton.disabled = true
-      post("card")
+  // Pay by bank and card both go to the payment provider's checkout.
+  page.querySelectorAll("[data-checkout-method]").forEach((button) => {
+    button.addEventListener("click", () => {
+      button.disabled = true
+      post("checkout", { method: button.dataset.checkoutMethod })
         .then(({ checkoutUrl }) => {
           window.location.href = checkoutUrl
         })
         .catch((error) => {
-          cardButton.disabled = false
+          button.disabled = false
           showActionError(error.message)
         })
     })
-  }
+  })
 
   // --- Declining the quote ------------------------------------------------------
 

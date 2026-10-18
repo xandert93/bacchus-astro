@@ -48,7 +48,7 @@ const staffButton = (bookingId: string) => {
 /** The quote, with the link to the deposit page. Sent when staff mark it Sent. */
 export const quoteEmail = (
   facts: DepositFacts,
-  { depositLink, holdUntil }: { depositLink: string; holdUntil?: string },
+  { depositLink, validUntil }: { depositLink: string; validUntil?: string },
 ): Email => {
   const day = longDate(facts.date)
   const rows: [string, string | undefined][] = [
@@ -56,7 +56,7 @@ export const quoteEmail = (
     ["Quote reference", facts.reference],
     ["Total", euros(facts.total)],
     ["Deposit to secure it", euros(facts.deposit)],
-    ["Date held until", holdUntil ? longDate(holdUntil) : undefined],
+    ["Quote valid until", validUntil ? longDate(validUntil) : undefined],
   ]
 
   return {
@@ -65,12 +65,12 @@ export const quoteEmail = (
     html: emailLayout({
       preview: `Your quote is ready: review it and secure ${day}.`,
       eyebrow: "Your quote",
-      title: "Your date, <em>held for you</em>",
+      title: "Your quote is <em>ready</em>",
       hero: HERO,
       body: [
         paragraph(`Dear ${escapeHtml(facts.firstName)},`),
         paragraph(
-          `Your quote for ${highlight(day)} is ready. Everything is on your booking page: the details, the full price breakdown, and the deposit that confirms your date.`,
+          `Your quote for ${highlight(day)} is ready. Everything is on your booking page: the details, the full price breakdown, and the deposit that secures your date. Until a deposit arrives, the date is still open to other couples.`,
         ),
         detailsCard(rows),
         button("Review and pay your deposit", depositLink),
@@ -83,7 +83,7 @@ export const quoteEmail = (
     text: plain([
       `Dear ${facts.firstName},`,
       "",
-      `Your quote for ${day} is ready. Everything is on your booking page: the details, the full price breakdown, and the deposit that confirms your date.`,
+      `Your quote for ${day} is ready. Everything is on your booking page: the details, the full price breakdown, and the deposit that secures your date. Until a deposit arrives, the date is still open to other couples.`,
       "",
       ...rows.filter(([, value]) => value).map(([label, value]) => `${label}: ${value}`),
       "",

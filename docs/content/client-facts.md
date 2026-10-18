@@ -217,9 +217,10 @@ quirk of that one quote. Trust only the per-person and line-item prices.
   without restating the 30/70 split. **Conflict**: see below.
 
 - **The organiser, in person** (as the user remembers it, 2026-10-18): 30%
-  due six months before the wedding, 60% within the following five months,
-  and the last 10% one month before. A third version, not confirmed in
-  writing. It doesn't say what, if anything, secures the date at booking.
+  at booking (or six months before), 60% over the following months, and
+  the last 10% one month before. A third version, not confirmed in writing.
+  The 30% at booking is the deposit the site takes, and it secures the
+  date.
 
 ---
 
@@ -238,7 +239,7 @@ in their own admin.
    contested.
 
 2. **Deposit and cancellation.** 30/70 (catalogue) against "quite flexible"
-   (emails) against 30/60/10 staged over the last six months (the
+   (emails) against 30/60/10 staged from booking to a month before (the
    organiser, verbally). Settle this before taking any real money.
 
 ---
@@ -255,12 +256,13 @@ Everything below is illustrative and is labelled as such on the page.
   come from the wedding policy and are still our assumptions.
 
 - **The deposit page** (`secure-booking`) now shows the real quote it was
-  sent for, in test mode (flagged; card payments take no money). The deposit
+  sent for, in test mode (flagged; card and pay-by-bank payments take no money). The deposit
   split comes from the quote's terms, which inherit the contested 30/70. The
   bank details are the wedding policy's example ones, with a "do not send
-  funds to this account" warning until Bacchus supplies theirs. The hold (7
-  days unless the wedding policy says otherwise) is our assumption, not a
-  real policy.
+  funds to this account" warning until Bacchus supplies theirs. How long a
+  quote stays valid (7 days unless the wedding policy says otherwise) is our
+  assumption, not a real policy. The banks listed on the pretend pay-by-bank
+  page are illustrative.
 
 - **The 16 Reception station images** are AI-generated stand-ins, added on the
   user's explicit call so the section looks finished in a pitch. They carry an
@@ -347,9 +349,8 @@ Everything below is illustrative and is labelled as such on the page.
   is due, and how long a date is held after the deposit link is sent (the
   site says seven days).
 - **The 30/60/10 schedule** we discussed in person: can you confirm it in
-  writing? If a couple books a year or more ahead, do they pay anything to
-  secure the date when they book, or nothing until six months before? And
-  what happens when someone books less than six months out?
+  writing? Is the 30% due when the couple books, however far ahead, and
+  when exactly are the 60% and the last 10% due?
 - **Holding a date**: while one couple has a quote, can another couple pay
   and take the date first, or is it held for the first couple only?
 - **Bank transfer details** for the deposit page, once the terms are settled.
