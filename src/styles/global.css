@@ -160,6 +160,14 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* The hidden attribute always hides. The browser's own rule for it is a
+   plain display: none, which any rule that sets display (a flex card, a
+   button's inline-flex) beats, so the element showed anyway: the deposit
+   page once showed all five of its state messages at once. */
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
