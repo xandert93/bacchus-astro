@@ -255,12 +255,13 @@ Everything below is illustrative and is labelled as such on the page.
   come from the wedding policy and are still our assumptions.
 
 - **The deposit page** (`secure-booking`) now shows the real quote it was
-  sent for, in test mode (flagged; card payments take no money). The deposit
+  sent for, in test mode (flagged; card and pay-by-bank payments take no money). The deposit
   split comes from the quote's terms, which inherit the contested 30/70. The
   bank details are the wedding policy's example ones, with a "do not send
-  funds to this account" warning until Bacchus supplies theirs. The hold (7
-  days unless the wedding policy says otherwise) is our assumption, not a
-  real policy.
+  funds to this account" warning until Bacchus supplies theirs. How long a
+  quote stays valid (7 days unless the wedding policy says otherwise) is our
+  assumption, not a real policy. The banks listed on the pretend pay-by-bank
+  page are illustrative.
 
 - **The 16 Reception station images** are AI-generated stand-ins, added on the
   user's explicit call so the section looks finished in a pitch. They carry an

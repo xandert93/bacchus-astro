@@ -216,8 +216,9 @@ sells high-value weddings.
 
 ## Payments
 
-**Bank transfer is the main route, card the convenient option** (decided
-2026-10-16). Bank transfer costs Bacchus almost nothing; a card fee on a
+**Paying by bank is the main route, card the convenient option** (decided
+2026-10-16; by open banking rather than a transfer by hand since
+2026-10-18, see "Bank" below). Bank transfer costs Bacchus almost nothing; a card fee on a
 deposit of several thousand euros is real money, and EU rules don't allow it
 to be passed on to the couple. The deposit system is built first as a mock
 (no real money), then switched to live keys once the terms are settled.
@@ -257,14 +258,30 @@ when it's opened.
   from abroad. Bank and SEPA methods are usually cheaper than cards.
 - **Check Stripe's current Malta pricing before quoting the client.**
 
-**Bank transfer**
+**Bank**
 
-- **Baseline**: show the IBAN and a reference; staff reconcile by hand.
-- **Upgrade to investigate**: "Pay by Bank" (open banking: the customer
-  approves the payment in their own banking app, instantly, with no card fee,
-  and it reconciles itself).
+- **Pay by Bank is the main route, built in test mode (2026-10-18)** on the
+  assumption it works in Malta. Open banking: the client picks their bank,
+  approves the payment in its own app, and the provider tells our site
+  straight away, so there's nothing for staff to match. The same provider
+  and code path as card (`src/lib/payments/checkout.ts`).
+- **A transfer by hand stays as the fallback**, folded away under it: the
+  IBAN and a reference, and staff mark it received in the Studio.
+- **Unconfirmed for Malta.** PSD2 obliges every EU bank to offer the
+  interface, but what matters is whether a provider we can sign up with
+  reaches the Maltese banks. Stripe's Pay by Bank page lists Malta while its
+  payment-method table lists only the UK. To settle it, check the payment
+  methods in a Maltese Stripe account, or ask Stripe.
+- **Drawbacks to weigh**: a bank the provider doesn't reach (couples from
+  outside Europe especially) falls back to card or a transfer by hand;
+  banks often cap how much can be sent online in a day, and a deposit runs
+  to thousands; a bank without instant payments approves straight away but
+  the money arrives a day later, so whether to confirm on approval or on
+  arrival is a provider-by-provider decision; and there's still a fee per
+  payment, usually well under a card's.
+- **The alternative if Malta isn't covered**: Stripe's bank transfers. The
+  client still transfers from their own banking app, but to an account
+  number unique to them, and Stripe matches it automatically and tells our
+  site. Not instant, but nothing for staff to match either.
 - Not the same as **SEPA Direct Debit**, which is a mandate letting the
   merchant pull money, not open banking.
-- **Unconfirmed for Malta.** Stripe lists Pay by Bank as live, but open
-  banking in Malta is reportedly early, with few banks covered. To settle it,
-  check the payment methods in a Maltese Stripe account, or ask Stripe.

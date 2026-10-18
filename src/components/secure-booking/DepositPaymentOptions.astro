@@ -1,10 +1,13 @@
 ---
-// "Complete your deposit": the two ways to pay, side by side from laptop
-// width. Bank transfer comes first and is the one we recommend: no card fee
-// for Bacchus on a deposit of thousands. It lists the details with copy
-// buttons, and an "I've sent it" button that tells the events team. Card goes
-// to the card provider's checkout (a pretend one in test mode). Both are
-// wired up in the page's script, src/pages/_secure-booking.js.
+// "Complete your deposit": the ways to pay, side by side from laptop width.
+// Bank comes first and is the one we recommend: no card fee for Bacchus on a
+// deposit of thousands. "Pay by bank" (open banking) sends the client to
+// approve the payment in their own banking app, and confirms the booking as
+// soon as they do. Folded away beneath it, for a bank that can't do that:
+// the details to transfer it by hand, and an "I've sent it" button that
+// tells the events team. Card goes to the card provider's checkout. Both
+// online routes are pretend ones in test mode (src/lib/payments/checkout.ts),
+// and everything is wired up in the page's script, src/pages/_secure-booking.js.
 import Button from "@components/ui/Button.astro"
 import BankDetailRow from "./BankDetailRow.astro"
 import SecureBookingIcon from "./SecureBookingIcon.astro"
@@ -16,7 +19,7 @@ import SecureBookingIntro from "./SecureBookingIntro.astro"
     <SecureBookingIntro eyebrow="Choose how to pay">
       Complete your <em>deposit</em>
       <Fragment slot="lead">
-        Transfer it from your bank, or pay by card.{" "}
+        Approve it in your banking app, or pay by card.{" "}
         <span data-deposit-row="validUntil" hidden>
           This quote is valid until <span data-deposit="validUntil"></span>.
         </span>
@@ -29,54 +32,72 @@ import SecureBookingIntro from "./SecureBookingIntro.astro"
           <span class="secure-booking-icon-badge secure-booking-pay-icon-cream">
             <SecureBookingIcon name="bank" size={24} />
           </span>
-          <h3>Pay by bank transfer</h3>
+          <h3>Pay by bank</h3>
           <span class="secure-booking-recommended">Recommended</span>
         </div>
         <p>
-          Transfer your deposit from your bank, using the reference below so we can match
-          it. We'll confirm your booking as soon as it arrives, usually within two working
-          days.
+          Approve the payment in your own banking app, with no card needed. Your booking
+          is confirmed the moment you do.
         </p>
-
-        <div class="secure-booking-bank-details">
-          <BankDetailRow
-            label="Account name"
-            field="bank.accountName"
-            copyLabel="Copy account name"
-          />
-          <BankDetailRow label="IBAN" field="bank.iban" copyLabel="Copy IBAN" />
-          <BankDetailRow
-            label="Amount to transfer"
-            field="deposit.display"
-            copyField="deposit.plain"
-            copyLabel="Copy amount"
-          />
-          <BankDetailRow
-            label="Reference"
-            field="bank.reference"
-            copyLabel="Copy reference"
-          />
-        </div>
-
-        <div class="secure-booking-warning-box" data-deposit-row="exampleBank" hidden>
-          <SecureBookingIcon name="warning" />
-          <span>
-            Example bank details, for testing only: please don't send funds to this
-            account.
-          </span>
-        </div>
-
         <Button
           variant="gradient"
           arrow
           class="secure-booking-pay-button"
-          id="transferSentButton"
+          data-checkout-method="pay-by-bank"
         >
-          <span>I've sent the transfer</span>
+          <span>
+            Pay <span data-deposit="deposit.display"></span> by bank
+          </span>
         </Button>
-        <p class="secure-booking-pay-note">
-          Press this once you've made the transfer, so we know to look for it.
-        </p>
+        <p class="secure-booking-pay-note">You'll choose your bank on the next screen.</p>
+
+        <details class="secure-booking-manual-transfer">
+          <summary>Or transfer it yourself</summary>
+          <p>
+            Use the reference below so we can match it. We'll confirm your booking once it
+            arrives, usually within two working days.
+          </p>
+
+          <div class="secure-booking-bank-details">
+            <BankDetailRow
+              label="Account name"
+              field="bank.accountName"
+              copyLabel="Copy account name"
+            />
+            <BankDetailRow label="IBAN" field="bank.iban" copyLabel="Copy IBAN" />
+            <BankDetailRow
+              label="Amount to transfer"
+              field="deposit.display"
+              copyField="deposit.plain"
+              copyLabel="Copy amount"
+            />
+            <BankDetailRow
+              label="Reference"
+              field="bank.reference"
+              copyLabel="Copy reference"
+            />
+          </div>
+
+          <div class="secure-booking-warning-box" data-deposit-row="exampleBank" hidden>
+            <SecureBookingIcon name="warning" />
+            <span>
+              Example bank details, for testing only: please don't send funds to this
+              account.
+            </span>
+          </div>
+
+          <Button
+            variant="ghost"
+            arrow
+            class="secure-booking-pay-button"
+            id="transferSentButton"
+          >
+            <span>I've sent the transfer</span>
+          </Button>
+          <p class="secure-booking-pay-note">
+            Press this once you've made the transfer, so we know to look for it.
+          </p>
+        </details>
       </div>
 
       <div class="secure-booking-hover-card secure-booking-pay-card">
@@ -91,7 +112,7 @@ import SecureBookingIntro from "./SecureBookingIntro.astro"
           variant="ghost"
           arrow
           class="secure-booking-pay-button"
-          id="payCardButton"
+          data-checkout-method="card"
         >
           <span>
             Pay <span data-deposit="deposit.display"></span> by card

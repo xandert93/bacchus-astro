@@ -5,11 +5,11 @@
 
 import { longDate } from "@lib/email/enquiry-details"
 import { euros, plainAmount } from "@lib/money"
-import { CARD_PROVIDER } from "@lib/payments/card"
+import { PAYMENT_PROVIDER } from "@lib/payments/checkout"
 import { coupleName, depositPayment, type DepositRecord } from "./load"
 
 /**
- * pay              the deposit is due: the summary and both ways to pay
+ * pay              the deposit is due: the summary and the ways to pay
  * transfer-sent    the client says they've sent a transfer; waiting for it
  * confirmed        the deposit has arrived and the date is theirs
  * closed           the quote was declined, replaced or has run out
@@ -59,7 +59,7 @@ export const toDepositView = (record: DepositRecord) => {
 
   return {
     state: stateOf(record),
-    testMode: CARD_PROVIDER === "test" || !record.bank?.areReal,
+    testMode: PAYMENT_PROVIDER === "test" || !record.bank?.areReal,
     couple: coupleName(record),
     firstName: booking.client.firstName,
     reference: record.reference,

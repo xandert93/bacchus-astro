@@ -1,7 +1,8 @@
-// POST /api/deposits/test-card: the pretend card checkout's "Pay" button
-// (src/pages/secure-booking/test-checkout.astro). Does what a real card
-// provider's "payment succeeded" webhook will: records the payment and
-// confirms the booking. Refused unless the site is in card test mode.
+// POST /api/deposits/test-payment: the pretend checkout's "Pay" or "Approve"
+// button (src/pages/secure-booking/test-checkout.astro), for card or pay by
+// bank (`method`). Does what a real provider's "payment succeeded" webhook
+// will: records the payment and confirms the booking. Refused unless the
+// site is in test mode.
 
 import type { APIRoute } from "astro"
 import { json } from "@lib/api/requests"
@@ -9,17 +10,19 @@ import { confirmDeposit } from "@lib/deposits/confirm"
 import { loadDepositByToken } from "@lib/deposits/load"
 import { findDeposit } from "@lib/deposits/request"
 import { toDepositView } from "@lib/deposits/view"
-import { CARD_PROVIDER } from "@lib/payments/card"
+import { isOnlineMethod, PAYMENT_PROVIDER } from "@lib/payments/checkout"
 
 export const prerender = false
 
 export const POST: APIRoute = async ({ request }) => {
-  if (CARD_PROVIDER !== "test") return json(404, { error: "Not found." })
+  if (PAYMENT_PROVIDER !== "test") return json(404, { error: "Not found." })
 
   try {
     const found = await findDeposit(request)
     if ("refusal" in found) return found.refusal
-    const { client, record, token } = found
+    const { client, record, token, body } = found
+
+    if (!isOnlineMethod(body.method)) return json(400, { error: "Choose a way to pay." })
 
     if (toDepositView(record).state !== "pay") {
       return json(409, { error: "This deposit isn't due any more." })
@@ -32,7 +35,7 @@ export const POST: APIRoute = async ({ request }) => {
         {
           _type: "paymentRecord",
           _key: crypto.randomUUID().slice(0, 12),
-          method: "card",
+          method: body.method,
           kind: "deposit",
           status: "received",
           amounts: { gross: record.pricing.deposit.amount },
@@ -52,7 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     return json(200, { ok: true, outcome })
   } catch (error) {
-    console.error("Test card payment not recorded.", error)
+    console.error("Test payment not recorded.", error)
     return json(502, { error: "Something went wrong. Please try again." })
   }
 }
