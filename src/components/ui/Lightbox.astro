@@ -3,9 +3,11 @@
 // from the clicked photo — see that file for which elements open it and how
 // captions are built. The two detail paragraphs are only used by photos that
 // carry data-detail (reception's stations) and stay hidden otherwise.
+import LoadingRing from "./LoadingRing.astro"
 ---
 
 <div class="lightbox" id="lightbox">
+  <LoadingRing class="lightbox-loading-ring" label="Loading photo" />
   <button class="lightbox-close" aria-label="Close">
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
       <path
@@ -355,7 +357,7 @@
   }
 
   /* While the photo loads, its caption, counter and arrows wait with it,
-     and a thin gold ring turns in the middle of the screen. */
+     and the loading ring turns in the middle of the screen. */
   .lightbox.is-loading figcaption,
   .lightbox.is-loading .lightbox-count,
   .lightbox.is-loading .lightbox-prev,
@@ -363,30 +365,16 @@
     visibility: hidden;
   }
 
-  .lightbox.is-loading::after {
-    content: "";
+  :global(.lightbox-loading-ring) {
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 32px;
-    height: 32px;
-    margin: -16px 0 0 -16px;
-    border: 1.5px solid rgba(var(--gold-rgb), 0.25);
-    border-top-color: var(--gold-2);
-    border-radius: 50%;
-    animation: lightbox-spin 0.9s linear infinite;
+    translate: -50% -50%;
+    display: none;
   }
 
-  @keyframes lightbox-spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  @media (--reduced-motion) {
-    .lightbox.is-loading::after {
-      animation: none;
-    }
+  .lightbox.is-loading :global(.lightbox-loading-ring) {
+    display: inline-block;
   }
 
   .lightbox-detail-items :global(.package-veg-marker) {

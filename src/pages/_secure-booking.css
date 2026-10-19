@@ -621,17 +621,46 @@
   color: var(--muted-ink);
 }
 
+/* ---------- Loading and changing state ---------- */
+
+/* Everything that appears once the booking's state is known fades in, so
+   the page settles from the loading ring into its answer rather than
+   snapping. An animation restarts each time an element goes from hidden to
+   shown, which is exactly when this should play. */
+#depositPage [data-deposit-show]:not([hidden]) {
+  animation: secure-booking-appear 0.6s var(--ease) both;
+}
+
+@keyframes secure-booking-appear {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (--reduced-motion) {
+  #depositPage [data-deposit-show]:not([hidden]) {
+    animation: none;
+  }
+}
+
+.secure-booking-hero-loading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.secure-booking-hero-loading p {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+}
+
 /* ---------- Outcomes (DepositStatus) ---------- */
 
 .secure-booking-status-section {
   padding: clamp(40px, 7vw, 72px) 0 0;
-}
-
-.secure-booking-status-loading {
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 17px;
-  color: var(--muted-ink);
-  text-align: center;
 }
 
 .secure-booking-status {

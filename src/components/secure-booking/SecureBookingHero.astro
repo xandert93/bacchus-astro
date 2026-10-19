@@ -1,14 +1,15 @@
 ---
 // The deposit page's hero: the compact HeroFrame, with the booking's own
 // occasion, spaces and date in the copy, filled in by the page's script. Its
-// words follow the page's state: an invitation to pay while the deposit is
-// due, a celebration once it's confirmed (the script adds a rise of gold
-// through it), and something neutral for a closed quote or a broken link.
-// The first heading has no `hidden`, so the hero reads properly before the
-// script has run. No crumb and no buttons: the page is a checkout, reached
-// from an emailed link.
+// words follow the page's state: while the booking loads, only the photo and
+// the loading ring, so nothing claims what isn't known yet; then an
+// invitation to pay while the deposit is due, a celebration once it's
+// confirmed (the script adds a rise of gold through it), or something
+// neutral for a closed quote or a broken link. No crumb and no buttons: the
+// page is a checkout, reached from an emailed link.
 import HeroFrame from "@components/sections/HeroFrame.astro"
 import HeroImage from "@components/ui/HeroImage.astro"
+import LoadingRing from "@components/ui/LoadingRing.astro"
 ---
 
 <HeroFrame small>
@@ -19,7 +20,12 @@ import HeroImage from "@components/ui/HeroImage.astro"
     heroHeightVh={62}
   />
 
-  <div data-deposit-show="loading pay transfer-sent">
+  <div class="secure-booking-hero-loading" data-deposit-show="loading">
+    <LoadingRing label="Loading your booking" size={36} />
+    <p>Loading your booking</p>
+  </div>
+
+  <div data-deposit-show="pay transfer-sent" hidden>
     <div class="secure-booking-eyebrow">
       <span class="secure-booking-rule"></span>Your booking
     </div>
@@ -27,7 +33,7 @@ import HeroImage from "@components/ui/HeroImage.astro"
       Secure your date <br class="secure-booking-hide-mobile" />
       at <em>Bacchus</em>
     </h1>
-    <div data-deposit-show="pay transfer-sent" hidden>
+    <div>
       <p class="sub">
         Congratulations, <span data-deposit="firstName"></span>: your{" "}
         <span data-deposit="occasion"></span> is approved!

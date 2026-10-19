@@ -89,7 +89,18 @@ const DETAILS: { icon: SecureBookingIconName; label: string }[] = [
           <p class="secure-booking-deposit-terms" data-deposit="depositTerms"></p>
 
           <div class="secure-booking-deposit-box">
-            <p class="secure-booking-deposit-label">Deposit due now</p>
+            {/* What the deposit is now, as the page's state says. */}
+            <p class="secure-booking-deposit-label">
+              <span data-deposit-show="pay" hidden>
+                Deposit due now
+              </span>
+              <span data-deposit-show="transfer-sent" hidden>
+                Deposit on its way
+              </span>
+              <span data-deposit-show="confirmed" hidden>
+                Deposit paid
+              </span>
+            </p>
             <p class="secure-booking-deposit-amount" data-deposit="deposit.display"></p>
             <p class="secure-booking-deposit-note" data-deposit="balanceNote"></p>
           </div>
