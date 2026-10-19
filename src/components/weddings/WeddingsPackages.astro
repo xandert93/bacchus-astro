@@ -91,7 +91,9 @@ const DINING = [
         <li class="package-dining-card-item">
           {i > 0 && (
             <span class="package-dining-card-or" aria-hidden="true">
-              <span>or</span>
+              <span class="package-dining-card-or-disc" data-reveal>
+                or
+              </span>
             </span>
           )}
           <article class="package-dining-card" data-reveal>
@@ -421,22 +423,61 @@ const DINING = [
   /* The "or" marker: a gold-ringed disc between two formats. Stacked between
          cards on narrow screens, floated into the column gap on wide ones.
   */
+  /* The "or" between two cards: this outer span places it (the rules
+     per width below), the disc inside is what's seen, and what reveals.
+     Kept apart so the reveal's own transform never fights the placing
+     one (the translate that centres it on the seam). */
   .package-dining-card-or {
     display: flex;
-    align-items: center;
-    justify-content: center;
     align-self: center;
     width: 46px;
     height: 46px;
+    flex: none;
+  }
+
+  .package-dining-card-or-disc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
     border-radius: var(--radius-pill);
     border: 1px solid rgba(var(--gold-rgb), 0.4);
     background: var(--ink-2);
+
     color: var(--gold-2);
     font-family: "Inter", system-ui, sans-serif;
     font-size: 10px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    flex: none;
+  }
+
+  /* It grows in rather than rising like the cards: a small thing arriving
+     between two big ones. */
+  .package-dining-card-or-disc[data-reveal] {
+    transform: scale(0.6);
+    transition:
+      opacity 0.6s var(--ease) var(--d, 0ms),
+      transform 0.7s var(--ease) var(--d, 0ms);
+  }
+
+  .package-dining-card-or-disc[data-reveal].is-revealed {
+    transform: none;
+  }
+
+  /* In the triptych, each "or" lands halfway between the card before it and
+     the card after (those start 600ms apart; see the reveal stagger below),
+     so the row reads card, or, card, or, card. */
+  @media (--from-desktop) {
+    .package-dining-card-item:nth-child(2) .package-dining-card-or-disc {
+      --d: 300ms;
+    }
+  }
+
+  @media (--from-desktop) {
+    .package-dining-card-item:nth-child(3) .package-dining-card-or-disc {
+      --d: 900ms;
+    }
   }
 
   @media (--from-desktop) {
