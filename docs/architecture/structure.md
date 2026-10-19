@@ -74,7 +74,9 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   on its own), `Dialog` (a modal on the browser's own `<dialog>`: centred,
   a close button, Escape or a click outside closes it; first used to
   decline a quote. The weddings quick-pick calendar's modal predates it and
-  is its own).
+  is its own),
+  `LoadingRing` (the turning gold ring while something loads: the
+  lightbox's photo, the deposit page's booking).
 - `forms/`: form controls. `FormField` (label, error, notes), `TextInput`
   (every input and the textarea), `ChipGroup`, `OptionCardGroup`. Used by the
   enquiry wizard and the waitlist popover.

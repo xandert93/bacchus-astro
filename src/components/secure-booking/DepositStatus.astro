@@ -1,7 +1,7 @@
 ---
-// The deposit page's outcome panel, for every state but "pay": while it
-// loads, a link that doesn't work, a transfer on its way, a confirmed
-// booking and a closed quote. Each is a full card under the hero, with what
+// The deposit page's outcome panel, for every state but "pay" (and
+// "loading", which the hero shows): a link that doesn't work, a transfer on
+// its way, a confirmed booking and a closed quote. Each is a full card under the hero, with what
 // happens next and somewhere to go, and the page hides everything about
 // paying around it, so the outcome is what the page is about. The page's
 // script (src/pages/_secure-booking.js) shows the one that matches.
@@ -78,13 +78,10 @@ const OUTCOMES: Outcome[] = [
 
 <section
   class="secure-booking-status-section"
-  data-deposit-show="loading invalid transfer-sent confirmed closed"
+  data-deposit-show="invalid transfer-sent confirmed closed"
+  hidden
 >
   <div class="secure-booking-container-large">
-    <p class="secure-booking-status-loading" data-deposit-show="loading">
-      Loading your booking…
-    </p>
-
     {OUTCOMES.map((outcome) => (
       <div
         class="secure-booking-card secure-booking-status"

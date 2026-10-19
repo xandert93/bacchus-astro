@@ -1,0 +1,45 @@
+---
+// A thin gold ring that turns while something loads: the lightbox while a
+// photo arrives, the deposit page while it fetches the booking. Screen
+// readers hear `label`. Under reduced motion it holds still.
+interface Props {
+  /** Read out to screen readers, e.g. "Loading your booking". */
+  label?: string
+  /** Diameter in px. */
+  size?: number
+  class?: string
+}
+
+const { label = "Loading", size = 32, class: className } = Astro.props
+---
+
+<span
+  class:list={["loading-ring", className]}
+  role="status"
+  aria-label={label}
+  style={`--loading-ring-size: ${size}px`}
+></span>
+
+<style>
+  .loading-ring {
+    display: inline-block;
+    width: var(--loading-ring-size);
+    height: var(--loading-ring-size);
+    border: 1.5px solid rgba(var(--gold-rgb), 0.25);
+    border-top-color: var(--gold-2);
+    border-radius: 50%;
+    animation: loading-ring-turn 0.9s linear infinite;
+  }
+
+  @keyframes loading-ring-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (--reduced-motion) {
+    .loading-ring {
+      animation: none;
+    }
+  }
+</style>
