@@ -9,6 +9,7 @@
 
 import { EMAIL_SITE_ORIGIN } from "astro:env/server"
 import { ADDRESS_LINE, CONTACT } from "@data/contact"
+import { breakpoints } from "@lib/media-queries"
 
 // The site's palette (src/styles/global.css), written out: emails can't read
 // CSS variables. GOLD is too pale for text on white, so text that would be
@@ -186,8 +187,10 @@ export const emailLayout = ({
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>
       /* The body's side padding is 20px wherever style rules are ignored,
-         which suits a phone; apps that read them give a wider screen more. */
-      @media (min-width: 621px) {
+         which suits a phone; apps that read them give a wider screen more,
+         from the site's tablet width (written as min-width, which email
+         apps understand, unlike the site's range syntax). */
+      @media (min-width: ${breakpoints.tablet}px) {
         .email-body {
           padding: 36px 36px 12px !important;
         }
