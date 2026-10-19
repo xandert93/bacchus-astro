@@ -359,6 +359,15 @@ order.
 - **Data retention.** A scheduled job surfaces personal data past its review
   date for deletion.
 
+**The daily jobs, built 2026-10-19.** Cloudflare runs the Worker's
+`scheduled` (`src/worker.ts`) every day at 07:00 UTC (the `triggers` in
+`wrangler.jsonc`). It hands the run to `/api/jobs/daily` through Astro's own
+handler, with a key only that Worker knows, so the jobs run like any request
+and nobody else can start them. The jobs live in `src/lib/jobs/daily.ts`; the
+two scheduled jobs above slot in there. Locally, `npm run dev:daily-jobs`
+runs them on the dev server and prints what they did. Nothing to set up on
+the live site: the timetable deploys with the Worker.
+
 ## Step 7 — quotes and deposits
 
 **Deposits in test mode, built 2026-10-17.** Paying by bank is the main
@@ -396,6 +405,11 @@ deposit to arrive secures it, and the client is told so.
    every other open enquiry for the date is declined and emailed that the
    date has gone; if the date was already taken, staff are emailed to refund
    instead. Client and staff both get a confirmation email.
+5. **The quote's end date** (`src/lib/deposits/deadlines.ts`, run by the
+   daily jobs): two days before it, if the deposit is still due, the client
+   gets a reminder with a fresh link (the first still works). Once it has
+   passed with nothing paid or on its way, the quote becomes Expired, the
+   enquiry goes back to In Discussion, and the client and staff are emailed.
 
 **Sanity's webhooks.** A webhook is Sanity's server calling one of the
 site's API routes when a published document changes. Two drive the site:
@@ -434,9 +448,6 @@ puts everything back.
   with Viva and Revolut worth comparing on fees, and pay by bank's reach
   in Malta to confirm (`docs/architecture/tech-stack.md`). Swapping means
   `src/lib/payments/checkout.ts` plus the provider's own webhook.
-- **Expired quotes in the Studio**: a page past its end date already shows
-  as closed, but nothing yet sets the quote to Expired or the booking back,
-  so staff see it as still awaiting a deposit. A daily scheduled job.
 - Quote PDFs: deterministic templating, never a language model.
 
 ## Step 8 — hand it to the client

@@ -1,6 +1,6 @@
 // Everything the deposit page and the deposit endpoints need about one
 // quote, found by the secret in its emailed link (only the hash is stored,
-// as `quote.depositTokenHash`; see src/lib/tokens.ts).
+// in `quote.depositTokenHashes`; see src/lib/tokens.ts).
 
 import type { SanityClient } from "@sanity/client"
 import { hashToken } from "@lib/tokens"
@@ -27,6 +27,7 @@ export interface DepositRecord {
     deposit: { percent?: number; amount: number }
   }
   terms?: { balanceDueDate?: string; validUntil?: string }
+  reminderSentAt?: string
   booking: {
     _id: string
     status: string
@@ -46,6 +47,7 @@ const DEPOSIT_PROJECTION = /* groq */ `{
   event{date, startTime, endTime, guestCount, "spaces": spaces[]->name},
   pricing{lineItems[]{label, amount}, subtotal, discount, total, vat, perPerson, deposit},
   terms,
+  reminderSentAt,
   "booking": booking->{
     _id,
     status,
@@ -65,7 +67,7 @@ export const loadDepositByToken = async (
 ): Promise<DepositRecord | null> =>
   typeof token === "string" && token
     ? client.fetch<DepositRecord | null>(
-        `*[_type == "quote" && depositTokenHash == $hash && ${PUBLISHED}][0]${DEPOSIT_PROJECTION}`,
+        `*[_type == "quote" && $hash in depositTokenHashes && ${PUBLISHED}][0]${DEPOSIT_PROJECTION}`,
         { hash: await hashToken(token) },
       )
     : null

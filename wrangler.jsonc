@@ -12,12 +12,17 @@
   // never automatically.
   "compatibility_date": "2026-10-07",
 
-  // The Worker that runs the on-demand routes (the enquiry endpoint). Every
-  // page is still static: Cloudflare serves a matching file first, with the
-  // rules in public/_headers applied, and only hands the Worker what no file
-  // answers. The build writes the final config (dist/server/wrangler.json)
-  // from this one, and `wrangler deploy` picks that up.
-  "main": "@astrojs/cloudflare/entrypoints/server",
+  // The Worker that runs the on-demand routes (the API) and the daily jobs.
+  // Every page is still static: Cloudflare serves a matching file first,
+  // with the rules in public/_headers applied, and only hands the Worker what
+  // no file answers. Our own entry point wraps Astro's (src/worker.ts) to add
+  // the daily run. The build writes the final config (dist/server/
+  // wrangler.json) from this one, and `wrangler deploy` picks that up.
+  "main": "./src/worker.ts",
+
+  // When Cloudflare runs the Worker's `scheduled` (src/worker.ts): every day
+  // at 07:00 UTC, which is 8 or 9 in the morning in Malta.
+  "triggers": { "crons": ["0 7 * * *"] },
 
   // Lets the Worker read process.env and Node's built-ins, which
   // @sanity/client relies on.
