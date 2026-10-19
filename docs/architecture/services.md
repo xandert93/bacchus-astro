@@ -90,10 +90,35 @@ record.
 **A cancelled wedding**: staff set it to Cancelled and publish; Sanity's
 webhook calls `api/booking-events.ts`, which emails that date's waitlist.
 
-**Every morning** (Cloudflare's timer, not a webhook): Cloudflare runs the
-Worker's `scheduled` (`src/worker.ts`), which hands over to
-`api/jobs/daily.ts`. It reads the quotes from Sanity, saves a reminder or an
-expiry on each that needs one, then asks Resend for the emails.
+**Every morning** (Cloudflare's timer, not a webhook). Nothing polls:
+Cloudflare starts the run once a day, and it asks Sanity one question.
+
+```
+ 07:00 UTC   CLOUDFLARE's timer ──▶ the Worker's `scheduled` (src/worker.ts)
+                                          │ hands over to
+                                          ▼
+                                   API route /api/jobs/daily
+                                          │ 1. one query: every Sent quote with an end date,
+                                          ▼    with its booking and payments
+                                       SANITY
+                                          │
+                    ┌─────────────────────┼──────────────────────────┐
+                    ▼                     ▼                          ▼
+          deposit paid or on its   ends within 2 days,       end date passed,
+          way, or enquiry closed   no reminder sent yet      nothing paid
+                    │                     │                          │
+                  skip      2. SANITY: note the reminder,  2. SANITY: quote Expired,
+                               add a fresh link               enquiry back to In Discussion
+                                          │                          │
+                            3. RESEND: reminder to the     3. RESEND: "your quote has
+                               client                         expired" to the client,
+                                          │                   follow-up to staff
+                                          │                          │
+                                          └──▶ 4. SANITY: each email in the booking's Email Log
+```
+
+Because step 2 is saved before step 3, tomorrow's run sees the reminder or
+the expiry and leaves that quote alone.
 
 ## Locally
 

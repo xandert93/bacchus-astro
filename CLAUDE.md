@@ -40,6 +40,8 @@ code they cover.
   Shopify site, payments.
 - `docs/architecture/services.md`: how Sanity, Cloudflare and Resend call
   each other, flow by flow, locally and live.
+- `docs/architecture/api-routes.md`: every API route, who calls it, what it
+  does and how it's guarded; and the rules for writing a new one.
 
 ## Rules that apply everywhere
 
