@@ -31,7 +31,7 @@ import { formatDateTime, joinParts, optionTitle } from "../../lib/preview"
  */
 const ACTORS = [
   { title: "Staff, in Sanity Studio", value: "staff" },
-  { title: "Card Payment, Recorded Automatically", value: "payment-webhook" },
+  { title: "Online Payment, Recorded Automatically", value: "payment-webhook" },
   { title: "Scheduled Job", value: "cron" },
   { title: "Visitor, via the Site", value: "visitor" },
   { title: "Migration or Manual Data Fix", value: "migration" },

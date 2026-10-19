@@ -10,7 +10,7 @@ import { findDeposit } from "@lib/deposits/request"
 import { depositFacts } from "@lib/deposits/load"
 import { toDepositView } from "@lib/deposits/view"
 import { transferNoticeEmail } from "@lib/email/deposit-emails"
-import { sendEmail } from "@lib/email/send"
+import { sendAndLog } from "@lib/email/log"
 import { fetchStaffRecipients } from "@lib/email/staff"
 
 export const prerender = false
@@ -43,7 +43,9 @@ export const POST: APIRoute = async ({ request }) => {
       ])
       .commit()
 
-    await sendEmail(
+    await sendAndLog(
+      client,
+      { bookingId: record.booking._id, audience: "staff" },
       transferNoticeEmail(depositFacts(record), await fetchStaffRecipients(client)),
     )
 

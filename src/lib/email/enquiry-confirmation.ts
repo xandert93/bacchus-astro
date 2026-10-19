@@ -29,11 +29,7 @@ const NEXT_STEPS: [string, string][] = [
   ],
 ]
 
-export const enquiryConfirmationEmail = (
-  enquiry: EnquiryInput,
-  /** Tags the email, so a bounce can be traced back to the enquiry. */
-  bookingKey: string,
-): Email => {
+export const enquiryConfirmationEmail = (enquiry: EnquiryInput): Email => {
   const date = longDate(enquiry.date)
   const details = enquiryDetails(enquiry, { messageLabel: "Your message" })
 
@@ -82,6 +78,5 @@ export const enquiryConfirmationEmail = (
     }),
     text,
     kind: "enquiry-confirmation",
-    tags: { booking: bookingKey },
   }
 }

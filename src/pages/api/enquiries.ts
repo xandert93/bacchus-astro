@@ -13,7 +13,7 @@ import { toBooking } from "@lib/enquiries/to-booking"
 import { validateEnquiry } from "@lib/enquiries/validate"
 import { enquiryAlertEmail } from "@lib/email/enquiry-alert"
 import { enquiryConfirmationEmail } from "@lib/email/enquiry-confirmation"
-import { sendEmail } from "@lib/email/send"
+import { sendAndLog } from "@lib/email/log"
 import { getWriteClient } from "@lib/sanity/write-client"
 import { json, looksLikeABot, readFormPost } from "@lib/api/requests"
 import { STAFF_RECIPIENTS_GROQ, staffRecipientsOrDefault } from "@lib/email/staff"
@@ -67,34 +67,22 @@ export const POST: APIRoute = async ({ request }) => {
 
   // After it's stored, never before: a confirmation must mean the enquiry
   // really is with Bacchus. A failed email doesn't undo the enquiry; the
-  // form just doesn't promise a copy.
+  // form just doesn't promise a copy. Both go in the booking's Email Log.
   const [confirmation] = await Promise.all([
-    sendEmail(
-      enquiryConfirmationEmail(result.enquiry, booking._id.replace(/^booking\./, "")),
+    sendAndLog(
+      client,
+      { bookingId: booking._id, audience: "client" },
+      enquiryConfirmationEmail(result.enquiry),
     ),
-    sendEmail(
+    sendAndLog(
+      client,
+      { bookingId: booking._id, audience: "staff" },
       enquiryAlertEmail(result.enquiry, {
         bookingId: booking._id,
         recipients: staffRecipients,
       }),
     ),
   ])
-
-  // Shown on the enquiry in the Studio. A bounce reported later
-  // (src/pages/api/email-events.ts) overwrites it.
-  try {
-    await client
-      .patch(booking._id)
-      .set({
-        confirmationEmail: {
-          status: confirmation.sent ? "sent" : "failed",
-          at: new Date().toISOString(),
-        },
-      })
-      .commit()
-  } catch (error) {
-    console.error("Confirmation status not recorded.", error)
-  }
 
   return json(201, { ok: true, emailSent: confirmation.sent })
 }

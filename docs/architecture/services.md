@@ -57,9 +57,9 @@ record.
 1. The visitor sends the form to the route.
 2. The route saves a new booking in Sanity.
 3. The route asks Resend for the enquirer's confirmation and the staff
-   alert, then records on the booking whether the confirmation went.
+   alert, and records both in the booking's Email Log.
 4. If the address doesn't exist, Resend's webhook calls `api/email-events.ts`,
-   which marks the booking "Bounced".
+   which marks that email "Bounced" in the log.
 
 **A quote** (`api/quote-events.ts`):
 
@@ -108,9 +108,11 @@ The same, except:
 
 - **Resend** keeps its own log of every email sent, in its dashboard, for a
   limited time that depends on the plan.
-- **Sanity** records only the enquiry confirmation's outcome (sent, failed
-  or bounced, on the booking). Other emails leave no trace there beyond the
-  change they were about (a quote's "Sent At", a payment).
+- **Sanity** keeps each booking's **Email Log**: every email the site sent
+  about it, to the client or to staff, with when, to whom and whether it
+  went or bounced (`src/lib/email/log.ts`). It's written just after the
+  email is handed to Resend, and lasts as long as the booking. Waitlist
+  emails aren't about a booking and appear only in Resend's log.
 
 The webhook settings themselves are in `docs/planning/sanity-rollout.md`
 (steps 3 and 7) and `sanity/webhooks/definitions.ts`.

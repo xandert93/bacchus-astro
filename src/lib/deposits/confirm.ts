@@ -18,7 +18,7 @@ import {
   depositReceivedStaffEmail,
   paidButTakenEmail,
 } from "@lib/email/deposit-emails"
-import { sendEmail } from "@lib/email/send"
+import { sendAndLog } from "@lib/email/log"
 import { fetchStaffRecipients } from "@lib/email/staff"
 import { depositFacts, type DepositRecord } from "./load"
 
@@ -37,7 +37,11 @@ export const confirmDeposit = async (
   const isWedding = booking.event.type === "wedding"
 
   if (isWedding && (await statusOnDate(client, record.event.date)) === "taken") {
-    await sendEmail(paidButTakenEmail(facts, staff))
+    await sendAndLog(
+      client,
+      { bookingId: booking._id, audience: "staff" },
+      paidButTakenEmail(facts, staff),
+    )
     return "date-taken"
   }
 
@@ -61,7 +65,9 @@ export const confirmDeposit = async (
         actor,
         reason: "Another couple paid the deposit for this date first.",
       }).commit()
-      await sendEmail(
+      await sendAndLog(
+        client,
+        { bookingId: enquiry._id, audience: "client" },
         dateTakenEmail({
           to: enquiry.client.email,
           firstName: enquiry.client.firstName,
@@ -73,8 +79,16 @@ export const confirmDeposit = async (
   }
 
   await Promise.all([
-    sendEmail(depositConfirmedEmail(facts)),
-    sendEmail(depositReceivedStaffEmail(facts, staff)),
+    sendAndLog(
+      client,
+      { bookingId: booking._id, audience: "client" },
+      depositConfirmedEmail(facts),
+    ),
+    sendAndLog(
+      client,
+      { bookingId: booking._id, audience: "staff" },
+      depositReceivedStaffEmail(facts, staff),
+    ),
   ])
 
   return "confirmed"
