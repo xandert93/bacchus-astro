@@ -279,22 +279,22 @@ export const quoteDeclinedClientEmail = (facts: DepositFacts): Email => {
   }
 }
 
-/** The quote ran out with no deposit, so it's closed. */
+/** The quote expired with no deposit paid. */
 export const quoteExpiredEmail = (
   facts: DepositFacts,
   { validUntil }: { validUntil: string },
 ): Email => {
   const day = longDate(facts.date)
-  const closed = `Your quote for ${day} (reference ${facts.reference}) was open until ${longDate(validUntil)}, and as no deposit arrived, we've closed it. Nothing has been charged.`
+  const closed = `Your quote for ${day} (reference ${facts.reference}) was valid until ${longDate(validUntil)}. As no deposit arrived, it has now expired. Nothing has been charged.`
   const invitation = `If you'd still like ${day}, or another date, just reply to this email: we'll check it's free and send you a fresh quote.`
 
   return {
     to: facts.email,
-    subject: `Your quote for ${day} has closed`,
+    subject: `Your quote for ${day} has expired`,
     html: emailLayout({
-      preview: `Your quote for ${day} has closed.`,
+      preview: `Your quote for ${day} has expired.`,
       eyebrow: "Your quote",
-      title: "Your quote has <em>closed</em>",
+      title: "Your quote has <em>expired</em>",
       body: [
         paragraph(`Dear ${escapeHtml(facts.firstName)},`),
         paragraph(escapeHtml(closed)),
@@ -426,7 +426,7 @@ export const quoteDeclinedEmail = (facts: DepositFacts, to: string[], reason?: s
     kind: "quote-declined",
   })
 
-/** A quote ran out unpaid: someone should follow up. */
+/** A quote expired unpaid: someone should follow up. */
 export const quoteExpiredStaffEmail = (facts: DepositFacts, to: string[]) =>
   staffEmail({
     to,
@@ -434,9 +434,9 @@ export const quoteExpiredStaffEmail = (facts: DepositFacts, to: string[]) =>
     replyTo: facts.email,
     subject: `Quote expired: ${facts.couple}, ${longDate(facts.date)}`,
     eyebrow: "Needs a follow-up",
-    title: "A quote has <em>run out</em>",
+    title: "A quote has <em>expired</em>",
     lines: [
-      `${facts.couple}'s quote ${facts.reference} ran out without a deposit, so it's now Expired and their enquiry is back in In Discussion. They've been told.`,
+      `${facts.couple}'s quote ${facts.reference} has expired with no deposit paid, so their enquiry is back in In Discussion. They've been told.`,
       "Worth a call or an email: send a new quote, or close the enquiry if they're not going ahead. Replying to this email reaches them.",
     ],
     kind: "quote-expired-staff",

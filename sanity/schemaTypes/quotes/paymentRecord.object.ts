@@ -76,7 +76,7 @@ export default defineType({
           { title: "Awaiting Payment", value: "awaiting" },
           { title: "Received", value: "received" },
           { title: "Failed", value: "failed" },
-          { title: "Expired: The Quote Ran Out", value: "expired" },
+          { title: "Expired", value: "expired" },
           { title: "Refunded", value: "refunded" },
         ],
       },
