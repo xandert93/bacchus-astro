@@ -207,6 +207,8 @@ untouched, so nothing errored; the elements simply weren't there.
 **Rule**: when replacing one block of markup, check the diff for anything
 else removed with it.
 
+---
+
 ## 8. The footer's logo was stretched tall
 
 **Symptom**: the Bacchus mark in the footer looked squeezed into a tall,
