@@ -184,3 +184,25 @@ reason.
 
 **Rule**: `hidden` always means hidden. To show and hide something with a
 transition, use a class, not the attribute.
+
+---
+
+## 7. The wedding calendar lost its footer and waitlist hint
+
+**Symptom**: picking a date on the weddings page's calendar showed nothing
+under it: no "Selected · date", no "Enquire now", and the quick-pick
+modal had no "Use this date". The "Date unavailable? Tap it to join the
+waitlist" hint had gone too. Reported 2026-10-19.
+
+**Cause**: the change that made the calendar live (2026-10-17, commit
+a7caa57) replaced the "illustrative only" notice with the minimum-notice
+note, and the edit deleted everything between them as well: the waitlist
+hint and the whole footer. The styles and the script that drive them were
+untouched, so nothing errored; the elements simply weren't there.
+
+**Fix**: the hint and footer restored as they were, above the notice.
+
+**Test**: none automated (no new tests this session, at the user's call).
+
+**Rule**: when replacing one block of markup, check the diff for anything
+else removed with it.

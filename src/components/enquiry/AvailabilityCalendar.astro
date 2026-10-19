@@ -93,6 +93,72 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
        text as one toggled group (display: contents), so a touch visitor
        never sees a mouse-pointer glyph next to "Tap it...". 
 */}
+  <div class="availability-note">
+    <span class="wl-hint-hover">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M4 4l7.07 16.97 2.51-7.39 7.39-2.51L4 4Z"
+          stroke="currentColor"
+          stroke-width="1.3"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M13.5 13.5 19 19"
+          stroke="currentColor"
+          stroke-width="1.3"
+          stroke-linecap="round"
+        />
+      </svg>
+      <span>
+        Date unavailable? Click it to join the waitlist — we'll email you if it opens up.
+      </span>
+    </span>
+    <span class="wl-hint-touch">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.3" />
+        <circle
+          cx="12"
+          cy="12"
+          r="6"
+          stroke="currentColor"
+          stroke-width="1.3"
+          opacity="0.6"
+        />
+        <circle
+          cx="12"
+          cy="12"
+          r="9.5"
+          stroke="currentColor"
+          stroke-width="1.1"
+          opacity="0.35"
+        />
+      </svg>
+      <span>
+        Date unavailable? Tap it to join the waitlist — we'll email you if it opens up.
+      </span>
+    </span>
+  </div>
+  {isCompact ? (
+    <div class="availability-foot-label" id="availPicked">
+      <span class="availability-foot-label-date"></span>
+      <span class="availability-picked-status"></span>
+    </div>
+  ) : (
+    <>
+      <div class="availability-foot">
+        <span class="availability-foot-label">
+          <span class="availability-foot-label-date">No date selected</span>
+          <span class="availability-picked-status"></span>
+        </span>
+        <slot name="foot-action" />
+      </div>
+      <p class="availability-foot-note">
+        The Prince De Redin Hall, Terrace and Secret Garden are reserved together for your
+        day. Your date stays unconfirmed until we reply.
+      </p>
+    </>
+  )}
   {noticeSuffix && (
     <div class="availability-note">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
