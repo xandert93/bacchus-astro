@@ -206,3 +206,23 @@ untouched, so nothing errored; the elements simply weren't there.
 
 **Rule**: when replacing one block of markup, check the diff for anything
 else removed with it.
+
+## 8. The footer's logo was stretched tall
+
+**Symptom**: the Bacchus mark in the footer looked squeezed into a tall,
+thin strip at every width. Reported 2026-10-19.
+
+**Cause**: the footer narrows the logo to 40px with a width rule, but the
+image also carries its height attribute (every `<Photo>` sets width and
+height, so the page doesn't jump while photos load). With only the width
+changed, the browser kept the attribute's full 132px height: 40 by 132.
+
+**Fix**: `height: auto` in the global `img` rule (`src/styles/global.css`),
+so any image narrowed by a width rule or by `max-width` keeps its shape. A
+rule that sets an image's height on purpose (a cover photo filling its
+frame) still wins, being more specific.
+
+**Test**: none automated (no new tests this session, at the user's call).
+
+**Rule**: an image whose width is set in CSS needs `height: auto` too; the
+global rule now gives every image that.
