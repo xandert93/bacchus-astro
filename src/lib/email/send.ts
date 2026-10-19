@@ -27,6 +27,37 @@ export interface SendResult {
   id?: string
 }
 
+/** How many times to try again when Resend says we're sending too fast. */
+const RATE_LIMIT_RETRIES = 2
+
+const wait = (milliseconds: number) =>
+  new Promise((resolve) => setTimeout(resolve, milliseconds))
+
+/**
+ * Posts one email to Resend. Resend accepts a couple of requests a second;
+ * when a burst goes over (the daily jobs expiring several quotes at once,
+ * say), it answers 429 and says how long to wait, so this waits and tries
+ * again, a little at most. A 429 for the free plan's daily cap won't clear
+ * in seconds: after the retries that one is reported like any failure.
+ */
+const postToResend = async (body: string, retriesLeft = RATE_LIMIT_RETRIES) => {
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body,
+  })
+
+  if (response.status !== 429 || !retriesLeft) return response
+
+  const retryAfterSeconds = Number(response.headers.get("retry-after")) || 1
+  await wait(Math.min(retryAfterSeconds, 2) * 1000)
+
+  return postToResend(body, retriesLeft - 1)
+}
+
 /**
  * Sends the email. An email failing must never undo what the visitor did
  * (an enquiry is still stored), so this never throws: it reports whether
@@ -56,23 +87,18 @@ export const sendEmail = async ({
     ? `[Test for ${realRecipients}] ${subject}`
     : subject
 
+  const body = JSON.stringify({
+    from: EMAIL_FROM,
+    to: recipient,
+    reply_to: replyTo,
+    subject: testSubject,
+    html,
+    text,
+    tags: Object.entries({ kind, ...tags }).map(([name, value]) => ({ name, value })),
+  })
+
   try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: EMAIL_FROM,
-        to: recipient,
-        reply_to: replyTo,
-        subject: testSubject,
-        html,
-        text,
-        tags: Object.entries({ kind, ...tags }).map(([name, value]) => ({ name, value })),
-      }),
-    })
+    const response = await postToResend(body)
 
     if (!response.ok) {
       console.error(
