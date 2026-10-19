@@ -9,6 +9,7 @@
 
 import { EMAIL_SITE_ORIGIN } from "astro:env/server"
 import { ADDRESS_LINE, CONTACT } from "@data/contact"
+import { breakpoints } from "@lib/media-queries"
 
 // The site's palette (src/styles/global.css), written out: emails can't read
 // CSS variables. GOLD is too pale for text on white, so text that would be
@@ -33,7 +34,8 @@ const SANS = "Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif"
 const ROW_LINE_HEIGHT = "22px"
 
 // A details card's label and answer widths. With the 16px gap between them
-// they fit side by side in the 600px email; on a narrow screen, an answer
+// they fit side by side in the 600px email (even with its narrower phone
+// padding); on a narrow screen, an answer
 // that can't fit beside its label drops beneath it. A label never wraps, so
 // it always shares its answer's baseline: keep labels to about 20 letters.
 const DETAIL_LABEL_WIDTH = 180
@@ -184,6 +186,16 @@ export const emailLayout = ({
     <meta name="color-scheme" content="light">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Newsreader:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <style>
+      /* The body's side padding is 20px wherever style rules are ignored,
+         which suits a phone; apps that read them give a wider screen more,
+         from the site's tablet width (written as min-width, which email
+         apps understand, unlike the site's range syntax). */
+      @media (min-width: ${breakpoints.tablet}px) {
+        .email-body {
+          padding: 36px 36px 12px !important;
+        }
+      }
+
       @supports (-webkit-background-clip: text) {
         .gold-text {
           background-image: ${GOLD_GRADIENT};
@@ -198,7 +210,7 @@ export const emailLayout = ({
     <div style="display: none; max-height: 0; overflow: hidden;">${escapeHtml(preview)}</div>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: ${WHITE};">
       <tr>
-        <td align="center" style="padding: 24px 12px;">
+        <td align="center" style="padding: 16px 6px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; background: ${WHITE}; border: 1px solid ${RULE}; border-radius: 14px; overflow: hidden;">
             <tr>
               <td align="center" style="padding: 34px 24px 26px; border-bottom: 1px solid ${RULE};">
@@ -219,7 +231,7 @@ export const emailLayout = ({
                 : ""
             }
             <tr>
-              <td style="padding: 36px 36px 12px;">
+              <td class="email-body" style="padding: 32px 20px 12px;">
                 <p style="margin: 0 0 10px; font-family: ${SANS}; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: ${BRONZE};">${escapeHtml(eyebrow)}</p>
                 <h1 style="margin: 0 0 24px; font-family: ${SERIF}; font-size: 30px; line-height: 1.2; font-weight: normal; color: ${INK};">${styleEm(title)}</h1>
                 ${body}
