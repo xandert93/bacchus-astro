@@ -354,6 +354,41 @@
     transform: scale(0.97);
   }
 
+  /* While the photo loads, its caption, counter and arrows wait with it,
+     and a thin gold ring turns in the middle of the screen. */
+  .lightbox.is-loading figcaption,
+  .lightbox.is-loading .lightbox-count,
+  .lightbox.is-loading .lightbox-prev,
+  .lightbox.is-loading .lightbox-next {
+    visibility: hidden;
+  }
+
+  .lightbox.is-loading::after {
+    content: "";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 32px;
+    height: 32px;
+    margin: -16px 0 0 -16px;
+    border: 1.5px solid rgba(var(--gold-rgb), 0.25);
+    border-top-color: var(--gold-2);
+    border-radius: 50%;
+    animation: lightbox-spin 0.9s linear infinite;
+  }
+
+  @keyframes lightbox-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (--reduced-motion) {
+    .lightbox.is-loading::after {
+      animation: none;
+    }
+  }
+
   .lightbox-detail-items :global(.package-veg-marker) {
     margin-inline-start: 1px;
   }

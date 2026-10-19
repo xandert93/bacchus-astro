@@ -128,16 +128,22 @@ if (lb) {
   }
 
   // Fresh open: the image is held invisible (.lightbox-loading) until the new
-  // photo has decoded, then plays its normal open transition.
+  // photo has decoded, then plays its normal open transition. Meanwhile the
+  // whole figure waits too (.is-loading on the lightbox, with a spinner):
+  // before the photo arrives the figure has no width, so its caption and
+  // counter would otherwise squeeze into a thin column mid-screen.
   const show = () => {
     const mine = ++token
     lbImg.classList.remove("lightbox-fade")
     lbImg.classList.add("lightbox-loading")
+    lb.classList.add("is-loading")
     applyImage()
     lb.classList.add("show")
     lockScroll("lightbox")
     const reveal = () => {
-      if (mine === token) lbImg.classList.remove("lightbox-loading")
+      if (mine !== token) return
+      lbImg.classList.remove("lightbox-loading")
+      lb.classList.remove("is-loading")
     }
     if (lbImg.decode) lbImg.decode().then(reveal, reveal)
     else reveal()
