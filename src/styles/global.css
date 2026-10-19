@@ -196,9 +196,14 @@ input[type="reset"] {
   user-select: none;
 }
 
+/* height: auto, so an image narrowed by a width rule or by max-width keeps
+   its shape. Without it the height attribute (which every <Photo> sets, so
+   the page doesn't jump as photos load) holds the full height while only the
+   width shrinks: the footer's 40px-wide logo was drawn 132px tall. */
 img {
   display: block;
   max-width: 100%;
+  height: auto;
 }
 
 a {
