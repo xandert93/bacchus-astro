@@ -11,7 +11,7 @@ import { SANITY_WEBHOOK_SECRET } from "astro:env/server"
 import { changeStatus } from "@lib/bookings/status"
 import { depositFacts, loadDepositByQuoteId } from "@lib/deposits/load"
 import { quoteEmail } from "@lib/email/deposit-emails"
-import { sendEmail } from "@lib/email/send"
+import { sendAndLog } from "@lib/email/log"
 import { getWriteClient } from "@lib/sanity/write-client"
 import { newToken } from "@lib/tokens"
 import { verifySanityWebhook } from "@lib/webhooks/sanity"
@@ -89,11 +89,10 @@ export const POST: APIRoute = async ({ request }) => {
       .commit()
 
     const depositLink = `${new URL(request.url).origin}/secure-booking?token=${token}`
-    const result = await sendEmail(
-      quoteEmail(depositFacts(record), {
-        depositLink,
-        validUntil,
-      }),
+    const result = await sendAndLog(
+      client,
+      { bookingId: record.booking._id, audience: "client" },
+      quoteEmail(depositFacts(record), { depositLink, validUntil }),
     )
 
     return new Response(JSON.stringify({ emailed: result.sent }), {

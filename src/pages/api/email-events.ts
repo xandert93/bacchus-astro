@@ -1,7 +1,8 @@
 // POST /api/email-events: Resend tells us here when an email bounced, i.e.
-// the address doesn't exist or won't accept mail. A bounced enquiry
-// confirmation is flagged on its enquiry in the Studio, since replying by
-// email to that address won't reach anyone.
+// the address doesn't exist or won't accept mail. The email's entry in its
+// booking's Email Log is marked Bounced (src/lib/email/log.ts tags each one
+// with both), and a bounced client email flags the booking's card in the
+// Studio, since replying to that address won't reach anyone.
 //
 // Set up in Resend's dashboard (Webhooks, event email.bounced), with its
 // signing secret as the RESEND_WEBHOOK_SECRET Worker secret
@@ -36,10 +37,10 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const event = JSON.parse(rawBody) as ResendEvent
-  const { kind, booking } = event.data.tags ?? {}
+  const { booking, entry } = event.data.tags ?? {}
 
   // Anything else is acknowledged, so Resend doesn't keep retrying it.
-  if (event.type !== "email.bounced" || kind !== "enquiry-confirmation" || !booking) {
+  if (event.type !== "email.bounced" || !booking || !/^[a-z0-9]+$/.test(entry ?? "")) {
     return new Response(null, { status: 204 })
   }
 
@@ -50,11 +51,8 @@ export const POST: APIRoute = async ({ request }) => {
     await client
       .patch(`booking.${booking}`)
       .set({
-        confirmationEmail: {
-          status: "bounced",
-          at: event.created_at,
-          note: event.data.bounce?.message ?? "",
-        },
+        [`emailLog[_key=="${entry}"].status`]: "bounced",
+        [`emailLog[_key=="${entry}"].note`]: event.data.bounce?.message ?? "",
       })
       .commit()
   } catch (error) {

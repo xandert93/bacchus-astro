@@ -323,11 +323,16 @@ email. An email that fails never undoes the enquiry it's about.
   "Open in the Studio" button (`STUDIO_URL`). Replying to it replies to the
   enquirer. The AI-drafted reply is still to come (it needs an Anthropic API
   key).
-- **Bounces**: each enquiry records whether its confirmation was sent
-  ("Confirmation Email" in the Studio). If the address turns out not to
-  exist, Resend reports the bounce to `src/pages/api/email-events.ts`, which
-  marks the enquiry "Bounced" and its card "Email bounced: phone them". The
-  report is checked against Resend's signature, so it can't be faked.
+- **The Email Log** (since 2026-10-19): every email the site sends about a
+  booking, to the client or to staff, is recorded on it ("Email Log" in the
+  Studio, under Status History): which email, to whom, when, and whether it
+  went (`src/lib/email/log.ts`). Waitlist emails aren't about a booking and
+  aren't logged.
+- **Bounces**: if an address turns out not to exist, Resend reports the
+  bounce to `src/pages/api/email-events.ts`, which marks that email
+  "Bounced" in the log; a bounced client email also flags the booking's card
+  "Email bounced: phone them". The report is checked against Resend's
+  signature, so it can't be faked.
   **To switch on**, once emails send from the live site: Resend → Webhooks →
   Add endpoint `https://<site>/api/email-events`, event `email.bounced`; then
   put its signing secret in the Worker secret `RESEND_WEBHOOK_SECRET`.

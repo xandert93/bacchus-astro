@@ -73,6 +73,9 @@ const STATUS_ICONS: Record<BookingStatus, ComponentType> = {
 
 type EventValue = { type?: string; date?: string; dateIsFlexible?: boolean } | undefined
 
+/** The parts of an email log entry the preview card reads. */
+type EmailLogPreview = { audience?: string; status?: string }
+
 export default defineType({
   name: "booking",
   title: "Enquiry / Booking",
@@ -259,32 +262,16 @@ export default defineType({
       ],
     }),
     defineField({
-      name: "confirmationEmail",
-      title: "Confirmation Email",
-      type: "object",
-      group: ["enquiry", "admin"],
+      name: "emailLog",
+      title: "Email Log",
+      type: "array",
+      group: ["history", "admin"],
       readOnly: true,
-      options: { collapsible: false, columns: 2 },
+      of: [defineArrayMember({ type: "emailLogEntry" })],
       description: help(
-        "The email the client got when they enquired. Recorded automatically.",
-        "If it bounced, their email address doesn't work: phone them instead.",
+        "Every email the site sent about this booking, to the client or to staff. Recorded automatically.",
+        "If one to the client bounced, their email address doesn't work: phone them instead.",
       ),
-      fields: [
-        defineField({
-          name: "status",
-          title: "Status",
-          type: "string",
-          options: {
-            list: [
-              { title: "Sent", value: "sent" },
-              { title: "Couldn't Be Sent", value: "failed" },
-              { title: "Bounced: Address Doesn't Work", value: "bounced" },
-            ],
-          },
-        }),
-        defineField({ name: "at", title: "When", type: "datetime" }),
-        defineField({ name: "note", title: "Reason Given", type: "string" }),
-      ],
     }),
     defineField({
       name: "message",
@@ -419,7 +406,7 @@ export default defineType({
       status: "status",
       type: "event.type",
       guests: "event.guestCount",
-      emailStatus: "confirmationEmail.status",
+      emailLog: "emailLog",
     },
     prepare: ({
       firstName,
@@ -430,8 +417,12 @@ export default defineType({
       status,
       type,
       guests,
-      emailStatus,
+      emailLog,
     }) => {
+      const clientEmailBounced = (emailLog as EmailLogPreview[] | undefined)?.some(
+        (entry) => entry.audience === "client" && entry.status === "bounced",
+      )
+
       const name = `${firstName ?? ""} ${lastName ?? ""}`.trim()
 
       return {
@@ -439,7 +430,7 @@ export default defineType({
         subtitle: joinParts(
           optionTitle(EVENT_TYPES, type),
           // Flagged on the card, so staff see it without opening the enquiry.
-          emailStatus === "bounced" ? "Email bounced: phone them" : undefined,
+          clientEmailBounced ? "Email bounced: phone them" : undefined,
           formatDate(date) ?? (flexible ? "Date flexible" : "No date"),
           pluralise(guests, "guest"),
         ),

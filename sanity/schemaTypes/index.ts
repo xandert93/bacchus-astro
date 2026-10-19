@@ -11,6 +11,7 @@ import booking from "./bookings/booking.document"
 import waitlistEntry from "./bookings/waitlistEntry.document"
 import consentRecord from "./bookings/consentRecord.object"
 import statusEvent from "./bookings/statusEvent.object"
+import emailLogEntry from "./bookings/emailLogEntry.object"
 
 // Quotes and payment.
 import quote from "./quotes/quote.document"
@@ -99,6 +100,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   waitlistEntry,
   consentRecord,
   statusEvent,
+  emailLogEntry,
 
   quote,
   quoteLineItem,
