@@ -10,9 +10,10 @@ import { from } from "@lib/media-queries.js"
 // triptych offset in styles.css), so left to its own intersection it
 // crosses the shared revObs threshold later during scroll and visibly lags
 // behind the other two. Fix: observe the row as a whole and reveal all
-// three the moment it enters view. They still arrive one after another
-// rather than as a block — the left-to-right stagger comes from the --d
-// values in styles.css's own 980px query, applied as transition-delay.
+// three the moment it enters view, with the two "or" discs between them.
+// They still arrive one after another rather than as a block — card, or,
+// card, or, card — from the --d values in WeddingsPackages.astro's own
+// 980px query, applied as transition-delay.
 //
 // Below 980px this deliberately does nothing. The cards are stacked (or
 // 2-up) and tall, so a row-level trigger fires while cards two and three
@@ -33,16 +34,18 @@ import { from } from "@lib/media-queries.js"
 ;(() => {
   const list = document.querySelector(".package-dining-card-list")
   if (!list) return
-  const cards = list.querySelectorAll(".package-dining-card")
-  if (!cards.length) return
+  const pieces = list.querySelectorAll(
+    ".package-dining-card, .package-dining-card-or-disc",
+  )
+  if (!pieces.length) return
   const triptych = window.matchMedia(from.desktop)
   const obs = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return
         if (triptych.matches) {
-          cards.forEach((card) => {
-            card.classList.add("is-revealed")
+          pieces.forEach((piece) => {
+            piece.classList.add("is-revealed")
           })
         }
         obs.unobserve(entry.target)
