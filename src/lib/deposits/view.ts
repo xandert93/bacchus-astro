@@ -3,6 +3,7 @@
 // view.ts) sends this, and the page's script only drops it into place, so
 // all the wording lives here, on the server.
 
+import { todayInMalta } from "@lib/dates"
 import { longDate } from "@lib/email/enquiry-details"
 import { euros, plainAmount } from "@lib/money"
 import { PAYMENT_PROVIDER } from "@lib/payments/checkout"
@@ -25,10 +26,6 @@ const OCCASIONS: Record<string, string> = {
 
 const listInWords = (items: string[]) =>
   items.length > 1 ? `${items.slice(0, -1).join(", ")} and ${items.at(-1)}` : items[0]
-
-/** Today in Malta, as "2026-10-18". */
-const todayInMalta = () =>
-  new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Malta" })
 
 const stateOf = (record: DepositRecord): DepositState => {
   const closedQuote = ["declined", "expired", "superseded"].includes(record.status)

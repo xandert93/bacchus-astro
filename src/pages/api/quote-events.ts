@@ -9,6 +9,7 @@
 import type { APIRoute } from "astro"
 import { SANITY_WEBHOOK_SECRET } from "astro:env/server"
 import { changeStatus } from "@lib/bookings/status"
+import { addDays, todayInMalta } from "@lib/dates"
 import { depositFacts, loadDepositByQuoteId } from "@lib/deposits/load"
 import { quoteEmail } from "@lib/email/deposit-emails"
 import { sendAndLog } from "@lib/email/log"
@@ -59,17 +60,16 @@ export const POST: APIRoute = async ({ request }) => {
       (await client.fetch<number | null>(
         `*[_id == "weddingPolicy"][0].deposit.quoteValidDays`,
       )) ?? DEFAULT_QUOTE_VALID_DAYS
-    const validUntil =
-      record.terms?.validUntil ??
-      new Date(Date.now() + validDays * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+    const validUntil = record.terms?.validUntil ?? addDays(todayInMalta(), validDays)
     const { token, hash } = await newToken()
     const openStatuses = ["new", "in-discussion"]
 
     await client
       .transaction()
+      // A fresh send replaces any earlier links, and allows a fresh reminder.
       .patch(record._id, (patch) =>
-        patch.set({
-          depositTokenHash: hash,
+        patch.unset(["reminderSentAt"]).set({
+          depositTokenHashes: [hash],
           sentAt: new Date().toISOString(),
           "terms.validUntil": validUntil,
         }),

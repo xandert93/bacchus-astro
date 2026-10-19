@@ -90,12 +90,19 @@ record.
 **A cancelled wedding**: staff set it to Cancelled and publish; Sanity's
 webhook calls `api/booking-events.ts`, which emails that date's waitlist.
 
+**Every morning** (Cloudflare's timer, not a webhook): Cloudflare runs the
+Worker's `scheduled` (`src/worker.ts`), which hands over to
+`api/jobs/daily.ts`. It reads the quotes from Sanity, saves a reminder or an
+expiry on each that needs one, then asks Resend for the emails.
+
 ## Locally
 
 The same, except:
 
 - **Your dev server plays Cloudflare.** It renders every page fresh on each
   visit, so nothing is rebuilt.
+- **`npm run dev:daily-jobs` plays Cloudflare's morning timer**, once,
+  whenever you run it.
 - **`npm run dev:webhooks` plays Sanity's webhooks.** Sanity's real webhooks
   point at the live site, which runs the code on `main` against the
   production data. To try your own code against the development data, the

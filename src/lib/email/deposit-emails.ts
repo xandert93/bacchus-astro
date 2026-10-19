@@ -98,6 +98,58 @@ export const quoteEmail = (
   }
 }
 
+/** A couple of days before the quote runs out, while the deposit is still due. */
+export const quoteReminderEmail = (
+  facts: DepositFacts,
+  { depositLink, validUntil }: { depositLink: string; validUntil: string },
+): Email => {
+  const day = longDate(facts.date)
+  const lastDay = longDate(validUntil)
+  const rows: [string, string][] = [
+    ["Date", day],
+    ["Quote reference", facts.reference],
+    ["Deposit to secure it", euros(facts.deposit)],
+    ["Quote valid until", lastDay],
+  ]
+  const lead = `Just a reminder that your quote for ${day} is open until ${lastDay}. The date isn't held until a deposit arrives, so if it's the one, now's a good time to secure it.`
+
+  return {
+    to: facts.email,
+    subject: `A reminder: your quote for ${day}`,
+    html: emailLayout({
+      preview: `Your quote for ${day} is open until ${lastDay}.`,
+      eyebrow: "Your quote",
+      title: "A gentle <em>reminder</em>",
+      hero: HERO,
+      body: [
+        paragraph(`Dear ${escapeHtml(facts.firstName)},`),
+        paragraph(escapeHtml(lead)),
+        detailsCard(rows),
+        button("Review and pay your deposit", depositLink),
+        smallPrint(
+          "Not going ahead? You can decline the quote on the same page. Questions? Just reply to this email.",
+        ),
+        SIGN_OFF,
+      ].join(""),
+    }),
+    text: plain([
+      `Dear ${facts.firstName},`,
+      "",
+      lead,
+      "",
+      ...rows.map(([label, value]) => `${label}: ${value}`),
+      "",
+      `Review and pay your deposit: ${depositLink}`,
+      "",
+      "Not going ahead? You can decline the quote on the same page. Questions? Just reply to this email.",
+      "",
+      "Warm regards,",
+      "The Bacchus events team",
+    ]),
+    kind: "quote-reminder",
+  }
+}
+
 /** Once the deposit has arrived: the date is theirs. */
 export const depositConfirmedEmail = (facts: DepositFacts): Email => {
   const day = longDate(facts.date)
@@ -227,6 +279,43 @@ export const quoteDeclinedClientEmail = (facts: DepositFacts): Email => {
   }
 }
 
+/** The quote ran out with no deposit, so it's closed. */
+export const quoteExpiredEmail = (
+  facts: DepositFacts,
+  { validUntil }: { validUntil: string },
+): Email => {
+  const day = longDate(facts.date)
+  const closed = `Your quote for ${day} (reference ${facts.reference}) was open until ${longDate(validUntil)}, and as no deposit arrived, we've closed it. Nothing has been charged.`
+  const invitation = `If you'd still like ${day}, or another date, just reply to this email: we'll check it's free and send you a fresh quote.`
+
+  return {
+    to: facts.email,
+    subject: `Your quote for ${day} has closed`,
+    html: emailLayout({
+      preview: `Your quote for ${day} has closed.`,
+      eyebrow: "Your quote",
+      title: "Your quote has <em>closed</em>",
+      body: [
+        paragraph(`Dear ${escapeHtml(facts.firstName)},`),
+        paragraph(escapeHtml(closed)),
+        paragraph(escapeHtml(invitation)),
+        SIGN_OFF,
+      ].join(""),
+    }),
+    text: plain([
+      `Dear ${facts.firstName},`,
+      "",
+      closed,
+      "",
+      invitation,
+      "",
+      "Warm regards,",
+      "The Bacchus events team",
+    ]),
+    kind: "quote-expired",
+  }
+}
+
 // --- To staff -----------------------------------------------------------------
 
 const staffEmail = ({
@@ -335,4 +424,20 @@ export const quoteDeclinedEmail = (facts: DepositFacts, to: string[], reason?: s
       reason ? `Their reason: "${reason}"` : "They didn't give a reason.",
     ],
     kind: "quote-declined",
+  })
+
+/** A quote ran out unpaid: someone should follow up. */
+export const quoteExpiredStaffEmail = (facts: DepositFacts, to: string[]) =>
+  staffEmail({
+    to,
+    facts,
+    replyTo: facts.email,
+    subject: `Quote expired: ${facts.couple}, ${longDate(facts.date)}`,
+    eyebrow: "Needs a follow-up",
+    title: "A quote has <em>run out</em>",
+    lines: [
+      `${facts.couple}'s quote ${facts.reference} ran out without a deposit, so it's now Expired and their enquiry is back in In Discussion. They've been told.`,
+      "Worth a call or an email: send a new quote, or close the enquiry if they're not going ahead. Replying to this email reaches them.",
+    ],
+    kind: "quote-expired-staff",
   })

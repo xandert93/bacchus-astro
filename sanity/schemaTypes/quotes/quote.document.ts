@@ -135,7 +135,7 @@ export default defineType({
       group: "summary",
       options: { list: [...QUOTE_STATUSES], layout: "radio" },
       description: help(
-        "Set it to Sent and publish to email the client their quote, with a private link to pay the deposit. Their date is then held for them.",
+        "Set it to Sent and publish to email the client their quote, with a private link to pay the deposit. It stays open until its end date, with a reminder two days before; the first deposit to arrive secures the date.",
         "Once a quote is sent, everything else on it locks, so it always matches what the client received. To change it, create a new one and mark this one superseded.",
       ),
       validation: (Rule) => Rule.required(),
@@ -149,11 +149,21 @@ export default defineType({
       hidden: ({ document }) => !document?.sentAt,
     }),
     defineField({
-      // A hash of the secret in the deposit page's link, never the secret
-      // itself (src/lib/tokens.ts). Set by the site when the quote is sent.
-      name: "depositTokenHash",
-      title: "Deposit Link Check",
-      type: "string",
+      name: "reminderSentAt",
+      title: "Reminder Emailed",
+      type: "datetime",
+      group: "summary",
+      readOnly: true,
+      hidden: ({ document }) => !document?.reminderSentAt,
+    }),
+    defineField({
+      // Hashes of the secrets in the deposit page's links, never the secrets
+      // themselves (src/lib/tokens.ts): one from the quote email, and one
+      // more if a reminder went. Set by the site.
+      name: "depositTokenHashes",
+      title: "Deposit Link Checks",
+      type: "array",
+      of: [defineArrayMember({ type: "string" })],
       hidden: true,
       readOnly: true,
     }),
