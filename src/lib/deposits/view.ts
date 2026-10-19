@@ -13,7 +13,7 @@ import { coupleName, depositPayment, type DepositRecord } from "./load"
  * pay              the deposit is due: the summary and the ways to pay
  * transfer-sent    the client says they've sent a transfer; waiting for it
  * confirmed        the deposit has arrived and the date is theirs
- * closed           the quote was declined, replaced or has run out
+ * closed           the quote was declined, replaced or has expired
  */
 export type DepositState = "pay" | "transfer-sent" | "confirmed" | "closed"
 

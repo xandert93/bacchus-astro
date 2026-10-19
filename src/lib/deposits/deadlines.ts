@@ -82,7 +82,7 @@ const expire = async (
         from: booking.status,
         to: "in-discussion",
         actor: "cron",
-        reason: `Quote ${record.reference} ran out on ${longDate(validUntil)} without a deposit.`,
+        reason: `Quote ${record.reference} expired: it was valid until ${longDate(validUntil)}, and no deposit was paid.`,
       }),
     )
   }
