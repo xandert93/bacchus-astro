@@ -36,7 +36,12 @@ export interface DepositFacts {
   deposit: number
   bookingId: string
   balanceDueDate?: string
+  depositPercent?: number
 }
+
+/** "Deposit (30% of total)", or just "Deposit" where no percentage was set. */
+const depositLabel = (facts: DepositFacts) =>
+  facts.depositPercent ? `Deposit (${facts.depositPercent}% of total)` : "Deposit"
 
 /** A received payment, as the receipt shows it. */
 export interface ReceiptPayment {
@@ -73,7 +78,7 @@ export const quoteEmail = (
     ["Date", day],
     ["Quote reference", facts.reference],
     ["Total", euros(facts.total)],
-    ["Deposit to secure it", euros(facts.deposit)],
+    [depositLabel(facts), euros(facts.deposit)],
     ["Quote valid until", validUntil ? longDate(validUntil) : undefined],
   ]
   const lead = [
@@ -131,7 +136,7 @@ export const quoteReminderEmail = (
   const rows: [string, string][] = [
     ["Date", day],
     ["Quote reference", facts.reference],
-    ["Deposit to secure it", euros(facts.deposit)],
+    [depositLabel(facts), euros(facts.deposit)],
     ["Quote valid until", lastDay],
   ]
   const lead = [

@@ -122,4 +122,5 @@ export const depositFacts = (record: DepositRecord) => ({
   deposit: record.pricing.deposit.amount,
   bookingId: record.booking._id,
   balanceDueDate: record.terms?.balanceDueDate,
+  depositPercent: record.pricing.deposit.percent,
 })

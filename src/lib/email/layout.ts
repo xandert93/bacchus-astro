@@ -37,9 +37,9 @@ const ROW_LINE_HEIGHT = "22px"
 // they fit side by side in the 600px email (even with its narrower phone
 // padding); on a narrow screen, an answer
 // that can't fit beside its label drops beneath it. A label never wraps, so
-// it always shares its answer's baseline: keep labels to about 20 letters.
-const DETAIL_LABEL_WIDTH = 180
-const DETAIL_VALUE_WIDTH = 280
+// it always shares its answer's baseline: keep labels to about 22 letters.
+const DETAIL_LABEL_WIDTH = 196
+const DETAIL_VALUE_WIDTH = 264
 
 /** An absolute address on the live site, e.g. for a picture or a link. */
 export const siteUrl = (path: string) => `${EMAIL_SITE_ORIGIN}${path}`

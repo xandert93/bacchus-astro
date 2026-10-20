@@ -106,6 +106,8 @@ if (page) {
   // payment options again, which would invite paying twice) and keeps
   // asking, less often, for 10 minutes more.
   const backFromPaying = new URLSearchParams(window.location.search).has("paid")
+  // Stripe's checkout session, which the server checks with Stripe directly.
+  const stripeSession = new URLSearchParams(window.location.search).get("session")
   const QUICK_CHECK_MS = 2000
   const QUICK_CHECKS = 15
   const SLOW_CHECK_MS = 10000
@@ -113,7 +115,7 @@ if (page) {
   let confirmChecks = 0
 
   const load = () =>
-    post("view")
+    post("view", stripeSession ? { session: stripeSession } : {})
       .then(({ view }) => {
         if (backFromPaying && view.state === "pay") {
           confirmChecks++

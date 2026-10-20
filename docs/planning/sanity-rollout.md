@@ -390,7 +390,9 @@ deposit to arrive secures it, and the client is told so.
      `STRIPE_SECRET_KEY` is set (its test key locally, so no money moves),
      or to the pretend one without it. Stripe's webhook
      (`api/payments/stripe-events.ts`) records the payment and confirms the
-     booking. Locally, run `stripe listen --forward-to
+     booking; so does the deposit page itself when the couple lands back,
+     by asking Stripe about their checkout session directly, whichever comes
+     first (`src/lib/payments/stripe-sessions.ts`). Locally, run `stripe listen --forward-to
 localhost:3000/api/payments/stripe-events` beside `npm run dev`, and put
      the `whsec_…` it prints in `.env` as `STRIPE_WEBHOOK_SECRET`. Pay with
      Stripe's test card 4242 4242 4242 4242, any future date, any CVC;
