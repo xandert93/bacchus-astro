@@ -1,12 +1,20 @@
 ---
 // The deposit page's hero: the compact HeroFrame, with the booking's own
 // occasion, spaces and date in the copy, filled in by the page's script. Its
-// words follow the page's state: while the booking loads, only the photo and
-// the loading ring, so nothing claims what isn't known yet; then an
-// invitation to pay while the deposit is due, a celebration once it's
-// confirmed (the script adds a rise of gold through it), or something
-// neutral for a closed quote or a broken link. No crumb and no buttons: the
-// page is a checkout, reached from an emailed link.
+// words follow the page's state:
+//
+//   loading          only the photo and the loading ring, so nothing claims
+//                    what isn't known yet
+//   pay, transfer-sent  an invitation to pay, with the booking below
+//   confirmed        a celebration (the script adds a rise of gold through it)
+//   closed, invalid  the whole message and where to go next
+//
+// When the hero is all there is to say (loading, closed, invalid), it fills
+// the screen with the words centred, and the page holds nothing else
+// (_secure-booking.css). No crumb: the page is a checkout, reached from an
+// emailed link.
+import Button from "@components/ui/Button.astro"
+import { CONTACT } from "@data/contact"
 import HeroFrame from "@components/sections/HeroFrame.astro"
 import HeroImage from "@components/ui/HeroImage.astro"
 import LoadingRing from "@components/ui/LoadingRing.astro"
@@ -59,12 +67,41 @@ import LoadingRing from "@components/ui/LoadingRing.astro"
     </p>
   </div>
 
-  <div data-deposit-show="closed invalid" hidden>
-    <div class="secure-booking-eyebrow">
-      <span class="secure-booking-rule"></span>Your booking
-    </div>
+  <div class="secure-booking-hero-message" data-deposit-show="closed" hidden>
+    <div class="secure-booking-eyebrow">Quote closed</div>
     <h1>
-      Bacchus, <em>Mdina</em>
+      This quote is <em>closed</em>
     </h1>
+    <p class="sub">
+      It was declined, replaced by a newer quote, or has expired. If you'd like to talk
+      about your date, or another one, we'd love to hear from you.
+    </p>
+    <div class="secure-booking-hero-actions">
+      <Button href="/weddings#enquire" variant="gradient" arrow>
+        <span>Enquire about a date</span>
+      </Button>
+      <Button href={CONTACT.email.href} variant="ghost">
+        <span>Email us</span>
+      </Button>
+    </div>
+  </div>
+
+  <div class="secure-booking-hero-message" data-deposit-show="invalid" hidden>
+    <div class="secure-booking-eyebrow">Link not working</div>
+    <h1>
+      This link isn't <em>working</em>
+    </h1>
+    <p class="sub">
+      It may be incomplete, or the quote may have changed. Please use the button in your
+      latest email from us, or get in touch and we'll send you a new one.
+    </p>
+    <div class="secure-booking-hero-actions">
+      <Button href={CONTACT.phone.href} variant="gradient">
+        <span>Call {CONTACT.phone.display}</span>
+      </Button>
+      <Button href={CONTACT.email.href} variant="ghost">
+        <span>Email us</span>
+      </Button>
+    </div>
   </div>
 </HeroFrame>

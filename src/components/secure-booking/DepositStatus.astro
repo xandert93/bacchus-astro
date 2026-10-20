@@ -1,12 +1,11 @@
 ---
-// The deposit page's outcome panel, for every state but "pay" (and
-// "loading", which the hero shows): a link that doesn't work, a transfer on
-// its way, a confirmed booking and a closed quote. Each is a full card under the hero, with what
+// The deposit page's outcome panel, for a transfer on its way and a
+// confirmed booking: the states with a booking still to show below. (A
+// closed quote and a broken link say everything in the hero.) Each is a full card under the hero, with what
 // happens next and somewhere to go, and the page hides everything about
 // paying around it, so the outcome is what the page is about. The page's
 // script (src/pages/_secure-booking.js) shows the one that matches.
 import Button from "@components/ui/Button.astro"
-import { CONTACT } from "@data/contact"
 import SecureBookingIcon from "./SecureBookingIcon.astro"
 import type { SecureBookingIconName } from "./SecureBookingIcon.astro"
 
@@ -23,20 +22,7 @@ interface Outcome {
   actions?: { label: string; href: string; main?: boolean }[]
 }
 
-const CONTACT_ACTIONS = [
-  { label: `Call ${CONTACT.phone.display}`, href: CONTACT.phone.href },
-  { label: "Email us", href: CONTACT.email.href },
-]
-
 const OUTCOMES: Outcome[] = [
-  {
-    state: "invalid",
-    icon: "warning",
-    eyebrow: "Link not working",
-    title: "This link isn't <em>working</em>",
-    body: "It may be incomplete, or the quote may have changed. Please use the button in your latest email from us, or get in touch and we'll send you a new one.",
-    actions: CONTACT_ACTIONS,
-  },
   {
     state: "transfer-sent",
     icon: "bank",
@@ -63,23 +49,12 @@ const OUTCOMES: Outcome[] = [
     ],
     actions: [{ label: "Back to Bacchus", href: "/", main: true }],
   },
-  {
-    state: "closed",
-    icon: "calendar",
-    eyebrow: "Quote closed",
-    title: "This quote is <em>closed</em>",
-    body: "It was declined, replaced by a newer quote, or has expired. If you'd like to talk about your date, or another one, we'd love to hear from you.",
-    actions: [
-      { label: "Enquire about a date", href: "/weddings#enquire", main: true },
-      ...CONTACT_ACTIONS,
-    ],
-  },
 ]
 ---
 
 <section
   class="secure-booking-status-section"
-  data-deposit-show="invalid transfer-sent confirmed closed"
+  data-deposit-show="transfer-sent confirmed"
   hidden
 >
   <div class="secure-booking-container-large">
