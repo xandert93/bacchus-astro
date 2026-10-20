@@ -261,9 +261,20 @@ when it's opened.
 - **Stripe's published online rates for EEA businesses** (its 2023 pricing
   notice, checked 2026-10-20): standard EEA cards 1.5% + €0.25, UK cards
   2.5% + €0.25, other international cards 3.25% + €0.25, and about 2% more
-  when a currency is converted. On a €4,500 deposit that's €67.75, €112.75
-  and €146.50. **Confirm on stripe.com/mt/pricing before quoting the
-  client.**
+  when a currency is converted. **Confirm on stripe.com/mt/pricing before
+  quoting the client.**
+- **Worked example, a €10,000 deposit**: the couple pays €10,000 whatever
+  the method; what Stripe keeps comes out of what reaches Bacchus.
+
+  | Paid by                | Fee                                 | Stripe keeps | Bacchus gets |
+  | ---------------------- | ----------------------------------- | ------------ | ------------ |
+  | European card          | 1.5% + €0.25                        | €150.25      | €9,849.75    |
+  | UK card                | 2.5% + €0.25                        | €250.25      | €9,749.75    |
+  | Other card             | 3.25% + €0.25                       | €325.25      | €9,674.75    |
+  | Other card, converted  | 3.25% + €0.25, plus about 2%        | about €525   | about €9,475 |
+  | Pay by bank (Stripe)   | Not published for Malta; to confirm | ?            | ?            |
+  | Bank transfer (Stripe) | Not published for Malta; to confirm | ?            | ?            |
+  | Bank transfer, by hand | None from Stripe                    | €0           | €10,000      |
 
 **Bank**
 
