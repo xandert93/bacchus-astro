@@ -8,9 +8,10 @@ import {
   detailsCard,
   emailLayout,
   escapeHtml,
-  highlight,
+  htmlParagraphs,
+  mark,
   paragraph,
-  smallPrint,
+  textParagraphs,
 } from "./layout"
 import type { Email } from "./send"
 import { studioLink } from "./staff"
@@ -58,6 +59,15 @@ export const quoteEmail = (
     ["Deposit to secure it", euros(facts.deposit)],
     ["Quote valid until", validUntil ? longDate(validUntil) : undefined],
   ]
+  const lead = [
+    `Your quote for ${mark(day)} is ready.`,
+    "Everything is on your booking page: the details, the full price breakdown, and the deposit that secures your date.",
+    "Until a deposit arrives, the date is still open to other couples.",
+  ]
+  const footnote = [
+    "The page is private to you: please don't share the link.",
+    "Questions? Just reply to this email.",
+  ]
 
   return {
     to: facts.email,
@@ -69,27 +79,23 @@ export const quoteEmail = (
       hero: HERO,
       body: [
         paragraph(`Dear ${escapeHtml(facts.firstName)},`),
-        paragraph(
-          `Your quote for ${highlight(day)} is ready. Everything is on your booking page: the details, the full price breakdown, and the deposit that secures your date. Until a deposit arrives, the date is still open to other couples.`,
-        ),
+        htmlParagraphs(lead),
         detailsCard(rows),
         button("Review and pay your deposit", depositLink),
-        smallPrint(
-          "The page is private to you: please don't share the link. Questions? Just reply to this email.",
-        ),
+        htmlParagraphs(footnote, { small: true }),
         SIGN_OFF,
       ].join(""),
     }),
     text: plain([
       `Dear ${facts.firstName},`,
       "",
-      `Your quote for ${day} is ready. Everything is on your booking page: the details, the full price breakdown, and the deposit that secures your date. Until a deposit arrives, the date is still open to other couples.`,
+      textParagraphs(lead),
       "",
       ...rows.filter(([, value]) => value).map(([label, value]) => `${label}: ${value}`),
       "",
       `Review and pay your deposit: ${depositLink}`,
       "",
-      "The page is private to you: please don't share the link. Questions? Just reply to this email.",
+      textParagraphs(footnote),
       "",
       "Warm regards,",
       "The Bacchus events team",
@@ -111,7 +117,14 @@ export const quoteReminderEmail = (
     ["Deposit to secure it", euros(facts.deposit)],
     ["Quote valid until", lastDay],
   ]
-  const lead = `Just a reminder that your quote for ${day} is open until ${lastDay}. The date isn't held until a deposit arrives, so if it's the one, now's a good time to secure it.`
+  const lead = [
+    `Just a reminder that your quote for ${mark(day)} is open until ${mark(lastDay)}.`,
+    "The date isn't held until a deposit arrives, so if it's the one, now's a good time to secure it.",
+  ]
+  const footnote = [
+    "Not going ahead? You can decline the quote on the same page.",
+    "Questions? Just reply to this email.",
+  ]
 
   return {
     to: facts.email,
@@ -123,25 +136,23 @@ export const quoteReminderEmail = (
       hero: HERO,
       body: [
         paragraph(`Dear ${escapeHtml(facts.firstName)},`),
-        paragraph(escapeHtml(lead)),
+        htmlParagraphs(lead),
         detailsCard(rows),
         button("Review and pay your deposit", depositLink),
-        smallPrint(
-          "Not going ahead? You can decline the quote on the same page. Questions? Just reply to this email.",
-        ),
+        htmlParagraphs(footnote, { small: true }),
         SIGN_OFF,
       ].join(""),
     }),
     text: plain([
       `Dear ${facts.firstName},`,
       "",
-      lead,
+      textParagraphs(lead),
       "",
       ...rows.map(([label, value]) => `${label}: ${value}`),
       "",
       `Review and pay your deposit: ${depositLink}`,
       "",
-      "Not going ahead? You can decline the quote on the same page. Questions? Just reply to this email.",
+      textParagraphs(footnote),
       "",
       "Warm regards,",
       "The Bacchus events team",
@@ -154,6 +165,14 @@ export const quoteReminderEmail = (
 export const depositConfirmedEmail = (facts: DepositFacts): Email => {
   const day = longDate(facts.date)
   const balance = facts.total - facts.deposit
+  const lead = [
+    `Your deposit of ${mark(euros(facts.deposit))} has arrived, and ${mark(day)} is now yours.`,
+    "Thank you.",
+  ]
+  const after = [
+    "We'll be in touch soon to start planning the day with you.",
+    "In the meantime, just reply to this email with any questions.",
+  ]
 
   return {
     to: facts.email,
@@ -165,29 +184,25 @@ export const depositConfirmedEmail = (facts: DepositFacts): Email => {
       hero: HERO,
       body: [
         paragraph(`Dear ${escapeHtml(facts.firstName)},`),
-        paragraph(
-          `Your deposit of ${highlight(euros(facts.deposit))} has arrived, and ${highlight(day)} is now yours. Thank you.`,
-        ),
+        htmlParagraphs(lead),
         detailsCard([
           ["Quote reference", facts.reference],
           ["Deposit received", euros(facts.deposit)],
           ["Remaining balance", balance > 0 ? euros(balance) : undefined],
         ]),
-        paragraph(
-          "We'll be in touch soon to start planning the day with you. In the meantime, just reply to this email with any questions.",
-        ),
+        htmlParagraphs(after),
         SIGN_OFF,
       ].join(""),
     }),
     text: plain([
       `Dear ${facts.firstName},`,
       "",
-      `Your deposit of ${euros(facts.deposit)} has arrived, and ${day} is now yours. Thank you.`,
+      textParagraphs(lead),
       "",
       `Quote reference: ${facts.reference}`,
       balance > 0 ? `Remaining balance: ${euros(balance)}` : undefined,
       "",
-      "We'll be in touch soon to start planning the day with you. In the meantime, just reply to this email with any questions.",
+      textParagraphs(after),
       "",
       "Warm regards,",
       "The Bacchus events team",
@@ -209,6 +224,12 @@ export const dateTakenEmail = ({
   enquireLink: string
 }): Email => {
   const day = longDate(date)
+  const lead = [
+    `We're sorry to tell you that ${mark(day)}, the date you enquired about, has now been booked by another couple.`,
+    "We host only one wedding a day, so it's no longer available.",
+    "We'd love to find you another date.",
+    "Reply to this email, or look at the calendar for the dates still open.",
+  ]
 
   return {
     to,
@@ -219,12 +240,7 @@ export const dateTakenEmail = ({
       title: `${escapeHtml(day)} has been <em>booked</em>`,
       body: [
         paragraph(`Dear ${escapeHtml(firstName)},`),
-        paragraph(
-          `We're sorry to tell you that ${highlight(day)}, the date you enquired about, has now been booked by another couple. We host only one wedding a day, so it's no longer available.`,
-        ),
-        paragraph(
-          "We'd love to find you another date. Reply to this email, or look at the calendar for the dates still open.",
-        ),
+        htmlParagraphs(lead),
         button("See available dates", enquireLink),
         SIGN_OFF,
       ].join(""),
@@ -232,9 +248,8 @@ export const dateTakenEmail = ({
     text: plain([
       `Dear ${firstName},`,
       "",
-      `We're sorry to tell you that ${day}, the date you enquired about, has now been booked by another couple. We host only one wedding a day, so it's no longer available.`,
-      "",
-      `We'd love to find you another date. Reply to this email, or look at the calendar for the dates still open: ${enquireLink}`,
+      textParagraphs(lead),
+      enquireLink,
       "",
       "Warm regards,",
       "The Bacchus events team",
@@ -246,6 +261,12 @@ export const dateTakenEmail = ({
 /** The client declined their quote: a record of it, and the door left open. */
 export const quoteDeclinedClientEmail = (facts: DepositFacts): Email => {
   const day = longDate(facts.date)
+  const lead = [
+    `As you asked, we've closed your quote for ${mark(day)} (reference ${facts.reference}).`,
+    "Nothing has been charged, and there's nothing more you need to do.",
+    "Thank you for thinking of Bacchus.",
+    "If your plans change, or you'd like to talk about another date, just reply to this email: we'd love to hear from you.",
+  ]
 
   return {
     to: facts.email,
@@ -256,21 +277,14 @@ export const quoteDeclinedClientEmail = (facts: DepositFacts): Email => {
       title: "We've closed your <em>quote</em>",
       body: [
         paragraph(`Dear ${escapeHtml(facts.firstName)},`),
-        paragraph(
-          `As you asked, we've closed your quote for ${highlight(day)} (reference ${escapeHtml(facts.reference)}). Nothing has been charged, and there's nothing more you need to do.`,
-        ),
-        paragraph(
-          "Thank you for thinking of Bacchus. If your plans change, or you'd like to talk about another date, just reply to this email: we'd love to hear from you.",
-        ),
+        htmlParagraphs(lead),
         SIGN_OFF,
       ].join(""),
     }),
     text: plain([
       `Dear ${facts.firstName},`,
       "",
-      `As you asked, we've closed your quote for ${day} (reference ${facts.reference}). Nothing has been charged, and there's nothing more you need to do.`,
-      "",
-      "Thank you for thinking of Bacchus. If your plans change, or you'd like to talk about another date, just reply to this email: we'd love to hear from you.",
+      textParagraphs(lead),
       "",
       "Warm regards,",
       "The Bacchus events team",
@@ -285,8 +299,12 @@ export const quoteExpiredEmail = (
   { validUntil }: { validUntil: string },
 ): Email => {
   const day = longDate(facts.date)
-  const closed = `Your quote for ${day} (reference ${facts.reference}) was valid until ${longDate(validUntil)}. As no deposit arrived, it has now expired. Nothing has been charged.`
-  const invitation = `If you'd still like ${day}, or another date, just reply to this email: we'll check it's free and send you a fresh quote.`
+  const lead = [
+    `Your quote for ${mark(day)} (reference ${facts.reference}) was valid until ${mark(longDate(validUntil))}.`,
+    "As no deposit arrived, it has now expired.",
+    "Nothing has been charged.",
+    `If you'd still like ${day}, or another date, just reply to this email: we'll check it's free and send you a fresh quote.`,
+  ]
 
   return {
     to: facts.email,
@@ -297,17 +315,14 @@ export const quoteExpiredEmail = (
       title: "Your quote has <em>expired</em>",
       body: [
         paragraph(`Dear ${escapeHtml(facts.firstName)},`),
-        paragraph(escapeHtml(closed)),
-        paragraph(escapeHtml(invitation)),
+        htmlParagraphs(lead),
         SIGN_OFF,
       ].join(""),
     }),
     text: plain([
       `Dear ${facts.firstName},`,
       "",
-      closed,
-      "",
-      invitation,
+      textParagraphs(lead),
       "",
       "Warm regards,",
       "The Bacchus events team",
@@ -351,13 +366,15 @@ const staffEmail = ({
       preview: lines[0],
       eyebrow,
       title,
-      body: [
-        ...lines.map((line) => paragraph(escapeHtml(line))),
-        staffButton(facts.bookingId),
-        detailsCard(rows),
-      ].join(""),
+      body: [htmlParagraphs(lines), staffButton(facts.bookingId), detailsCard(rows)].join(
+        "",
+      ),
     }),
-    text: plain([...lines, "", ...rows.map(([label, value]) => `${label}: ${value}`)]),
+    text: plain([
+      textParagraphs(lines),
+      "",
+      ...rows.map(([label, value]) => `${label}: ${value}`),
+    ]),
     kind,
     replyTo,
   }
@@ -374,7 +391,8 @@ export const transferNoticeEmail = (facts: DepositFacts, to: string[]) =>
     title: "A transfer is <em>on its way</em>",
     lines: [
       `${facts.couple} says they've sent their deposit by bank transfer, with the reference ${facts.reference}.`,
-      "When it reaches the account, open their booking, set the payment to Received and publish. That confirms the booking, and they're emailed.",
+      "When it reaches the account, open their booking, set the payment to Received and publish.",
+      "That confirms the booking, and they're emailed.",
     ],
     kind: "transfer-notice",
   })
@@ -404,7 +422,8 @@ export const paidButTakenEmail = (facts: DepositFacts, to: string[]) =>
     eyebrow: "Needs attention",
     title: "Paid for a date <em>already taken</em>",
     lines: [
-      `${facts.couple} paid their deposit, but another wedding was confirmed for ${longDate(facts.date)} first. Their booking has not been confirmed.`,
+      `${facts.couple} paid their deposit, but another wedding was confirmed for ${longDate(facts.date)} first.`,
+      "Their booking has not been confirmed.",
       "Please contact them about another date or a refund.",
     ],
     kind: "paid-but-taken",
@@ -420,7 +439,8 @@ export const quoteDeclinedEmail = (facts: DepositFacts, to: string[], reason?: s
     eyebrow: "Quote declined",
     title: "The quote was <em>declined</em>",
     lines: [
-      `${facts.couple} declined their quote on the booking page. Their enquiry is now Withdrawn, and the date is free for others.`,
+      `${facts.couple} declined their quote on the booking page.`,
+      "Their enquiry is now Withdrawn.",
       reason ? `Their reason: "${reason}"` : "They didn't give a reason.",
     ],
     kind: "quote-declined",
@@ -436,8 +456,10 @@ export const quoteExpiredStaffEmail = (facts: DepositFacts, to: string[]) =>
     eyebrow: "Needs a follow-up",
     title: "A quote has <em>expired</em>",
     lines: [
-      `${facts.couple}'s quote ${facts.reference} has expired with no deposit paid, so their enquiry is back in In Discussion. They've been told.`,
-      "Worth a call or an email: send a new quote, or close the enquiry if they're not going ahead. Replying to this email reaches them.",
+      `${facts.couple}'s quote ${facts.reference} has expired with no deposit paid, so their enquiry is back in In Discussion.`,
+      "They've been told.",
+      "Worth a call or an email: send a new quote, or close the enquiry if they're not going ahead.",
+      "Replying to this email reaches them.",
     ],
     kind: "quote-expired-staff",
   })

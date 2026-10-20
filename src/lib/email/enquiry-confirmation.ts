@@ -11,10 +11,12 @@ import {
   emailLayout,
   escapeHtml,
   heading,
-  highlight,
+  htmlParagraphs,
+  mark,
   paragraph,
   siteUrl,
   stepsList,
+  textParagraphs,
 } from "./layout"
 import type { Email } from "./send"
 
@@ -33,11 +35,14 @@ export const enquiryConfirmationEmail = (enquiry: EnquiryInput): Email => {
   const date = longDate(enquiry.date)
   const details = enquiryDetails(enquiry, { messageLabel: "Your message" })
 
+  const lead = [
+    `Thank you for your enquiry for ${mark(date)}.`,
+    "It's with our events team, and here's everything you sent us, for your records.",
+  ]
+
   const body = [
     paragraph(`Dear ${escapeHtml(enquiry.firstName)},`),
-    paragraph(
-      `Thank you for your enquiry for ${highlight(date)}. It's with our events team, and here's everything you sent us, for your records.`,
-    ),
+    htmlParagraphs(lead),
     heading("Your enquiry"),
     detailsCard(details),
     heading("What happens next"),
@@ -50,7 +55,7 @@ export const enquiryConfirmationEmail = (enquiry: EnquiryInput): Email => {
   const text = [
     `Dear ${enquiry.firstName},`,
     "",
-    `Thank you for your enquiry for ${date}. It's with our events team, and here's everything you sent us, for your records.`,
+    textParagraphs(lead),
     "",
     ...details.filter(([, value]) => value).map(([label, value]) => `${label}: ${value}`),
     "",

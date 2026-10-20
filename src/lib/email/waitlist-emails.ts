@@ -50,8 +50,9 @@ export const waitlistConfirmEmail = ({
   const body = [
     paragraph(greeting(name)),
     paragraph(
-      `You asked to hear if ${highlight(day)} becomes free for a wedding at Bacchus. Please confirm it was you, and we'll email you the moment it does.`,
+      `You asked to hear if ${highlight(day)} becomes free for a wedding at Bacchus.`,
     ),
+    paragraph("Please confirm it was you, and we'll email you the moment it does."),
     button("Confirm my place", confirmLink),
     smallPrint(
       "If you didn't ask, ignore this email: without confirming, you won't hear from us again.",
@@ -62,7 +63,9 @@ export const waitlistConfirmEmail = ({
   const text = [
     name ? `Dear ${name},` : "Hello,",
     "",
-    `You asked to hear if ${day} becomes free for a wedding at Bacchus. Please confirm it was you, and we'll email you the moment it does:`,
+    `You asked to hear if ${day} becomes free for a wedding at Bacchus.`,
+    "",
+    "Please confirm it was you, and we'll email you the moment it does:",
     confirmLink,
     "",
     "If you didn't ask, ignore this email: without confirming, you won't hear from us again.",
@@ -100,8 +103,9 @@ export const waitlistDateFreeEmail = ({
     paragraph(
       `Good news: ${highlight(day)} has just become available for a wedding at Bacchus.`,
     ),
+    paragraph("Everyone on the waitlist for this date hears at the same time."),
     paragraph(
-      "Everyone on the waitlist for this date hears at the same time, and we can only hold a date once a deposit is paid, so if it's still the one, enquire soon.",
+      "We can only hold a date once a deposit is paid, so if it's still the one, enquire soon.",
     ),
     button("Enquire about this date", enquireLink),
     paragraph("Warm regards,<br><em>The Bacchus events team</em>"),
@@ -113,7 +117,9 @@ export const waitlistDateFreeEmail = ({
     "",
     `Good news: ${day} has just become available for a wedding at Bacchus.`,
     "",
-    "Everyone on the waitlist for this date hears at the same time, and we can only hold a date once a deposit is paid, so if it's still the one, enquire soon:",
+    "Everyone on the waitlist for this date hears at the same time.",
+    "",
+    "We can only hold a date once a deposit is paid, so if it's still the one, enquire soon:",
     enquireLink,
     "",
     "Warm regards,",
