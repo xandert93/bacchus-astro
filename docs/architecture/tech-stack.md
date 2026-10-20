@@ -276,6 +276,19 @@ when it's opened.
   | Bank transfer (Stripe) | Not published for Malta; to confirm | ?            | ?            |
   | Bank transfer, by hand | None from Stripe                    | €0           | €10,000      |
 
+**Which Stripe payment methods, and why** (if Bacchus goes with Stripe; set
+in code, `METHODS_BY_BUTTON` in `src/lib/payments/stripe.ts`, so their own
+account gets the same):
+
+- **"Pay by card" offers cards, Apple Pay, Google Pay and Link.** All four
+  are card payments at card fees; the wallets make it one tap on a phone.
+- **"Pay by bank" offers Stripe's Pay by Bank**, open banking (below).
+- **Not offered**: PayPal (higher fees, and refunds run through PayPal;
+  Bacchus's call to add it), Samsung Pay (popular in South Korea),
+  buy-now-pay-later such as Klarna (high fees, and messy on a refundable
+  deposit), country-specific methods (few couples would use them), and
+  Stripe's bank transfers (waiting on Bacchus; below).
+
 **Bank**
 
 - **Pay by Bank is the main route, built in test mode (2026-10-18)** on the
@@ -289,9 +302,12 @@ when it's opened.
   German and UK businesses, but a Maltese test account has Pay by Bank
   available and takes euro checkouts with it, so the site now sends "Pay by
   bank" to Stripe whenever a Stripe key is set. The catch is whose banks it
-  reaches: the Dashboard lists the UK and Finland, not Malta, so it suits
-  couples banking in those countries and not yet Maltese ones. Each button
-  offers only its own methods, set in code (`src/lib/payments/stripe.ts`).
+  reaches. Tried in test mode (2026-10-21): paying in euros offers Finnish
+  and Irish banks; most UK banks appear only when the couple pays in pounds,
+  with a conversion fee Stripe shows them (its "Adaptive Pricing"). No
+  Maltese bank, so it suits couples banking in the UK, Ireland or Finland and
+  not yet Maltese ones; a provider that reaches Maltese banks would still
+  have to be asked (Noda, above).
 - **Stripe's bank transfers** are a different product: the couple sends a
   normal transfer to account details unique to their booking, and Stripe
   matches it when it arrives (usually the next working day; at once if their

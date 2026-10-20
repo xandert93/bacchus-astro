@@ -6,6 +6,7 @@ import { STRIPE_SECRET_KEY } from "astro:env/server"
 import type { DepositRecord } from "@lib/deposits/load"
 import { longDate } from "@lib/email/enquiry-details"
 import type { OnlineMethod } from "./checkout"
+import type { StripeCheckoutSession } from "./stripe-sessions"
 
 const STRIPE_API = "https://api.stripe.com/v1"
 
@@ -186,4 +187,15 @@ export const createStripeCheckout = async ({
   })
 
   return session.url
+}
+
+/**
+ * One checkout session, as Stripe has it now: whether it's paid, and the
+ * quote it belongs to. Ids that aren't a checkout session's are refused
+ * before asking Stripe.
+ */
+export const retrieveStripeCheckout = async (sessionId: string) => {
+  if (!/^cs_[A-Za-z0-9_]+$/.test(sessionId)) return null
+
+  return stripeRequest<StripeCheckoutSession>("GET", `/checkout/sessions/${sessionId}`)
 }

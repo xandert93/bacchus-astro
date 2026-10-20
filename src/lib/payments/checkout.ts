@@ -57,9 +57,11 @@ export const startCheckout = async ({
       checkoutUrl: await createStripeCheckout({
         record,
         method,
-        // `paid` tells the page to wait for Stripe's webhook, which can land
-        // a moment after the client does.
-        successUrl: `${depositPage}&paid=1`,
+        // `paid` tells the page the client is back from paying; Stripe
+        // fills in the session's id, which the page uses to ask Stripe
+        // directly rather than wait for the webhook
+        // (src/pages/api/deposits/view.ts).
+        successUrl: `${depositPage}&paid=1&session={CHECKOUT_SESSION_ID}`,
         cancelUrl: depositPage,
       }),
     }
