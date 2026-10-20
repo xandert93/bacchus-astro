@@ -343,11 +343,12 @@ Everything below is illustrative and is labelled as such on the page.
 - **How do you take deposits and balances today?** Bank transfer, card over
   the phone, card machine, invoice?
 - **Receipts and VAT invoices for deposits**: who issues them today (your
-  accountant's system, your till)? The site's "date confirmed" email states
-  the amount and quote reference but isn't a formal receipt. For it to be
-  one, we'd need your registered business name, address and VAT number; and
-  if a fiscal receipt or VAT invoice must come from your own system, the
-  email should say one will follow.
+  accountant's system, your till)? The "date confirmed" email now carries a
+  payment receipt (receipt number, date, method, amount, balance), showing
+  only the trading name and address. For it to carry your registered name
+  and VAT number we need them (`src/data/business.ts`). If a fiscal receipt
+  or VAT invoice must come from your own system, the email should say one
+  will follow.
 - **Do you already have a card provider** for online payments or your card
   machine (Viva.com, Revolut Business, Stripe, a bank)? If so, which, and
   roughly what do you pay per card payment?
