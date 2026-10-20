@@ -356,8 +356,8 @@ import LoadingRing from "./LoadingRing.astro"
     transform: scale(0.97);
   }
 
-  /* While the photo loads, its caption, counter and arrows wait with it,
-     and the loading ring turns in the middle of the screen. */
+  /* While a freshly opened photo loads, its caption, counter and arrows
+     wait with it. */
   .lightbox.is-loading figcaption,
   .lightbox.is-loading .lightbox-count,
   .lightbox.is-loading .lightbox-prev,
@@ -373,7 +373,9 @@ import LoadingRing from "./LoadingRing.astro"
     display: none;
   }
 
-  .lightbox.is-loading :global(.lightbox-loading-ring) {
+  /* Only once a photo has kept it waiting (.is-waiting, Lightbox.js), so a
+     photo that's ready at once never flashes the ring. */
+  .lightbox.is-waiting :global(.lightbox-loading-ring) {
     display: inline-block;
   }
 
