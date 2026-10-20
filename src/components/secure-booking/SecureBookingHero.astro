@@ -8,8 +8,10 @@
 //   pay, transfer-sent  an invitation to pay, with the booking below
 //   confirmed        a celebration (the script adds a rise of gold through it)
 //   closed, invalid  the whole message and where to go next
+//   processing       back from paying, waiting for the provider to confirm
 //
-// When the hero is all there is to say (loading, closed, invalid), it fills
+// When the hero is all there is to say (loading, processing, closed,
+// invalid), it fills
 // the screen with the words centred, and the page holds nothing else
 // (_secure-booking.css). No crumb: the page is a checkout, reached from an
 // emailed link.
@@ -84,6 +86,17 @@ import LoadingRing from "@components/ui/LoadingRing.astro"
         <span>Email us</span>
       </Button>
     </div>
+  </div>
+
+  <div class="secure-booking-hero-message" data-deposit-show="processing" hidden>
+    <div class="secure-booking-eyebrow">Payment on its way</div>
+    <h1>
+      Confirming your <em>payment</em>
+    </h1>
+    <p class="sub">
+      Your payment went through, and it's taking a little longer than usual to reach us.
+      There's no need to pay again: we'll email you as soon as your date is confirmed.
+    </p>
   </div>
 
   <div class="secure-booking-hero-message" data-deposit-show="invalid" hidden>

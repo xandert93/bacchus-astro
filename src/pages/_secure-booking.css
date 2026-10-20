@@ -658,6 +658,7 @@
    out of sight below. */
 #depositPage:is(
     [data-deposit-state="loading"],
+    [data-deposit-state="processing"],
     [data-deposit-state="closed"],
     [data-deposit-state="invalid"]
   )

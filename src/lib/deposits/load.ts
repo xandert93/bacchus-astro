@@ -30,6 +30,8 @@ export interface DepositRecord {
   reminderSentAt?: string
   booking: {
     _id: string
+    /** Sanity's revision, so a write can refuse if the booking changed meanwhile. */
+    _rev: string
     status: string
     event: { type: string; date?: string }
     client: { firstName: string; lastName: string; partnerName?: string; email: string }
@@ -56,6 +58,7 @@ const DEPOSIT_PROJECTION = /* groq */ `{
   reminderSentAt,
   "booking": booking->{
     _id,
+    _rev,
     status,
     event{type, date},
     client{firstName, lastName, partnerName, email},

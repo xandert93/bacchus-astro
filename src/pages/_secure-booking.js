@@ -100,18 +100,32 @@ if (page) {
   }
 
   // Back from paying (?paid=1): the provider's confirmation can land a
-  // moment after the client does, so while the deposit still shows as due,
-  // the loading screen stays up and asks again, for up to half a minute.
+  // moment after the client does. While the deposit still shows as due, the
+  // loading screen stays up and asks again every 2 seconds. After half a
+  // minute it says the payment is on its way ("processing", never the
+  // payment options again, which would invite paying twice) and keeps
+  // asking, less often, for 10 minutes more.
   const backFromPaying = new URLSearchParams(window.location.search).has("paid")
-  const CONFIRM_CHECK_MS = 2000
-  const CONFIRM_CHECKS = 15
+  const QUICK_CHECK_MS = 2000
+  const QUICK_CHECKS = 15
+  const SLOW_CHECK_MS = 10000
+  const SLOW_CHECKS = 60
   let confirmChecks = 0
 
   const load = () =>
     post("view")
       .then(({ view }) => {
-        if (backFromPaying && view.state === "pay" && confirmChecks++ < CONFIRM_CHECKS) {
-          setTimeout(load, CONFIRM_CHECK_MS)
+        if (backFromPaying && view.state === "pay") {
+          confirmChecks++
+          if (confirmChecks <= QUICK_CHECKS + SLOW_CHECKS) {
+            if (confirmChecks > QUICK_CHECKS) setState("processing")
+            setTimeout(
+              load,
+              confirmChecks < QUICK_CHECKS ? QUICK_CHECK_MS : SLOW_CHECK_MS,
+            )
+            return
+          }
+          setState("processing")
           return
         }
         fill(view)
