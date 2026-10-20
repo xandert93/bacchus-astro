@@ -318,6 +318,15 @@ const arrow = isCompact ? { width: 14, height: 10 } : { width: 12, height: 9 }
     text-decoration: line-through;
   }
 
+  /* Past days and days inside the minimum notice: just the faded number, no
+     tile, so they read as out of reach rather than booked. */
+  :global(.availability-cell.unavailable) {
+    background: transparent;
+    color: var(--avail-grey-fg);
+    opacity: 0.45;
+    cursor: default;
+  }
+
   :global(.availability-cell.today)::before {
     content: "";
     position: absolute;

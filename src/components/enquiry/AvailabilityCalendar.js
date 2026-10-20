@@ -599,7 +599,7 @@ import { hover } from "@lib/media-queries.js"
       nextBtn = el.querySelector(".availability-next")
     // Opens on the first month that actually has bookable dates, not the
     // current month — every day in the 3-month minimum-notice window is
-    // "taken" regardless, so starting there would mean clicking forward
+    // unavailable regardless, so starting there would mean clicking forward
     // 3 times before seeing anything clickable. Backward navigation to
     // today's month is still allowed (see minMonth below), just not
     // where the calendar opens by default.
@@ -625,11 +625,15 @@ import { hover } from "@lib/media-queries.js"
         const cell = document.createElement("div")
         // <= not < : covers both "today or earlier" (can't book the past)
         // and, since minBookableDate is always >= today, the minimum
-        // 3-month wedding lead-time window in one comparison.
+        // 3-month wedding lead-time window in one comparison. Those days are
+        // "unavailable", not "taken": they're kept in the grid so the weeks
+        // still line up, but faded, with no tile, and nothing to click. As
+        // "taken" they looked booked and opened the waitlist, for a date
+        // that was never booked (or had already passed).
         const isBeforeMinNotice =
           new Date(view.getFullYear(), view.getMonth(), d) <= minBookableDate
         const iso = isoOf(view.getFullYear(), view.getMonth(), d)
-        const status = isBeforeMinNotice ? "taken" : statusOf(iso)
+        const status = isBeforeMinNotice ? "unavailable" : statusOf(iso)
         cell.className = "availability-cell " + status
         // Exposed on every cell regardless of status (not just the ones that get a
         // click listener below) so other code — e.g. the waitlist-prompt sandbox —
@@ -645,7 +649,11 @@ import { hover } from "@lib/media-queries.js"
         cell.textContent = d
         // No picking until the live statuses arrive: a date that looks
         // available for a moment might not be.
-        if (!isBeforeMinNotice && status !== "taken" && availabilityState !== "loading") {
+        if (
+          status !== "unavailable" &&
+          status !== "taken" &&
+          availabilityState !== "loading"
+        ) {
           cell.addEventListener(
             "click",
             ((ymIso, st, dd, yy, mm, el) => () => {
