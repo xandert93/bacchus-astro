@@ -19,7 +19,8 @@ interface Outcome {
   body: string
   /** What happens next. A `field` step's detail is filled in by the script. */
   steps?: { title: string; detail?: string; field?: string }[]
-  actions?: { label: string; href: string; variant?: "gradient" }[]
+  /** The main one is gold; the rest are dark, as everywhere on this page. */
+  actions?: { label: string; href: string; main?: boolean }[]
 }
 
 const CONTACT_ACTIONS = [
@@ -60,7 +61,7 @@ const OUTCOMES: Outcome[] = [
       },
       { title: "The balance", field: "balanceNote" },
     ],
-    actions: [{ label: "Back to Bacchus", href: "/", variant: "gradient" }],
+    actions: [{ label: "Back to Bacchus", href: "/", main: true }],
   },
   {
     state: "closed",
@@ -69,7 +70,7 @@ const OUTCOMES: Outcome[] = [
     title: "This quote is <em>closed</em>",
     body: "It was declined, replaced by a newer quote, or has expired. If you'd like to talk about your date, or another one, we'd love to hear from you.",
     actions: [
-      { label: "Enquire about a date", href: "/weddings#enquire", variant: "gradient" },
+      { label: "Enquire about a date", href: "/weddings#enquire", main: true },
       ...CONTACT_ACTIONS,
     ],
   },
@@ -115,8 +116,8 @@ const OUTCOMES: Outcome[] = [
             {outcome.actions.map((action) => (
               <Button
                 href={action.href}
-                variant={action.variant}
-                arrow={!!action.variant}
+                variant={action.main ? "gradient" : "dark"}
+                arrow={action.main}
               >
                 <span>{action.label}</span>
               </Button>

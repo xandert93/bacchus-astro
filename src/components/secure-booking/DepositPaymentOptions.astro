@@ -86,7 +86,12 @@ import SecureBookingIntro from "./SecureBookingIntro.astro"
             </span>
           </div>
 
-          <Button arrow class="secure-booking-pay-button" id="transferSentButton">
+          <Button
+            variant="dark"
+            arrow
+            class="secure-booking-pay-button"
+            id="transferSentButton"
+          >
             <span>I've sent the transfer</span>
           </Button>
           <p class="secure-booking-pay-note">
@@ -103,7 +108,12 @@ import SecureBookingIntro from "./SecureBookingIntro.astro"
           <h3>Pay by card</h3>
         </div>
         <p>Pay securely by card, and your booking is confirmed straight away.</p>
-        <Button arrow class="secure-booking-pay-button" data-checkout-method="card">
+        <Button
+          variant="dark"
+          arrow
+          class="secure-booking-pay-button"
+          data-checkout-method="card"
+        >
           <span>
             Pay <span data-deposit="deposit.display"></span> by card
           </span>
