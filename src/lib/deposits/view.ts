@@ -6,7 +6,7 @@
 import { todayInMalta } from "@lib/dates"
 import { longDate } from "@lib/email/enquiry-details"
 import { euros, plainAmount } from "@lib/money"
-import { PAYMENT_PROVIDER } from "@lib/payments/checkout"
+import { paymentsInTestMode } from "@lib/payments/checkout"
 import { coupleName, depositPayment, type DepositRecord } from "./load"
 
 /**
@@ -56,7 +56,7 @@ export const toDepositView = (record: DepositRecord) => {
 
   return {
     state: stateOf(record),
-    testMode: PAYMENT_PROVIDER === "test" || !record.bank?.areReal,
+    testMode: paymentsInTestMode() || !record.bank?.areReal,
     couple: coupleName(record),
     firstName: booking.client.firstName,
     reference: record.reference,

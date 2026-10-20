@@ -386,12 +386,19 @@ deposit to arrive secures it, and the client is told so.
    page shows the quote as closed.
 2. **The deposit page** loads the quote by that link (`api/deposits/view.ts`;
    loading and shaping in `src/lib/deposits/`). The client can:
-   - **pay by bank or by card** (`checkout.ts`): sends them to the payment
-     provider's checkout, which is `/secure-booking/test-checkout` while
-     `PAYMENT_PROVIDER` in `src/lib/payments/checkout.ts` is `"test"`. For
-     pay by bank, that page asks which bank, then plays the bank asking
-     them to approve. Paying (`test-payment.ts`) records a received test
-     payment and confirms the booking, as a real provider's webhook will;
+   - **pay by card** (`checkout.ts`): sends them to Stripe's checkout when
+     `STRIPE_SECRET_KEY` is set (its test key locally, so no money moves),
+     or to the pretend one without it. Stripe's webhook
+     (`api/payments/stripe-events.ts`) records the payment and confirms the
+     booking. Locally, run `stripe listen --forward-to
+localhost:3000/api/payments/stripe-events` beside `npm run dev`, and put
+     the `whsec_…` it prints in `.env` as `STRIPE_WEBHOOK_SECRET`. Pay with
+     Stripe's test card 4242 4242 4242 4242, any future date, any CVC;
+   - **pay by bank**: always the pretend checkout for now
+     (`/secure-booking/test-checkout`), which asks which bank, then plays the
+     bank asking them to approve; paying (`test-payment.ts`) records a test
+     payment and confirms the booking. See "Bank" in
+     `docs/architecture/tech-stack.md` for why;
    - **transfer it themselves** (folded away under Pay by bank) and say so
      (`transfer-sent.ts`): records an Awaiting bank-transfer payment on the
      booking and emails staff to look out for it;
