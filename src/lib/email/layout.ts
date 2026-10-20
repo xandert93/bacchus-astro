@@ -77,6 +77,37 @@ export const textLink = (label: string, href: string) =>
 export const smallPrint = (html: string) =>
   `<p style="margin: 0 0 16px; font-family: ${SERIF}; font-size: 13px; line-height: 1.6; color: ${MUTED};">${html}</p>`
 
+// Copy written once for both versions of an email. Every email has an HTML
+// version and a plain-text one; its paragraphs are written once, as plain
+// strings, and drawn into both. `mark()` picks out a phrase (a date, an
+// amount) in bronze in the HTML and leaves it plain in the text. Keep each
+// paragraph to a sentence or one short thought: a block of three reads as a
+// wall on a phone.
+const MARK_OPEN = "⟦"
+const MARK_CLOSE = "⟧"
+const MARKED = new RegExp(`${MARK_OPEN}([^${MARK_CLOSE}]*)${MARK_CLOSE}`, "g")
+
+export const mark = (text: string) => `${MARK_OPEN}${text}${MARK_CLOSE}`
+
+const unmarked = (text: string) => text.replace(MARKED, "$1")
+
+/** Paragraphs for the HTML version, with marked phrases in bronze. */
+export const htmlParagraphs = (paragraphs: string[], { small = false } = {}) =>
+  paragraphs
+    .map((text) => {
+      // Split on the marks: odd parts are the marked phrases.
+      const html = text
+        .split(MARKED)
+        .map((part, index) => (index % 2 ? highlight(part) : escapeHtml(part)))
+        .join("")
+      return small ? smallPrint(html) : paragraph(html)
+    })
+    .join("")
+
+/** The same paragraphs for the text version, a blank line between each. */
+export const textParagraphs = (paragraphs: string[]) =>
+  paragraphs.map(unmarked).join("\n\n")
+
 /** A section heading with a short gold rule above it. */
 export const heading = (text: string) => `
   <div style="margin: 36px 0 16px;">

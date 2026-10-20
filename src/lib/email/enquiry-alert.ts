@@ -29,9 +29,8 @@ export const enquiryAlertEmail = (
     paragraph(
       `${escapeHtml(name)} has enquired about a ${escapeHtml(enquiry.eventType)} on ${escapeHtml(date)}, for ${enquiry.guests} guests.`,
     ),
-    paragraph(
-      "It's in the Studio under Enquiries, New. Reply to this email to answer them directly.",
-    ),
+    paragraph("It's in the Studio under Enquiries, New."),
+    paragraph("Reply to this email to answer them directly."),
     ...(link ? [button("Open in the Studio", link)] : []),
     heading("The enquiry"),
     detailsCard(details),
@@ -40,7 +39,9 @@ export const enquiryAlertEmail = (
   const text = [
     `${name} has enquired about a ${enquiry.eventType} on ${date}, for ${enquiry.guests} guests.`,
     "",
-    "It's in the Studio under Enquiries, New. Reply to this email to answer them directly.",
+    "It's in the Studio under Enquiries, New.",
+    "",
+    "Reply to this email to answer them directly.",
     ...(link ? ["", `Open in the Studio: ${link}`] : []),
     "",
     ...details.filter(([, value]) => value).map(([label, value]) => `${label}: ${value}`),
