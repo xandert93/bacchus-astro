@@ -18,7 +18,7 @@ export interface DepositRecord {
     spaces?: string[]
   }
   pricing: {
-    lineItems: { label: string; amount: number }[]
+    lineItems: { label: string; amount: number; quantity?: number; unitAmount?: number }[]
     subtotal: number
     discount?: { amount?: number; reason?: string }
     total: number
@@ -45,7 +45,7 @@ const DEPOSIT_PROJECTION = /* groq */ `{
   status,
   addressedTo,
   event{date, startTime, endTime, guestCount, "spaces": spaces[]->name},
-  pricing{lineItems[]{label, amount}, subtotal, discount, total, vat, perPerson, deposit},
+  pricing{lineItems[]{label, amount, quantity, unitAmount}, subtotal, discount, total, vat, perPerson, deposit},
   terms,
   reminderSentAt,
   "booking": booking->{

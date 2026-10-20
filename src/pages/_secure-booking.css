@@ -246,6 +246,16 @@
   color: var(--ink);
 }
 
+/* The receipt-style sum under a line's name, "160 × €64.00". */
+.secure-booking-item-working {
+  display: block;
+  margin-top: 2px;
+
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-ink);
+}
+
 .secure-booking-item-amount {
   flex: none;
   font-family: "Newsreader", Georgia, serif;
