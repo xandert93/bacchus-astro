@@ -1,6 +1,7 @@
 ---
-// "Not going ahead?" under the payment options: a quiet card whose button
-// opens a dialog to decline the quote, with an optional reason. It can't be
+// "Not going ahead?" under the payment options: a dark card, set apart from
+// the white payment cards above so it reads as a different kind of choice,
+// whose button opens a dialog to decline the quote, with an optional reason. It can't be
 // undone from here, hence the dialog. The confirm button is wired in the
 // page's script (src/pages/_secure-booking.js); opening and closing are the
 // Dialog's own.
@@ -12,15 +13,17 @@ import TextInput from "@components/forms/TextInput.astro"
 
 <section class="secure-booking-decline-section" data-deposit-show="pay" hidden>
   <div class="secure-booking-container-large">
-    <div class="secure-booking-card secure-booking-decline-card">
+    <div class="secure-booking-decline-card">
       <div>
-        <h3>Not going ahead?</h3>
+        <p class="secure-booking-decline-eyebrow">Changed your plans?</p>
+        <h3>
+          Not going <em>ahead?</em>
+        </h3>
         <p>
-          If your plans have changed, let us know and we'll close this quote. You're
-          always welcome to enquire again.
+          Let us know and we'll close this quote. You're always welcome to enquire again.
         </p>
       </div>
-      <Button variant="dark" data-dialog-open="declineDialog">
+      <Button variant="light" data-dialog-open="declineDialog">
         <span>Decline this quote</span>
       </Button>
     </div>
