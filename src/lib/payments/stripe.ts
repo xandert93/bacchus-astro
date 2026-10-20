@@ -5,6 +5,7 @@
 import { STRIPE_SECRET_KEY } from "astro:env/server"
 import type { DepositRecord } from "@lib/deposits/load"
 import { longDate } from "@lib/email/enquiry-details"
+import type { OnlineMethod } from "./checkout"
 
 const STRIPE_API = "https://api.stripe.com/v1"
 
@@ -30,14 +31,18 @@ const formEncode = (
   return form
 }
 
-const stripePost = async <Result>(path: string, params: FormValue) => {
+const stripeRequest = async <Result>(
+  method: "GET" | "POST",
+  path: string,
+  params?: FormValue,
+) => {
   const response = await fetch(`${STRIPE_API}${path}`, {
-    method: "POST",
+    method,
     headers: {
       Authorization: `Bearer ${STRIPE_SECRET_KEY}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: formEncode(params),
+    body: params === undefined ? undefined : formEncode(params),
   })
   const result = await response.json()
   if (!response.ok) {
@@ -47,36 +52,114 @@ const stripePost = async <Result>(path: string, params: FormValue) => {
   return result as Result
 }
 
+// --- Which payment methods each button offers --------------------------------
+//
+// Stripe no longer takes a list of payment methods per checkout; it shows
+// what a "payment method configuration" switches on. So each of our buttons
+// has its own configuration, created in the Stripe account the first time
+// it's needed and found by name after that. What each offers is decided
+// here, in code, not in the Dashboard: Bacchus's own account gets the same
+// set at launch. Change a list below and bump CONFIGURATION_VERSION, so a
+// fresh configuration is made rather than the old one reused.
+
+const CONFIGURATION_VERSION = 1
+
+/** The methods each of our buttons offers, by Stripe's names. */
+const METHODS_BY_BUTTON: Record<OnlineMethod, string[]> = {
+  // Apple Pay, Google Pay and Link are cards saved in a phone, a browser or
+  // Stripe: same fees, one tap.
+  card: ["card", "apple_pay", "google_pay", "link"],
+  // Open banking: the client approves the payment in their bank's own app.
+  "pay-by-bank": ["pay_by_bank"],
+}
+
+/** Every method a configuration has to switch on or off explicitly. */
+const ALL_METHODS = [
+  "card",
+  "apple_pay",
+  "google_pay",
+  "link",
+  "pay_by_bank",
+  "paypal",
+  "samsung_pay",
+  "customer_balance",
+  "klarna",
+]
+
+const configurationIds = new Map<OnlineMethod, string>()
+
+const configurationFor = async (method: OnlineMethod) => {
+  const known = configurationIds.get(method)
+  if (known) return known
+
+  const name = `Bacchus website: ${method} (v${CONFIGURATION_VERSION})`
+  const existing = await stripeRequest<{
+    data: { id: string; name: string; active: boolean }[]
+  }>("GET", "/payment_method_configurations?limit=100")
+  const found = existing.data.find(
+    (configuration) => configuration.active && configuration.name === name,
+  )
+
+  const id =
+    found?.id ??
+    (
+      await stripeRequest<{ id: string }>("POST", "/payment_method_configurations", {
+        name,
+        ...Object.fromEntries(
+          ALL_METHODS.map((stripeMethod) => [
+            stripeMethod,
+            {
+              display_preference: {
+                preference: METHODS_BY_BUTTON[method].includes(stripeMethod)
+                  ? "on"
+                  : "off",
+              },
+            },
+          ]),
+        ),
+      })
+    ).id
+
+  configurationIds.set(method, id)
+
+  return id
+}
+
+// --- Starting a checkout ------------------------------------------------------
+
 /** What the webhook reads back from a session's metadata. */
 export interface StripeDepositMetadata {
   quoteId: string
   bookingId: string
+  method: OnlineMethod
 }
 
 /**
- * Starts a Stripe Checkout session for a quote's deposit, and answers with
- * the address of Stripe's payment page. Stripe sends the client to
- * `successUrl` once they've paid, or `cancelUrl` if they go back.
+ * Starts a Stripe Checkout session for a quote's deposit, offering only the
+ * button's own methods, and answers with the address of Stripe's payment
+ * page. Stripe sends the client to `successUrl` once they've paid, or
+ * `cancelUrl` if they go back.
  */
 export const createStripeCheckout = async ({
   record,
+  method,
   successUrl,
   cancelUrl,
 }: {
   record: DepositRecord
+  method: OnlineMethod
   successUrl: string
   cancelUrl: string
 }) => {
   const metadata: StripeDepositMetadata = {
     quoteId: record._id,
     bookingId: record.booking._id,
+    method,
   }
 
-  const session = await stripePost<{ url: string }>("/checkout/sessions", {
+  const session = await stripeRequest<{ url: string }>("POST", "/checkout/sessions", {
     mode: "payment",
-    // No payment_method_types: Stripe no longer takes one here. Its page
-    // offers whichever methods are switched on in the Dashboard (Settings →
-    // Payment methods), cards included.
+    payment_method_configuration: await configurationFor(method),
     customer_email: record.booking.client.email,
     client_reference_id: record._id,
     metadata: { ...metadata },
