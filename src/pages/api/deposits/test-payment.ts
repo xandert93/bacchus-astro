@@ -1,55 +1,37 @@
 // POST /api/deposits/test-payment: the pretend checkout's "Pay" or "Approve"
 // button (src/pages/secure-booking/test-checkout.astro), for card or pay by
 // bank (`method`). Does what a real provider's "payment succeeded" webhook
-// will: records the payment and confirms the booking. Refused unless the
-// site is in test mode.
+// does: records the payment and confirms the booking. Refused for any way to
+// pay that a real provider takes (src/lib/payments/checkout.ts).
 
 import type { APIRoute } from "astro"
 import { json } from "@lib/api/requests"
-import { confirmDeposit } from "@lib/deposits/confirm"
-import { loadDepositByToken } from "@lib/deposits/load"
+import { recordOnlineDeposit } from "@lib/deposits/record-payment"
 import { findDeposit } from "@lib/deposits/request"
 import { toDepositView } from "@lib/deposits/view"
-import { isOnlineMethod, PAYMENT_PROVIDER } from "@lib/payments/checkout"
+import { isOnlineMethod, providerFor } from "@lib/payments/checkout"
 
 export const prerender = false
 
 export const POST: APIRoute = async ({ request }) => {
-  if (PAYMENT_PROVIDER !== "test") return json(404, { error: "Not found." })
-
   try {
     const found = await findDeposit(request)
     if ("refusal" in found) return found.refusal
-    const { client, record, token, body } = found
+    const { client, record, body } = found
 
-    if (!isOnlineMethod(body.method)) return json(400, { error: "Choose a way to pay." })
+    if (!isOnlineMethod(body.method) || providerFor(body.method) !== "test") {
+      return json(404, { error: "Not found." })
+    }
 
     if (toDepositView(record).state !== "pay") {
       return json(409, { error: "This deposit isn't due any more." })
     }
 
-    await client
-      .patch(record.booking._id)
-      .setIfMissing({ payments: [] })
-      .append("payments", [
-        {
-          _type: "paymentRecord",
-          _key: crypto.randomUUID().slice(0, 12),
-          method: body.method,
-          kind: "deposit",
-          status: "received",
-          amounts: { gross: record.pricing.deposit.amount },
-          reference: `test_${crypto.randomUUID().slice(0, 8)}`,
-          receivedAt: new Date().toISOString(),
-          note: "Test mode: no money was taken.",
-        },
-      ])
-      .commit()
-
-    // Reloaded, so the confirmation sees the payment just recorded.
-    const updated = await loadDepositByToken(client, token)
-    const outcome = await confirmDeposit(client, updated ?? record, {
-      actor: "payment-webhook",
+    const outcome = await recordOnlineDeposit(client, record, {
+      method: body.method,
+      reference: `test_${crypto.randomUUID().slice(0, 8)}`,
+      gross: record.pricing.deposit.amount,
+      note: "Test mode: no money was taken.",
       siteOrigin: new URL(request.url).origin,
     })
 

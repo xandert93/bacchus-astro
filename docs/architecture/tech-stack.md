@@ -274,11 +274,17 @@ when it's opened.
   and code path as card (`src/lib/payments/checkout.ts`).
 - **A transfer by hand stays as the fallback**, folded away under it: the
   IBAN and a reference, and staff mark it received in the Studio.
-- **Unconfirmed for Malta.** PSD2 obliges every EU bank to offer the
-  interface, but what matters is whether a provider we can sign up with
-  reaches the Maltese banks. Stripe's Pay by Bank page lists Malta while its
-  payment-method table lists only the UK. To settle it, check the payment
-  methods in a Maltese Stripe account, or ask Stripe.
+- **Not through Stripe.** Stripe's Pay by Bank is offered only to
+  businesses in Germany and the UK (its docs, checked 2026-10-20), so a
+  Maltese Stripe account can't use it.
+- **Other providers** (checked 2026-10-20): PSD2 obliges every Maltese bank
+  to offer the interface, and Bank of Valletta, HSBC Malta, APS Bank and
+  Lombard are reported to; the question is which provider connects to them.
+  TrueLayer, which runs Stripe's, doesn't list Malta. Noda (noda.live), which
+  has a Maltese entity, claims 28 European countries, fees from 0.1% and no
+  monthly charge, but publishes no list of Maltese banks. Settled only by
+  asking a provider directly: which Maltese banks they reach for a business
+  in Malta taking euros, at what fee.
 - **Drawbacks to weigh**: a bank the provider doesn't reach (couples from
   outside Europe especially) falls back to card or a transfer by hand;
   banks often cap how much can be sent online in a day, and a deposit runs

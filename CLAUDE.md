@@ -162,8 +162,9 @@ format:check`, `npm run lint` and `npm run check`, plus the one spec file
 Start the dev server in background mode: `astro dev --background` (manage
 with `astro dev stop`, `astro dev status`, `astro dev logs`). The user runs
 `npm run dev` themselves. Anything a Sanity webhook drives (a quote sent, a
-deposit marked received) also needs `npm run dev:webhooks` beside it
-(`docs/planning/sanity-rollout.md`, step 7). Build with `npm run build`. Both read content from
+deposit marked received) also needs `npm run dev:webhooks` beside it, and a
+Stripe card payment needs `stripe listen` (`docs/planning/sanity-rollout.md`,
+step 7). Build with `npm run build`. Both read content from
 Sanity and need `SANITY_API_READ_TOKEN` in `.env` (never committed).
 
 Docs: https://docs.astro.build. This project is on Astro 7.x. Consult before

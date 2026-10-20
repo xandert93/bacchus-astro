@@ -131,6 +131,23 @@ export default defineConfig({
         access: "secret",
         optional: true,
       }),
+      // Takes card deposits through Stripe (src/lib/payments/stripe.ts).
+      // Stripe Dashboard → Developers → API keys: the test key (sk_test_…)
+      // locally, so no money moves; the live key only at launch, as a Worker
+      // secret. Without it, card payments go to the pretend checkout.
+      STRIPE_SECRET_KEY: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
+      // Checks that a payment event really came from Stripe
+      // (src/pages/api/payments/stripe-events.ts). Locally, the whsec_… that
+      // `stripe listen` prints; live, the webhook endpoint's signing secret.
+      STRIPE_WEBHOOK_SECRET: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
       // The Studio's address, including the workspace, for the "Open in the
       // Studio" button in the staff alert, e.g.
       // https://bacchus.sanity.studio/production. Locally,

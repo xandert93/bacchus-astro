@@ -24,10 +24,11 @@ export const POST: APIRoute = async ({ request }) => {
 
     return json(
       200,
-      startCheckout({
+      await startCheckout({
         method,
         token: found.token,
         siteOrigin: new URL(request.url).origin,
+        record: found.record,
       }),
     )
   } catch (error) {

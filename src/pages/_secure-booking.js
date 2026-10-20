@@ -99,9 +99,21 @@ if (page) {
     }
   }
 
+  // Back from paying (?paid=1): the provider's confirmation can land a
+  // moment after the client does, so while the deposit still shows as due,
+  // the loading screen stays up and asks again, for up to half a minute.
+  const backFromPaying = new URLSearchParams(window.location.search).has("paid")
+  const CONFIRM_CHECK_MS = 2000
+  const CONFIRM_CHECKS = 15
+  let confirmChecks = 0
+
   const load = () =>
     post("view")
       .then(({ view }) => {
+        if (backFromPaying && view.state === "pay" && confirmChecks++ < CONFIRM_CHECKS) {
+          setTimeout(load, CONFIRM_CHECK_MS)
+          return
+        }
         fill(view)
         setState(view.state)
         if (view.state === "confirmed") celebrate()
@@ -179,6 +191,10 @@ if (page) {
   }
 
   if (token) {
+    if (backFromPaying) {
+      const loadingText = document.getElementById("depositLoadingText")
+      if (loadingText) loadingText.textContent = "Confirming your payment"
+    }
     setState("loading")
     load()
   } else {
