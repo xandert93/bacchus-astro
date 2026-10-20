@@ -231,6 +231,12 @@ const classes = [
     --fg: var(--ink);
     --bd: var(--gold);
     --fg-h: var(--ink);
+
+    /* Gold under the gradient on hover, not the base rule's ink. The colour
+       sits beneath the gradient, but at the rounded edges, where the
+       gradient's edge is anti-aliased and the lift moves it by a fraction of
+       a pixel, it showed through as a faint dark line around the inside. */
+    --bg-h: var(--gold);
     background: var(--gold-gradient);
     transition:
       background-color 0.45s var(--ease),
