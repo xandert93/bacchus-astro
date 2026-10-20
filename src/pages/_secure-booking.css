@@ -643,10 +643,38 @@
   }
 }
 
-.secure-booking-hero-loading {
+/* When the hero is all there is to say (loading, a closed quote, a broken
+   link), it fills the screen with its words centred, so the footer stays
+   out of sight below. */
+#depositPage:is(
+    [data-deposit-state="loading"],
+    [data-deposit-state="closed"],
+    [data-deposit-state="invalid"]
+  )
+  .hero {
+  min-height: 100vh;
+  min-height: 100svh;
+  align-items: center;
+}
+
+.secure-booking-hero-loading,
+.secure-booking-hero-message {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 16px;
+  max-width: 760px;
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.secure-booking-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
 }
 
 .secure-booking-hero-loading p {
