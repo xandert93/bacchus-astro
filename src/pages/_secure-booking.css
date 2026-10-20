@@ -766,29 +766,69 @@
   padding: 0 0 calc(var(--secure-booking-section-gap) / 2);
 }
 
-/* Quieter than the payment cards above it: no fill, so it reads as an
-   aside rather than a third way to pay. */
+/* Dark, where the payment cards above are white: a different kind of choice,
+   so a different look, with a gold glow from one corner and a gold hairline
+   to keep it in the family. */
 .secure-booking-decline-card {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px 32px;
-  padding: clamp(24px, 3vw, 32px) clamp(24px, 3vw, 40px);
-  background: transparent;
+  gap: 24px 40px;
+  padding: clamp(28px, 4vw, 44px) clamp(24px, 4vw, 48px);
+  border: 1px solid rgba(var(--gold-rgb), 0.28);
+  border-radius: var(--radius-card);
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(var(--gold-rgb), 0.16), transparent 55%),
+    var(--ink-2);
+
+  color: var(--limestone);
+}
+
+@media (--below-tablet) {
+  .secure-booking-decline-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.secure-booking-decline-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+}
+
+.secure-booking-decline-eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: var(--gold-2);
 }
 
 .secure-booking-decline-card h3 {
-  font-size: clamp(20px, 3vw, 24px);
+  font-size: clamp(26px, 3.6vw, 34px);
   font-weight: 400;
+  line-height: 1.15;
+  color: var(--limestone);
 }
 
-.secure-booking-decline-card p {
+.secure-booking-decline-card h3 em {
+  color: var(--gold-2);
+}
+
+.secure-booking-decline-card p:not([class]) {
   max-width: 52ch;
-  margin-top: 6px;
+  margin-top: 10px;
 
   font-family: "Newsreader", Georgia, serif;
-  color: var(--muted-ink);
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(var(--limestone-rgb), 0.72);
 }
 
 .secure-booking-decline-dialog h2 {
