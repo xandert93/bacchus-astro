@@ -16,6 +16,8 @@ the client.
 3. [Hosting](#hosting)
 4. [The live site today](#the-live-site-today)
 5. [Payments](#payments)
+6. [Email](#email)
+7. [Running costs](#running-costs)
 
 ---
 
@@ -256,7 +258,12 @@ when it's opened.
   more on small deposits.
 - Cards from outside the EU cost more, which matters since many couples pay
   from abroad. Bank and SEPA methods are usually cheaper than cards.
-- **Check Stripe's current Malta pricing before quoting the client.**
+- **Stripe's published online rates for EEA businesses** (its 2023 pricing
+  notice, checked 2026-10-20): standard EEA cards 1.5% + €0.25, UK cards
+  2.5% + €0.25, other international cards 3.25% + €0.25, and about 2% more
+  when a currency is converted. On a €4,500 deposit that's €67.75, €112.75
+  and €146.50. **Confirm on stripe.com/mt/pricing before quoting the
+  client.**
 
 **Bank**
 
@@ -285,3 +292,49 @@ when it's opened.
   site. Not instant, but nothing for staff to match either.
 - Not the same as **SEPA Direct Debit**, which is a mandate letting the
   merchant pull money, not open banking.
+
+---
+
+## Email
+
+**Resend** (resend.com) sends every email (`src/lib/email/send.ts`), from
+Bacchus's own address once its domain is verified with a few DNS records.
+Plans, from Resend's pricing (checked 2026-10-20):
+
+- **Free**: 3,000 emails a month, at most 100 a day; sending pauses at the
+  cap, with no bill. One domain, one webhook endpoint (the bounce report
+  uses it) and logs kept for about 30 days (third-party figures).
+- **Pro**: $20 a month for 50,000 emails, no daily cap.
+
+What the site sends: an enquiry is 2 emails (enquirer and staff), a quote 1,
+a reminder 1, an expiry 2, a deposit 2, and each waitlist sign-up or
+notification 1. For one venue that's far below 100 a day, so Free is right
+at launch; Pro only if Bacchus starts sending campaigns or the daily cap
+bites. Resend also limits requests per second; `send.ts` waits and retries
+when told it's going too fast.
+
+---
+
+## Running costs
+
+What Bacchus pays once the site is live, for the client-facing summary
+(prices checked 2026-10-20; every one to confirm before quoting).
+
+| Service                  | What for                                           | Cost                                                                                                                                      |
+| ------------------------ | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Sanity                   | The Studio and all content and bookings            | Growth plan, $15 a seat a month: about $30–45 for 2–3 logins. Needed for private datasets (see `docs/planning/sanity-rollout.md`, step 8) |
+| Cloudflare               | Hosting, the API routes, the daily jobs            | Free plan covers it. Workers Paid ($5 a month) only if the server code or the builds outgrow it                                           |
+| Resend                   | Every email                                        | Free plan; Pro $20 a month only if needed (above)                                                                                         |
+| Stripe                   | Card payments, and pay by bank if it reaches Malta | No monthly fee; per payment, as under Payments                                                                                            |
+| Pay by bank              | Open banking deposits                              | Per payment; no published European rate yet, expected well under a card's                                                                 |
+| Bank transfer by hand    | The fallback                                       | Free to us; only Bacchus's own bank charges                                                                                               |
+| Domain, bacchus.com.mt   | The address, and the email sender                  | Already theirs: the yearly renewal they pay now                                                                                           |
+| Shopify                  | The current site                                   | Ends at launch (est. €30–100 a month saved), unless they want Shopify for gift vouchers                                                   |
+| Tableo                   | Table bookings                                     | Unchanged                                                                                                                                 |
+| Cloudflare Web Analytics | Visitor numbers                                    | Free                                                                                                                                      |
+
+**Optional extras**: AI-drafted replies to enquiries (an Anthropic API key;
+cents per enquiry), and online booking of viewings (Cal.com's free tier).
+
+The client-facing version is a separate page, kept in step with this
+table: https://claude.ai/artifact/VKWNEeDtKpAMXpFA3fYzgS (private until shared).
