@@ -51,7 +51,7 @@ const TEST_BANKS = [
               as a real payment will.
             </p>
             <div class="secure-booking-button-row">
-              <Button data-test-back>
+              <Button variant="dark" data-test-back>
                 <span>Back without paying</span>
               </Button>
               <Button variant="gradient" arrow data-test-pay>
@@ -71,14 +71,19 @@ const TEST_BANKS = [
             <ul class="test-checkout-banks">
               {TEST_BANKS.map((bank) => (
                 <li>
-                  <Button class="test-checkout-bank" data-test-bank={bank} arrow>
+                  <Button
+                    variant="dark"
+                    class="test-checkout-bank"
+                    data-test-bank={bank}
+                    arrow
+                  >
                     <span>{bank}</span>
                   </Button>
                 </li>
               ))}
             </ul>
             <div class="secure-booking-button-row">
-              <Button data-test-back>
+              <Button variant="dark" data-test-back>
                 <span>My bank isn't listed</span>
               </Button>
             </div>
@@ -95,7 +100,7 @@ const TEST_BANKS = [
               your fingerprint, face or PIN.
             </p>
             <div class="secure-booking-button-row">
-              <Button id="testCheckoutCancel">
+              <Button variant="dark" id="testCheckoutCancel">
                 <span>Cancel</span>
               </Button>
               <Button variant="gradient" arrow data-test-pay>

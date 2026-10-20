@@ -20,7 +20,7 @@ import TextInput from "@components/forms/TextInput.astro"
           always welcome to enquire again.
         </p>
       </div>
-      <Button data-dialog-open="declineDialog">
+      <Button variant="dark" data-dialog-open="declineDialog">
         <span>Decline this quote</span>
       </Button>
     </div>
@@ -41,7 +41,7 @@ import TextInput from "@components/forms/TextInput.astro"
       </FormField>
       <p class="secure-booking-pay-error" id="declineError" role="alert" hidden></p>
       <div class="secure-booking-button-row">
-        <Button data-dialog-close>
+        <Button variant="gradient" data-dialog-close>
           <span>Keep my quote</span>
         </Button>
         <Button variant="dark" id="declineConfirm">
