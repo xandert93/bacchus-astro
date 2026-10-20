@@ -82,9 +82,16 @@ export const toDepositView = (record: DepositRecord) => {
         value: spaces.length ? `${spaces.join(", ")}, Mdina` : "Bacchus, Mdina",
       },
     ],
+    // Each line's sum shown like a receipt ("160 × €64.00"), so a couple
+    // can check it; left off a single item, where it would only repeat the
+    // amount.
     lineItems: pricing.lineItems.map((item) => ({
       label: item.label,
       amount: euros(item.amount),
+      working:
+        item.quantity && item.quantity !== 1 && item.unitAmount !== undefined
+          ? `${item.quantity} × ${euros(item.unitAmount)}`
+          : "",
     })),
     subtotal: euros(pricing.subtotal),
     discount: pricing.discount?.amount ? `−${euros(pricing.discount.amount)}` : undefined,

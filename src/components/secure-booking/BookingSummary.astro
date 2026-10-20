@@ -57,7 +57,10 @@ const DETAILS: { icon: SecureBookingIconName; label: string }[] = [
           <div class="secure-booking-items" id="depositLineItems"></div>
           <template id="depositLineItem">
             <div class="secure-booking-item">
-              <span data-line="label"></span>
+              <span>
+                <span data-line="label"></span>
+                <span class="secure-booking-item-working" data-line="working"></span>
+              </span>
               <span class="secure-booking-item-amount" data-line="amount"></span>
             </div>
           </template>

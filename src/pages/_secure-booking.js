@@ -72,6 +72,9 @@ if (page) {
           const line = lineTemplate.content.cloneNode(true)
           line.querySelector('[data-line="label"]').textContent = item.label
           line.querySelector('[data-line="amount"]').textContent = item.amount
+          const working = line.querySelector('[data-line="working"]')
+          working.textContent = item.working
+          working.hidden = !item.working
           return line
         }),
       )
