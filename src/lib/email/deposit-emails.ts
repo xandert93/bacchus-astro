@@ -1,6 +1,7 @@
 // Every email in the deposit flow, to the client and to staff. One file, as
 // each is short and they share their facts (a quote's couple, date, sums).
 
+import { BUSINESS } from "@data/business"
 import { euros } from "@lib/money"
 import { longDate } from "./enquiry-details"
 import {
@@ -8,6 +9,7 @@ import {
   detailsCard,
   emailLayout,
   escapeHtml,
+  heading,
   htmlParagraphs,
   mark,
   paragraph,
@@ -33,6 +35,21 @@ export interface DepositFacts {
   total: number
   deposit: number
   bookingId: string
+  balanceDueDate?: string
+}
+
+/** A received payment, as the receipt shows it. */
+export interface ReceiptPayment {
+  method: string
+  reference?: string
+  receivedAt?: string
+  gross?: number
+}
+
+const METHOD_NAMES: Record<string, string> = {
+  card: "Card",
+  "pay-by-bank": "Pay by bank",
+  "bank-transfer": "Bank transfer",
 }
 
 /** The text version: the same lines without the HTML. */
@@ -161,10 +178,38 @@ export const quoteReminderEmail = (
   }
 }
 
-/** Once the deposit has arrived: the date is theirs. */
-export const depositConfirmedEmail = (facts: DepositFacts): Email => {
+/**
+ * Once the deposit has arrived: the date is theirs, with the payment's
+ * receipt. Only what's confirmed about Bacchus as a business goes on it
+ * (src/data/business.ts); a VAT number, once known, appears by itself.
+ */
+export const depositConfirmedEmail = (
+  facts: DepositFacts,
+  payment: ReceiptPayment | undefined,
+): Email => {
   const day = longDate(facts.date)
   const balance = facts.total - facts.deposit
+  const paidOn = payment?.receivedAt
+    ? longDate(payment.receivedAt.slice(0, 10))
+    : undefined
+  const receipt: [string, string | undefined][] = [
+    ["Receipt number", `${facts.reference}-D1`],
+    ["Date paid", paidOn],
+    ["Paid by", payment ? (METHOD_NAMES[payment.method] ?? "Other") : undefined],
+    ["Amount paid", euros(payment?.gross ?? facts.deposit)],
+    ["For", `Deposit, quote ${facts.reference}`],
+    ["Payment reference", payment?.reference],
+    ["Remaining balance", balance > 0 ? euros(balance) : undefined],
+    [
+      "Balance due by",
+      balance > 0 && facts.balanceDueDate ? longDate(facts.balanceDueDate) : undefined,
+    ],
+  ]
+  const issuer = [
+    BUSINESS.legalName ?? BUSINESS.tradingName,
+    BUSINESS.address,
+    ...(BUSINESS.vatNumber ? [`VAT number ${BUSINESS.vatNumber}`] : []),
+  ]
   const lead = [
     `Your deposit of ${mark(euros(facts.deposit))} has arrived, and ${mark(day)} is now yours.`,
     "Thank you.",
@@ -185,11 +230,9 @@ export const depositConfirmedEmail = (facts: DepositFacts): Email => {
       body: [
         paragraph(`Dear ${escapeHtml(facts.firstName)},`),
         htmlParagraphs(lead),
-        detailsCard([
-          ["Quote reference", facts.reference],
-          ["Deposit received", euros(facts.deposit)],
-          ["Remaining balance", balance > 0 ? euros(balance) : undefined],
-        ]),
+        heading("Your receipt"),
+        detailsCard(receipt),
+        htmlParagraphs([issuer.join(" · ")], { small: true }),
         htmlParagraphs(after),
         SIGN_OFF,
       ].join(""),
@@ -199,8 +242,11 @@ export const depositConfirmedEmail = (facts: DepositFacts): Email => {
       "",
       textParagraphs(lead),
       "",
-      `Quote reference: ${facts.reference}`,
-      balance > 0 ? `Remaining balance: ${euros(balance)}` : undefined,
+      "Your receipt",
+      ...receipt
+        .filter(([, value]) => value)
+        .map(([label, value]) => `${label}: ${value}`),
+      issuer.join(", "),
       "",
       textParagraphs(after),
       "",

@@ -22,6 +22,22 @@ import { sendAndLog } from "@lib/email/log"
 import { fetchStaffRecipients } from "@lib/email/staff"
 import { depositFacts, type DepositRecord } from "./load"
 
+/** The deposit payment just received, newest first, for the receipt. */
+const receivedDeposit = (record: DepositRecord) => {
+  const payment = (record.booking.payments ?? [])
+    .filter((each) => each.kind === "deposit" && each.status === "received")
+    .at(-1)
+
+  return (
+    payment && {
+      method: payment.method,
+      reference: payment.reference,
+      receivedAt: payment.receivedAt,
+      gross: payment.amounts?.gross,
+    }
+  )
+}
+
 export type ConfirmOutcome = "confirmed" | "already-confirmed" | "date-taken"
 
 export const confirmDeposit = async (
@@ -82,7 +98,7 @@ export const confirmDeposit = async (
     sendAndLog(
       client,
       { bookingId: booking._id, audience: "client" },
-      depositConfirmedEmail(facts),
+      depositConfirmedEmail(facts, receivedDeposit(record)),
     ),
     sendAndLog(
       client,
