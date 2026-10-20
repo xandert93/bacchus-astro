@@ -25,14 +25,18 @@ export const recordOnlineDeposit = async (
     siteOrigin: string
   },
 ) => {
-  // A provider may report one payment more than once (Stripe retries until
-  // it hears back), so a payment already on the booking is left alone.
+  // A provider may report one payment more than once (Stripe delivers
+  // "at least once"), so a payment already on the booking is left alone.
   if (record.booking.payments?.some((payment) => payment.reference === reference)) {
     return "already-recorded" as const
   }
 
+  // Two reports arriving at the same moment could both pass that check, so
+  // the write only goes ahead if the booking is still as it was when read.
+  // The loser fails, its provider retries, and the retry finds the payment.
   await client
     .patch(record.booking._id)
+    .ifRevisionId(record.booking._rev)
     .setIfMissing({ payments: [] })
     .append("payments", [
       {
