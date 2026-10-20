@@ -274,9 +274,19 @@ when it's opened.
   and code path as card (`src/lib/payments/checkout.ts`).
 - **A transfer by hand stays as the fallback**, folded away under it: the
   IBAN and a reference, and staff mark it received in the Studio.
-- **Not through Stripe.** Stripe's Pay by Bank is offered only to
-  businesses in Germany and the UK (its docs, checked 2026-10-20), so a
-  Maltese Stripe account can't use it.
+- **Through Stripe, as a trial (2026-10-21).** Stripe's docs list only
+  German and UK businesses, but a Maltese test account has Pay by Bank
+  available and takes euro checkouts with it, so the site now sends "Pay by
+  bank" to Stripe whenever a Stripe key is set. The catch is whose banks it
+  reaches: the Dashboard lists the UK and Finland, not Malta, so it suits
+  couples banking in those countries and not yet Maltese ones. Each button
+  offers only its own methods, set in code (`src/lib/payments/stripe.ts`).
+- **Stripe's bank transfers** are a different product: the couple sends a
+  normal transfer to account details unique to their booking, and Stripe
+  matches it when it arrives (usually the next working day; at once if their
+  bank sends it as an instant transfer). Like card payments, the money lands
+  in Bacchus's Stripe balance and reaches their bank on Stripe's payout
+  schedule, a few working days.
 - **Other providers** (checked 2026-10-20): PSD2 obliges every Maltese bank
   to offer the interface, and Bank of Valletta, HSBC Malta, APS Bank and
   Lombard are reported to; the question is which provider connects to them.

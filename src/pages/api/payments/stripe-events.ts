@@ -1,5 +1,6 @@
 // POST /api/payments/stripe-events: Stripe tells us here when a deposit has
-// been paid through its checkout (src/lib/payments/stripe.ts). Records the
+// been paid through its checkout (src/lib/payments/stripe.ts), by card or
+// by Pay by Bank. Records the
 // payment on the booking and confirms it, as the pretend provider's Pay
 // button does (src/lib/deposits/record-payment.ts).
 //
@@ -15,6 +16,7 @@ import { STRIPE_WEBHOOK_SECRET } from "astro:env/server"
 import { json } from "@lib/api/requests"
 import { loadDepositByQuoteId } from "@lib/deposits/load"
 import { recordOnlineDeposit } from "@lib/deposits/record-payment"
+import { isOnlineMethod } from "@lib/payments/checkout"
 import type { StripeDepositMetadata } from "@lib/payments/stripe"
 import { getWriteClient } from "@lib/sanity/write-client"
 import { verifyStripeWebhook } from "@lib/webhooks/stripe"
@@ -78,7 +80,8 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const outcome = await recordOnlineDeposit(client, record, {
-      method: "card",
+      // Which button they pressed, written on the session when it started.
+      method: isOnlineMethod(session.metadata?.method) ? session.metadata.method : "card",
       reference: session.payment_intent ?? session.id,
       gross: (session.amount_total ?? 0) / 100,
       note: event.livemode ? undefined : "Stripe test mode: no money was taken.",

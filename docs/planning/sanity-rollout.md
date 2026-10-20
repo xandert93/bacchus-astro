@@ -394,11 +394,12 @@ deposit to arrive secures it, and the client is told so.
 localhost:3000/api/payments/stripe-events` beside `npm run dev`, and put
      the `whsec_…` it prints in `.env` as `STRIPE_WEBHOOK_SECRET`. Pay with
      Stripe's test card 4242 4242 4242 4242, any future date, any CVC;
-   - **pay by bank**: always the pretend checkout for now
-     (`/secure-booking/test-checkout`), which asks which bank, then plays the
-     bank asking them to approve; paying (`test-payment.ts`) records a test
-     payment and confirms the booking. See "Bank" in
-     `docs/architecture/tech-stack.md` for why;
+   - **pay by bank**: Stripe's Pay by Bank when `STRIPE_SECRET_KEY` is set,
+     through the same checkout, webhook and test setup as card (Stripe's
+     test mode offers a pretend bank to approve in); otherwise the pretend
+     checkout (`/secure-booking/test-checkout`), whose "Approve" records a
+     test payment (`test-payment.ts`). Which banks it reaches is under
+     "Bank" in `docs/architecture/tech-stack.md`;
    - **transfer it themselves** (folded away under Pay by bank) and say so
      (`transfer-sent.ts`): records an Awaiting bank-transfer payment on the
      booking and emails staff to look out for it;
