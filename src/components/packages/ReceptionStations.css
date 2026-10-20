@@ -1288,8 +1288,8 @@
    edge until hover, so at rest it's really just the gold-2 glyph
    floating with no visible container. A gold-tinted ring borrows
    the accent language the site's actual gold CTA already uses for
-   "this is interactive" (.button-gradient's own --bd: var(--gold)
-   border) rather than inventing a fourth arrow treatment.
+   "this is interactive" (gold, as on .button-gradient) rather than
+   inventing a fourth arrow treatment.
    Deliberately scoped to THIS page only for now, not promoted into
    the shared recipe yet — see if it earns its way into
    .testimonial-arrow/.lightbox-prev/-next too before changing
