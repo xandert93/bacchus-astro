@@ -229,15 +229,17 @@ const classes = [
   */
   .button-gradient {
     --fg: var(--ink);
-    --bd: var(--gold);
     --fg-h: var(--ink);
 
-    /* Gold under the gradient on hover, not the base rule's ink. The colour
-       sits beneath the gradient, but at the rounded edges, where the
-       gradient's edge is anti-aliased and the lift moves it by a fraction of
-       a pixel, it showed through as a faint dark line around the inside. */
+    /* The gradient runs right to the edge, under a see-through border,
+       rather than stopping inside a solid gold one: a flat gold border beside
+       a gradient that's lighter at one end and darker at the other read as a
+       faint line around the inside, most of all on hover, when the
+       brightness lifts. Gold, not the base rule's ink, sits beneath it on
+       hover, so nothing dark can show at the rounded edges either. */
+    --bd: transparent;
     --bg-h: var(--gold);
-    background: var(--gold-gradient);
+    background: var(--gold-gradient) border-box;
     transition:
       background-color 0.45s var(--ease),
       color 0.45s var(--ease),
