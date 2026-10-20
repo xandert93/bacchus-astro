@@ -19,7 +19,10 @@
 // · <item> (V) · …") rendered as two paragraphs with real veg badges.
 //
 // Every image change waits on decode() before showing it: a reused <img>
-// keeps painting the old bitmap until the new one has decoded.
+// keeps painting the old bitmap until the new one has decoded. A photo that
+// keeps it waiting more than a moment gets the loading ring, and the photos
+// either side of the open one download in the background, so stepping
+// through rarely waits at all.
 import { lockScroll, unlockScroll } from "@scripts/lib/scroll-lock.js"
 
 const lb = document.getElementById("lightbox")
@@ -27,6 +30,9 @@ const lb = document.getElementById("lightbox")
 if (lb) {
   const GRID_GROUP = "#ggrid"
   const LB_FADE_MS = 180
+  // How long a photo can keep the lightbox waiting before the ring shows: a
+  // photo that's ready at once never flashes it.
+  const LOADING_RING_DELAY_MS = 250
 
   const items = [...document.querySelectorAll("[data-lb-group], #ggrid .gallery-item")]
   const lbImg = lb.querySelector("figure img")
@@ -113,6 +119,14 @@ if (lb) {
     lbCapItems.hidden = !list.length
   }
 
+  // Starts the photos either side downloading, so the next step is ready.
+  const preloadNeighbours = () => {
+    ;[current - 1, current + 1].forEach((index) => {
+      const neighbour = group[index]?.querySelector("img")
+      if (neighbour) new Image().src = neighbour.src
+    })
+  }
+
   const applyImage = () => {
     if (!group.length) return
     if (current < 0) current = group.length - 1
@@ -125,13 +139,35 @@ if (lb) {
     renderTag(item.dataset.tag || "")
     renderDetail(item.dataset.detail || "")
     if (lbCount) lbCount.textContent = current + 1 + " / " + group.length
+    preloadNeighbours()
+  }
+
+  // Calls `ready` once the lightbox's photo can be drawn (decode() also
+  // settles if it fails, so the lightbox can never get stuck), showing the
+  // ring if that takes a while. `mine` drops a photo a newer one overtook.
+  let ringTimer = null
+  const whenPhotoReady = (mine, ready) => {
+    clearTimeout(ringTimer)
+    ringTimer = setTimeout(() => {
+      if (mine === token) lb.classList.add("is-waiting")
+    }, LOADING_RING_DELAY_MS)
+
+    const settle = () => {
+      if (mine !== token) return
+      clearTimeout(ringTimer)
+      lb.classList.remove("is-waiting")
+      ready()
+    }
+
+    if (lbImg.decode) lbImg.decode().then(settle, settle)
+    else settle()
   }
 
   // Fresh open: the image is held invisible (.lightbox-loading) until the new
   // photo has decoded, then plays its normal open transition. Meanwhile the
-  // whole figure waits too (.is-loading on the lightbox, with a spinner):
-  // before the photo arrives the figure has no width, so its caption and
-  // counter would otherwise squeeze into a thin column mid-screen.
+  // whole figure waits too (.is-loading on the lightbox): before the photo
+  // arrives the figure has no width, so its caption and counter would
+  // otherwise squeeze into a thin column mid-screen.
   const show = () => {
     const mine = ++token
     lbImg.classList.remove("lightbox-fade")
@@ -140,13 +176,10 @@ if (lb) {
     applyImage()
     lb.classList.add("show")
     lockScroll("lightbox")
-    const reveal = () => {
-      if (mine !== token) return
+    whenPhotoReady(mine, () => {
       lbImg.classList.remove("lightbox-loading")
       lb.classList.remove("is-loading")
-    }
-    if (lbImg.decode) lbImg.decode().then(reveal, reveal)
-    else reveal()
+    })
   }
 
   const openAt = (item) => {
@@ -167,17 +200,15 @@ if (lb) {
     lbImg.classList.add("lightbox-fade")
     setTimeout(() => {
       applyImage()
-      const fadeIn = () => {
-        if (mine !== token) return
+      whenPhotoReady(mine, () => {
         setTimeout(() => lbImg.classList.remove("lightbox-fade"), 20)
-      }
-      if (lbImg.decode) lbImg.decode().then(fadeIn, fadeIn)
-      else fadeIn()
+      })
     }, LB_FADE_MS)
   }
 
   const close = () => {
-    lb.classList.remove("show")
+    clearTimeout(ringTimer)
+    lb.classList.remove("show", "is-waiting")
     unlockScroll("lightbox")
   }
 
