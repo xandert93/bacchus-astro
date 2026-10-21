@@ -40,6 +40,12 @@ if (page) {
     page.querySelectorAll("[data-deposit]").forEach((element) => {
       element.textContent = valueAt(view, element.dataset.deposit) ?? ""
     })
+    // Links whose address comes from the view; hidden when it's empty.
+    page.querySelectorAll("[data-deposit-href]").forEach((link) => {
+      const href = valueAt(view, link.dataset.depositHref)
+      link.href = href || "#"
+      link.hidden = !href
+    })
     page.querySelectorAll("[data-deposit-copy]").forEach((button) => {
       button.dataset.copy = valueAt(view, button.dataset.depositCopy) ?? ""
     })
@@ -52,6 +58,8 @@ if (page) {
       balanceNote: Boolean(view.balanceNote),
       testMode: view.testMode,
       exampleBank: !view.bank.areReal,
+      manualTransfer: view.transferMode === "manual",
+      stripeTransfer: view.transferMode === "stripe",
     }
     page.querySelectorAll("[data-deposit-row]").forEach((element) => {
       element.hidden = !rowShown[element.dataset.depositRow]

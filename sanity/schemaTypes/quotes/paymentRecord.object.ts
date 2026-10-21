@@ -141,6 +141,15 @@ export default defineType({
       type: "text",
       rows: 2,
     }),
+    defineField({
+      name: "instructionsUrl",
+      title: "Transfer Details Page (Stripe)",
+      type: "url",
+      readOnly: true,
+      hidden: ({ parent }) => !parent?.instructionsUrl,
+      description:
+        "Where the client can see the bank details for this transfer again. Set automatically.",
+    }),
   ],
   preview: {
     select: {

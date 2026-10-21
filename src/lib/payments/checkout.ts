@@ -20,19 +20,24 @@ import type { DepositRecord } from "@lib/deposits/load"
 import { createStripeCheckout } from "./stripe"
 
 /** The ways to pay online, as stored on a payment record's `method`. */
-export const ONLINE_METHODS = ["card", "pay-by-bank"] as const
+export const ONLINE_METHODS = ["card", "pay-by-bank", "bank-transfer"] as const
 
 export type OnlineMethod = (typeof ONLINE_METHODS)[number]
 
 export const isOnlineMethod = (value: unknown): value is OnlineMethod =>
   ONLINE_METHODS.includes(value as OnlineMethod)
 
-type PaymentProvider = "test" | "stripe"
+type PaymentProvider = "test" | "stripe" | "manual"
 
-// Every method goes to Stripe when there's a key; the argument is kept so a
-// method can move to another provider without touching the callers.
-export const providerFor = (_method: OnlineMethod): PaymentProvider =>
-  STRIPE_SECRET_KEY ? "stripe" : "test"
+// Every method goes to Stripe when there's a key. Without one, card and pay
+// by bank go to the pretend provider, and a bank transfer is the manual kind:
+// bank details on the page, and staff mark it received
+// (src/pages/api/deposits/transfer-sent.ts).
+export const providerFor = (method: OnlineMethod): PaymentProvider => {
+  if (STRIPE_SECRET_KEY) return "stripe"
+
+  return method === "bank-transfer" ? "manual" : "test"
+}
 
 /** True unless a live Stripe key is set: no real money can move. */
 export const paymentsInTestMode = () => !STRIPE_SECRET_KEY?.startsWith("sk_live_")

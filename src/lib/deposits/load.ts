@@ -43,6 +43,7 @@ export interface DepositRecord {
       reference?: string
       receivedAt?: string
       amounts?: { gross?: number }
+      instructionsUrl?: string
     }[]
   }
   bank?: { accountName?: string; iban?: string; bic?: string; areReal?: boolean }
@@ -64,7 +65,7 @@ const DEPOSIT_PROJECTION = /* groq */ `{
     status,
     event{type, date},
     client{firstName, lastName, partnerName, email},
-    payments[]{_key, kind, status, method, reference, receivedAt, amounts}
+    payments[]{_key, kind, status, method, reference, receivedAt, amounts, instructionsUrl}
   },
   "bank": *[_id == "weddingPolicy"][0].bankTransferDetails
 }`

@@ -18,8 +18,11 @@ interface Outcome {
   body: string
   /** What happens next. A `field` step's detail is filled in by the script. */
   steps?: { title: string; detail?: string; field?: string }[]
-  /** The main one is gold; the rest are dark, as everywhere on this page. */
-  actions?: { label: string; href: string; main?: boolean }[]
+  /**
+   * The main one is gold; the rest are dark, as everywhere on this page. A
+   * `hrefField` link takes its address from the view, and hides without one.
+   */
+  actions?: { label: string; href?: string; hrefField?: string; main?: boolean }[]
 }
 
 const OUTCOMES: Outcome[] = [
@@ -29,6 +32,13 @@ const OUTCOMES: Outcome[] = [
     eyebrow: "Transfer on its way",
     title: "Thank you: we're looking out for your <em>transfer</em>",
     body: "We'll email you as soon as it arrives and your date is confirmed. Transfers usually take one or two working days.",
+    actions: [
+      {
+        label: "See the bank details again",
+        hrefField: "transferInstructionsUrl",
+        main: true,
+      },
+    ],
   },
   {
     state: "confirmed",
@@ -90,7 +100,10 @@ const OUTCOMES: Outcome[] = [
           <div class="secure-booking-status-actions">
             {outcome.actions.map((action) => (
               <Button
-                href={action.href}
+                href={action.href ?? "#"}
+                data-deposit-href={action.hrefField}
+                target={action.hrefField ? "_blank" : undefined}
+                rel={action.hrefField ? "noopener" : undefined}
                 variant={action.main ? "gradient" : "dark"}
                 arrow={action.main}
               >

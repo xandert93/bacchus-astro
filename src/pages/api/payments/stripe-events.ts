@@ -15,7 +15,7 @@ import type { APIRoute } from "astro"
 import { STRIPE_WEBHOOK_SECRET } from "astro:env/server"
 import { json } from "@lib/api/requests"
 import {
-  recordPaidStripeSession,
+  recordStripeSession,
   type StripeCheckoutSession,
 } from "@lib/payments/stripe-sessions"
 import { getWriteClient } from "@lib/sanity/write-client"
@@ -23,8 +23,9 @@ import { verifyStripeWebhook } from "@lib/webhooks/stripe"
 
 export const prerender = false
 
-// A card is paid when its checkout completes; a payment that settles later
-// (a bank transfer) arrives as the second.
+// A card or Pay by Bank is paid when its checkout completes. A bank
+// transfer's checkout completes unpaid (recorded as on its way), and the
+// second event comes when the money has arrived and been matched.
 const PAID_EVENTS = [
   "checkout.session.completed",
   "checkout.session.async_payment_succeeded",
@@ -52,7 +53,7 @@ export const POST: APIRoute = async ({ request }) => {
   if (!client) return new Response(null, { status: 503 })
 
   try {
-    const outcome = await recordPaidStripeSession(client, event.data.object, {
+    const outcome = await recordStripeSession(client, event.data.object, {
       siteOrigin: new URL(request.url).origin,
     })
 

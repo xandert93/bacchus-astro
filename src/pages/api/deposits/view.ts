@@ -4,8 +4,9 @@
 //
 // Back from paying through Stripe, the page also sends the checkout session's
 // id (`session`). If the deposit still shows as due, this asks Stripe about
-// that session directly and records the payment if it's paid, so the couple
-// isn't left waiting on the webhook (src/lib/payments/stripe-sessions.ts).
+// that session directly and records it (paid, or a transfer on its way), so
+// the couple isn't left waiting on the webhook
+// (src/lib/payments/stripe-sessions.ts).
 // Stripe's answer is trusted only for the quote this link belongs to.
 
 import type { APIRoute } from "astro"
@@ -14,7 +15,7 @@ import { loadDepositByQuoteId } from "@lib/deposits/load"
 import { findDeposit } from "@lib/deposits/request"
 import { toDepositView } from "@lib/deposits/view"
 import { retrieveStripeCheckout } from "@lib/payments/stripe"
-import { recordPaidStripeSession } from "@lib/payments/stripe-sessions"
+import { recordStripeSession } from "@lib/payments/stripe-sessions"
 
 export const prerender = false
 
@@ -29,7 +30,7 @@ export const POST: APIRoute = async ({ request }) => {
       try {
         const session = await retrieveStripeCheckout(sessionId)
         if (session?.metadata?.quoteId === record._id) {
-          await recordPaidStripeSession(found.client, session, {
+          await recordStripeSession(found.client, session, {
             siteOrigin: new URL(request.url).origin,
           })
           record = (await loadDepositByQuoteId(found.client, record._id)) ?? record

@@ -53,50 +53,73 @@ import SecureBookingIntro from "./SecureBookingIntro.astro"
 
         <details class="secure-booking-manual-transfer">
           <summary>Or transfer it yourself</summary>
-          <p>
-            Use the reference below so we can match it. We'll confirm your booking once it
-            arrives, usually within two working days.
-          </p>
 
-          <div class="secure-booking-bank-details">
-            <BankDetailRow
-              label="Account name"
-              field="bank.accountName"
-              copyLabel="Copy account name"
-            />
-            <BankDetailRow label="IBAN" field="bank.iban" copyLabel="Copy IBAN" />
-            <BankDetailRow
-              label="Amount to transfer"
-              field="deposit.display"
-              copyField="deposit.plain"
-              copyLabel="Copy amount"
-            />
-            <BankDetailRow
-              label="Reference"
-              field="bank.reference"
-              copyLabel="Copy reference"
-            />
+          {/* Through Stripe (when it takes payments): bank details made for
+              this payment, and the booking confirms itself when it arrives. */}
+          <div data-deposit-row="stripeTransfer" hidden>
+            <p>
+              We'll give you bank details made just for this payment. Send the deposit
+              from your own banking app, and your booking confirms itself as soon as it
+              arrives, usually the next working day.
+            </p>
+            <Button
+              variant="dark"
+              arrow
+              class="secure-booking-pay-button"
+              data-checkout-method="bank-transfer"
+            >
+              <span>Get the bank details</span>
+            </Button>
           </div>
 
-          <div class="secure-booking-warning-box" data-deposit-row="exampleBank" hidden>
-            <SecureBookingIcon name="warning" />
-            <span>
-              Example bank details, for testing only: please don't send funds to this
-              account.
-            </span>
-          </div>
+          {/* By hand (without Stripe): our own bank details, and staff mark it
+              received. */}
+          <div data-deposit-row="manualTransfer" hidden>
+            <p>
+              Use the reference below so we can match it. We'll confirm your booking once
+              it arrives, usually within two working days.
+            </p>
 
-          <Button
-            variant="dark"
-            arrow
-            class="secure-booking-pay-button"
-            id="transferSentButton"
-          >
-            <span>I've sent the transfer</span>
-          </Button>
-          <p class="secure-booking-pay-note">
-            Press this once you've made the transfer, so we know to look for it.
-          </p>
+            <div class="secure-booking-bank-details">
+              <BankDetailRow
+                label="Account name"
+                field="bank.accountName"
+                copyLabel="Copy account name"
+              />
+              <BankDetailRow label="IBAN" field="bank.iban" copyLabel="Copy IBAN" />
+              <BankDetailRow
+                label="Amount to transfer"
+                field="deposit.display"
+                copyField="deposit.plain"
+                copyLabel="Copy amount"
+              />
+              <BankDetailRow
+                label="Reference"
+                field="bank.reference"
+                copyLabel="Copy reference"
+              />
+            </div>
+
+            <div class="secure-booking-warning-box" data-deposit-row="exampleBank" hidden>
+              <SecureBookingIcon name="warning" />
+              <span>
+                Example bank details, for testing only: please don't send funds to this
+                account.
+              </span>
+            </div>
+
+            <Button
+              variant="dark"
+              arrow
+              class="secure-booking-pay-button"
+              id="transferSentButton"
+            >
+              <span>I've sent the transfer</span>
+            </Button>
+            <p class="secure-booking-pay-note">
+              Press this once you've made the transfer, so we know to look for it.
+            </p>
+          </div>
         </details>
       </div>
 
