@@ -14,6 +14,8 @@ export const PAGES = [
   { path: "/secure-booking", title: /Secure Your Booking/, noIndex: true },
   // The stand-in payment provider while payments are in test mode.
   { path: "/secure-booking/test-checkout", title: /Test Payment/, noIndex: true },
+  // The bank picker for Enable Banking's "Pay by bank".
+  { path: "/secure-booking/choose-bank", title: /Choose Your Bank/, noIndex: true },
   { path: "/menu", title: /Menu/ },
   // Reached only from a waitlist email's link.
   { path: "/waitlist", title: /Waitlist/, noIndex: true },

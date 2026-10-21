@@ -17,6 +17,7 @@
 
 import { STRIPE_SECRET_KEY } from "astro:env/server"
 import type { DepositRecord } from "@lib/deposits/load"
+import { enableBankingConfigured } from "./enable-banking"
 import { createStripeCheckout } from "./stripe"
 
 /** The ways to pay online, as stored on a payment record's `method`. */
@@ -27,13 +28,16 @@ export type OnlineMethod = (typeof ONLINE_METHODS)[number]
 export const isOnlineMethod = (value: unknown): value is OnlineMethod =>
   ONLINE_METHODS.includes(value as OnlineMethod)
 
-type PaymentProvider = "test" | "stripe" | "manual"
+type PaymentProvider = "test" | "stripe" | "manual" | "enable-banking"
 
 // Every method goes to Stripe when there's a key. Without one, card and pay
 // by bank go to the pretend provider, and a bank transfer is the manual kind:
 // bank details on the page, and staff mark it received
 // (src/pages/api/deposits/transfer-sent.ts).
 export const providerFor = (method: OnlineMethod): PaymentProvider => {
+  // Enable Banking, when it's set up, takes "Pay by bank" (it's on trial;
+  // src/lib/payments/enable-banking.ts).
+  if (method === "pay-by-bank" && enableBankingConfigured()) return "enable-banking"
   if (STRIPE_SECRET_KEY) return "stripe"
 
   return method === "bank-transfer" ? "manual" : "test"
@@ -56,6 +60,13 @@ export const startCheckout = async ({
   record: DepositRecord
 }) => {
   const depositPage = `${siteOrigin}/secure-booking?token=${encodeURIComponent(token)}`
+
+  // Enable Banking's first step is ours: the couple picks their bank.
+  if (providerFor(method) === "enable-banking") {
+    return {
+      checkoutUrl: `${siteOrigin}/secure-booking/choose-bank?token=${encodeURIComponent(token)}`,
+    }
+  }
 
   if (providerFor(method) === "stripe") {
     return {

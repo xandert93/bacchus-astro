@@ -63,13 +63,14 @@ const stripeRequest = async <Result>(
 // set at launch. Change a list below and bump CONFIGURATION_VERSION, so a
 // fresh configuration is made rather than the old one reused.
 
-const CONFIGURATION_VERSION = 1
+const CONFIGURATION_VERSION = 2
 
 /** The methods each of our buttons offers, by Stripe's names. */
 const METHODS_BY_BUTTON: Record<OnlineMethod, string[]> = {
   // Apple Pay, Google Pay and Link are cards saved in a phone, a browser or
-  // Stripe: same fees, one tap.
-  card: ["card", "apple_pay", "google_pay", "link"],
+  // Stripe: same fees, one tap. Revolut Pay is Revolut's own one-tap
+  // checkout, popular in Malta.
+  card: ["card", "apple_pay", "google_pay", "link", "revolut_pay"],
   // Open banking: the client approves the payment in their bank's own app.
   "pay-by-bank": ["pay_by_bank"],
   // An ordinary transfer from their own banking app, to bank details unique
@@ -83,6 +84,7 @@ const ALL_METHODS = [
   "apple_pay",
   "google_pay",
   "link",
+  "revolut_pay",
   "pay_by_bank",
   "paypal",
   "samsung_pay",

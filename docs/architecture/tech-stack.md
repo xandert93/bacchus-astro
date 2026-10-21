@@ -280,8 +280,10 @@ when it's opened.
 in code, `METHODS_BY_BUTTON` in `src/lib/payments/stripe.ts`, so their own
 account gets the same):
 
-- **"Pay by card" offers cards, Apple Pay, Google Pay and Link.** All four
-  are card payments at card fees; the wallets make it one tap on a phone.
+- **"Pay by card" offers cards, Apple Pay, Google Pay, Link and Revolut
+  Pay.** All are card payments or Revolut's own one-tap checkout, at card-like
+  fees; the wallets make it one tap on a phone, and Revolut is popular in
+  Malta.
 - **"Pay by bank" offers Stripe's Pay by Bank**, open banking (below).
 - **"Or transfer it yourself" offers Stripe's bank transfers**, the fallback
   for anyone who can't or won't use either (2026-10-21): bank details made
@@ -296,8 +298,6 @@ account gets the same):
   Bacchus's call to add it), Samsung Pay (popular in South Korea),
   buy-now-pay-later such as Klarna (high fees, and messy on a refundable
   deposit), and country-specific methods (few couples would use them).
-  Revolut Pay, popular in Malta, isn't available on the test account; worth
-  checking on Bacchus's own.
 
 **Bank**
 
@@ -318,6 +318,19 @@ account gets the same):
   Maltese bank, so it suits couples banking in the UK, Ireland or Finland and
   not yet Maltese ones; a provider that reaches Maltese banks would still
   have to be asked (Noda, above).
+- **Enable Banking, on trial (2026-10-21).** It publishes Bank of Valletta
+  and HSBC Malta as supported (not APS, BNF, Lombard, FCM or Izola), though
+  not yet whether payments, rather than only account reading, work with
+  them; asked. When its two settings are in `.env` it takes "Pay by bank"
+  instead of Stripe (`src/lib/payments/enable-banking.ts`): our own bank
+  picker, then the couple's bank, then back to the deposit page, which
+  checks the payment's status. Its sandbox has no Maltese banks that take
+  payments, so the trial runs against Finnish, Baltic, Spanish and Dutch
+  sandbox banks; a Nordea (Finland) sandbox payment went through to a
+  confirmed booking. Nordea's sandbox ends on a bare page instead of sending
+  the couple back; reopening the deposit link picks the payment up.
+  Settlement is learned only by checking (no webhook yet), when the deposit
+  page loads.
 - **Stripe's bank transfers** are a different product: the couple sends a
   normal transfer to account details unique to their booking, and Stripe
   matches it when it arrives (usually the next working day; at once if their

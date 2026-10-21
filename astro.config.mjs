@@ -148,6 +148,20 @@ export default defineConfig({
         access: "secret",
         optional: true,
       }),
+      // Enable Banking, tried for "Pay by bank" (src/lib/payments/
+      // enable-banking.ts): the application's id and its private key, the
+      // .pem file's body on one line. Both set, it takes "Pay by bank" from
+      // Stripe; leave them out to go back.
+      ENABLE_BANKING_APP_ID: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
+      ENABLE_BANKING_PRIVATE_KEY: envField.string({
+        context: "server",
+        access: "secret",
+        optional: true,
+      }),
       // The Studio's address, including the workspace, for the "Open in the
       // Studio" button in the staff alert, e.g.
       // https://bacchus.sanity.studio/production. Locally,

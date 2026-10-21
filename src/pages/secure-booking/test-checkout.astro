@@ -11,6 +11,7 @@
 // client to their deposit page. No card, no bank, no money.
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/ui/Button.astro"
+import CheckoutCard from "@components/secure-booking/CheckoutCard.astro"
 import SecureCheckoutBadge from "@components/secure-booking/SecureCheckoutBadge.astro"
 import "../_secure-booking.css"
 
@@ -35,131 +36,76 @@ const TEST_BANKS = [
 >
   <SecureCheckoutBadge slot="header" />
 
-  <section class="secure-booking-status-section test-checkout">
-    <div class="secure-booking-container-large">
-      <div class="secure-booking-card test-checkout-card" id="testCheckout">
-        <div>
-          <p class="secure-booking-eyebrow-plain">Test mode: no money is taken</p>
+  <CheckoutCard id="testCheckout">
+    <p class="secure-booking-eyebrow-plain">Test mode: no money is taken</p>
 
-          <div data-test-step="card" hidden>
-            <h2>
-              Pay <span data-test-amount>your deposit</span> by card
-            </h2>
-            <p>
-              This stands in for the card provider's checkout while payments are in test
-              mode. Pressing Pay records a test payment and confirms the booking, exactly
-              as a real payment will.
-            </p>
-            <div class="secure-booking-button-row">
-              <Button variant="dark" data-test-back>
-                <span>Back without paying</span>
-              </Button>
-              <Button variant="gradient" arrow data-test-pay>
-                <span>Pay (test)</span>
-              </Button>
-            </div>
-          </div>
-
-          <div data-test-step="choose-bank" hidden>
-            <h2>
-              Pay <span data-test-amount>your deposit</span> by bank
-            </h2>
-            <p>
-              Choose your bank. You'll approve the payment in its own app or website, and
-              Bacchus never sees your banking details.
-            </p>
-            <ul class="test-checkout-banks">
-              {TEST_BANKS.map((bank) => (
-                <li>
-                  <Button
-                    variant="dark"
-                    class="test-checkout-bank"
-                    data-test-bank={bank}
-                    arrow
-                  >
-                    <span>{bank}</span>
-                  </Button>
-                </li>
-              ))}
-            </ul>
-            <div class="secure-booking-button-row">
-              <Button variant="dark" data-test-back>
-                <span>My bank isn't listed</span>
-              </Button>
-            </div>
-          </div>
-
-          <div data-test-step="approve" hidden>
-            <h2>
-              <span data-test-bank-name></span>: approve a payment of{" "}
-              <span data-test-amount>your deposit</span>
-            </h2>
-            <p>
-              To Bacchus, Mdina, with the reference <span data-test-reference></span>. In
-              real life this is your bank's own app or website, where you'd confirm with
-              your fingerprint, face or PIN.
-            </p>
-            <div class="secure-booking-button-row">
-              <Button variant="dark" id="testCheckoutCancel">
-                <span>Cancel</span>
-              </Button>
-              <Button variant="gradient" arrow data-test-pay>
-                <span>Approve (test)</span>
-              </Button>
-            </div>
-          </div>
-
-          <p
-            class="secure-booking-pay-error"
-            id="testCheckoutError"
-            role="alert"
-            hidden
-          ></p>
-        </div>
+    <div data-test-step="card" hidden>
+      <h2>
+        Pay <span data-test-amount>your deposit</span> by card
+      </h2>
+      <p>
+        This stands in for the card provider's checkout while payments are in test mode.
+        Pressing Pay records a test payment and confirms the booking, exactly as a real
+        payment will.
+      </p>
+      <div class="secure-booking-button-row">
+        <Button variant="dark" data-test-back>
+          <span>Back without paying</span>
+        </Button>
+        <Button variant="gradient" arrow data-test-pay>
+          <span>Pay (test)</span>
+        </Button>
       </div>
     </div>
-  </section>
+
+    <div data-test-step="choose-bank" hidden>
+      <h2>
+        Pay <span data-test-amount>your deposit</span> by bank
+      </h2>
+      <p>
+        Choose your bank. You'll approve the payment in its own app or website, and
+        Bacchus never sees your banking details.
+      </p>
+      <ul class="checkout-card-banks">
+        {TEST_BANKS.map((bank) => (
+          <li>
+            <Button variant="dark" class="checkout-card-bank" data-test-bank={bank} arrow>
+              <span>{bank}</span>
+            </Button>
+          </li>
+        ))}
+      </ul>
+      <div class="secure-booking-button-row">
+        <Button variant="dark" data-test-back>
+          <span>My bank isn't listed</span>
+        </Button>
+      </div>
+    </div>
+
+    <div data-test-step="approve" hidden>
+      <h2>
+        <span data-test-bank-name></span>: approve a payment of{" "}
+        <span data-test-amount>your deposit</span>
+      </h2>
+      <p>
+        To Bacchus, Mdina, with the reference <span data-test-reference></span>. In real
+        life this is your bank's own app or website, where you'd confirm with your
+        fingerprint, face or PIN.
+      </p>
+      <div class="secure-booking-button-row">
+        <Button variant="dark" id="testCheckoutCancel">
+          <span>Cancel</span>
+        </Button>
+        <Button variant="gradient" arrow data-test-pay>
+          <span>Approve (test)</span>
+        </Button>
+      </div>
+    </div>
+
+    <p class="secure-booking-pay-error" id="testCheckoutError" role="alert" hidden></p>
+  </CheckoutCard>
 </BaseLayout>
 
 <script>
   import "./_test-checkout.js"
 </script>
-
-<style>
-  .test-checkout {
-    padding: clamp(140px, 20vh, 220px) 0 clamp(80px, 11vw, 150px);
-  }
-
-  .test-checkout-card {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: clamp(28px, 5vw, 48px);
-  }
-
-  .test-checkout-card h2 {
-    margin: 10px 0 12px;
-
-    font-size: clamp(26px, 3.5vw, 34px);
-    line-height: 1.2;
-  }
-
-  .test-checkout-card p:not([class]) {
-    font-family: "Newsreader", Georgia, serif;
-    font-size: 17px;
-    line-height: 1.6;
-    color: var(--muted-ink);
-  }
-
-  .test-checkout-banks {
-    display: grid;
-    gap: 10px;
-    margin-top: 24px;
-    list-style: none;
-  }
-
-  /* Full-width rows, the bank's name on the left and the arrow on the right. */
-  .test-checkout-banks :global(.test-checkout-bank) {
-    width: 100%;
-    justify-content: space-between;
-  }
-</style>
