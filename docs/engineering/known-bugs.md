@@ -228,3 +228,26 @@ frame) still wins, being more specific.
 
 **Rule**: an image whose width is set in CSS needs `height: auto` too; the
 global rule now gives every image that.
+
+---
+
+## 9. Installing the docs site or the Studio failed with EALLOWSCRIPTS
+
+**Symptom**: `npm run docs:install` stopped with "--allow-scripts is not
+allowed in project-scoped installs". Reported 2026-10-21.
+
+**Cause**: a user-level `.npmrc` setting (`allow-scripts`, from installing
+Claude Code globally) is passed to everything `npm run` starts, as the
+environment variable `npm_config_allow_scripts`. The install that the script
+runs inside `docs-site/` reads it as if it had been typed as a flag, which
+npm refuses for a project's own install. The same applies to
+`sanity:install`.
+
+**Fix**: both scripts start the inner install from a one-line Node command
+that removes that variable first (`package.json`). `docs-site/package.json`
+lists its own `allowScripts`, as the root one does.
+
+**Test**: none automated; it depends on the machine's own npm settings.
+
+**Rule**: a script that runs `npm install` in a subfolder clears
+`npm_config_allow_scripts` first.
