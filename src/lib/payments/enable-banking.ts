@@ -15,6 +15,7 @@
 // public half it holds. No shared secret ever travels.
 
 import { ENABLE_BANKING_APP_ID, ENABLE_BANKING_PRIVATE_KEY } from "astro:env/server"
+import { BANK_COUNTRIES } from "@data/bank-countries"
 import type { DepositRecord } from "@lib/deposits/load"
 
 const API = "https://api.enablebanking.com"
@@ -100,16 +101,14 @@ const enableBankingRequest = async <Result>(
 
 // --- Banks, payments and their status -----------------------------------------
 
-/**
- * Countries whose banks are offered, Malta first. The others are where its
- * sandbox has banks that can take payments, so the flow can be tried at all
- * (Malta's own banks aren't in the sandbox).
- */
-const COUNTRIES = ["MT", "IE", "LT", "FI", "EE", "ES", "NL"]
+/** The countries the picker offers (src/data/bank-countries.ts). */
+const COUNTRIES = BANK_COUNTRIES.map((country) => country.code)
 
 export interface PaymentBank {
   name: string
   country: string
+  /** The bank's logo, from Enable Banking. */
+  logo?: string
 }
 
 /** Banks that can start a euro payment, by country. */
@@ -126,7 +125,7 @@ export const listPaymentBanks = async () => {
   return lists.flatMap((list) =>
     list.aspsps
       .filter((bank) => bank.payments?.length)
-      .map(({ name, country }) => ({ name, country })),
+      .map(({ name, country, logo }) => ({ name, country, logo })),
   )
 }
 
@@ -169,7 +168,7 @@ export const createBankPayment = ({
         },
       ],
     },
-    aspsp: bank,
+    aspsp: { name: bank.name, country: bank.country },
     state,
     redirect_url: bankReturnUrl(siteOrigin),
     psu_type: "personal",
