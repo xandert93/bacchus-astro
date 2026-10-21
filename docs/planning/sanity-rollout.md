@@ -400,8 +400,10 @@ localhost:3000/api/payments/stripe-events` beside `npm run dev`, and put
      through the same checkout, webhook and test setup as card (Stripe's
      test mode offers a pretend bank to approve in); otherwise the pretend
      checkout (`/secure-booking/test-checkout`), whose "Approve" records a
-     test payment (`test-payment.ts`). Which banks it reaches is under
-     "Bank" in `docs/architecture/tech-stack.md`;
+     test payment (`test-payment.ts`). With Enable Banking set up, our own
+     bank picker (`/secure-booking/choose-bank`) and the couple's bank
+     instead. Which banks each reaches is under "Bank" in
+     `docs/architecture/tech-stack.md`;
    - **transfer it themselves** (folded away under Pay by bank): with a
      Stripe key, Stripe's bank transfers, through the same checkout and
      webhook: recorded as Awaiting when the couple has the bank details, and

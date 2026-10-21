@@ -149,6 +149,27 @@ export default defineType({
       hidden: ({ document }) => !document?.sentAt,
     }),
     defineField({
+      // Each "Pay by bank" through Enable Banking: the random state that
+      // rides along to the bank and back, and the payment's id there. Set by
+      // the site (src/lib/payments/bank-payments.ts).
+      name: "bankPaymentAttempts",
+      title: "Bank Payment Attempts",
+      type: "array",
+      hidden: true,
+      readOnly: true,
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            defineField({ name: "state", type: "string" }),
+            defineField({ name: "paymentId", type: "string" }),
+            defineField({ name: "bank", type: "string" }),
+            defineField({ name: "startedAt", type: "datetime" }),
+          ],
+        }),
+      ],
+    }),
+    defineField({
       name: "reminderSentAt",
       title: "Reminder Emailed",
       type: "datetime",

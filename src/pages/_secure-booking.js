@@ -11,7 +11,25 @@ import { reducedMotion } from "@lib/media-queries.js"
 const page = document.getElementById("depositPage")
 
 if (page) {
-  const token = new URLSearchParams(window.location.search).get("token")
+  const params = new URLSearchParams(window.location.search)
+  // Back from the couple's bank (Enable Banking), the address carries only
+  // the payment's `state`, never the link's token, which the bank picker
+  // kept in this tab before leaving (secure-booking/_choose-bank.js).
+  const bankState = params.get("state")
+  const bankError = params.get("error_description") || params.get("error")
+  const savedToken = () => {
+    try {
+      return window.sessionStorage.getItem("depositToken")
+    } catch {
+      return null
+    }
+  }
+  const token = params.get("token") || (bankState ? savedToken() : null)
+
+  // Put the token back in the address, so a refresh or a bookmark works.
+  if (token && !params.get("token")) {
+    window.history.replaceState(null, "", `?token=${encodeURIComponent(token)}`)
+  }
 
   // "bank.iban" → view.bank.iban
   const valueAt = (view, path) =>
@@ -113,9 +131,9 @@ if (page) {
   // minute it says the payment is on its way ("processing", never the
   // payment options again, which would invite paying twice) and keeps
   // asking, less often, for 10 minutes more.
-  const backFromPaying = new URLSearchParams(window.location.search).has("paid")
+  const backFromPaying = params.has("paid") || (Boolean(bankState) && !bankError)
   // Stripe's checkout session, which the server checks with Stripe directly.
-  const stripeSession = new URLSearchParams(window.location.search).get("session")
+  const stripeSession = params.get("session")
   const QUICK_CHECK_MS = 2000
   const QUICK_CHECKS = 15
   const SLOW_CHECK_MS = 10000
@@ -123,7 +141,10 @@ if (page) {
   let confirmChecks = 0
 
   const load = () =>
-    post("view", stripeSession ? { session: stripeSession } : {})
+    post("view", {
+      ...(stripeSession ? { session: stripeSession } : {}),
+      ...(bankState ? { bankState } : {}),
+    })
       .then(({ view }) => {
         if (backFromPaying && view.state === "pay") {
           confirmChecks++
@@ -220,7 +241,12 @@ if (page) {
       if (loadingText) loadingText.textContent = "Confirming your payment"
     }
     setState("loading")
-    load()
+    load().then(() => {
+      // Back from the bank without paying (cancelled there, say): say so
+      // beside the ways to pay.
+      if (bankError)
+        showActionError(`Your bank didn't complete the payment: ${bankError}.`)
+    })
   } else {
     setState("invalid")
   }

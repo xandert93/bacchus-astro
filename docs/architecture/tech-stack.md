@@ -318,6 +318,19 @@ account gets the same):
   Maltese bank, so it suits couples banking in the UK, Ireland or Finland and
   not yet Maltese ones; a provider that reaches Maltese banks would still
   have to be asked (Noda, above).
+- **Enable Banking, on trial (2026-10-21).** It publishes Bank of Valletta
+  and HSBC Malta as supported (not APS, BNF, Lombard, FCM or Izola), though
+  not yet whether payments, rather than only account reading, work with
+  them; asked. When its two settings are in `.env` it takes "Pay by bank"
+  instead of Stripe (`src/lib/payments/enable-banking.ts`): our own bank
+  picker, then the couple's bank, then back to the deposit page, which
+  checks the payment's status. Its sandbox has no Maltese banks that take
+  payments, so the trial runs against Finnish, Baltic, Spanish and Dutch
+  sandbox banks; a Nordea (Finland) sandbox payment went through to a
+  confirmed booking. Nordea's sandbox ends on a bare page instead of sending
+  the couple back; reopening the deposit link picks the payment up.
+  Settlement is learned only by checking (no webhook yet), when the deposit
+  page loads.
 - **Stripe's bank transfers** are a different product: the couple sends a
   normal transfer to account details unique to their booking, and Stripe
   matches it when it arrives (usually the next working day; at once if their

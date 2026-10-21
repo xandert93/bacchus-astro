@@ -1,0 +1,63 @@
+---
+// The single card that a payment step stands in, on a page of its own:
+// the pretend provider (secure-booking/test-checkout.astro) and the bank
+// picker for Enable Banking (secure-booking/choose-bank.astro). The step's
+// content comes through the slot; its headings, paragraphs and a list of
+// banks (`.checkout-card-banks`, each a `.checkout-card-bank` Button) are
+// styled here, so both pages look the same.
+interface Props {
+  /** The card's id, for the page's script to find it. */
+  id: string
+}
+---
+
+<section class="secure-booking-status-section checkout-card-section">
+  <div class="secure-booking-container-large">
+    <div class="secure-booking-card checkout-card" id={Astro.props.id}>
+      <div>
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .checkout-card-section {
+    padding: clamp(140px, 20vh, 220px) 0 clamp(80px, 11vw, 150px);
+  }
+
+  .checkout-card {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 48px);
+  }
+
+  /* The content arrives through the slot, carrying the page's scope, not
+     this file's: hence :global(). */
+  .checkout-card :global(h2) {
+    margin: 10px 0 12px;
+
+    font-size: clamp(26px, 3.5vw, 34px);
+    line-height: 1.2;
+  }
+
+  .checkout-card :global(p:not([class])) {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--muted-ink);
+  }
+
+  .checkout-card :global(.checkout-card-banks) {
+    display: grid;
+    gap: 10px;
+    margin-top: 24px;
+    list-style: none;
+  }
+
+  /* Full-width rows, the bank's name on the left and the arrow on the right. */
+  .checkout-card :global(.checkout-card-bank) {
+    width: 100%;
+    justify-content: space-between;
+  }
+</style>

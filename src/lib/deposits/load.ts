@@ -28,6 +28,7 @@ export interface DepositRecord {
   }
   terms?: { balanceDueDate?: string; validUntil?: string }
   reminderSentAt?: string
+  bankPaymentAttempts?: { state: string; paymentId: string; bank?: string }[]
   booking: {
     _id: string
     /** Sanity's revision, so a write can refuse if the booking changed meanwhile. */
@@ -59,6 +60,7 @@ const DEPOSIT_PROJECTION = /* groq */ `{
   pricing{lineItems[]{label, amount, quantity, unitAmount}, subtotal, discount, total, vat, perPerson, deposit},
   terms,
   reminderSentAt,
+  bankPaymentAttempts[]{state, paymentId, bank},
   "booking": booking->{
     _id,
     _rev,

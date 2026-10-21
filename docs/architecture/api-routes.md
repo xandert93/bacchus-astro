@@ -21,18 +21,20 @@ comment has the detail.
 
 **Called by a visitor's browser**, from the site's pages:
 
-| Route                              | From                               | Does                                                                               | Guarded by                                                           |
-| ---------------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `GET /api/availability`            | The wedding calendar               | Each date's status (open, enquiries received, booked), worked out live from Sanity | Nothing: public on purpose, dates and statuses only                  |
-| `POST /api/enquiries`              | The enquiry form                   | Stores the enquiry as a new booking; emails the enquirer and staff                 | Same-site check, a hidden bot field, a minimum time                  |
-| `POST /api/waitlist`               | The calendar's "notify me" popover | Stores an unconfirmed waitlist entry; emails a link to confirm it                  | Same-site check, bot field, minimum time, a per-person limit         |
-| `POST /api/waitlist/confirm`       | The `/waitlist` page's button      | Confirms a waitlist entry                                                          | The private link's token                                             |
-| `POST /api/waitlist/leave`         | The `/waitlist` page's button      | Takes someone off a waitlist                                                       | The private link's token                                             |
-| `POST /api/deposits/view`          | The deposit page, as it opens      | Everything the page shows for a quote, already worded                              | The private link's token                                             |
-| `POST /api/deposits/checkout`      | "Pay by bank" or "Pay by card"     | Where to send the client to pay (the payment provider's checkout)                  | The private link's token                                             |
-| `POST /api/deposits/transfer-sent` | "I've sent the transfer"           | Records an awaiting transfer on the booking; emails staff                          | The private link's token                                             |
-| `POST /api/deposits/decline`       | The decline dialog                 | Closes the quote and withdraws the enquiry; emails staff and the client            | The private link's token                                             |
-| `POST /api/deposits/test-payment`  | The pretend checkout               | Records a test payment and confirms the booking, as a provider's webhook does      | The private link's token; 404 for a way to pay a real provider takes |
+| Route                              | From                                            | Does                                                                               | Guarded by                                                           |
+| ---------------------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `GET /api/availability`            | The wedding calendar                            | Each date's status (open, enquiries received, booked), worked out live from Sanity | Nothing: public on purpose, dates and statuses only                  |
+| `POST /api/enquiries`              | The enquiry form                                | Stores the enquiry as a new booking; emails the enquirer and staff                 | Same-site check, a hidden bot field, a minimum time                  |
+| `POST /api/waitlist`               | The calendar's "notify me" popover              | Stores an unconfirmed waitlist entry; emails a link to confirm it                  | Same-site check, bot field, minimum time, a per-person limit         |
+| `POST /api/waitlist/confirm`       | The `/waitlist` page's button                   | Confirms a waitlist entry                                                          | The private link's token                                             |
+| `POST /api/waitlist/leave`         | The `/waitlist` page's button                   | Takes someone off a waitlist                                                       | The private link's token                                             |
+| `POST /api/deposits/view`          | The deposit page, as it opens                   | Everything the page shows for a quote, already worded                              | The private link's token                                             |
+| `POST /api/deposits/checkout`      | "Pay by bank" or "Pay by card"                  | Where to send the client to pay (the payment provider's checkout)                  | The private link's token                                             |
+| `POST /api/deposits/transfer-sent` | "I've sent the transfer"                        | Records an awaiting transfer on the booking; emails staff                          | The private link's token                                             |
+| `POST /api/deposits/decline`       | The decline dialog                              | Closes the quote and withdraws the enquiry; emails staff and the client            | The private link's token                                             |
+| `POST /api/deposits/test-payment`  | The pretend checkout                            | Records a test payment and confirms the booking, as a provider's webhook does      | The private link's token; 404 for a way to pay a real provider takes |
+| `POST /api/deposits/banks`         | The bank picker (`/secure-booking/choose-bank`) | The banks Enable Banking can take the payment from                                 | The private link's token; 404 unless Enable Banking is set up        |
+| `POST /api/deposits/bank-payment`  | Choosing a bank there                           | Starts the payment and answers with the bank's approval page                       | The private link's token; 404 unless Enable Banking is set up        |
 
 **Called by another service** (webhooks, and Cloudflare's timer):
 

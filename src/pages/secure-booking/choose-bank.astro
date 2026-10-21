@@ -1,0 +1,77 @@
+---
+// /secure-booking/choose-bank: where "Pay by bank" goes while Enable Banking
+// takes it (src/lib/payments/checkout.ts). The couple picks their bank from
+// the ones that can make the payment; we start it and send them to their
+// bank to approve it. Their bank sends them back to the deposit page.
+import BaseLayout from "@layouts/BaseLayout.astro"
+import Button from "@components/ui/Button.astro"
+import CheckoutCard from "@components/secure-booking/CheckoutCard.astro"
+import LoadingRing from "@components/ui/LoadingRing.astro"
+import SecureCheckoutBadge from "@components/secure-booking/SecureCheckoutBadge.astro"
+import "../_secure-booking.css"
+---
+
+<BaseLayout
+  title="Choose Your Bank — Bacchus, Mdina"
+  description="Choose the bank to pay your deposit from."
+  checkout
+  noIndex
+  showVisitSection={false}
+>
+  <SecureCheckoutBadge slot="header" />
+
+  <CheckoutCard id="chooseBank">
+    <p class="secure-booking-eyebrow-plain">Pay by bank</p>
+    <h2>Choose your bank</h2>
+    <p>
+      You'll approve the payment in your bank's own app or website. Bacchus never sees
+      your banking details.
+    </p>
+
+    <div class="choose-bank-loading" id="chooseBankLoading">
+      <LoadingRing label="Loading the banks" size={28} />
+    </div>
+
+    {/* Filled by the script, one list per country. */}
+    <div id="chooseBankLists"></div>
+
+    {/* Copied by the script for each bank, so each is a real <Button>. */}
+    <template id="chooseBankButton">
+      <li>
+        <Button variant="dark" class="checkout-card-bank" arrow>
+          <span data-bank-name></span>
+        </Button>
+      </li>
+    </template>
+
+    <p class="secure-booking-pay-error" id="chooseBankError" role="alert" hidden></p>
+
+    <div class="secure-booking-button-row">
+      <Button variant="dark" id="chooseBankBack">
+        <span>My bank isn't listed</span>
+      </Button>
+    </div>
+  </CheckoutCard>
+</BaseLayout>
+
+<script>
+  import "./_choose-bank.js"
+</script>
+
+<style>
+  .choose-bank-loading {
+    display: flex;
+    justify-content: center;
+    padding: 28px 0 8px;
+  }
+
+  :global(.choose-bank-country) {
+    margin-top: 28px;
+
+    font-family: "Inter", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--bronze);
+  }
+</style>
