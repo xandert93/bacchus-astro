@@ -27,6 +27,7 @@ export default [
       "playwright-report/",
       "public/prototype/",
       "sanity/.sanity/",
+      "docs-site/.astro/",
     ],
   },
 
