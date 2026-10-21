@@ -1,6 +1,7 @@
 // The bank picker (choose-bank.astro): loads the banks that can make the
-// payment, offers only the countries that have any (Malta first, chosen if it
-// has banks), and shows the chosen country's banks as logo tiles. Choosing
+// payment, fills the country dropdown with the countries that have any (Malta
+// first, chosen if it has banks), and shows the chosen country's banks as
+// logo tiles. The logos load from Enable Banking, which supplies them. Choosing
 // one starts the payment and sends the couple to their bank to approve it.
 // The link's token is kept in this tab first: the bank sends them back to the
 // deposit page without it (src/pages/_secure-booking.js reads it back).
@@ -11,15 +12,13 @@ const card = document.getElementById("chooseBank")
 
 if (card) {
   const token = new URLSearchParams(window.location.search).get("token") || ""
-  const chips = [...document.querySelectorAll("#chooseBankCountries .chip")]
+  const picker = document.getElementById("chooseBankPicker")
+  const countrySelect = document.getElementById("chooseBankCountry")
   const tiles = document.getElementById("chooseBankTiles")
   const template = document.getElementById("chooseBankTile")
   const loading = document.getElementById("chooseBankLoading")
   const error = document.getElementById("chooseBankError")
   const depositPage = `/secure-booking?token=${encodeURIComponent(token)}`
-
-  const codeOf = (countryName) =>
-    BANK_COUNTRIES.find((country) => country.name === countryName)?.code
 
   const showError = (message) => {
     error.textContent = message
@@ -58,10 +57,6 @@ if (card) {
   }
 
   const showCountry = (code, banks) => {
-    chips.forEach((chip) => {
-      chip.classList.toggle("is-selected", codeOf(chip.dataset.v) === code)
-    })
-
     tiles.replaceChildren(
       ...banks
         .filter((bank) => bank.country === code)
@@ -79,18 +74,23 @@ if (card) {
   }
 
   const start = (banks) => {
-    const countriesWithBanks = new Set(banks.map((bank) => bank.country))
-
-    chips.forEach((chip) => {
-      chip.hidden = !countriesWithBanks.has(codeOf(chip.dataset.v))
-      chip.addEventListener("click", () => showCountry(codeOf(chip.dataset.v), banks))
-    })
-
-    // Malta when it has banks, otherwise the first country that does.
-    const first = BANK_COUNTRIES.find((country) => countriesWithBanks.has(country.code))
-    if (first) showCountry(first.code, banks)
-    else
+    const countries = BANK_COUNTRIES.filter((country) =>
+      banks.some((bank) => bank.country === country.code),
+    )
+    if (!countries.length) {
       showError("No banks can take this payment right now. Please pay by card instead.")
+      return
+    }
+
+    // Malta first when it has banks, as BANK_COUNTRIES orders them.
+    countrySelect.replaceChildren(
+      ...countries.map((country) => new Option(country.name, country.code)),
+    )
+    countrySelect.addEventListener("change", () =>
+      showCountry(countrySelect.value, banks),
+    )
+    showCountry(countries[0].code, banks)
+    picker.hidden = false
   }
 
   document.getElementById("chooseBankBack").addEventListener("click", () => {

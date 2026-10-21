@@ -75,7 +75,8 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   a close button, Escape or a click outside closes it; first used to
   decline a quote. The weddings quick-pick calendar's modal predates it and
   is its own), `secure-booking/CheckoutCard` (the one card a payment step
-  stands in on a page of its own: the pretend checkout and the bank picker),
+  stands in on a page of its own: the pretend checkout and the bank picker,
+  with a "Back to your booking" link above it),
   `LoadingRing` (the turning gold ring while something loads: the
   lightbox's photo, the deposit page's booking).
 - `forms/`: form controls. `FormField` (label, error, notes), `TextInput`

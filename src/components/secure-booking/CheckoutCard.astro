@@ -4,7 +4,9 @@
 // picker for Enable Banking (secure-booking/choose-bank.astro). The step's
 // content comes through the slot; its headings, paragraphs and a list of
 // banks (`.checkout-card-banks`, each a `.checkout-card-bank` Button) are
-// styled here, so both pages look the same.
+// styled here, so both pages look the same. Above the card, a link back to
+// the couple's deposit page, as on any checkout step (CheckoutCard.js fills
+// in its address from this page's own ?token=).
 interface Props {
   /** The card's id, for the page's script to find it. */
   id: string
@@ -13,6 +15,9 @@ interface Props {
 
 <section class="secure-booking-status-section checkout-card-section">
   <div class="secure-booking-container-large">
+    <a class="checkout-card-back" href="/secure-booking" data-checkout-back>
+      <span aria-hidden="true">←</span> Back to your booking
+    </a>
     <div class="secure-booking-card checkout-card" id={Astro.props.id}>
       <div>
         <slot />
@@ -21,9 +26,34 @@ interface Props {
   </div>
 </section>
 
+<script>
+  import "./CheckoutCard.js"
+</script>
+
 <style>
   .checkout-card-section {
     padding: clamp(140px, 20vh, 220px) 0 clamp(80px, 11vw, 150px);
+  }
+
+  .checkout-card-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 640px;
+    margin: 0 auto 16px;
+
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-ink);
+    transition: color 0.3s var(--ease);
+  }
+
+  @media (--hover) {
+    .checkout-card-back:hover {
+      color: var(--ink);
+    }
   }
 
   .checkout-card {
