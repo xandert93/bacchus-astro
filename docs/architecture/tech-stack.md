@@ -273,7 +273,7 @@ when it's opened.
   | Other card             | 3.25% + €0.25                       | €325.25      | €9,674.75    |
   | Other card, converted  | 3.25% + €0.25, plus about 2%        | about €525   | about €9,475 |
   | Pay by bank (Stripe)   | Not published for Malta; to confirm | ?            | ?            |
-  | Bank transfer (Stripe) | Not published for Malta; to confirm | ?            | ?            |
+  | Bank transfer (Stripe) | 0.5%, at most €5                    | €5           | €9,995       |
   | Bank transfer, by hand | None from Stripe                    | €0           | €10,000      |
 
 **Which Stripe payment methods, and why** (if Bacchus goes with Stripe; set
@@ -283,11 +283,21 @@ account gets the same):
 - **"Pay by card" offers cards, Apple Pay, Google Pay and Link.** All four
   are card payments at card fees; the wallets make it one tap on a phone.
 - **"Pay by bank" offers Stripe's Pay by Bank**, open banking (below).
+- **"Or transfer it yourself" offers Stripe's bank transfers**, the fallback
+  for anyone who can't or won't use either (2026-10-21): bank details made
+  for that one payment, sent from the couple's own banking app, matched by
+  Stripe when the money arrives, so it confirms itself like the others. To
+  the couple it's the familiar transfer, so choosing it costs Bacchus no
+  staff work. 0.5% capped at €5 (Stripe's EU price list, checked 2026-10-21;
+  more if a currency is converted). Without a Stripe key, the same fold
+  shows Bacchus's own bank details instead and staff mark the payment
+  received (the manual fallback, kept for the live site until Stripe is).
 - **Not offered**: PayPal (higher fees, and refunds run through PayPal;
   Bacchus's call to add it), Samsung Pay (popular in South Korea),
   buy-now-pay-later such as Klarna (high fees, and messy on a refundable
-  deposit), country-specific methods (few couples would use them), and
-  Stripe's bank transfers (waiting on Bacchus; below).
+  deposit), and country-specific methods (few couples would use them).
+  Revolut Pay, popular in Malta, isn't available on the test account; worth
+  checking on Bacchus's own.
 
 **Bank**
 

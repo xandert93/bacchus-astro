@@ -72,6 +72,9 @@ const METHODS_BY_BUTTON: Record<OnlineMethod, string[]> = {
   card: ["card", "apple_pay", "google_pay", "link"],
   // Open banking: the client approves the payment in their bank's own app.
   "pay-by-bank": ["pay_by_bank"],
+  // An ordinary transfer from their own banking app, to bank details unique
+  // to this payment, which Stripe matches to it when the money arrives.
+  "bank-transfer": ["customer_balance"],
 }
 
 /** Every method a configuration has to switch on or off explicitly. */
@@ -158,10 +161,36 @@ export const createStripeCheckout = async ({
     method,
   }
 
+  // A bank transfer needs a Stripe customer, to give them their own bank
+  // details; card and Pay by Bank don't.
+  const bankTransfer: Record<string, FormValue> =
+    method === "bank-transfer"
+      ? {
+          customer: (
+            await stripeRequest<{ id: string }>("POST", "/customers", {
+              email: record.booking.client.email,
+              name: `${record.booking.client.firstName} ${record.booking.client.lastName}`,
+              metadata: { bookingId: record.booking._id },
+            })
+          ).id,
+          payment_method_options: {
+            customer_balance: {
+              funding_type: "bank_transfer",
+              // Euro bank details from Stripe's Irish entity, which serves
+              // businesses across the EU.
+              bank_transfer: {
+                type: "eu_bank_transfer",
+                eu_bank_transfer: { country: "IE" },
+              },
+            },
+          },
+        }
+      : { customer_email: record.booking.client.email }
+
   const session = await stripeRequest<{ url: string }>("POST", "/checkout/sessions", {
     mode: "payment",
+    ...bankTransfer,
     payment_method_configuration: await configurationFor(method),
-    customer_email: record.booking.client.email,
     client_reference_id: record._id,
     metadata: { ...metadata },
     payment_intent_data: {
@@ -198,4 +227,24 @@ export const retrieveStripeCheckout = async (sessionId: string) => {
   if (!/^cs_[A-Za-z0-9_]+$/.test(sessionId)) return null
 
   return stripeRequest<StripeCheckoutSession>("GET", `/checkout/sessions/${sessionId}`)
+}
+
+/**
+ * The page where Stripe shows a bank transfer's details (account, reference,
+ * amount), for the couple to come back to. Missing if Stripe hasn't made
+ * one, which never stops the payment being recorded.
+ */
+export const retrieveTransferInstructionsUrl = async (paymentIntentId: string) => {
+  try {
+    const intent = await stripeRequest<{
+      next_action?: {
+        display_bank_transfer_instructions?: { hosted_instructions_url?: string }
+      }
+    }>("GET", `/payment_intents/${paymentIntentId}`)
+
+    return intent.next_action?.display_bank_transfer_instructions?.hosted_instructions_url
+  } catch (error) {
+    console.error("Transfer instructions not found.", error)
+    return undefined
+  }
 }

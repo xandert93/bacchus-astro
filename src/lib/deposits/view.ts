@@ -6,7 +6,7 @@
 import { todayInMalta } from "@lib/dates"
 import { longDate } from "@lib/email/enquiry-details"
 import { euros, plainAmount } from "@lib/money"
-import { paymentsInTestMode } from "@lib/payments/checkout"
+import { paymentsInTestMode, providerFor } from "@lib/payments/checkout"
 import { coupleName, depositPayment, type DepositRecord } from "./load"
 
 /**
@@ -57,6 +57,11 @@ export const toDepositView = (record: DepositRecord) => {
   return {
     state: stateOf(record),
     testMode: paymentsInTestMode() || !record.bank?.areReal,
+    // How a bank transfer works here: through Stripe, which matches it
+    // itself, or by hand, with our bank details and staff marking it.
+    transferMode: providerFor("bank-transfer") === "stripe" ? "stripe" : "manual",
+    // Stripe's page with a transfer's bank details, once one is on its way.
+    transferInstructionsUrl: depositPayment(record, "awaiting")?.instructionsUrl ?? "",
     couple: coupleName(record),
     firstName: booking.client.firstName,
     reference: record.reference,

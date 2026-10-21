@@ -6,7 +6,7 @@ import type { APIRoute } from "astro"
 import { json } from "@lib/api/requests"
 import { findDeposit } from "@lib/deposits/request"
 import { toDepositView } from "@lib/deposits/view"
-import { isOnlineMethod, startCheckout } from "@lib/payments/checkout"
+import { isOnlineMethod, providerFor, startCheckout } from "@lib/payments/checkout"
 
 export const prerender = false
 
@@ -16,7 +16,9 @@ export const POST: APIRoute = async ({ request }) => {
     if ("refusal" in found) return found.refusal
 
     const { method } = found.body
-    if (!isOnlineMethod(method)) return json(400, { error: "Choose a way to pay." })
+    if (!isOnlineMethod(method) || providerFor(method) === "manual") {
+      return json(400, { error: "Choose a way to pay." })
+    }
 
     if (toDepositView(found.record).state !== "pay") {
       return json(409, { error: "This deposit isn't due any more." })

@@ -624,7 +624,7 @@
   color: var(--bronze);
 }
 
-.secure-booking-manual-transfer > p {
+.secure-booking-manual-transfer p:not([class]) {
   margin-top: 16px;
 
   font-family: "Newsreader", Georgia, serif;

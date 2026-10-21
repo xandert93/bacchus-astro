@@ -402,9 +402,14 @@ localhost:3000/api/payments/stripe-events` beside `npm run dev`, and put
      checkout (`/secure-booking/test-checkout`), whose "Approve" records a
      test payment (`test-payment.ts`). Which banks it reaches is under
      "Bank" in `docs/architecture/tech-stack.md`;
-   - **transfer it themselves** (folded away under Pay by bank) and say so
-     (`transfer-sent.ts`): records an Awaiting bank-transfer payment on the
-     booking and emails staff to look out for it;
+   - **transfer it themselves** (folded away under Pay by bank): with a
+     Stripe key, Stripe's bank transfers, through the same checkout and
+     webhook: recorded as Awaiting when the couple has the bank details, and
+     Received, confirming the booking, when Stripe has matched the money (in
+     test mode, the Dashboard's "simulate a transfer" sends it). Without a
+     key, Bacchus's own bank details, and "I've sent the transfer"
+     (`transfer-sent.ts`) records an Awaiting payment and emails staff to look
+     out for it;
    - **decline the quote** (`decline.ts`), after a confirmation dialog: the
      quote becomes Declined, the booking Withdrawn, staff are emailed, and
      the client gets a short email confirming it.
