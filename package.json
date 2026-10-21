@@ -9,6 +9,8 @@
     "dev": "astro dev --port 3000",
     "dev:host": "astro dev --port 3000 --host 0.0.0.0",
     "dev:webhooks": "node sanity/webhooks/relay.ts",
+    "docs": "npm --prefix docs-site run dev",
+    "docs:install": "npm --prefix docs-site install",
     "dev:daily-jobs": "node -e \"fetch('http://localhost:3000/api/jobs/daily', { method: 'POST' }).then(async (response) => console.log(response.status, await response.text()))\"",
     "build": "astro build",
     "preview": "astro preview",

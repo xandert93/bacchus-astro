@@ -1,6 +1,8 @@
 # Documentation
 
-Project documentation, grouped by the question each folder answers. These
+Project documentation, grouped by the question each folder answers. To
+read it as a site, with a sidebar and search: `npm run docs:install` once,
+then `npm run docs`, and open http://localhost:4400 (`docs-site/`). These
 files replace the prototype's old all-in-one `CLAUDE.md` and are the source
 of truth for design, content facts and bugs.
 
