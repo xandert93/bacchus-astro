@@ -16,7 +16,9 @@ const section = (label, directory) => ({
 export default defineConfig({
   integrations: [
     starlight({
-      title: "Bacchus: how it works",
+      title: "Bacchus docs",
+      // The site's own mark, from the main project, so there's one copy.
+      logo: { src: "../src/assets/images/brand/bacchus-logo.png", alt: "Bacchus" },
       sidebar: [
         { label: "Start here", items: [{ label: "The docs, by folder", slug: "index" }] },
         section("Architecture", "architecture"),
