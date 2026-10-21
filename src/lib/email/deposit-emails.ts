@@ -53,7 +53,8 @@ export interface ReceiptPayment {
 
 const METHOD_NAMES: Record<string, string> = {
   card: "Card",
-  "pay-by-bank": "Pay by bank",
+  // Stripe's own name for it, capitals and all.
+  "pay-by-bank": "Pay by Bank",
   "bank-transfer": "Bank transfer",
 }
 
@@ -199,11 +200,11 @@ export const depositConfirmedEmail = (
     : undefined
   const receipt: [string, string | undefined][] = [
     ["Receipt number", `${facts.reference}-D1`],
+    ["Payment reference", payment?.reference],
     ["Date paid", paidOn],
     ["Paid by", payment ? (METHOD_NAMES[payment.method] ?? "Other") : undefined],
     ["Amount paid", euros(payment?.gross ?? facts.deposit)],
     ["For", `Deposit, quote ${facts.reference}`],
-    ["Payment reference", payment?.reference],
     ["Remaining balance", balance > 0 ? euros(balance) : undefined],
     [
       "Balance due by",
@@ -216,7 +217,7 @@ export const depositConfirmedEmail = (
     ...(BUSINESS.vatNumber ? [`VAT number ${BUSINESS.vatNumber}`] : []),
   ]
   const lead = [
-    `Your deposit of ${mark(euros(facts.deposit))} has arrived, and ${mark(day)} is now yours.`,
+    `We've received your deposit of ${mark(euros(facts.deposit))}, and ${mark(day)} is now yours.`,
     "Thank you.",
   ]
   const after = [
@@ -228,7 +229,7 @@ export const depositConfirmedEmail = (
     to: facts.email,
     subject: `${day} is yours`,
     html: emailLayout({
-      preview: `Your deposit has arrived and ${day} is confirmed.`,
+      preview: `We've received your deposit, and ${day} is confirmed.`,
       eyebrow: "Booking confirmed",
       title: "Your date is <em>confirmed</em>",
       hero: HERO,
@@ -458,7 +459,7 @@ export const depositReceivedStaffEmail = (facts: DepositFacts, to: string[]) =>
     eyebrow: "Booking confirmed",
     title: "Deposit <em>received</em>",
     lines: [
-      `${facts.couple}'s deposit has arrived, so their booking is confirmed and they've been emailed.`,
+      `We've received ${facts.couple}'s deposit, so their booking is confirmed and they've been emailed.`,
     ],
     kind: "deposit-received",
   })
