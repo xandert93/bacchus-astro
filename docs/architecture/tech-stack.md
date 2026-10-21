@@ -280,8 +280,10 @@ when it's opened.
 in code, `METHODS_BY_BUTTON` in `src/lib/payments/stripe.ts`, so their own
 account gets the same):
 
-- **"Pay by card" offers cards, Apple Pay, Google Pay and Link.** All four
-  are card payments at card fees; the wallets make it one tap on a phone.
+- **"Pay by card" offers cards, Apple Pay, Google Pay, Link and Revolut
+  Pay.** All are card payments or Revolut's own one-tap checkout, at card-like
+  fees; the wallets make it one tap on a phone, and Revolut is popular in
+  Malta.
 - **"Pay by bank" offers Stripe's Pay by Bank**, open banking (below).
 - **"Or transfer it yourself" offers Stripe's bank transfers**, the fallback
   for anyone who can't or won't use either (2026-10-21): bank details made
@@ -296,8 +298,6 @@ account gets the same):
   Bacchus's call to add it), Samsung Pay (popular in South Korea),
   buy-now-pay-later such as Klarna (high fees, and messy on a refundable
   deposit), and country-specific methods (few couples would use them).
-  Revolut Pay, popular in Malta, isn't available on the test account; worth
-  checking on Bacchus's own.
 
 **Bank**
 
