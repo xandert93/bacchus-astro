@@ -102,10 +102,15 @@ Restaurant features (gift vouchers and so on) wait until these are done.
 
 ### 5. Collecting testimonials
 
-- Some days after an event, a daily scheduled job marks the booking Completed
-  and emails a review request (opt-in for name and photo). **Every submission
+- **Built** (2026-10-21): the day after an event the daily jobs mark the
+  booking Completed; a week after, they email a review request. The `/review`
+  form asks for a rating, the review, the name to show and permission to
+  publish, and lands in the Studio as "Awaiting review". **Every submission
   is reviewed by a person before publishing.**
-- Not built. The four live testimonials were supplied by hand.
+- Not yet: a photo upload (the schema has the permission and the field), and
+  a link to Bacchus's Google reviews on the thank-you screen, which needs
+  their Google Business profile link.
+- The four live testimonials were supplied by hand.
 
 ### 6. Preferred supplier directory
 

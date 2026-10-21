@@ -1,0 +1,246 @@
+---
+// The /review page's one card: where the link in the review request lands
+// (src/lib/reviews/follow-ups.ts). ReviewForm.js loads who it's for, shows the
+// form, and sends it; it then thanks them, or does straight away if they've
+// already left their review.
+//
+// The stars are radio buttons, so the rating works from the keyboard (the
+// arrow keys move between them) and is read out as "3 stars"; the script
+// lights the stars up to the one chosen or hovered.
+import Button from "@components/ui/Button.astro"
+import CheckboxField from "@components/forms/CheckboxField.astro"
+import FormField from "@components/forms/FormField.astro"
+import LoadingRing from "@components/ui/LoadingRing.astro"
+import TextInput from "@components/forms/TextInput.astro"
+import { PUBLISH_WORDING, REVIEW_MAXIMUM_LENGTH } from "@data/reviews"
+
+const STAR_VALUES = [1, 2, 3, 4, 5]
+---
+
+<section class="review-page">
+  <div class="wrap">
+    <div class="review-card" id="reviewCard">
+      <p class="eyebrow">Your review</p>
+      <h1 id="reviewTitle">One moment…</h1>
+      <p class="lead" id="reviewLead"></p>
+
+      <div class="review-loading" id="reviewLoading">
+        <LoadingRing label="Loading" size={28} />
+      </div>
+
+      <form class="review-form" id="reviewForm" novalidate hidden>
+        <fieldset class="review-rating" id="reviewRatingField">
+          <legend>Your rating</legend>
+          <div class="review-stars" id="reviewStars">
+            {STAR_VALUES.map((value) => (
+              <label class="review-star">
+                <input
+                  type="radio"
+                  name="rating"
+                  value={value}
+                  aria-label={value === 1 ? "1 star" : `${value} stars`}
+                />
+                <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" />
+                </svg>
+              </label>
+            ))}
+          </div>
+          <div class="error">Please choose a rating.</div>
+        </fieldset>
+
+        <FormField
+          label="Your review"
+          for="reviewText"
+          full
+          id="reviewTextField"
+          error="Please tell us a little about it."
+        >
+          <TextInput
+            id="reviewText"
+            multiline
+            maxlength={String(REVIEW_MAXIMUM_LENGTH)}
+            placeholder="What made the day for you?"
+          />
+        </FormField>
+
+        <FormField
+          label="Name to show"
+          for="reviewName"
+          id="reviewNameField"
+          error="Please add a name."
+        >
+          <TextInput id="reviewName" placeholder="e.g. Bertha & Alex" />
+        </FormField>
+
+        <FormField label="Where you're from" for="reviewLocation">
+          <TextInput id="reviewLocation" placeholder="Optional, e.g. London" />
+        </FormField>
+
+        <CheckboxField id="reviewPublish">{PUBLISH_WORDING}</CheckboxField>
+
+        <p class="review-error" id="reviewError" role="alert" hidden></p>
+
+        <div class="review-buttons">
+          <Button variant="gradient" type="submit" id="reviewSend">
+            <span>Send my review</span>
+          </Button>
+        </div>
+      </form>
+
+      <div class="review-buttons review-done" id="reviewDone" hidden>
+        <Button href="/" variant="ghost" arrow>
+          <span>Back to Bacchus</span>
+        </Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import "./ReviewForm.js"
+</script>
+
+<style>
+  /* Clear of the fixed nav, with the card centred in what's left. */
+  .review-page {
+    padding: clamp(140px, 20vh, 220px) 0 clamp(80px, 11vw, 150px);
+  }
+
+  .review-card {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 48px);
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.12);
+    border-radius: var(--radius-card);
+    background: var(--paper);
+  }
+
+  .review-card h1 {
+    margin: 14px 0 16px;
+
+    font-size: clamp(30px, 4.5vw, 44px);
+    line-height: 1.15;
+  }
+
+  .review-loading {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0 8px;
+  }
+
+  .review-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px 12px;
+    margin-top: 28px;
+  }
+
+  /* A fieldset, so the legend names the five stars as one question; styled
+     like the .field labels beside it. */
+  .review-rating {
+    flex: 1 1 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .review-rating legend {
+    margin-bottom: 9px;
+    padding: 0;
+
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bronze);
+  }
+
+  .review-stars {
+    display: flex;
+    gap: 6px;
+  }
+
+  .review-star {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: 4px;
+    border-radius: 6px;
+
+    color: rgba(var(--muted-ink-rgb), 0.25);
+    cursor: pointer;
+    transition:
+      color 0.2s var(--ease),
+      transform 0.2s var(--ease);
+  }
+
+  .review-star input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .review-star svg {
+    fill: currentColor;
+  }
+
+  /* Lit by the script: every star up to the one chosen or hovered. */
+  .review-star:global(.is-lit) {
+    color: var(--gold);
+  }
+
+  .review-star:has(input:focus-visible) {
+    outline: 2px solid var(--gold);
+    outline-offset: 1px;
+  }
+
+  @media (--hover) {
+    .review-star:hover {
+      transform: scale(1.08);
+    }
+  }
+
+  /* The same message as a FormField's, shown the same way (.field.bad). */
+  .review-rating .error {
+    height: 0;
+    margin-top: 0;
+    overflow: hidden;
+    opacity: 0;
+
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 11.5px;
+    color: var(--oxblood);
+    transition: all 0.3s var(--ease);
+  }
+
+  .review-rating:global(.bad) {
+    animation: shake 0.4s;
+  }
+
+  .review-rating:global(.bad) .error {
+    height: 18px;
+    margin-top: 8px;
+    opacity: 1;
+  }
+
+  .review-error {
+    flex: 1 1 100%;
+
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 15px;
+    color: var(--oxblood);
+  }
+
+  .review-buttons {
+    display: flex;
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .review-done {
+    margin-top: 24px;
+  }
+</style>

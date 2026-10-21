@@ -35,6 +35,8 @@ comment has the detail.
 | `POST /api/deposits/test-payment`  | The pretend checkout                            | Records a test payment and confirms the booking, as a provider's webhook does      | The private link's token; 404 for a way to pay a real provider takes |
 | `POST /api/deposits/banks`         | The bank picker (`/secure-booking/choose-bank`) | The banks Enable Banking can take the payment from                                 | The private link's token; 404 unless Enable Banking is set up        |
 | `POST /api/deposits/bank-payment`  | Choosing a bank there                           | Starts the payment and answers with the bank's approval page                       | The private link's token; 404 unless Enable Banking is set up        |
+| `POST /api/reviews/view`           | The `/review` page, as it opens                 | Who the review link is for, their event, and whether they've already reviewed      | The private link's token                                             |
+| `POST /api/reviews/submit`         | The `/review` page's form                       | Stores the review as a testimonial awaiting review; emails staff                   | The private link's token; one review per booking                     |
 
 **Called by another service** (webhooks, and Cloudflare's timer):
 

@@ -80,8 +80,12 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   `LoadingRing` (the turning gold ring while something loads: the
   lightbox's photo, the deposit page's booking).
 - `forms/`: form controls. `FormField` (label, error, notes), `TextInput`
-  (every input and the textarea), `ChipGroup`, `OptionCardGroup`. Used by the
-  enquiry wizard and the waitlist popover.
+  (every input, the textarea and dropdowns), `CheckboxField` (a box with its
+  wording: the enquiry's consent, the review's permission to publish),
+  `ChipGroup`, `OptionCardGroup`. Used by the enquiry wizard, the waitlist
+  popover, the bank picker and the review form.
+- `reviews/`: `ReviewForm`, the `/review` page's card, where a review
+  request's link lands.
 - `layout/`: chrome on every page. `SiteHeader`, `MobileMenu`,
   `SiteFooter`, `VisitSection`.
 - `nav/`: `NavDropdown` (one desktop dropdown), `MobileNavGroup` (one drawer

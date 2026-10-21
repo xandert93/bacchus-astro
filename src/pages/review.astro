@@ -1,0 +1,15 @@
+---
+// /review: where the link in a review request lands (ReviewForm). Reached
+// only from an email, so it stays out of search results.
+import BaseLayout from "@layouts/BaseLayout.astro"
+import ReviewForm from "@components/reviews/ReviewForm.astro"
+---
+
+<BaseLayout
+  title="Your Review — Bacchus, Mdina"
+  description="Tell us how your event at Bacchus went."
+  noIndex
+  showVisitSection={false}
+>
+  <ReviewForm />
+</BaseLayout>

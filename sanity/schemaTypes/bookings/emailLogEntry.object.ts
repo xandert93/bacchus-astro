@@ -27,6 +27,8 @@ const EMAIL_KINDS = [
   { title: "Quote Declined: Confirmation", value: "quote-declined-client" },
   { title: "Quote Expired", value: "quote-expired" },
   { title: "Quote Expired: Follow Up", value: "quote-expired-staff" },
+  { title: "Review Request", value: "review-request" },
+  { title: "Review Received", value: "review-received" },
 ] as const
 
 const AUDIENCES = [

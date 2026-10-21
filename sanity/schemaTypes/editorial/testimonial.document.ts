@@ -6,19 +6,18 @@ import { formatDate, joinParts, optionTitle } from "../../lib/preview"
 /**
  * A real client review.
  *
- * Four exist today, client-provided, live in the rotator on the homepage and
+ * The first four, client-provided, live in the rotator on the homepage and
  * the weddings page. They were front-loaded by hand from
- * `docs/testimonials-raw.md`, NOT through the collection pipeline below, which
- * is not built yet.
+ * `docs/testimonials-raw.md`, before the collection pipeline below existed.
  *
- * The intended pipeline, for context on why the fields are shaped this way: a
- * Cloudflare Cron Trigger (a Worker run on a schedule, polling daily — not a webhook, because this
- * is a time-based trigger rather than a reaction to an event) moves a booking
- * Confirmed -> Completed some days after the event date, which triggers a
- * review-request email carrying an explicit opt-in for name and photo use.
- * Submissions are reviewed manually before publishing. Visitor-submitted
- * content is never auto-published, which is why `status` starts at `submitted`
- * and nothing renders below `published`.
+ * The pipeline (src/lib/reviews/): the daily jobs move a booking Confirmed ->
+ * Completed the day after its event, and a week after it email the client a
+ * link to /review. What they send lands here as `submitted`, with
+ * `sourceBooking` set and an id made from the booking's, so each booking can
+ * leave one. The form asks permission to publish with their name; there is
+ * no photo upload, so `usePhoto` stays unticked unless staff get one
+ * another way. Visitor-submitted content is never auto-published, which is
+ * why `status` starts at `submitted` and nothing renders below `published`.
  *
  * Consent is TWO separate booleans, not one. A reviewer can be happy to be
  * quoted by name and unwilling to have their photograph used, and collapsing

@@ -120,6 +120,17 @@ Cloudflare starts the run once a day, and it asks Sanity one question.
 Because step 2 is saved before step 3, tomorrow's run sees the reminder or
 the expiry and leaves that quote alone.
 
+The same run then follows up past events (`src/lib/reviews/follow-ups.ts`):
+
+- **The day after an event**, a Confirmed booking becomes Completed.
+- **A week after it** (up to 30 days, so old bookings added by hand aren't
+  asked), the client is emailed a link to `/review`. `reviewRequestedAt` is
+  saved first, so it's only ever sent once.
+
+**A review arriving**: the client sends the `/review` form;
+`api/reviews/submit.ts` creates a testimonial, status Submitted, and emails
+staff. Nothing shows on the site until someone publishes it in the Studio.
+
 ## Locally
 
 The same, except:

@@ -5,10 +5,12 @@
 
 import type { SanityClient } from "@sanity/client"
 import { runQuoteDeadlines } from "@lib/deposits/deadlines"
+import { runEventFollowUps } from "@lib/reviews/follow-ups"
 
 export const runDailyJobs = async (
   client: SanityClient,
   options: { siteOrigin: string },
 ) => ({
   quotes: await runQuoteDeadlines(client, options),
+  events: await runEventFollowUps(client, options),
 })

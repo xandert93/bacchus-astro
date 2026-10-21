@@ -345,6 +345,27 @@ export default defineType({
       readOnly: true,
       description: "The page the enquiry was sent from.",
     }),
+    defineField({
+      name: "reviewRequestedAt",
+      title: "Review Requested",
+      type: "datetime",
+      group: "admin",
+      readOnly: true,
+      description: help(
+        "When the client was emailed asking for a review, a week after the event. Set automatically.",
+        'Their review, if they leave one, is under Testimonials, "Awaiting review".',
+      ),
+    }),
+    defineField({
+      // Only a hash of the review link's secret, as for deposit links: the
+      // link itself is only in the client's inbox. Set by the site.
+      name: "reviewTokenHash",
+      title: "Review Link Check",
+      type: "string",
+      group: "admin",
+      hidden: true,
+      readOnly: true,
+    }),
   ],
 
   validation: (Rule) =>

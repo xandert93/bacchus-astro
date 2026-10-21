@@ -354,8 +354,9 @@ order.
   sent to the client automatically; a person edits and sends it.
 - **Cancellation to waitlist.** When a booking is cancelled, everyone holding
   a verified waitlist entry for that date is emailed.
-- **Confirmed to completed.** A scheduled job moves bookings on after the
-  event date, which triggers the review request.
+- **Confirmed to completed.** Built 2026-10-21: the daily jobs move
+  bookings on the day after the event, and send the review request a week
+  after (`src/lib/reviews/follow-ups.ts`).
 - **Data retention.** A scheduled job surfaces personal data past its review
   date for deletion.
 

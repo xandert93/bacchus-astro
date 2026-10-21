@@ -19,4 +19,6 @@ export const PAGES = [
   { path: "/menu", title: /Menu/ },
   // Reached only from a waitlist email's link.
   { path: "/waitlist", title: /Waitlist/, noIndex: true },
+  // Reached only from a review request's link.
+  { path: "/review", title: /Your Review/, noIndex: true },
 ]

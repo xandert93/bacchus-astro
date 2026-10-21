@@ -1,7 +1,8 @@
 ---
 // Wizard step 4, "Review": the enquiry exactly as it will arrive, and the
-// consent box. The review list itself is built by EnquiryForm.js from the
+// consent box (CheckboxField). The review list itself is built by EnquiryForm.js from the
 // answers, so its rows are script-made and their rules are :global().
+import CheckboxField from "@components/forms/CheckboxField.astro"
 import { CONSENT_WORDING } from "@data/enquiry"
 ---
 
@@ -28,24 +29,9 @@ import { CONSENT_WORDING } from "@data/enquiry"
 
 <div class="review-list" id="review"></div>
 
-<label class="consent" id="consentWrap">
-  <input type="checkbox" id="consent" />
-  <span class="box" aria-hidden="true">
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="3"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path d="m5 12 5 5L19 7" />
-    </svg>
-  </span>
-  <span>{CONSENT_WORDING}</span>
-</label>
+<CheckboxField id="consent" wrapperId="consentWrap">
+  {CONSENT_WORDING}
+</CheckboxField>
 
 <style>
   /* Scoped to this file (moved from global.css by
@@ -73,52 +59,6 @@ import { CONSENT_WORDING } from "@data/enquiry"
     border: 1px solid rgba(var(--muted-ink-rgb), 0.12);
     border-radius: var(--radius-card);
     overflow: hidden;
-  }
-
-  .consent {
-    flex: 1 1 100%;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    cursor: pointer;
-    font-family: "Newsreader", Georgia, serif;
-    font-size: 12px;
-    color: var(--muted-ink);
-    line-height: 1.5;
-  }
-
-  .consent input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .consent .box {
-    flex: none;
-    width: 21px;
-    height: 21px;
-    margin-top: 2px;
-    border-radius: 5px;
-    border: 1px solid rgba(var(--muted-ink-rgb), 0.28);
-    display: grid;
-    place-items: center;
-    transition: all 0.3s var(--ease);
-  }
-
-  .consent input:checked + .box {
-    background: var(--gold);
-    border-color: var(--gold);
-
-    /* Matches .button-gradient's --fg on the same --gold background (submit button
-           included), rather than --paper, so the checkmark reads as the same "ink
-           on gold" combination used everywhere else that pairs the two.
-  */
-    color: var(--ink);
-  }
-
-  .consent.bad .box {
-    border-color: var(--oxblood);
-    animation: shake 0.4s;
   }
 
   .review-note :global(svg) {
@@ -206,16 +146,5 @@ import { CONSENT_WORDING } from "@data/enquiry"
       grid-template-columns: 1fr;
       gap: 6px;
     }
-  }
-
-  .consent .box :global(svg) {
-    opacity: 0;
-    transform: scale(0.6);
-    transition: all 0.3s var(--ease);
-  }
-
-  .consent input:checked + .box :global(svg) {
-    opacity: 1;
-    transform: none;
   }
 </style>
