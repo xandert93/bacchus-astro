@@ -370,3 +370,20 @@ Everything below is illustrative and is labelled as such on the page.
 
 - **Shopify**: do they sell, or plan to sell, products or gift vouchers through
   it? See `docs/architecture/tech-stack.md`.
+
+### For the call (added 2026-10-21)
+
+- **How are enquiries and bookings recorded today?** An inbox, a diary, a
+  spreadsheet, a calendar? Before launch we need every upcoming confirmed
+  booking (and any open enquiry) in the Studio, or the calendar shows a
+  booked date as free. A spreadsheet of them can be imported in one go; past
+  events can stay where they are.
+- **Google reviews**: the link to your Google Business profile's review page,
+  so the review request and the thank-you screen can ask couples to post
+  there too.
+- **PDF quotes**: do you send quotes as PDFs today? Do corporate clients ask
+  for one for their accounts team?
+- **Paying the balance**: would you let couples pay towards the balance in
+  amounts of their choosing, any time before each due date?
+- **Paying early**: would you consider a small discount for paying it all,
+  or a large part of it, up front?
