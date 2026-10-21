@@ -1,12 +1,13 @@
 ---
 // A text, email, phone, number or date input — or, with `multiline`, a
-// textarea — in the site's boxed field style, with the gold underline that
-// draws in on focus. Date inputs get a calendar icon. The default slot adds
-// anything else that belongs inside the box (the message field's character
-// counter).
+// textarea, or with type "select", a dropdown — in the site's boxed field
+// style, with the gold underline that draws in on focus. Date inputs get a
+// calendar icon and dropdowns a chevron. The default slot adds anything else
+// that belongs inside the box (the message field's character counter); a
+// dropdown's options go in the "options" slot, or a script adds them.
 interface Props {
   id: string
-  type?: "text" | "email" | "tel" | "number" | "date"
+  type?: "text" | "email" | "tel" | "number" | "date" | "select"
   placeholder?: string
   min?: string
   max?: string
@@ -46,6 +47,10 @@ const {
 >
   {multiline ? (
     <textarea id={id} maxlength={maxlength} placeholder={placeholder} />
+  ) : type === "select" ? (
+    <select id={id} required={required}>
+      <slot name="options" />
+    </select>
   ) : (
     <input
       id={id}
@@ -73,6 +78,22 @@ const {
     >
       <rect x="3" y="4" width="18" height="18" rx="2" />
       <path d="M16 2v4M8 2v4M3 10h18" />
+    </svg>
+  )}
+  {type === "select" && (
+    <svg
+      class="field-select-icon"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m6 9 6 6 6-6" />
     </svg>
   )}
   <slot />
@@ -164,6 +185,24 @@ const {
   :global(.field) textarea {
     resize: vertical;
     min-height: 82px;
+  }
+
+  /* The browser's own arrow is drawn differently everywhere, so it's
+     replaced with a chevron matching the date icon. The icon lets clicks
+     through to the dropdown beneath it. */
+  :global(.field) select {
+    appearance: none;
+    padding-right: 42px;
+    cursor: pointer;
+  }
+
+  .field-select-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--bronze);
+    pointer-events: none;
   }
 
   :global(.field) input::placeholder,
