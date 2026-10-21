@@ -1,13 +1,19 @@
 ---
 // /secure-booking/choose-bank: where "Pay by bank" goes while Enable Banking
-// takes it (src/lib/payments/checkout.ts). The couple picks their bank from
-// the ones that can make the payment; we start it and send them to their
+// takes it (src/lib/payments/checkout.ts). The couple picks their country,
+// then their bank by its logo; we start the payment and send them to their
 // bank to approve it. Their bank sends them back to the deposit page.
+//
+// The bank tiles and country chips are selection controls, like the enquiry
+// form's chips, not action pills, so they're plain buttons rather than
+// <Button> (the "every button is <Button>" rule is for actions).
 import BaseLayout from "@layouts/BaseLayout.astro"
 import Button from "@components/ui/Button.astro"
+import ChipGroup from "@components/forms/ChipGroup.astro"
 import CheckoutCard from "@components/secure-booking/CheckoutCard.astro"
 import LoadingRing from "@components/ui/LoadingRing.astro"
 import SecureCheckoutBadge from "@components/secure-booking/SecureCheckoutBadge.astro"
+import { BANK_COUNTRIES } from "@data/bank-countries"
 import "../_secure-booking.css"
 ---
 
@@ -28,19 +34,25 @@ import "../_secure-booking.css"
       your banking details.
     </p>
 
+    <p class="choose-bank-step">Where's your bank?</p>
+    <ChipGroup
+      id="chooseBankCountries"
+      options={BANK_COUNTRIES.map((country) => ({ value: country.name }))}
+    />
+
     <div class="choose-bank-loading" id="chooseBankLoading">
       <LoadingRing label="Loading the banks" size={28} />
     </div>
 
-    {/* Filled by the script, one list per country. */}
-    <div id="chooseBankLists"></div>
+    <ul class="choose-bank-tiles" id="chooseBankTiles"></ul>
 
-    {/* Copied by the script for each bank, so each is a real <Button>. */}
-    <template id="chooseBankButton">
+    {/* Copied by the script for each bank. */}
+    <template id="chooseBankTile">
       <li>
-        <Button variant="dark" class="checkout-card-bank" arrow>
+        <button type="button" class="choose-bank-tile">
+          <img class="choose-bank-logo" alt="" loading="lazy" />
           <span data-bank-name></span>
-        </Button>
+        </button>
       </li>
     </template>
 
@@ -59,19 +71,73 @@ import "../_secure-booking.css"
 </script>
 
 <style>
-  .choose-bank-loading {
-    display: flex;
-    justify-content: center;
-    padding: 28px 0 8px;
-  }
-
-  :global(.choose-bank-country) {
-    margin-top: 28px;
+  .choose-bank-step {
+    margin: 28px 0 8px;
 
     font-family: "Inter", sans-serif;
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--bronze);
+  }
+
+  .choose-bank-loading {
+    display: flex;
+    justify-content: center;
+    padding: 28px 0 8px;
+  }
+
+  .choose-bank-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    gap: 10px;
+    margin-top: 24px;
+    list-style: none;
+  }
+
+  /* Cloned from the template by the script, so without this file's scoping
+     attribute: hence :global(). */
+  .choose-bank-tiles :global(.choose-bank-tile) {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(var(--ink-rgb), 0.12);
+    border-radius: var(--radius-card);
+    background: #fff;
+
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 17px;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition:
+      border-color 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+
+  @media (--hover) {
+    .choose-bank-tiles :global(.choose-bank-tile:hover) {
+      border-color: rgba(var(--gold-rgb), 0.6);
+      box-shadow: 0 12px 30px -18px rgba(var(--ink-rgb), 0.35);
+    }
+  }
+
+  .choose-bank-tiles :global(.choose-bank-tile:focus-visible) {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  .choose-bank-tiles :global(.choose-bank-tile:disabled) {
+    opacity: 0.5;
+    cursor: progress;
+  }
+
+  .choose-bank-tiles :global(.choose-bank-logo) {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
   }
 </style>
