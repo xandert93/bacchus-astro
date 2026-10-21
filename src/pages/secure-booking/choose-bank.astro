@@ -15,6 +15,7 @@ import CheckoutCard from "@components/secure-booking/CheckoutCard.astro"
 import FormField from "@components/forms/FormField.astro"
 import LoadingRing from "@components/ui/LoadingRing.astro"
 import SecureCheckoutBadge from "@components/secure-booking/SecureCheckoutBadge.astro"
+import TextInput from "@components/forms/TextInput.astro"
 import "../_secure-booking.css"
 ---
 
@@ -42,7 +43,7 @@ import "../_secure-booking.css"
     <div class="choose-bank-picker" id="chooseBankPicker" hidden>
       <FormField label="Country" for="chooseBankCountry">
         {/* Filled by the script with the countries that have banks. */}
-        <select id="chooseBankCountry"></select>
+        <TextInput id="chooseBankCountry" type="select" underline={false} />
       </FormField>
 
       <p class="choose-bank-label">Select your bank</p>
