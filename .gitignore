@@ -50,3 +50,7 @@ playwright-report/
 .dev.vars
 .dev.vars.*
 .wrangler/
+
+# Client documents dropped in the repo root for reference (a real quote,
+# say) name real people, so they never go into git.
+/*.pdf
