@@ -58,9 +58,9 @@ question; it's a starting point, not a recommendation of law.
 
 **The business**
 
-- **D1. Who the contract is with.** The registered company name, company
-  number, registered address and VAT number. The catalogue calls you "the
-  Caterer"; the terms need the legal entity.
+- **D1. Who the contract is with.** The company is Bacchus Company Limited
+  (from your quote). Still needed: its company number, registered address
+  and VAT number.
 
 **Money** (two of these are the open conflicts)
 
@@ -87,8 +87,8 @@ question; it's a starting point, not a recommendation of law.
   time to rebook the date, the bigger the loss), not a penalty. A scale like
   this is the usual way to show that.
 
-- **D5. How long a quote stays valid.** The catalogue says 15 days. The
-  site currently assumes 7 (a Studio setting). Which?
+- **D5. How long a quote stays valid.** The catalogue says 15 days; your
+  quotes say 30. Suggestion: 30, as you use today.
 - **D6. Price changes for events far ahead.** The catalogue lets you revise
   prices after a quote expires to reflect cost increases "at the time of the
   Event". For a confirmed booking, consumer law allows a price rise only if
@@ -177,10 +177,11 @@ question; it's a starting point, not a recommendation of law.
 **Signing**
 
 - **D28. Accepting the terms.** The catalogue says a booking is confirmed
-  once the deposit is paid "and all necessary documentation signed". Is a
-  separate signed contract needed, or does accepting these terms on the
-  deposit page (a ticked box, recorded with the date and wording) do? The
-  second is just as binding and is what the site is built for.
+  once the deposit is paid "and all necessary documentation signed", and
+  your quote speaks of the contract being signed. Is a separate signed
+  contract needed, or does accepting these terms on the deposit page (a
+  ticked box, recorded with the date and wording) do? The second is just
+  as binding and is what the site is built for.
 
 ---
 
@@ -188,8 +189,8 @@ question; it's a starting point, not a recommendation of law.
 
 ### 1. Who we are and what these terms cover
 
-1.1. In these terms, "we", "us" and "Bacchus" mean [registered company
-name], company number [ ], registered at [address], VAT number [ ] [D1],
+1.1. In these terms, "we", "us" and "Bacchus" mean Bacchus Company
+Limited, company number [ ], registered at [address], VAT number [ ] [D1],
 trading as Bacchus, 1 Inguanez Street, Mdina MDN 1000, Malta.
 
 1.2. "You" means the person or organisation who books with us and pays the
@@ -209,7 +210,7 @@ force when you paid your deposit are the ones that apply to your event.
 
 ### 2. Quotes and prices
 
-2.1. Every quote has a reference and an end date, [15] days after it's
+2.1. Every quote has a reference and an end date, [30] days after it's
 sent [D5]. Until then, its prices won't change. After it, we may need to
 quote again, as prices change with the season and with what our suppliers
 charge us.

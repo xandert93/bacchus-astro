@@ -121,8 +121,16 @@ Restaurant features (gift vouchers and so on) wait until these are done.
   (couples usually choose two), wine and an open bar, a themed bar "on
   request" (the catalogue gives themed bars no price), and the set-up items
   from the real quote (round and bistro tables, bar pieces, sound, red
-  carpet, chair bows). Still to add: the name of the Bacchus coordinator
-  who prepared it, as the real quote has.
+  carpet, chair bows). Revised the same day: prices from Bacchus's own
+  quote (the gin bar is €12.50), small set-up items grouped into one
+  named line, "per person" dropped (the quantity shows it), "Prepared by
+  Nicholas Vella Gatt" as on their quotes, and 30-day validity.
+- **What their real quote suggests for ours** (`client-facts.md`, "The real
+  quote"), not built yet: who prepared it, filled in from whoever's logged
+  into the Studio; a Notes field the client sees, separate from the
+  internal one; an Overtime group, so the summary matches theirs (Exclusive
+  Use, Food, Beverage, Set-Up, Overtime); the cake and its flavour; and the
+  quote validity setting at whatever D5 settles.
 
 ### 4. Deposits
 
