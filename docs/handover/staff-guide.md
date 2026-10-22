@@ -10,7 +10,8 @@ Studio changes, so it's ready to hand over at launch.
 2. [Enquiries and bookings](#enquiries-and-bookings)
 3. [Quotes](#quotes)
 4. [The waitlist](#the-waitlist)
-5. [Greyed-out fields](#greyed-out-fields)
+5. [Reviews](#reviews)
+6. [Greyed-out fields](#greyed-out-fields)
 
 ---
 
@@ -83,6 +84,31 @@ Client** if they say no, and **Expired** once its "valid until" date passes.
 When a wedding date is taken, couples can ask to be told if it frees up.
 They confirm their email address first. If the booking is cancelled, everyone
 waiting for that date is emailed automatically.
+
+---
+
+## Reviews
+
+**A week after every event**, the client is emailed automatically, asking
+how it went. Their review arrives in **Website → Testimonials → Awaiting
+review**, and you're emailed too. Nothing appears on the website until
+someone publishes it.
+
+To publish one:
+
+1. Check they ticked permission to publish ("Their Name Being Used"). If
+   they didn't, set it to **Withheld**: it's private feedback.
+2. Highlight one phrase with **Gold Emphasis**; the website shows it in
+   gold.
+3. Set the status to **Published** and publish.
+
+**Google reviews matter most**: they're what couples check, and they help
+Bacchus show up in Google's map results. One rule, from Google itself:
+**ask every client the same way, never only the happy ones.** Sending only
+satisfied clients to Google ("review gating") breaks Google's rules, and
+Google can remove the reviews or suspend the listing. The automatic email
+already asks everyone. If you ask anyone by hand, ask everyone, and never
+suggest an unhappy client keep it off Google.
 
 ---
 
