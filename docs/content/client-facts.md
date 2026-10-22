@@ -268,11 +268,26 @@ The station prices match the Studio's exactly.
 - **A free-text Notes section** for the client, and the cake flavour
   picked on the quote itself.
 
+**What Nicholas said in person** (late September 2026, as the user
+remembers it four weeks on, so confirm before relying on any of it):
+
+- **Overtime is €10–15 a person**, depending on how many guests there are.
+- **Every food package includes the cake.** The cake prices on the template
+  are there for completeness.
+- **Some set-up lines are there to show what's included** rather than to be
+  charged, rounding the quote out.
+- **Two bar pieces are offered per wedding.**
+- **Chairs are included in the set-up**, usually for at most 30% of the
+  guests (a standing reception seats some, not all). The template does
+  price chairs (€5, 32 of them on this quote, a fifth of its 160 guests),
+  so ask whether "included" means free or simply part of the set-up line.
+
 **What it changes, or questions**
 
 - **The cake**: the emails say an in-house cake is included in the
-  Reception price; the quote prices cakes separately (€300–600). Ask which
-  packages include one.
+  Reception price, and Nicholas said every food package includes one; the
+  quote prices cakes separately (€300–600). Probably those prices are for a
+  couple who wants something different; confirm.
 - **Themed bar and extras prices** are now known, but published nowhere;
   the site doesn't show them until Bacchus says they may be published.
 
