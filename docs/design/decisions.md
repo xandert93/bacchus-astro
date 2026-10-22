@@ -129,6 +129,43 @@ A four-step wizard: **the occasion** (event type, date) → **the specifics**
 - **The ring is an SVG stroke**, not a `conic-gradient`, which filled
   inconsistently.
 
+### Reviews: Google first, the website second (2026-10-22)
+
+- **Google reviews are the main focus.** They count towards Google's map
+  results (how many reviews, the rating, how recent, whether the business
+  replies), and people trust them because the business can't choose which
+  show. Testimonials on our own site do little for search: Google ignores a
+  business's reviews of itself and no longer shows stars for them.
+- **The website's testimonials are curated stories**, placed where couples
+  are deciding: a few specific, named quotes, not a rating.
+- **No reviewer photos, for now.** The section doesn't show any. The photo a
+  couple has of their day usually belongs to their photographer, who holds
+  the copyright, so publishing it needs the photographer's permission too.
+  If photos are wanted, Bacchus's own pictures of that event are the safe
+  source.
+- **Review gating is banned, and we don't do it.** It means sending happy
+  clients to Google and unhappy ones somewhere private, so only the good
+  reviews go public. Google's rules forbid asking selectively for positive
+  reviews or discouraging negative ones. Google finds out from people
+  reporting it (clients, competitors), from patterns (a burst of five-star
+  reviews from new accounts), and from the asking page itself, which is
+  public. It can remove the reviews or suspend the listing. So:
+  - Everyone is asked by one fixed rule: every Completed booking, a week
+    after the event (`src/lib/reviews/follow-ups.ts`).
+  - Whoever sends our form is shown the Google prompt, whatever their rating
+    (planned, once we have Bacchus's Google review link).
+  - Not asking someone at all is fine for our own form, for a real reason
+    (a dispute in progress). Never because their review might be bad.
+    Staff asking couples by hand follow the same rule.
+- **Label the testimonials honestly.** EU consumer law (the 2022 "Omnibus"
+  rules) treats a business that publishes only positive reviews, or claims
+  reviews are genuine without checking, as misleading consumers. A selection
+  of testimonials is normal, but it shouldn't pose as a full set of reviews.
+  The section should present them as a selection, show no average rating
+  made from them, and can say truthfully that each came from a real Bacchus
+  client through a link only they receive. Not legal advice: worth Bacchus
+  checking. Not done yet.
+
 ---
 
 ## Photo carousel

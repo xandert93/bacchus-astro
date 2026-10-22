@@ -377,12 +377,30 @@ Everything below is illustrative and is labelled as such on the page.
   spreadsheet, a calendar? Before launch we need every upcoming confirmed
   booking (and any open enquiry) in the Studio, or the calendar shows a
   booked date as free. A spreadsheet of them can be imported in one go; past
-  events can stay where they are.
+  events can stay where they are (`docs/planning/sanity-rollout.md`,
+  "Before launch: their existing bookings").
+
+  Our guess, unconfirmed: enquiries live in the `events@` inbox, booked
+  dates in a paper diary, a spreadsheet or a shared calendar, quotes go out
+  as Word or PDF attachments, and deposits are matched to couples by reading
+  the bank statement. Why: every contact we've seen is by email and phone;
+  their terms are "quite flexible", which reads as negotiated case by case;
+  the current site takes no payments; and that's how most family-run venues
+  of this size work. If so, the site takes over the repetitive parts
+  (answering "is my date free?", sending quotes, chasing deposits, matching
+  payments) while staff are still told everything by email, the habit they
+  already have.
+
+- **Cancellation after the deposit**: if a couple cancels, what happens to
+  what they've paid beyond the deposit? Refunded in full, refunded on a
+  sliding scale by how close the date is, or kept? This decides how much
+  risk an early or full payment carries, for them and for you.
 - **Google reviews**: the link to your Google Business profile's review page,
   so the review request and the thank-you screen can ask couples to post
   there too.
-- **PDF quotes**: do you send quotes as PDFs today? Do corporate clients ask
-  for one for their accounts team?
+- **PDF quotes** (we're adding them, 2026-10-22): what must a quote show for
+  your corporate clients (their company name and VAT number, a purchase
+  order number)? Do you have standard terms and conditions to print on it?
 - **Paying the balance**: would you let couples pay towards the balance in
   amounts of their choosing, any time before each due date?
 - **Paying early**: would you consider a small discount for paying it all,
