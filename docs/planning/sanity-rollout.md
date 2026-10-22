@@ -18,6 +18,7 @@ the route from here to a working system.
 - [Step 5 — real availability](#step-5--real-availability)
 - [Step 6 — the automatic parts](#step-6--the-automatic-parts)
 - [Step 7 — quotes and deposits](#step-7--quotes-and-deposits)
+- [Before launch: their existing bookings](#before-launch-their-existing-bookings)
 - [Step 8 — hand it to the client](#step-8--hand-it-to-the-client)
 - [What Bacchus has to supply](#what-bacchus-has-to-supply)
 
@@ -468,6 +469,40 @@ puts everything back.
   `src/lib/payments/checkout.ts` plus the provider's own webhook.
 - Quote PDFs: deterministic templating, never a language model.
 
+## Before launch: their existing bookings
+
+Not started: we don't know yet how Bacchus records bookings (asked,
+`docs/content/client-facts.md`, "For the call"). No real data is in Sanity
+yet either; the user will say when there is.
+
+**What moves in**, and why:
+
+- **Every upcoming confirmed booking. Essential.** The public calendar is
+  worked out from bookings, so a wedding missing from Sanity shows its date
+  as free, and someone may enquire about a date that's taken. For each: the
+  date, event type, client and partner names, email, phone, guest count,
+  spaces, and what's been paid so far.
+- **Open enquiries and quotes still in play.** Worth moving so staff work
+  them in one place. A quote already sent the old way can be redone in the
+  Studio, or kept by email until it's settled.
+- **Not past events, old enquiries or old payments.** The site doesn't need
+  them, and under GDPR holding less personal data is better. They stay where
+  they are.
+
+**How**: Bacchus fills in a spreadsheet with one row per booking (we send
+the columns), and a one-off script imports it, as step 2's content
+migration did. Things to watch:
+
+- **No emails on import.** Sanity's webhooks fire on new documents too, so
+  importing a booking with a deposit marked Received would email the couple
+  "your date is confirmed". Pause the webhooks during the import, or record
+  payments without setting off the confirmation.
+- **The daily jobs will act on imported records**: a booking whose event
+  was 7 to 30 days ago gets a review request, and an imported quote with an
+  end date gets reminders. Import with that in mind.
+- **Status history**: each imported booking gets one entry saying it came
+  from Bacchus's own records, so nobody wonders later who set it.
+
 ## Step 8 — hand it to the client
 
 **Deadline: the plan, before 7 November 2026.** The project is on Sanity's
@@ -494,6 +529,11 @@ id is set the same way.
 - Walk them through approving an enquiry, editing a package and adding a
   gallery image. The sidebar is already ordered for this: pending enquiries
   first, settings last.
+- Explain reviews: requests go automatically to every Completed booking a
+  week after the event; reviews wait under Testimonials, "Awaiting review",
+  until someone publishes or withholds them. And the Google rule: ask
+  everyone the same way, never only the happy ones
+  (`docs/design/decisions.md`, "Review gating").
 - Agree who holds the account. It should be Bacchus, with us invited.
 
 ---

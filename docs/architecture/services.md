@@ -126,6 +126,10 @@ The same run then follows up past events (`src/lib/reviews/follow-ups.ts`):
 - **A week after it** (up to 30 days, so old bookings added by hand aren't
   asked), the client is emailed a link to `/review`. `reviewRequestedAt` is
   saved first, so it's only ever sent once.
+- It looks for **any** Completed event 7 to 30 days old that hasn't been
+  asked, not exactly day 7. So a day the timer misses is caught up the next
+  morning, and when the feature first ran, recent events were all asked at
+  once.
 
 **A review arriving**: the client sends the `/review` form;
 `api/reviews/submit.ts` creates a testimonial, status Submitted, and emails
