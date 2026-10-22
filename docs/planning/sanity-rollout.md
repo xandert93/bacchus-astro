@@ -493,15 +493,23 @@ yet either; the user will say when there is.
 the columns), and a one-off script imports it, as step 2's content
 migration did. Things to watch:
 
-- **No emails on import.** Sanity's webhooks fire on new documents too, so
-  importing a booking with a deposit marked Received would email the couple
-  "your date is confirmed". Pause the webhooks during the import, or record
-  payments without setting off the confirmation.
-- **The daily jobs will act on imported records**: a booking whose event
-  was 7 to 30 days ago gets a review request, and an imported quote with an
-  end date gets reminders. Import with that in mind.
-- **Status history**: each imported booking gets one entry saying it came
-  from Bacchus's own records, so nobody wonders later who set it.
+- **Create each booking whole, in one write.** The site's webhooks fire on
+  updates only (`sanity/webhooks/definitions.ts`), so a new document sets
+  nothing off: a booking created with its deposit already Received sends no
+  "your date is confirmed" email. A script that created a booking and then
+  added its payment in a second write would be an update, and would send
+  it. No need to pause the webhooks.
+- **Mark each one imported**: an `importedAt` date on the booking, and one
+  status history entry saying it came from Bacchus's own records, so nobody
+  wonders later who set it.
+- **The daily jobs act on imported records like any other.** A booking
+  whose event was 7 to 30 days before the import gets a review request, and
+  an imported quote with an end date gets reminders. Decide at import
+  whether that's wanted (a review request for a wedding last fortnight
+  probably is). If not, the jobs skip anything that happened before its
+  record's `importedAt`. Not a blanket "skip imported" rule: an imported
+  wedding next June should still get its review request after the day, and
+  a cancellation still emails the waitlist.
 
 ## Step 8 — hand it to the client
 
