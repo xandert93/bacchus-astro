@@ -356,7 +356,9 @@ Everything below is illustrative and is labelled as such on the page.
   balance is due.
 - **How long a quote stays valid** once it's sent. We've assumed seven days;
   it's a setting in the Studio (Wedding Policy, "Days a Quote Stays Valid"),
-  and staff can set a different end date on any one quote.
+  and staff can set a different end date on any one quote. **The
+  catalogue's terms say 15 days** (page 52), so the setting probably
+  should too.
 - **The 30/60/10 schedule** we discussed in person: can you confirm it in
   writing? Is the 30% due when the couple books, however far ahead, and
   when exactly are the 60% and the last 10% due?
