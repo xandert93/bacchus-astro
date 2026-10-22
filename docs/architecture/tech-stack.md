@@ -105,6 +105,24 @@ point, the static files (`dist/client/`) and the `previews` block that
 `wrangler preview` refuses to run without. Commands and build variables stay
 in the dashboard.
 
+**On demand, not always on.** A Worker isn't a server we keep running, as
+an Express app on a rented machine would be. Cloudflare starts our code
+when a request arrives (an API route, the daily timer) and drops it after.
+
+- **Gains**: free at Bacchus's traffic, since nothing is paid for while
+  idle; nothing to keep patched, restarted or monitored; it copes with a
+  rush by itself; and it runs in the Cloudflare data centre nearest the
+  visitor.
+- **Costs**: no memory between requests (anything to keep goes to Sanity);
+  nothing long-running (a timer starts each scheduled job, and a heavy job
+  must fit the CPU limit below); no persistent connections such as a
+  WebSocket server without extra Cloudflare products; not full Node.js (see
+  "What the Workers runtime can't do"); and the code is shaped around
+  Cloudflare's way of doing things, so moving host means some rework.
+- **An always-on server** would suit long tasks, live connections or heavy
+  computing, none of which this site has, and costs money every hour
+  whether anyone visits or not.
+
 **Static pages, plus a small Worker** (since 2026-10-16). Every page is still
 built ahead of time. The Cloudflare adapter (`@astrojs/cloudflare`) adds a
 Worker for the routes that must run when a visitor arrives, each marked
@@ -156,7 +174,13 @@ PDF, a headless Chrome (Puppeteer), can't run inside a Worker. Two options:
 - **A PDF library that runs on Workers** (`pdf-lib`, for example): draws the
   PDF in code, with no browser. Free, but the layout is built by hand.
 
-Decide when quotes are built (step 4 of the roadmap).
+**Chosen, 2026-10-22: Browser Rendering**, after a demo of both
+(`docs/planning/roadmap.md`, feature 3). In plain terms, "10 browser minutes
+a day" means each PDF opens an invisible Chrome on Cloudflare for a second or
+two; 10 minutes is 600 seconds, so a few hundred PDFs a day, free. Bacchus
+sends a few quotes a day at most. The template is an HTML page made for
+print (A4, page margins, page numbers), styled with the site's palette and
+fonts; it isn't the deposit page.
 
 **Until launch, nothing is indexed.** The `workers.dev` address is public, so
 `public/_headers` sends `X-Robots-Tag: noindex` with every page, telling

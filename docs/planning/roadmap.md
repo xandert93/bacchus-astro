@@ -114,7 +114,15 @@ Restaurant features (gift vouchers and so on) wait until these are done.
     show the cost.
   - The two came out nearly identical for a one-page quote. Browser
     Rendering is the recommendation, because real quotes will run to terms
-    and conditions and long item lists. Final choice is the user's.
+    and conditions and long item lists. **Chosen by the user, 2026-10-22.**
+- **The demo** (2026-10-22): a four-page PDF, the quote then the draft
+  booking terms, made to show Bacchus. Its lines are the kinds a real
+  quote carries at the prices on record: a Reception tier, two stations
+  (couples usually choose two), wine and an open bar, a themed bar "on
+  request" (the catalogue gives themed bars no price), and the set-up items
+  from the real quote (round and bistro tables, bar pieces, sound, red
+  carpet, chair bows). Still to add: the name of the Bacchus coordinator
+  who prepared it, as the real quote has.
 
 ### 4. Deposits
 
