@@ -7,7 +7,10 @@ and what still has to be asked.
 **How sure we are.** Each fact comes from one of three sources:
 
 - **Catalogue**: the PDF wedding catalogue (`public/docs/`).
-- **Quote**: one real client quote, shared as a PDF.
+- **Quote**: one real client quote, "Quote REV00 - Bertha & Alex", prepared
+  12 July 2026 (see [The real quote](#the-real-quote)). Bacchus's own
+  document, so treat it as confirmed. Kept out of git (it names a couple):
+  the user holds the file.
 - **Email**: client correspondence received 17 September 2026 (two threads
   answering a couple's questions, plus a Q&A thread). Written by Bacchus, so
   treat it as confirmed.
@@ -24,10 +27,11 @@ Never pick one side yourself; flag it to the client.
 3. [The day itself](#the-day-itself)
 4. [Packages](#packages)
 5. [Prices](#prices)
-6. [Booking terms](#booking-terms)
-7. [Open conflicts](#open-conflicts)
-8. [Placeholders on the site](#placeholders-on-the-site)
-9. [Questions for the client](#questions-for-the-client)
+6. [The real quote](#the-real-quote)
+7. [Booking terms](#booking-terms)
+8. [Open conflicts](#open-conflicts)
+9. [Placeholders on the site](#placeholders-on-the-site)
+10. [Questions for the client](#questions-for-the-client)
 
 ---
 
@@ -208,6 +212,70 @@ quirk of that one quote. Trust only the per-person and line-item prices.
 
 ---
 
+## The real quote
+
+Read in full on 2026-10-22 (only its prices had been recorded before). It's
+a spreadsheet template: every item Bacchus sells is listed with its price,
+and a quantity and total are filled in for the ones chosen.
+
+**About the business**
+
+- **The company is Bacchus Company Limited** (the quote's closing line).
+  The receipts now show it (`src/data/business.ts`).
+- **Quotes are prepared by a named person**: this one by **Nicholas Vella
+  Gatt**, with the date. His title isn't given.
+- **"This quote is valid for 30 days."** The catalogue's terms say 15.
+  **Conflict**, though a mild one: the quote is the newer document and
+  shows current practice. The Studio still assumes 7 (an illustrative
+  number from the prototype, never Bacchus's).
+- **"If the contract is not signed"**: they use a signed contract after
+  the quote, which matters for how terms are accepted online
+  (`booking-terms-draft.md`, D28).
+
+**Prices on it not recorded elsewhere** (per person unless said; the
+template doesn't state units, so "per person" is inferred from the
+quantities used):
+
+| Group          | Items                                                                                                                                                                                                      |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Venue          | Secret Garden €500 · Chambers €500 · Small Terrace €500 · Terrace & Lawns €4,500 (this booking) · De Redin Ballroom, Outside Catering, Partial Exclusivity (amounts unreadable: the column was too narrow) |
+| Wedding cake   | 1 tier €300 · 2 tiers €450 · 3 tiers €600 · custom; flavours almond, bacio, pistachio                                                                                                                      |
+| Drinks         | Maltese and Gozitan wine €30 · Italian and French wine €35 · custom wine · after-Mass reception €9.50 · premium upgrades                                                                                   |
+| Themed bars    | Cocktail €12.50 · whiskey €12.50 · champagne tower €20 · cigar €10.50 · gin €12.50 · rum €10.50 · welcome drink €6.50 · coffee €3.50                                                                       |
+| Set-up         | Chairs €5 (and the items under Prices)                                                                                                                                                                     |
+| Overtime       | €10 a rate (unit not stated; the emails say €10–15 a person per extra hour)                                                                                                                                |
+| Custom package | Food and drinks lines for anything off the menu                                                                                                                                                            |
+
+The station prices match the Studio's exactly.
+
+**How the price is built**
+
+- A summary by group: **Exclusive Use, Food, Beverage, Set-Up, Overtime**,
+  then subtotal, **discount**, total excluding VAT, VAT, per person, and the
+  total including VAT with its per-person figure.
+- **The discount rounds the price to €100 a person**, VAT included: a
+  €17,526 subtotal less €1,525.60 is €16,000.40, which is €100.00 for each
+  of 160 guests.
+- **Its VAT line is wrong**, which is why its maths never reconciled. VAT
+  inside a €16,000.40 total is €2,440.74 (18/118 of it); the quote shows
+  €2,880.07, which is 18% of the whole total. The total excluding VAT
+  (€13,559.66) is right. A quote built by the site works VAT out one way
+  only, so this can't happen there; worth mentioning gently, as their
+  own quotes may carry the same error.
+- **Other slips** a generated quote avoids: the date reads "Saturday 3 24
+  2027" under "D M YEAR" columns (24 March 2027 is a Wednesday), and
+  "Lavendar", "Whiskey Bat".
+- **A free-text Notes section** for the client, and the cake flavour
+  picked on the quote itself.
+
+**What it changes, or questions**
+
+- **The cake**: the emails say an in-house cake is included in the
+  Reception price; the quote prices cakes separately (€300–600). Ask which
+  packages include one.
+- **Themed bar and extras prices** are now known, but published nowhere;
+  the site doesn't show them until Bacchus says they may be published.
+
 ## Booking terms
 
 - **Catalogue**: a 30% non-refundable deposit confirms a wedding; the other
@@ -357,8 +425,8 @@ Everything below is illustrative and is labelled as such on the page.
 - **How long a quote stays valid** once it's sent. We've assumed seven days;
   it's a setting in the Studio (Wedding Policy, "Days a Quote Stays Valid"),
   and staff can set a different end date on any one quote. **The
-  catalogue's terms say 15 days** (page 52), so the setting probably
-  should too.
+  catalogue's terms say 15 days and their real quote says 30**: which is
+  current?
 - **The 30/60/10 schedule** we discussed in person: can you confirm it in
   writing? Is the 30% due when the couple books, however far ahead, and
   when exactly are the 60% and the last 10% due?
