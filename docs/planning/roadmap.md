@@ -89,6 +89,32 @@ Restaurant features (gift vouchers and so on) wait until these are done.
 
 - Built from a fixed template (HTML and CSS rendered to PDF), **never
   AI-generated**. Needs step 2.
+- **Decided, 2026-10-22: we're building them.** Why the email and the
+  deposit page aren't enough:
+  - **Corporate clients**: finance teams approve spending through
+    purchase-order and expense systems, which take a file as an attachment,
+    not an email. A formal quote also carries the client company's name and
+    VAT number, which the email doesn't.
+  - **No private link changes hands.** Forwarding the quote email forwards
+    the deposit page's link, and with it the buttons to pay and to decline.
+    A PDF can go to finance, parents or a planner without them.
+  - Printing, offline reading, and a branded copy of exactly what was
+    quoted, kept on the quote (its "Generated PDF" field).
+- **How to make them**, compared on 2026-10-22 with the same sample quote
+  drawn both ways:
+  - **Browser Rendering** (Cloudflare's headless Chrome printing an HTML
+    page): the template is HTML and CSS like the rest of the site, so text
+    wraps, long tables and terms flow onto further pages, and design changes
+    are CSS. About a second a PDF. Free plan: 10 browser minutes a day;
+    paid: 10 hours a month, then $0.09 an hour.
+  - **pdf-lib** (a JavaScript library inside the Worker): no service and
+    a fifth of the time, but every line is placed by hand in points, with
+    no wrapping, no page breaks and no gradients. Two bugs in the first
+    draw (letters missing from a subsetted font, a box drawn upside down)
+    show the cost.
+  - The two came out nearly identical for a one-page quote. Browser
+    Rendering is the recommendation, because real quotes will run to terms
+    and conditions and long item lists. Final choice is the user's.
 
 ### 4. Deposits
 
@@ -99,6 +125,34 @@ Restaurant features (gift vouchers and so on) wait until these are done.
   `/secure-booking`, bank transfer first, a pretend card checkout, declining,
   and first-deposit-wins. What's left before real money is in
   `docs/planning/sanity-rollout.md`, step 7.
+
+### 4b. The balance (not built)
+
+Only the deposit is built. The rest waits on the payment schedule, one of
+the two open conflicts (30/70 in the catalogue, 30/60/10 in person). Ideas,
+none agreed with Bacchus yet (questions in `client-facts.md`):
+
+- **A flexible payment plan.** Wedding venues often offer a payment plan:
+  fixed instalments on set dates. A flexible one also lets the couple pay
+  any amount towards the balance whenever they like (partial payments)
+  before each due date. The deposit page would become their booking page
+  (a client portal): paid so far, what's left (the running balance), the
+  next due date, and a "make a payment" box with a sensible minimum. The
+  daily jobs send a reminder before each due date, as they do for quotes.
+- **Bank payments first.** Card fees are a percentage plus a fixed part on
+  every payment, so many small card payments cost the most. Pay by Bank and
+  bank transfer cost little or nothing per payment
+  (`docs/architecture/tech-stack.md`, "Payments").
+- **A discount for paying early** (suggested 2026-10-21): pay it all, or a
+  large part, up front for a small discount. There's no industry standard
+  rate; it's set by what it's worth to Bacchus: money in hand sooner, less
+  chasing, and the card fee avoided. Offering it only for bank payment
+  stops a card fee (about €150 on €10,000) eating it.
+- **The risk is refunds.** The deposit is non-refundable in every version
+  of the terms we've seen; what happens to later payments if a couple
+  cancels isn't known (asked). The more that's paid early, the more a
+  cancellation puts at stake, so the cancellation terms must be clear
+  before either idea.
 
 ### 5. Collecting testimonials
 
