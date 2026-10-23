@@ -493,6 +493,22 @@ Everything below is illustrative and is labelled as such on the page.
 
 ### For the call (added 2026-10-21)
 
+- **Seasonal venue pricing** (Nicholas mentioned busier months cost more;
+  our proposal is in `docs/planning/roadmap.md`, "Seasonal venue pricing"):
+  - Which months fall in which season, and what are the seasons called?
+  - Does it apply to every space, or only the hall and the terrace?
+  - Is the venue priced per space, per combination of spaces (the Terrace &
+    Lawns), or per guest?
+  - Was the €4,500 for the Terrace & Lawns an April price? What would May
+    be?
+  - Do weekdays (or Fridays and Sundays) cost less than Saturdays?
+  - Do food and drink prices change by season too, or only the venue?
+  - How do prices rise from year to year: a set percentage, or reviewed
+    each year? Would you like a button that drafts next year's prices from
+    this year's plus a percentage, for you to check?
+  - How far ahead do you take bookings? That decides how many years of
+    prices need setting at once.
+
 - **Anniversary invitations** (our proposal): an email to every couple on
   their wedding anniversary, inviting them back to the restaurant, perhaps
   with a glass of prosecco or a dessert on the house. Would you like it,

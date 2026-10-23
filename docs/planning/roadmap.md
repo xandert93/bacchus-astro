@@ -217,6 +217,26 @@ none agreed with Bacchus yet (questions in `client-facts.md`):
   - **For Bacchus to decide**: whether to offer something with it (a glass
     of prosecco, a dessert), for which events (weddings only, or
     anniversaries of any celebration), and for how many years.
+- **Seasonal venue pricing** (proposed 2026-10-23, waiting on Nicholas's
+  answers in `client-facts.md`, "For the call"). Nicholas mentioned that
+  the venue costs more in busier months: the €4,500 for the Terrace &
+  Lawns was, we think, for April, and May would cost more. Today staff type
+  the venue fee into each quote by hand.
+  - **Seasons, set once**: each season a name and its months (low, mid,
+    peak, or whatever Bacchus uses).
+  - **A rate card per year** ("2027 rates"): for each space, or each
+    combination of spaces Bacchus prices together, a price per season.
+  - **Quotes fill it in**: the venue line takes its price from the event's
+    date, by season and year, and staff can still change it. A sent quote
+    keeps its own amounts, so changing the rates never changes a quote
+    already sent.
+  - **Next year's prices are set by Bacchus, never invented**: a quote is
+    a price they're held to. A button in the Studio would draft next
+    year's card from this year's plus a percentage they choose (say 4%),
+    for them to check and publish. Until a year's card exists, its dates
+    can't be quoted automatically, and staff are told why.
+  - **Not on the public site** until the prices are confirmed.
+  - **Effort**: about one to two days once the questions are answered.
 
 ---
 
