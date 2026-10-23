@@ -18,7 +18,13 @@ export const privateSeedId = (type: string, name: string): string =>
   `${type}.seed-${name}`
 
 export const isSeedId = (id: string): boolean =>
-  id.startsWith("seed-") || id.includes(".seed-")
+  id.startsWith("seed-") ||
+  id.includes(".seed-") ||
+  // A review sent while testing a seed booking (its id is made from the
+  // booking's, src/lib/reviews/booking-by-token.ts): it goes with the
+  // booking, or the reseeded booking's new link would find it and say
+  // "thank you" instead of showing the form.
+  id.startsWith("testimonial.review-seed-")
 
 /** Array items in Sanity need a `_key`, unique within their array. */
 export const keyed = <Item extends object>(items: Item[]): (Item & { _key: string })[] =>
