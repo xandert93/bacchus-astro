@@ -3,6 +3,7 @@
 // in `quote.depositTokenHashes`; see src/lib/tokens.ts).
 
 import type { SanityClient } from "@sanity/client"
+import type { IncludedSetUp } from "@studio/lib/includedSetUp"
 import { hashToken } from "@lib/tokens"
 
 export interface DepositRecord {
@@ -12,6 +13,7 @@ export interface DepositRecord {
   addressedTo?: string
   preparedBy?: string
   clientNotes?: string
+  includedSetUp?: IncludedSetUp
   event: {
     date: string
     startTime?: string
@@ -71,6 +73,7 @@ const DEPOSIT_PROJECTION = /* groq */ `{
   addressedTo,
   preparedBy,
   clientNotes,
+  includedSetUp,
   event{date, startTime, endTime, guestCount, "spaces": spaces[]->name},
   menu{"mealFormat": mealFormat._ref, cake},
   pricing{lineItems[]{label, amount, quantity, unitAmount, "source": sourceRef._ref}, subtotal, discount, total, vat, perPerson, deposit},

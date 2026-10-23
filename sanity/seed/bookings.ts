@@ -23,7 +23,9 @@ import {
   today,
 } from "./lib"
 import type { BookingStatus } from "../lib/constants"
+import { includedSetUpFor } from "../lib/includedSetUp"
 import { calculateQuoteTotals } from "../lib/quoteTotals"
+import { INCLUDED_SET_UP } from "./settings"
 import { SPACE_IDS } from "./venue"
 
 // The wording on the enquiry form's consent box (EnquiryStepReview.astro).
@@ -79,9 +81,9 @@ const TIERS = {
 
 type Tier = (typeof TIERS)[keyof typeof TIERS]
 
-// Lines priced as on Bacchus's quote template. Chairs are included for up to
-// 30% of guests, and two bar pieces come with a wedding (both as Bacchus's
-// coordinator described them), so those show at no charge.
+// Lines priced as on Bacchus's quote template. Chairs and bar pieces are
+// included, so they aren't lines: each quote carries the range for its
+// guests instead (sanity/lib/includedSetUp.ts).
 const extra = {
   roundTables: (count: number) => ({
     label: "Round tables",
@@ -89,13 +91,6 @@ const extra = {
     quantity: count,
     unitAmount: 15,
   }),
-  chairs: (guests: number) => ({
-    label: "Chairs",
-    category: "setup",
-    quantity: Math.round(guests * 0.3),
-    unitAmount: 0,
-  }),
-  barPieces: { label: "Bar pieces", category: "setup", quantity: 2, unitAmount: 0 },
   bows: (count: number) => ({
     label: "Bows",
     category: "setup",
@@ -195,7 +190,7 @@ const BOOKINGS: BookingSpec[] = [
       status: "accepted",
       mealFormat: TIERS.receptionRose,
       beverage: TIERS.localWine,
-      extras: [extra.roundTables(14), extra.chairs(140), extra.barPieces, extra.sound],
+      extras: [extra.roundTables(14), extra.sound],
       cake: FAVOURITE_CAKE,
       roundPerPersonDownTo: 5,
       sentDaysAgo: 100,
@@ -223,9 +218,7 @@ const BOOKINGS: BookingSpec[] = [
         extra.station("Salumerie Table", 12.5, 220),
         extra.cocktailBar(220),
         extra.roundTables(22),
-        extra.chairs(220),
         extra.bows(66),
-        extra.barPieces,
       ],
       cake: { tiers: 3, flavour: "bacio" },
       sentDaysAgo: 60,
@@ -334,8 +327,6 @@ const BOOKINGS: BookingSpec[] = [
         extra.welcomeDrink(160),
         extra.cocktailBar(160),
         extra.roundTables(16),
-        extra.chairs(160),
-        extra.barPieces,
         extra.sound,
         extra.overtime(160),
       ],
@@ -428,9 +419,7 @@ const BOOKINGS: BookingSpec[] = [
         },
         extra.welcomeDrink(110),
         extra.roundTables(11),
-        extra.chairs(110),
         extra.bows(33),
-        extra.barPieces,
         extra.sound,
       ],
       cake: FAVOURITE_CAKE,
@@ -643,6 +632,7 @@ const buildQuote = (
       ? `${spec.firstName} ${spec.lastName} & ${spec.partnerName}`
       : `${spec.firstName} ${spec.lastName}`,
     preparedBy: NICHOLAS,
+    includedSetUp: includedSetUpFor(spec.guestCount, INCLUDED_SET_UP),
     ...(quoteSpec.clientNotes ? { clientNotes: quoteSpec.clientNotes } : {}),
     event: {
       date: isoDate(eventDate),

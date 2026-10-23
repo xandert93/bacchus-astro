@@ -129,6 +129,41 @@ export default defineType({
       ],
     }),
     defineField({
+      name: "includedSetUp",
+      title: "Chairs and Bar Pieces Included",
+      type: "object",
+      group: "event",
+      options: { collapsible: false, columns: 3 },
+      description: help(
+        'What every booking includes at no charge. Each quote shows it for its guest count when it\'s sent, e.g. "32–48 chairs and 1–2 bar pieces" for 160 guests.',
+        "A change here applies to quotes sent from now on, not ones already sent.",
+      ),
+      fields: [
+        defineField({
+          name: "chairsMinPercent",
+          title: "Chairs, From (% of Guests)",
+          type: "number",
+          initialValue: 20,
+          validation: (Rule) => Rule.min(0).max(100),
+        }),
+        defineField({
+          name: "chairsMaxPercent",
+          title: "Chairs, Up To (% of Guests)",
+          type: "number",
+          initialValue: 30,
+          validation: (Rule) => Rule.min(0).max(100),
+        }),
+        defineField({
+          name: "guestsPerBarPiece",
+          title: "Guests per Bar Piece",
+          type: "number",
+          initialValue: 80,
+          description: "At least one bar piece, and one more for every this many guests.",
+          validation: (Rule) => Rule.min(1).integer(),
+        }),
+      ],
+    }),
+    defineField({
       name: "musicCurfew",
       title: "Entertainment Until",
       type: "object",
