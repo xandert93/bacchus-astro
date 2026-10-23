@@ -313,28 +313,6 @@ if (eventStyleWrap) {
   })
 }
 
-// ---------- "Anything else" character count ----------
-;(() => {
-  const msg = document.getElementById("msg")
-  const ring = document.getElementById("msgCharRing")
-  const num = document.getElementById("msgCharNum")
-  if (!msg || !ring || !num) return
-  const LIMIT = 500
-  const CIRCUMFERENCE = 87.96 // 2 * PI * r(14), matches the ring's SVG circle radius
-  const update = () => {
-    const used = msg.value.length
-    const remaining = LIMIT - used
-    num.textContent = remaining
-    const fill = ring.querySelector(".character-ring-fill")
-    fill.style.strokeDashoffset = CIRCUMFERENCE * (1 - Math.min(used / LIMIT, 1))
-    // Green (default, no class) -> amber -> red as room runs out.
-    ring.classList.toggle("near-limit", remaining <= 50)
-    ring.classList.toggle("amber", remaining > 50 && remaining <= 200)
-  }
-  msg.addEventListener("input", update)
-  update()
-})()
-
 const form = document.getElementById("form")
 if (form) {
   const bad = (el, cond) => {
