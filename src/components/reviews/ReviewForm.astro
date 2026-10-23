@@ -18,6 +18,7 @@ import Breadcrumb from "@components/ui/Breadcrumb.astro"
 import Button from "@components/ui/Button.astro"
 import CharacterCount from "@components/forms/CharacterCount.astro"
 import CheckboxField from "@components/forms/CheckboxField.astro"
+import DiamondDivider from "@components/ui/DiamondDivider.astro"
 import FormField from "@components/forms/FormField.astro"
 import LoadingState from "@components/ui/LoadingState.astro"
 import PhotoScrimSection from "@components/sections/PhotoScrimSection.astro"
@@ -118,6 +119,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
       </form>
 
       <div class="review-google" id="reviewGoogle" hidden data-reveal style="--d: 160ms">
+        <DiamondDivider arms="end" class="review-google-divider" />
         <div class="review-google-heading">
           <h2>Share it on Google too?</h2>
           <ProposedBadge tone="bronze" small />
@@ -351,13 +353,17 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     cursor: progress;
   }
 
-  /* After sending: Google, set off by a rule rather than boxed. */
+  /* After sending: Google, set off by the diamond rule rather than
+     boxed. */
   .review-google {
     display: flex;
     flex-direction: column;
     gap: calc(var(--review-gap) * 0.75);
-    padding-top: var(--review-gap);
-    border-top: 1px solid rgba(var(--muted-ink-rgb), 0.16);
+  }
+
+  /* A full gap between the rule and the heading, like the one above it. */
+  .review-google :global(.review-google-divider) {
+    margin-bottom: calc(var(--review-gap) * 0.25);
   }
 
   .review-google-heading {
