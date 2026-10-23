@@ -1,34 +1,31 @@
 ---
 // The /review page: where the link in the review request lands
 // (src/lib/reviews/follow-ups.ts). A photograph of a celebration on the
-// terrace fills the section, with a paper veil over the left half, cut on a
-// slant, that the form sits on; on a phone and tablet the veil covers it all
-// and the photo just shows through. ReviewForm.js loads who it's for, shows
-// the form, and sends it; it then thanks them, or does straight away if
-// they've already left their review, and offers Google.
+// terrace fills the section under a paper veil: solid on the left, where the
+// form sits, fading to clear on the right on a desktop; all over it on a
+// phone and tablet, with the photo just showing through. ReviewForm.js loads
+// who it's for, shows the form, and sends it; it then thanks them, or does
+// straight away if they've already left their review, and offers Google.
 //
-// The stars and the share question are radio buttons, so they work from the
-// keyboard and are read out properly; the script lights the stars up to the
-// one chosen or hovered.
+// The stars are radio buttons, so the rating works from the keyboard (the
+// arrow keys move between them) and is read out as "3 stars"; the script
+// lights the stars up to the one chosen or hovered.
 //
 // Google comes after sending, to everyone, whatever their rating: asking
 // only happy clients is "review gating", which Google forbids
 // (docs/design/decisions.md, "Review gating"). Its link is a stand-in until
 // Bacchus supplies their own, hence the Proposed badge.
 import { below } from "@lib/media-queries.js"
+import Breadcrumb from "@components/ui/Breadcrumb.astro"
 import Button from "@components/ui/Button.astro"
 import CharacterCount from "@components/forms/CharacterCount.astro"
+import CheckboxField from "@components/forms/CheckboxField.astro"
 import FormField from "@components/forms/FormField.astro"
-import LoadingRing from "@components/ui/LoadingRing.astro"
+import LoadingState from "@components/ui/LoadingState.astro"
 import Photo from "@components/ui/Photo.astro"
 import ProposedBadge from "@components/ui/ProposedBadge.astro"
 import TextInput from "@components/forms/TextInput.astro"
-import {
-  GOOGLE_REVIEWS_URL,
-  PUBLISH_CHOICES,
-  PUBLISH_QUESTION,
-  REVIEW_MAXIMUM_LENGTH,
-} from "@data/reviews"
+import { GOOGLE_REVIEWS_URL, PUBLISH_WORDING, REVIEW_MAXIMUM_LENGTH } from "@data/reviews"
 
 const STAR_VALUES = [1, 2, 3, 4, 5]
 ---
@@ -44,18 +41,22 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
   </div>
 
   <div class="review-panel is-loading" id="reviewCard">
-    <div class="review-loading">
-      <LoadingRing label="Loading your review page" size={40} onLight />
-    </div>
+    <LoadingState class="review-loading" text="Loading your review" onLight />
 
     <div class="review-content">
-      {/* Revealed from the start: this page runs no reveal script. */}
-      <p class="eyebrow is-revealed">Your review</p>
-      <h1 id="reviewTitle"></h1>
-      <p class="lead" id="reviewLead"></p>
+      <Breadcrumb current="Your review" tone="on-light" data-reveal />
+      <h1 id="reviewTitle" data-reveal style="--d: 80ms"></h1>
+      <p class="lead" id="reviewLead" data-reveal style="--d: 160ms"></p>
 
-      <form class="review-form" id="reviewForm" novalidate hidden>
-        <fieldset class="review-question" id="reviewRatingField">
+      <form
+        class="review-form"
+        id="reviewForm"
+        novalidate
+        hidden
+        data-reveal
+        style="--d: 240ms"
+      >
+        <fieldset class="review-rating" id="reviewRatingField">
           <legend>Your rating</legend>
           <div class="review-stars">
             {STAR_VALUES.map((value) => (
@@ -105,19 +106,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
           <TextInput id="reviewLocation" placeholder="Optional, e.g. London" />
         </FormField>
 
-        <fieldset class="review-question" id="reviewShareField">
-          <legend>{PUBLISH_QUESTION}</legend>
-          <div class="review-share">
-            {Object.entries(PUBLISH_CHOICES).map(([value, wording]) => (
-              <label class="review-share-choice">
-                <input type="radio" name="share" value={value} />
-                <span class="review-share-dot" aria-hidden="true" />
-                <span>{wording}</span>
-              </label>
-            ))}
-          </div>
-          <div class="error">Please choose one.</div>
-        </fieldset>
+        <CheckboxField id="reviewPublish">{PUBLISH_WORDING}</CheckboxField>
 
         <p class="review-error" id="reviewError" role="alert" hidden></p>
 
@@ -128,17 +117,49 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
         </div>
       </form>
 
-      <div class="review-google" id="reviewGoogle" hidden>
+      <div class="review-google" id="reviewGoogle" hidden data-reveal style="--d: 160ms">
         <div class="review-google-heading">
           <h2>Share it on Google too?</h2>
           <ProposedBadge tone="bronze" small />
         </div>
         <p>
-          Couples choosing a venue read Google's reviews first. If you'd like to help
-          them, copy your review here and paste it there.
+          Couples choosing a venue read Google's reviews first.{" "}
+          <span id="reviewGoogleNote">
+            If you'd like to help them, copy your review here and paste it there.
+          </span>
         </p>
         <div class="review-buttons">
           <Button variant="dark" id="reviewCopy">
+            <svg
+              class="review-copy-icon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="9" y="9" width="12" height="12" rx="2"></rect>
+              <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"></path>
+            </svg>
+            <svg
+              class="review-copied-icon"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              style="display: none"
+            >
+              <path d="m5 12 5 5L19 7"></path>
+            </svg>
             <span id="reviewCopyLabel">Copy my review</span>
           </Button>
           <Button
@@ -151,12 +172,6 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
             <span>Review us on Google</span>
           </Button>
         </div>
-      </div>
-
-      <div class="review-buttons" id="reviewDone" hidden>
-        <Button href="/" variant="dark" arrow>
-          <span>Back to Bacchus</span>
-        </Button>
       </div>
     </div>
   </div>
@@ -177,8 +192,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     background: var(--paper);
   }
 
-  /* The photograph under everything, and the paper veil over it: all of it on
-     a phone and tablet, the left half on a slant on a desktop. */
+  /* The photograph under everything, and the paper veil over it. */
   .review-photo {
     position: absolute;
     inset: 0;
@@ -198,6 +212,19 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     background: rgba(var(--paper-rgb), 0.9);
   }
 
+  /* On a desktop the veil is solid behind the form and fades to clear
+     across the middle, so the photograph shows fully on the right. */
+  @media (--from-desktop) {
+    .review-page::before {
+      background: linear-gradient(
+        90deg,
+        rgba(var(--paper-rgb), 0.95) 0%,
+        rgba(var(--paper-rgb), 0.95) 46%,
+        rgba(var(--paper-rgb), 0) 72%
+      );
+    }
+  }
+
   .review-panel {
     position: relative;
     z-index: 2;
@@ -205,48 +232,33 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     flex-direction: column;
     width: 100%;
     max-width: 640px;
+    min-height: calc(100vh - var(--nav-h));
     margin: 0 auto;
     padding: calc(var(--review-gap) * 2) clamp(20px, 5vw, 44px)
       calc(var(--review-gap) * 3);
   }
 
   @media (--from-desktop) {
-    .review-page::before {
-      background: linear-gradient(
-        105deg,
-        rgba(var(--paper-rgb), 0.94) 52%,
-        transparent 52%
-      );
-    }
-
-    /* Left, in line with the site's other content, and clear of the slant. */
+    /* Left, in line with the site's other content, inside the solid veil. */
     .review-panel {
-      min-height: calc(100vh - var(--nav-h));
-      max-width: min(620px, 40vw);
+      max-width: min(620px, 42vw);
       margin: 0 0 0 max(0px, calc((100vw - 1180px) / 2));
     }
   }
 
-  /* While loading, only the ring: at the top of the panel on a phone and
-     tablet, in the middle of it on a desktop. */
-  .review-loading {
+  /* While loading, only the ring and its line, in the middle of the panel. */
+  .review-panel :global(.review-loading) {
     display: none;
   }
 
-  .is-loading .review-loading {
+  .is-loading :global(.review-loading) {
     display: flex;
+    flex: 1;
     justify-content: center;
   }
 
   .is-loading .review-content {
     display: none;
-  }
-
-  @media (--from-desktop) {
-    .is-loading .review-loading {
-      flex: 1;
-      align-items: center;
-    }
   }
 
   .review-content {
@@ -255,12 +267,9 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     gap: var(--review-gap);
   }
 
-  .review-content .eyebrow,
   .review-content h1 {
     margin: 0;
-  }
 
-  .review-content h1 {
     font-size: clamp(30px, 4.5vw, 44px);
     line-height: 1.15;
   }
@@ -271,9 +280,9 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     gap: var(--review-gap) 12px;
   }
 
-  /* The stars and the share question: fieldsets, so each legend names its
-     choices as one question; styled like the .field labels beside them. */
-  .review-question {
+  /* A fieldset, so the legend names the five stars as one question; styled
+     like the .field labels beside it. */
+  .review-rating {
     flex: 1 1 100%;
     min-width: 0;
     margin: 0;
@@ -281,7 +290,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     border: 0;
   }
 
-  .review-question legend {
+  .review-rating legend {
     margin-bottom: 9px;
     padding: 0;
 
@@ -292,7 +301,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
   }
 
   /* The same message as a FormField's, shown the same way (.field.bad). */
-  .review-question .error {
+  .review-rating .error {
     height: 0;
     margin-top: 0;
     overflow: hidden;
@@ -304,11 +313,11 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     transition: all 0.3s var(--ease);
   }
 
-  .review-question:global(.bad) {
+  .review-rating:global(.bad) {
     animation: shake 0.4s;
   }
 
-  .review-question:global(.bad) .error {
+  .review-rating:global(.bad) .error {
     height: 18px;
     margin-top: 8px;
     opacity: 1;
@@ -333,8 +342,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
       transform 0.2s var(--ease);
   }
 
-  .review-star input,
-  .review-share-choice input {
+  .review-star input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
@@ -360,65 +368,6 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     }
   }
 
-  /* The two answers to "May we share it?", as round choices. */
-  .review-share {
-    display: grid;
-    gap: 10px;
-  }
-
-  .review-share-choice {
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-
-    font-family: "Newsreader", Georgia, serif;
-    font-size: 15px;
-    line-height: 1.5;
-    color: var(--ink);
-    cursor: pointer;
-  }
-
-  .review-share-dot {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 20px;
-    height: 20px;
-    margin-top: 2px;
-    border: 1px solid rgba(var(--muted-ink-rgb), 0.35);
-    border-radius: 50%;
-    background: #fff;
-    transition: border-color 0.3s var(--ease);
-  }
-
-  .review-share-dot::after {
-    content: "";
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--gold);
-    transform: scale(0);
-    transition: transform 0.2s var(--ease);
-  }
-
-  .review-share-choice input:checked + .review-share-dot {
-    border-color: var(--gold);
-  }
-
-  .review-share-choice input:checked + .review-share-dot::after {
-    transform: scale(1);
-  }
-
-  .review-share-choice input:focus-visible + .review-share-dot {
-    outline: 2px solid var(--gold);
-    outline-offset: 2px;
-  }
-
-  .review-question:global(.bad) .review-share-dot {
-    border-color: var(--oxblood);
-  }
-
   .review-error {
     flex: 1 1 100%;
 
@@ -432,6 +381,19 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     flex: 1 1 100%;
     flex-wrap: wrap;
     gap: 12px;
+  }
+
+  /* On a phone the buttons stack, each as wide as the site's other phone
+     buttons. */
+  @media (--below-tablet) {
+    .review-buttons {
+      flex-direction: column;
+    }
+
+    .review-buttons :global(.button) {
+      width: min(100%, 300px);
+      justify-content: center;
+    }
   }
 
   /* While sending: the button stays where it is, dimmed, and can't be

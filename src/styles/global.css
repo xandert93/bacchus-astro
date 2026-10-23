@@ -257,6 +257,9 @@ em {
 }
 
 .eyebrow {
+  /* Its own typeface, not inherited: a <p class="eyebrow"> would otherwise
+     take the serif every paragraph has. */
+  font-family: "Inter", system-ui, sans-serif;
   font-size: 11px;
   letter-spacing: 0.24em;
   text-transform: uppercase;

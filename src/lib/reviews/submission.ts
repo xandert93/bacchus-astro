@@ -2,8 +2,7 @@
 // testimonial for staff to look at in the Studio.
 
 import {
-  PUBLISH_CHOICES,
-  PUBLISH_QUESTION,
+  PUBLISH_WORDING,
   REVIEW_CATEGORIES,
   REVIEW_MAXIMUM_LENGTH,
   REVIEW_MINIMUM_LENGTH,
@@ -47,7 +46,7 @@ export const validateReview = (
     return { error: "Please shorten where you're from." }
   }
   if (typeof body.publish !== "boolean") {
-    return { error: "Please choose whether we may share it." }
+    return { error: "That couldn't be read: please try again." }
   }
 
   return {
@@ -97,8 +96,7 @@ export const toTestimonial = (review: Review, booking: ReviewBooking) => ({
     _type: "consentRecord",
     given: review.publish,
     givenAt: new Date().toISOString(),
-    // The question and the answer they chose, word for word.
-    wording: `${PUBLISH_QUESTION} ${review.publish ? PUBLISH_CHOICES.yes : PUBLISH_CHOICES.no}`,
+    wording: PUBLISH_WORDING,
     sourcePage: "/review",
   },
   // Weak, so the booking can still be deleted when its retention date comes.
