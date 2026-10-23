@@ -348,13 +348,11 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
   }
 
   /* .button is inline-flex and flex-shrink: 0, so it sizes to its label
-       unless told otherwise — width + max-width is what gives the two equal
-       widths. justify-content matters because the label and icon would otherwise
-       sit left inside a button that is now wider than its content.
+       unless told otherwise — the width is what gives the two equal widths.
+       .button centres its label and icon inside the wider box itself.
   */
   .mobile-nav-cta-row :global(.button) {
     width: min(100%, 300px);
-    justify-content: center;
 
     /* Scaled up from .button-small's own size, exactly as
          .availability-foot .button already does at this same 300px width. That

@@ -96,6 +96,11 @@ const classes = [
     position: relative;
     display: inline-flex;
     align-items: center;
+
+    /* Centred, for a button wider than its label: one given a set width
+       (the phone buttons' min(100%, 300px)) or held at its width while its
+       label changes (the review page's "Copied"). */
+    justify-content: center;
     gap: 8px;
     padding: 0 var(--button-padding-x);
     height: var(--button-height);
