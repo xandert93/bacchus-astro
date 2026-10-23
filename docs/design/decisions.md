@@ -185,24 +185,34 @@ single number ("2 / 5") on mobile.
 
 ## PDF quotes
 
-Settled with the user, 2026-10-22 and 23, from a demo drawn several ways.
-Three candidate layouts are in `docs/design/quote-pdf/`, and **Bacchus
-chooses between them**; everything below applies to all three:
+Settled with the user, 2026-10-22 and 23, over several drafts. **The
+layout is `docs/design/quote-pdf/quote.pdf`** (chosen by the user on
+2026-10-23, to show Bacchus):
 
-- `quote-one-page.pdf`: the whole quote on page 1, compact, with group
-  names in a left column (as on Bacchus's own quote) and the deposit
-  beside the totals.
-- `quote-two-page.pdf`: groups as headings; a longer quote's totals and
-  deposit move to page 2 together.
-- `quote-three-part.pdf`: page 1 is the price alone, through to the total,
-  with room to breathe and to grow, and an "At a glance" label on the event
-  panel; page 2, "Securing your date", explains the deposit, the balance,
-  how to pay and what happens next at length, then the notes and who
-  prepared it; the terms follow. The total stays on page 1, because a
-  price breakdown without its total looks unfinished to anyone checking
-  it. Page 2's unconfirmed details (the payment schedule, the tasting
+- **Page 1 is the price alone**, through to the total, with room left to
+  grow: a longer quote still fits on the page. Group names sit in a left
+  column, as on Bacchus's own quote, each with its subtotal beneath. The
+  total stays on page 1, because a price breakdown without its total looks
+  unfinished to anyone checking it. A line under it points to page 2.
+- **Page 2, "Securing your date"**, explains at length what page 1 can't:
+  the deposit and the balance, how to pay, a warning not to share the
+  private link, what happens next, the notes from Bacchus and who prepared
+  the quote. Its unconfirmed details (the payment schedule, the tasting
   terms, when menu choices and final numbers are due) are in red brackets
   until Bacchus settles them.
+- **The terms follow from page 3.**
+
+**How it got there**, kept in `docs/design/quote-pdf/archive/`:
+
+1. `1a-browser-rendering.pdf` and `1b-pdf-lib.pdf`: the same one-page quote
+   made both ways, to choose how PDFs are made (Browser Rendering won).
+2. `2-two-page.pdf`: real items and prices, groups as headings, the
+   deposit and notes after the totals, which spilled onto page 2.
+3. `3-one-page.pdf`: everything squeezed onto page 1, the deposit beside
+   the totals. It fitted, but felt cramped, which led to the current
+   layout.
+
+The rules below apply to the current layout.
 
 - **One PDF: the quote, then the booking terms.** Not two files.
   - It travels whole: a quote forwarded to a finance team, a parent or a
