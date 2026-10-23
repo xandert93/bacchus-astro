@@ -1,0 +1,64 @@
+---
+// A hairline with a small diamond on it, the rule from the prototype's
+// station cards: each arm is strongest at the diamond and fades to nothing
+// at its outer end, so the rule dissolves rather than stopping dead. Bronze,
+// for a paper background. First used to set off the review page's Google
+// prompt.
+//
+//   arms   both (default): diamond in the middle, for centred content ·
+//          end: diamond at the start with one arm running on, for content
+//          aligned to the left, where a centred mark would float free of it
+//
+// Decorative only, so it's hidden from screen readers.
+interface Props {
+  arms?: "both" | "end"
+  class?: string
+}
+
+const { arms = "both", class: className } = Astro.props
+---
+
+<div
+  class:list={["diamond-divider", { "diamond-divider-end": arms === "end" }, className]}
+  aria-hidden="true"
+>
+  <span></span>
+</div>
+
+<style>
+  .diamond-divider {
+    --diamond-divider-colour: rgba(var(--bronze-rgb), 0.45);
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .diamond-divider::before,
+  .diamond-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+  }
+
+  .diamond-divider::before {
+    background: linear-gradient(90deg, transparent, var(--diamond-divider-colour));
+  }
+
+  .diamond-divider::after {
+    background: linear-gradient(90deg, var(--diamond-divider-colour), transparent);
+  }
+
+  .diamond-divider-end::before {
+    display: none;
+  }
+
+  .diamond-divider span {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border: 1px solid var(--bronze);
+    transform: rotate(45deg);
+  }
+</style>

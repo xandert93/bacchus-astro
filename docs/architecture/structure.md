@@ -83,7 +83,9 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   lightbox's photo; `onLight` for a paper background), `LoadingState` (the
   ring with a line of text beneath: the deposit page's booking, the review
   page), `Breadcrumb` (Home › this page: the subpage heroes, and the review
-  page with `tone="on-light"`).
+  page with `tone="on-light"`), `DiamondDivider` (a fading hairline with a
+  diamond on it, from the prototype's station cards: the review page's
+  Google prompt; `arms="end"` for left-aligned content).
 - `forms/`: form controls. `FormField` (label, error, notes), `TextInput`
   (every input, the textarea and dropdowns), `CheckboxField` (a box with its
   wording: the enquiry's consent, the review's permission to publish),
