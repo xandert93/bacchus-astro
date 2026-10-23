@@ -30,6 +30,7 @@ export const POST: APIRoute = async ({ request }) => {
         occasion: REVIEW_OCCASIONS[booking.eventType] ?? REVIEW_OCCASIONS.other,
         suggestedName: suggestedDisplayName(booking),
         reviewSent: booking.reviewSent,
+        reviewText: booking.reviewText ?? "",
       },
       { "Cache-Control": "no-store" },
     )

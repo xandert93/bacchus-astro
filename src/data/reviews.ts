@@ -1,8 +1,8 @@
 // What the review request and the review page share: how each kind of event
 // is named to the client, which testimonial category it files under, and the
-// wording of the permission box. The review endpoint stores that wording with
-// each review, so the permission stays provable after it changes: edit it
-// here, and both follow.
+// wording of the permission question. The review endpoint stores the answer
+// chosen, word for word, so the permission stays provable after the wording
+// changes: edit it here, and both follow.
 
 /** "How was your wedding?": the event, as the email and the page name it. */
 export const REVIEW_OCCASIONS: Record<string, string> = {
@@ -19,8 +19,18 @@ export const REVIEW_CATEGORIES: Record<string, string> = {
   celebration: "celebration",
 }
 
-export const PUBLISH_WORDING =
-  "Bacchus may show my review on its website, with the name above. Leave this unticked and it stays between you and our team."
+/**
+ * Whether Bacchus may publish the review. Two answers, neither chosen to
+ * start, and one must be: under GDPR consent has to be an active choice, so
+ * a box ticked in advance, or "tick to keep it private" (publishing by
+ * default), wouldn't count. A question both ways gets a real answer.
+ */
+export const PUBLISH_QUESTION = "May we share it?"
+
+export const PUBLISH_CHOICES = {
+  yes: "Yes: show it on Bacchus's website, with the name above",
+  no: "No: keep it between me and the Bacchus team",
+} as const
 
 /**
  * Where the thank-you screen sends people to review Bacchus on Google: for
