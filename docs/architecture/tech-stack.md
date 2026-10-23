@@ -175,9 +175,12 @@ PDF, a headless Chrome (Puppeteer), can't run inside a Worker. Two options:
   PDF in code, with no browser. Free, but the layout is built by hand.
 
 **Chosen, 2026-10-22: Browser Rendering**, after a demo of both
-(`docs/planning/roadmap.md`, feature 3). In plain terms, "10 browser minutes
-a day" means each PDF opens an invisible Chrome on Cloudflare for a second or
-two; 10 minutes is 600 seconds, so a few hundred PDFs a day, free. Bacchus
+(`docs/planning/roadmap.md`, feature 3).
+
+**What "10 browser minutes a day" means.** Each PDF means Cloudflare opens
+an invisible Chrome, loads the quote page, prints it and closes it. That
+takes about 1 to 3 seconds, and those seconds are what's counted. 10
+minutes is 600 seconds, so roughly 200 to 600 PDFs a day, free. Bacchus
 sends a few quotes a day at most. The template is an HTML page made for
 print (A4, page margins, page numbers), styled with the site's palette and
 fonts; it isn't the deposit page.

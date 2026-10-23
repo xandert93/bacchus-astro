@@ -277,10 +277,22 @@ remembers it four weeks on, so confirm before relying on any of it):
 - **Some set-up lines are there to show what's included** rather than to be
   charged, rounding the quote out.
 - **Two bar pieces are offered per wedding.**
-- **Chairs are included in the set-up**, usually for at most 30% of the
-  guests (a standing reception seats some, not all). The template does
+- **Chairs are included in the set-up**, for up to 30% of the guests (a
+  standing reception seats some, not all). The template does
   price chairs (€5, 32 of them on this quote, a fifth of its 160 guests),
   so ask whether "included" means free or simply part of the set-up line.
+
+**What couples choose most**, also from Nicholas in person:
+
+- **The cake**: pistachio and olive oil is the most popular. (The quote's
+  flavours are almond, bacio and pistachio; olive oil appears nowhere in
+  writing yet.) Once it's cut, every guest is served a piece with a glass
+  of champagne or prosecco (the user can't remember which; the emails say
+  "the celebratory drink").
+- **The cocktail bar** is the themed bar most couples pick.
+- **Stations**: the Salumerie, Charcuterie and BBQ tables are the most
+  popular. **The BBQ is outdoors only**, so it depends on good weather.
+  Worth saying on the stations page and on any quote that includes it.
 
 **What it changes, or questions**
 
