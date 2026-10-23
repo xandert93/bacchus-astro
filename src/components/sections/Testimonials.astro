@@ -343,7 +343,7 @@ const testimonials = (await getTestimonials(category)).map((testimonial) =>
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     margin-top: 34px;
-    text-align: left;
+    text-align: center;
   }
 
   @media (--below-desktop) {
@@ -502,14 +502,18 @@ const testimonials = (await getTestimonials(category)).map((testimonial) =>
     position: relative;
     display: flex;
     flex-direction: column;
+
+    /* Centred both ways: a card beside one whose name wraps grows to match
+       it, and its own name stays in the middle. */
+    justify-content: center;
     gap: 6px;
     padding: 14px 16px;
 
     /* Grid items default to min-width: auto, so a track can still be forced
          wider than its 1fr share by its content's natural minimum size (a long
          name) even with repeat(4, 1fr) — zeroing it here is what actually makes
-         the four columns equal width and lets .testimonial-card-name's ellipsis (rather
-         than the grid track) be what handles an overlong name.
+         the four columns equal width and lets a long name wrap (rather than
+         widen the grid track).
   */
     min-width: 0;
     border: 1px solid rgba(var(--limestone-rgb), 0.18);
@@ -541,9 +545,10 @@ const testimonials = (await getTestimonials(category)).map((testimonial) =>
     font-family: "Fraunces", serif;
     font-size: 15px;
     color: var(--limestone-2);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+    /* A long name wraps onto a second line rather than being cut short. */
+    overflow-wrap: break-word;
+    text-wrap: balance;
     min-width: 0;
   }
 
