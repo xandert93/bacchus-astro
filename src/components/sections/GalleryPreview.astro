@@ -147,8 +147,7 @@ const tag = category[0].toUpperCase() + category.slice(1)
 
   @media (--below-tablet) {
     .gallery .head-row :global(.button) {
-      width: 100%;
-      max-width: 300px;
+      width: min(100%, 300px);
       justify-content: center;
     }
   }

@@ -722,8 +722,7 @@ const DINING = [
   .package-card-link {
     margin-top: 4px;
     align-self: center;
-    width: 100%;
-    max-width: 300px;
+    width: min(100%, 300px);
     justify-content: center;
   }
 
@@ -1015,7 +1014,6 @@ const DINING = [
 
   @media (--below-tablet) {
     .package-beverage-card-body .package-card-link {
-      max-width: 300px;
       align-self: center;
     }
   }
