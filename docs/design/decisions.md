@@ -14,8 +14,9 @@ yet, not that it's undecided between us.
 4. [Package pages](#package-pages)
 5. [Testimonials](#testimonials)
 6. [Photo carousel](#photo-carousel)
-7. [PDF quotes](#pdf-quotes)
-8. [Other](#other)
+7. [Photo with a scrim](#photo-with-a-scrim)
+8. [PDF quotes](#pdf-quotes)
+9. [Other](#other)
 
 ---
 
@@ -197,6 +198,37 @@ single number ("2 / 5") on mobile.
   and makes Next jump from 3 to 5. A position per photo makes the last Next do
   nothing visible.
 - The range counts **fully** visible photos, since a third usually peeks in.
+
+---
+
+## Photo with a scrim
+
+Settled with the user, 2026-10-23, on the review page; built as one
+component, `PhotoScrimSection`.
+
+- **A photograph fills the section, under a paper scrim** (a translucent
+  layer that keeps text readable), and the content sits on the scrim. It
+  gives a plain page life without the photo fighting the words.
+- **Desktop: solid behind the content, then a short fade well past it.**
+  The scrim is solid paper across the content column and 64px beyond, then
+  fades to clear over 180px, so the photo shows fully on the right. Tried
+  and dropped: a slanted hard edge (too dramatic) and a long fade (it
+  reached the form's inputs). A hard straight edge on a translucent layer
+  reads as a mistake.
+- **Phone and tablet: the scrim covers everything**, at 90%, with the photo
+  just showing through.
+- **The photo is a real image, not a CSS background**: sized per screen,
+  modern formats, loaded early when it's first on screen, with alt text.
+- **Names, for asking**: a background image with an overlay, or a scrim
+  (also tint, wash); a gradient scrim when it fades; a split layout when
+  text and image take a half each; a diagonal split when the edge slants.
+- **Next candidates**: the enquiry section, the waitlist page and the
+  checkout pages.
+- **One photo per page, chosen to fit it**, not a different one on each
+  load: a rotating photo makes the page look different for no reason,
+  costs a slower first paint, and makes it impossible to judge the page as
+  a design. Where the event type is known (the review page), the photo can
+  follow it, wedding, corporate or celebration: proposed, not built.
 
 ---
 

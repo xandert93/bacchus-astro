@@ -98,7 +98,9 @@ there is no long-lived branch to keep rebasing (trunk-based development).
 - `nav/`: `NavDropdown` (one desktop dropdown), `MobileNavGroup` (one drawer
   group), `NavChevron`, `NavItemIcon`, `NavPanelPhoto`. Both bars render from
   `src/data/navigation.ts`.
-- `sections/`: sections several pages share. `HeroFrame` (the hero shell)
+- `sections/`: sections several pages share. `PhotoScrimSection` (a photo
+  filling the section under a paper scrim, content on the left: the review
+  page), `HeroFrame` (the hero shell)
   and `PageHero` on top of it, `IntroSplit`, `FaqSection`, `ProcessSteps`,
   `GalleryPreview`, `Testimonials`, `OccasionCards`, `PhotoCarousel`, and
   `DishGrid` (arch-framed dishes: the homepage kitchen section and the menu

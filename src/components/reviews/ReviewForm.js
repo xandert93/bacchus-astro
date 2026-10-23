@@ -69,6 +69,8 @@ if (card) {
   const offerGoogle = (reviewText) => {
     google.hidden = false
     copyButton.hidden = !reviewText
+    // Held at its width, so only the words change when it says "Copied".
+    copyButton.style.minWidth = `${copyButton.offsetWidth}px`
     if (!reviewText)
       googleNote.textContent = "If you'd like to help them, you can leave one there too."
 
