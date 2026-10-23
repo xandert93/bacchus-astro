@@ -153,6 +153,45 @@ export const quoteEmail = (
   }
 }
 
+/**
+ * The quote's PDF, on its own, when it couldn't be made as the quote was sent
+ * and the daily jobs made it the next morning (src/lib/quotes/missing-pdfs.ts).
+ */
+export const quotePdfEmail = (facts: DepositFacts): Email => {
+  const day = longDate(facts.date)
+  const lead = [
+    `Here's your quote for ${mark(day)} as a PDF, to keep or to pass on.`,
+    "It has no link in it: to pay your deposit, use the button in your quote email.",
+  ]
+  const footnote = ["Questions? Just reply to this email."]
+
+  return {
+    to: facts.email,
+    subject: `Your quote for ${day}, as a PDF`,
+    html: emailLayout({
+      preview: `Your quote for ${day}, as a PDF.`,
+      eyebrow: "Your quote",
+      title: "Your quote, <em>attached</em>",
+      body: [
+        paragraph(`Dear ${escapeHtml(facts.firstName)},`),
+        htmlParagraphs(lead),
+        htmlParagraphs(footnote, { small: true }),
+        personalSignOff(facts.preparedBy),
+      ].join(""),
+    }),
+    text: plain([
+      `Dear ${facts.firstName},`,
+      "",
+      textParagraphs(lead),
+      "",
+      textParagraphs(footnote),
+      "",
+      ...personalSignOffText(facts.preparedBy),
+    ]),
+    kind: "quote-pdf",
+  }
+}
+
 /** A couple of days before the quote runs out, while the deposit is still due. */
 export const quoteReminderEmail = (
   facts: DepositFacts,
@@ -521,6 +560,22 @@ export const quoteDeclinedEmail = (facts: DepositFacts, to: string[], reason?: s
       reason ? `Their reason: "${reason}"` : "They didn't give a reason.",
     ],
     kind: "quote-declined",
+  })
+
+/** A quote's PDF couldn't be made on send, nor at the second try. */
+export const quotePdfFailedEmail = (facts: DepositFacts, to: string[]) =>
+  staffEmail({
+    to,
+    facts,
+    subject: `Quote PDF not made: ${facts.couple}, ref ${facts.reference}`,
+    eyebrow: "Needs attention",
+    title: "A quote's PDF <em>wasn't made</em>",
+    lines: [
+      `The PDF of ${facts.couple}'s quote ${facts.reference} couldn't be made when it was sent, nor when the site tried again this morning.`,
+      "They have their quote email and its link, so they can still see the quote and pay their deposit: only the PDF is missing.",
+      "If they ask for one, please let the website's developer know, who can look into it.",
+    ],
+    kind: "quote-pdf-failed",
   })
 
 /** A quote expired unpaid: someone should follow up. */
