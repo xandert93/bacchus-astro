@@ -260,6 +260,12 @@ The rules below apply to the current layout.
 
 ## Other
 
+- **Dates are written with ordinals**: "Saturday 29th May 2027", and
+  "23rd October 2026" without the weekday, as Bacchus writes them ("12th of
+  July 2026" on their quote). Everywhere takes them from `src/lib/dates.ts`:
+  emails, the deposit page, the review and waitlist pages, testimonials and
+  the PDF quote.
+
 - **Social links** (Facebook, Instagram) sit in the footer under the brand
   text and at the bottom of the mobile drawer, matching the live site.
 - **The deposit page has its own CSS namespace** (`secure-booking-*`) rather

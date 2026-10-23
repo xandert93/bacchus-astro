@@ -3,7 +3,8 @@
 // replies to the enquirer, so a quick answer is one click away.
 
 import type { EnquiryInput } from "@lib/enquiries/validate"
-import { capitalise, enquiryDetails, longDate } from "./enquiry-details"
+import { longDate } from "@lib/dates"
+import { capitalise, enquiryDetails } from "./enquiry-details"
 import {
   button,
   detailsCard,

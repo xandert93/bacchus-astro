@@ -3,6 +3,7 @@
 // lights the stars, checks the form and sends it to /api/reviews/submit.
 
 import { REVIEW_MINIMUM_LENGTH } from "@data/reviews"
+import { longDate } from "@lib/dates"
 
 const card = document.getElementById("reviewCard")
 
@@ -23,16 +24,6 @@ if (card) {
   const place = document.getElementById("reviewLocation")
   const publish = document.getElementById("reviewPublish")
   const stars = [...document.querySelectorAll(".review-star")]
-
-  // "Saturday 20 January 2027", from "2027-01-20".
-  const longDate = (isoDate) =>
-    new Date(`${isoDate}T12:00:00Z`).toLocaleDateString("en-GB", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      timeZone: "UTC",
-    })
 
   const post = (path, body = {}) =>
     fetch(`/api/reviews/${path}`, {

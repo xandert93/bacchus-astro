@@ -3,7 +3,7 @@
 
 import { BUSINESS } from "@data/business"
 import { euros } from "@lib/money"
-import { longDate } from "./enquiry-details"
+import { longDate } from "@lib/dates"
 import {
   button,
   detailsCard,

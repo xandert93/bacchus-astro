@@ -264,8 +264,9 @@ after the weekday, which British English doesn't use there. Found
 runtime's date formatting puts a comma after the weekday; Node and the
 browser don't, so nothing showed it outside the Worker.
 
-**Fix**: `longDate()` (`src/lib/email/enquiry-details.ts`) builds the date
-from two parts, the weekday and the rest, so no runtime can add the comma.
+**Fix**: `longDate()` builds the date from its parts, so no runtime can add
+the comma. It now lives in `src/lib/dates.ts` with `dayMonthYear()`, the one
+place every email, page and PDF takes its dates from.
 
 **Test**: none automated yet; it needs the Workers runtime, so it waits for
 the planned unit tests.

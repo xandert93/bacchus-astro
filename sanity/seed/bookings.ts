@@ -110,15 +110,17 @@ const extra = {
     quantity: guests,
     unitAmount: 12.5,
   }),
+  // Bacchus's own names, as their quote lists them under Food Stations,
+  // linked to the station, so the quote can say "with two stations".
   station: (name: string, unitAmount: number, guests: number) => ({
-    // Bacchus's own names, as their quote lists them under Food Stations.
     label: name,
     category: "food",
     quantity: guests,
     unitAmount,
+    sourceRef: reference(`station-${name.toLowerCase().replace(/\s+/g, "-")}`),
   }),
   overtime: (guests: number) => ({
-    label: "Overtime, one hour",
+    label: "One extra hour",
     category: "overtime",
     quantity: guests,
     unitAmount: 10,
@@ -151,7 +153,13 @@ interface BookingSpec {
     status: "draft" | "sent" | "accepted" | "expired" | "superseded"
     mealFormat: Tier
     beverage?: Tier
-    extras?: { label: string; category: string; quantity: number; unitAmount: number }[]
+    extras?: {
+      label: string
+      category: string
+      quantity: number
+      unitAmount: number
+      sourceRef?: ReturnType<typeof reference>
+    }[]
     // The cake that comes with the meal.
     cake?: { tiers: number; flavour?: string }
     clientNotes?: string
@@ -578,6 +586,9 @@ const buildQuote = (
   statusOverride?: string,
 ) => {
   const eventDate = spec.eventDate!
+  const hasOvertime = (quoteSpec.extras ?? []).some(
+    (extra) => extra.category === "overtime",
+  )
   const lineItems = keyed([
     {
       _type: "quoteLineItem",
@@ -638,7 +649,15 @@ const buildQuote = (
     event: {
       date: isoDate(eventDate),
       startTime: spec.eventType === "wedding" ? "17:00" : "19:30",
-      endTime: spec.eventType === "wedding" ? "22:00" : "23:30",
+      // An hour of overtime runs the evening an hour later.
+      endTime:
+        spec.eventType === "wedding"
+          ? hasOvertime
+            ? "23:00"
+            : "22:00"
+          : hasOvertime
+            ? "00:30"
+            : "23:30",
       guestCount: spec.guestCount,
       ...(spec.spaces ? { spaces: keyedReferences(spec.spaces) } : {}),
     },

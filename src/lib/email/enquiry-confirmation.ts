@@ -4,7 +4,8 @@
 // that panel's, so the two never say different things.
 
 import type { EnquiryInput } from "@lib/enquiries/validate"
-import { enquiryDetails, longDate } from "./enquiry-details"
+import { longDate } from "@lib/dates"
+import { enquiryDetails } from "./enquiry-details"
 import {
   button,
   detailsCard,

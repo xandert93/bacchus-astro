@@ -9,7 +9,7 @@
 
 import { CONTACT } from "@data/contact"
 import { coupleName, type DepositRecord } from "@lib/deposits/load"
-import { longDate } from "@lib/email/enquiry-details"
+import { dayMonthYear as plainDate, longDate } from "@lib/dates"
 import { escapeHtml, siteUrl } from "@lib/email/layout"
 import { eurosCompact } from "@lib/money"
 import { presentQuoteLines, stationCount, type PresentedGroup } from "../quote-lines"
@@ -24,15 +24,6 @@ const OCCASIONS: Record<string, string> = {
 }
 
 const NUMBER_WORDS = ["", "one", "two", "three", "four", "five", "six"]
-
-/** "23 October 2026": a date on the quote that isn't the event's. */
-const plainDate = (isoDate: string) =>
-  new Date(`${isoDate.slice(0, 10)}T12:00:00Z`).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  })
 
 const listInWords = (items: string[]) =>
   items.length > 1 ? `${items.slice(0, -1).join(", ")} and ${items.at(-1)}` : items[0]
