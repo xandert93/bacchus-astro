@@ -14,7 +14,8 @@ yet, not that it's undecided between us.
 4. [Package pages](#package-pages)
 5. [Testimonials](#testimonials)
 6. [Photo carousel](#photo-carousel)
-7. [Other](#other)
+7. [PDF quotes](#pdf-quotes)
+8. [Other](#other)
 
 ---
 
@@ -179,6 +180,53 @@ single number ("2 / 5") on mobile.
   and makes Next jump from 3 to 5. A position per photo makes the last Next do
   nothing visible.
 - The range counts **fully** visible photos, since a third usually peeks in.
+
+---
+
+## PDF quotes
+
+Settled with the user, 2026-10-22 and 23, from a demo drawn both ways. The
+two candidate layouts are `docs/design/quote-pdf/quote-one-page.pdf` (the
+whole quote on page 1, group names in a left column) and
+`quote-two-page.pdf` (groups as headings, totals on page 2). **Bacchus
+chooses between them**; everything below applies to both.
+
+- **One PDF: the quote, then the booking terms.** Not two files.
+  - It travels whole: a quote forwarded to a finance team, a parent or a
+    planner always carries its terms. Sent separately, the terms get left
+    behind.
+  - Terms are safest legally when shown with the quote and before payment,
+    so nobody can say they never saw them. One document makes that plain.
+  - The deposit page links to the same terms, with an "I accept" box
+    (`docs/content/booking-terms-draft.md`, "What the site needs").
+- **The terms start on a page of their own**, so they read, print and sign
+  as their own document.
+- **The terms are printed with every quote**, not stitched on afterwards.
+  They add a fraction of a second to each PDF, which costs nothing at a few
+  quotes a day. If it ever mattered, the terms could be printed once per
+  version and joined onto each quote with pdf-lib.
+- **Made by Browser Rendering** (`docs/architecture/tech-stack.md`), from an
+  HTML page made for print: A4, page margins, page numbers. It shares the
+  site's colours and fonts, not the deposit page's layout.
+- **The money is never split across pages**: the totals and the deposit
+  stay together, moving to the next page together if the quote is long.
+- **Lines read plainly**: "Reception – Rose", "Cocktail bar", with no
+  "per person" (the quantity shows it), under Qty, Price and Amount.
+  Bacchus's own product names are used as they are ("Salumerie Table").
+- **Small set-up items are one line** whose small print names and prices
+  each one, so the quote stays short without hiding anything. Items at no
+  charge say "Included". The chairs and bar pieces included are a range for
+  the guest count ("32–48 chairs and 1–2 bar pieces").
+- **A group with two or more priced lines shows its subtotal.** With one,
+  the subtotal would only repeat the line.
+- **The event panel uses the same words as the table** (Food, Drinks), and
+  the site's names for the spaces. A charge line, such as exclusive use,
+  keeps the name Bacchus charges it under ("Terrace & Lawns").
+- **A discount shows as "Discount"** with its amount. Its reason ("rounded
+  to €190 a guest") is for staff, in the Studio: the client doesn't need to
+  see how it was arrived at.
+- **The gold phrase in the title is SVG text** with a gradient fill. CSS
+  gradient text prints with a faint box around it.
 
 ---
 
