@@ -21,8 +21,12 @@ export interface DepositRecord {
     guestCount: number
     spaces?: string[]
   }
+  /** When the quote was sent: the date it was issued. */
+  sentAt?: string
   menu?: {
     mealFormat?: string
+    /** The meal's tier and package, e.g. "Rose" of "Reception". */
+    meal?: { name?: string; package?: string }
     cake?: { tiers?: number; flavour?: string }
   }
   pricing: {
@@ -31,8 +35,12 @@ export interface DepositRecord {
       amount: number
       quantity?: number
       unitAmount?: number
+      /** Its group on the quote: food, beverage, setup and so on. */
+      category?: string
       /** The package tier a line was priced from, if any. */
       source?: string
+      /** What it was priced from: "packageTier", "station" and so on. */
+      sourceType?: string
     }[]
     subtotal: number
     discount?: { amount?: number; reason?: string }
@@ -75,8 +83,9 @@ const DEPOSIT_PROJECTION = /* groq */ `{
   clientNotes,
   includedSetUp,
   event{date, startTime, endTime, guestCount, "spaces": spaces[]->name},
-  menu{"mealFormat": mealFormat._ref, cake},
-  pricing{lineItems[]{label, amount, quantity, unitAmount, "source": sourceRef._ref}, subtotal, discount, total, vat, perPerson, deposit},
+  sentAt,
+  menu{"mealFormat": mealFormat._ref, "meal": mealFormat->{name, "package": package->name}, cake},
+  pricing{lineItems[]{label, amount, quantity, unitAmount, category, "source": sourceRef._ref, "sourceType": sourceRef->_type}, subtotal, discount, total, vat, perPerson, deposit},
   terms,
   reminderSentAt,
   bankPaymentAttempts[]{state, paymentId, bank},
