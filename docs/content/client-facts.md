@@ -187,6 +187,10 @@ higher than March (emails). **VAT is included** in quoted prices (emails).
 | Beverage  | Maltese/Gozitan wine €30 · Italian/French wine €35     |
 | Bar       | Open Bar €23 · Limited Open Bar €12                    |
 
+**The open bar comes with two drinks** (catalogue): a welcome drink on
+arrival and a congratulatory drink with the cutting of the cake. So a
+couple with the open bar shouldn't also be charged the €6.50 welcome drink.
+
 **Corkage**: €6.50 on the quote, without saying per bottle or per person.
 It only applies if a couple brings their own wine, Champagne or other drinks,
 since packages already include drinks. The site deliberately doesn't publish
@@ -236,15 +240,15 @@ and a quantity and total are filled in for the ones chosen.
 template doesn't state units, so "per person" is inferred from the
 quantities used):
 
-| Group          | Items                                                                                                                                                                                                            |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Venue          | Secret Garden €500 · Chambers €500 · Small Terrace €500 · Terrace & Lawns €4,500 (this booking) · De Redin Ballroom, Outside Catering, Partial Exclusivity (amounts unreadable: the column was too narrow)       |
-| Wedding cake   | 1 tier €300 · 2 tiers €450 · 3 tiers €600 · custom; flavours almond, bacio, pistachio                                                                                                                            |
-| Drinks         | Maltese and Gozitan wine €30 · Italian and French wine €35 · custom wine · after-Mass reception €9.50 · premium upgrades                                                                                         |
-| Themed bars    | Cocktail €12.50 · whiskey €12.50 · champagne tower €20 · cigar €10.50 · gin €12.50 · rum €10.50 · welcome drink €6.50 (the catalogue's hidden text gives the same €6.50 for a welcome prosecco) · coffee €3.50   |
-| Set-up         | Chairs €5 (and the items under Prices). Sound (€500) and red carpet (€150) are priced but weren't charged on this quote; the emails say the staircase is always dressed with a red carpet, so it may be included |
-| Overtime       | €10 a rate (unit not stated; the emails say €10–15 a person per extra hour)                                                                                                                                      |
-| Custom package | Food and drinks lines for anything off the menu                                                                                                                                                                  |
+| Group          | Items                                                                                                                                                                                                                                                                                                                                                            |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Venue          | Secret Garden €500 · Chambers €500 · Small Terrace €500 · Terrace & Lawns €4,500 (this booking) · De Redin Ballroom, Outside Catering, Partial Exclusivity (amounts unreadable: the column was too narrow)                                                                                                                                                       |
+| Wedding cake   | 1 tier €300 · 2 tiers €450 · 3 tiers €600 · custom; flavours almond, bacio, pistachio                                                                                                                                                                                                                                                                            |
+| Drinks         | Maltese and Gozitan wine €30 · Italian and French wine €35 · custom wine · after-Mass reception €9.50 · premium upgrades                                                                                                                                                                                                                                         |
+| Themed bars    | Cocktail €12.50 · whiskey €12.50 · champagne tower €20 · cigar €10.50 · gin €12.50 · rum €10.50 · welcome drink €6.50 (the catalogue's hidden text gives the same €6.50 for a welcome prosecco) · coffee €3.50                                                                                                                                                   |
+| Set-up         | Chairs €5 (and the items under Prices). Every line has a unit price in white text, invisible on the page (Sound €500, Red Carpet €150 among them); Sound and Red Carpet were left blank on this quote. The emails say the staircase is always dressed with a red carpet, and Nicholas said some lines are there to show what's included, so both may be included |
+| Overtime       | €10 a rate (unit not stated; the emails say €10–15 a person per extra hour)                                                                                                                                                                                                                                                                                      |
+| Custom package | Food and drinks lines for anything off the menu                                                                                                                                                                                                                                                                                                                  |
 
 The station prices match the Studio's exactly.
 
