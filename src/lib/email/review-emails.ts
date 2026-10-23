@@ -40,7 +40,7 @@ export const reviewRequestEmail = ({
   const day = longDate(date)
   const occasion = REVIEW_OCCASIONS[eventType] ?? REVIEW_OCCASIONS.other
   const lead = [
-    `Thank you for celebrating ${occasion} with us on ${mark(day)}.`,
+    `Thank you for celebrating your ${occasion} with us on ${mark(day)}.`,
     "We hope it was everything you wished for.",
     "If you have a couple of minutes, we'd love to hear how it went: it helps others planning their own day, and helps us keep getting better.",
   ]
@@ -51,9 +51,9 @@ export const reviewRequestEmail = ({
 
   return {
     to,
-    subject: `How was ${occasion} at Bacchus?`,
+    subject: `How was your ${occasion} at Bacchus?`,
     html: emailLayout({
-      preview: `We'd love to hear how ${occasion} went.`,
+      preview: `We'd love to hear how your ${occasion} went.`,
       eyebrow: "Your review",
       title: "How was <em>your day?</em>",
       hero: HERO,

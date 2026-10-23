@@ -45,7 +45,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
 
     <div class="review-content">
       <Breadcrumb current="Your review" tone="on-light" data-reveal />
-      <h1 id="reviewTitle" data-reveal style="--d: 80ms"></h1>
+      <h1 class="section-heading" id="reviewTitle" data-reveal style="--d: 80ms"></h1>
       <p class="lead" id="reviewLead" data-reveal style="--d: 160ms"></p>
 
       <form
@@ -182,10 +182,12 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
 </script>
 
 <style>
-  /* One gap between everything on the page, so its rhythm is even. Fills
-     the section's panel, so the loading state can sit in its middle. */
+  /* One gap between the page's blocks, so its rhythm is even, and a
+     tighter one between the form's questions. Fills the section's panel, so
+     the loading state can sit in its middle. */
   .review-card {
     --review-gap: clamp(22px, 2.6vw, 30px);
+    --review-field-gap: clamp(14px, 1.6vw, 20px);
 
     display: flex;
     flex: 1;
@@ -213,17 +215,17 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     gap: var(--review-gap);
   }
 
-  .review-content h1 {
-    margin: 0;
-
-    font-size: clamp(30px, 4.5vw, 44px);
-    line-height: 1.15;
-  }
-
   .review-form {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--review-gap) 12px;
+    gap: var(--review-field-gap) 12px;
+  }
+
+  /* The character count under the review already sits between it and the
+     next question, so the gap after it closes to a small one: otherwise the
+     count's height doubles the space there. */
+  .review-form :global(#reviewTextField) {
+    margin-bottom: calc(12px - var(--review-field-gap));
   }
 
   /* A fieldset, so the legend names the five stars as one question; styled

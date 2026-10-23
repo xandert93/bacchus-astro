@@ -4,12 +4,15 @@
 // each review, so the permission stays provable after it changes: edit it
 // here, and both follow.
 
-/** "How was your wedding?": the event, as the email and the page name it. */
+/**
+ * The event, as the email ("How was your wedding?") and the page ("Tell us
+ * about your wedding") name it.
+ */
 export const REVIEW_OCCASIONS: Record<string, string> = {
-  wedding: "your wedding",
-  corporate: "your event",
-  celebration: "your celebration",
-  other: "your event",
+  wedding: "wedding",
+  corporate: "event",
+  celebration: "celebration",
+  other: "event",
 }
 
 /** The testimonial's category for each event type ("other" has none). */
