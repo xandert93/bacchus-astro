@@ -185,11 +185,24 @@ single number ("2 / 5") on mobile.
 
 ## PDF quotes
 
-Settled with the user, 2026-10-22 and 23, from a demo drawn both ways. The
-two candidate layouts are `docs/design/quote-pdf/quote-one-page.pdf` (the
-whole quote on page 1, group names in a left column) and
-`quote-two-page.pdf` (groups as headings, totals on page 2). **Bacchus
-chooses between them**; everything below applies to both.
+Settled with the user, 2026-10-22 and 23, from a demo drawn several ways.
+Three candidate layouts are in `docs/design/quote-pdf/`, and **Bacchus
+chooses between them**; everything below applies to all three:
+
+- `quote-one-page.pdf`: the whole quote on page 1, compact, with group
+  names in a left column (as on Bacchus's own quote) and the deposit
+  beside the totals.
+- `quote-two-page.pdf`: groups as headings; a longer quote's totals and
+  deposit move to page 2 together.
+- `quote-three-part.pdf`: page 1 is the price alone, through to the total,
+  with room to breathe and to grow, and an "At a glance" label on the event
+  panel; page 2, "Securing your date", explains the deposit, the balance,
+  how to pay and what happens next at length, then the notes and who
+  prepared it; the terms follow. The total stays on page 1, because a
+  price breakdown without its total looks unfinished to anyone checking
+  it. Page 2's unconfirmed details (the payment schedule, the tasting
+  terms, when menu choices and final numbers are due) are in red brackets
+  until Bacchus settles them.
 
 - **One PDF: the quote, then the booking terms.** Not two files.
   - It travels whole: a quote forwarded to a finance team, a parent or a
@@ -220,8 +233,9 @@ chooses between them**; everything below applies to both.
 - **A group with two or more priced lines shows its subtotal.** With one,
   the subtotal would only repeat the line.
 - **The event panel uses the same words as the table** (Food, Drinks), and
-  the site's names for the spaces. A charge line, such as exclusive use,
-  keeps the name Bacchus charges it under ("Terrace & Lawns").
+  spaces are named as the site names them, on the panel and on any line
+  ("The Terrace", not Bacchus's internal "Terrace & Lawns", which means
+  nothing to a couple).
 - **A discount shows as "Discount"** with its amount. Its reason ("rounded
   to €190 a guest") is for staff, in the Studio: the client doesn't need to
   see how it was arrived at.
