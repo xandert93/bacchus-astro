@@ -15,14 +15,18 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
 
 interface Props {
   checkout?: boolean
+  // Always in the dark, scrolled state, for a page with no dark hero behind
+  // the bar (BaseLayout's solidHeader). It starts stuck, so it never flashes
+  // clear, and site-nav.js keeps it that way.
+  solid?: boolean
 }
-const { checkout = false } = Astro.props
+const { checkout = false, solid = false } = Astro.props
 
 const BrandTag = checkout ? "span" : "a"
 const brandLinkAttributes = checkout ? {} : { href: "/", "aria-label": "Bacchus home" }
 ---
 
-<header class="nav" id="nav">
+<header class:list={["nav", { stuck: solid }]} id="nav" data-solid={solid || undefined}>
   <div class="wrap">
     <BrandTag class="brand" {...brandLinkAttributes}>
       <Photo

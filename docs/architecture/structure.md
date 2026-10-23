@@ -13,7 +13,9 @@ version is in `CLAUDE.md`; this is the full map.
 - `src/layouts/BaseLayout.astro`: `<head>`, grain, nav, drawer, Visit
   section, footer, the sitewide script. Props: `title`, `showEnquireLink`,
   `menuBackgroundImage`, `showVisitSection`, `checkout` (SiteHeader's
-  checkout bar, filled from the `header` slot, and no drawer) and `noIndex`.
+  checkout bar, filled from the `header` slot, and no drawer), `noIndex` and
+  `solidHeader` (the bar starts and stays dark, for a light page with no
+  hero behind it: `/review`, `/waitlist`).
   Has a named slot `after-footer` for page overlays.
 - `/secure-booking`, the deposit page, is a checkout: brand-only bar, no
   drawer, kept out of search results, never linked from the site. It is

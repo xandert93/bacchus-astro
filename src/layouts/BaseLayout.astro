@@ -30,6 +30,10 @@ interface Props {
   // Keeps the page out of search results. For pages reached only from a
   // private link, like the deposit page.
   noIndex?: boolean
+  // The page starts on a light background with no dark hero behind the bar,
+  // where the bar's clear, unscrolled state would vanish: it starts in its
+  // dark, scrolled state instead (SiteHeader).
+  solidHeader?: boolean
 }
 const {
   title,
@@ -41,6 +45,7 @@ const {
   showVisitSection = true,
   checkout = false,
   noIndex = false,
+  solidHeader = false,
 } = Astro.props
 ---
 
@@ -57,7 +62,7 @@ const {
   </head>
   <body>
     <div class="grain"></div>
-    <SiteHeader checkout={checkout}>
+    <SiteHeader checkout={checkout} solid={solidHeader}>
       <slot name="header" />
     </SiteHeader>
     {!checkout && <MobileMenu backgroundImage={menuBackgroundImage} />}
