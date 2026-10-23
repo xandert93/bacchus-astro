@@ -180,6 +180,16 @@ export default defineType({
       hidden: ({ document }) => !document?.reminderSentAt,
     }),
     defineField({
+      // When the daily jobs had a second go at a PDF that couldn't be made on
+      // send (src/lib/quotes/missing-pdfs.ts), so they only ever try once.
+      name: "pdfRetriedAt",
+      title: "PDF Tried Again",
+      type: "datetime",
+      group: "terms",
+      readOnly: true,
+      hidden: ({ document }) => !document?.pdfRetriedAt,
+    }),
+    defineField({
       // Hashes of the secrets in the deposit page's links, never the secrets
       // themselves (src/lib/tokens.ts): one from the quote email, and one
       // more if a reminder went. Set by the site.

@@ -88,7 +88,10 @@ Good to know:
 
 When a quote is sent, the client's email has it attached as a PDF, and the
 same PDF is kept on the quote, under Terms, "Generated PDF": open it to see
-exactly what they received.
+exactly what they received. Very occasionally the PDF can't be made at that
+moment: the email still goes with its link, and the site tries again the
+next morning and emails the PDF on its own. If that fails too, you're
+emailed "Quote PDF not made".
 
 Statuses after that: **Accepted** when the client says yes, **Declined by
 Client** if they say no, and **Expired** once its "valid until" date passes.

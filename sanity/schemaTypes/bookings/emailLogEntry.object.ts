@@ -18,6 +18,8 @@ const EMAIL_KINDS = [
   { title: "New Enquiry Alert", value: "enquiry-alert" },
   { title: "Quote", value: "quote" },
   { title: "Quote Reminder", value: "quote-reminder" },
+  { title: "Quote as a PDF", value: "quote-pdf" },
+  { title: "Quote PDF Not Made", value: "quote-pdf-failed" },
   { title: "Transfer on Its Way", value: "transfer-notice" },
   { title: "Booking Confirmed", value: "deposit-confirmed" },
   { title: "Deposit Received", value: "deposit-received" },

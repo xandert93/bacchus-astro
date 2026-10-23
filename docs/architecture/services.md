@@ -70,8 +70,11 @@ record.
 4. The route asks **Cloudflare's Browser Rendering** to print the quote as a
    PDF (`src/lib/quotes/pdf/`), and keeps it on the quote in Sanity.
 5. The route asks Resend to email the client the link, with the PDF
-   attached. If the PDF fails, the email still goes, without it, and the
-   failure is logged.
+   attached. If the PDF fails, the email still goes, without it.
+6. If it did fail, the next morning's daily jobs try once more
+   (`src/lib/quotes/missing-pdfs.ts`). Made, the PDF is kept and emailed to
+   the client on its own; not made again, staff are emailed so someone can
+   look into it.
 
 **A deposit by bank or card** (`api/deposits/`):
 
