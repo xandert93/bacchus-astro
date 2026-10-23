@@ -17,7 +17,11 @@ interface Props {
 }
 const { backgroundImage, category } = Astro.props
 
-const testimonials = await getTestimonials(category)
+// On a page for one kind of event, every review is that kind, so its label
+// ("Wedding celebration" on every card) would only repeat itself.
+const testimonials = (await getTestimonials(category)).map((testimonial) =>
+  category ? { ...testimonial, category: "" } : testimonial,
+)
 ---
 
 <section class="section-padding quote testimonials" id="testimonials">
@@ -69,7 +73,9 @@ const testimonials = await getTestimonials(category)
           aria-label={`Read testimonial from ${item.name}`}
         >
           <span class="testimonial-card-name">{item.name}</span>
-          <span class="testimonial-card-category">{item.category}</span>
+          {item.category && (
+            <span class="testimonial-card-category">{item.category}</span>
+          )}
         </button>
       ))}
     </div>

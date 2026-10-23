@@ -124,8 +124,8 @@ import { reduce } from "@scripts/lib/motion.js"
     nameEl.className = "testimonial-meta-name"
     nameEl.textContent = item.name
     metaEl.appendChild(nameEl)
-    const sub = [item.category, item.location]
-    if (item.date) sub.push(item.date)
+    // The category is empty on a page for one kind of event.
+    const sub = [item.category, item.location, item.date].filter(Boolean)
     const subEl = document.createElement("div")
     subEl.className = "testimonial-meta-sub"
     subEl.textContent = sub.join(" · ")
