@@ -299,6 +299,22 @@ written.
   controlled conditions: test with network throttling. Image weight is now
   handled; what to show when an image request fails or stalls is not.
 
+### Hide-on-scroll header
+
+Added 2026-10-24, at the user's suggestion. The header slides away while
+scrolling down and comes back on the first scroll up.
+
+- **Recommended for phones and tablets only.** There the 74px header is
+  about a ninth of a phone screen, and on the package pages the sticky tier
+  switch stacks under it. On a desktop it's a small share of the screen,
+  and Book a table and Enquire are worth keeping in sight.
+- **What it touches**: everything positioned against `--nav-h` (the
+  package pages' sticky tier switch, the station deep links' scroll offset,
+  the nav dropdowns) has to move up when the header hides, or it leaves a
+  gap. Reduced motion gets no slide. Opening the menu, or a jump to an
+  anchor, must never leave the header hidden behind a half-scrolled page.
+- **Effort**: about half a day with a test. After the launch work.
+
 ### Map in the Visit section
 
 - A Mapbox map styled to the palette would fit better than a plain Google
