@@ -594,7 +594,6 @@
 @media (--below-secure-booking-small) {
   .secure-booking-pay-card .secure-booking-pay-button {
     width: 100%;
-    justify-content: center;
   }
 }
 
@@ -920,7 +919,6 @@
 @media (--below-secure-booking-small) {
   .secure-booking-button-row > * {
     flex: 1 1 100%;
-    justify-content: center;
   }
 }
 
