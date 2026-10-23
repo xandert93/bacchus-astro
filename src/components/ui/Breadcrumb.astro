@@ -1,0 +1,83 @@
+---
+// "Home › Your review": the trail back up from a page, small capitals with a
+// chevron between. On the subpage heroes (PageHero, over a photograph) and on
+// the light pages without one (the review page).
+//
+//   tone   on-dark (default): pale limestone, for a hero photo ·
+//          on-light: muted ink, for a paper background
+//
+// Anything else (a class, a style, data-reveal) lands on the element, so a
+// parent can animate or space it.
+import type { HTMLAttributes } from "astro/types"
+
+type Props = HTMLAttributes<"div"> & {
+  // The page one level up. Home for top-level pages, Weddings for packages.
+  parent?: { href: string; label: string }
+  // This page's own name.
+  current: string
+  tone?: "on-dark" | "on-light"
+}
+
+const {
+  parent = { href: "/", label: "Home" },
+  current,
+  tone = "on-dark",
+  class: className,
+  ...rest
+} = Astro.props
+---
+
+<div
+  class:list={["crumb", { "crumb-on-light": tone === "on-light" }, className]}
+  {...rest}
+>
+  <a href={parent.href}>{parent.label}</a>
+  <svg width="7" height="10" viewBox="0 0 7 10" fill="none" aria-hidden="true">
+    <path
+      d="M1 1l5 4-5 4"
+      stroke="currentColor"
+      stroke-width="1.3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    ></path>
+  </svg>
+  <span>{current}</span>
+</div>
+
+<style>
+  .crumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-family: "Inter", sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(var(--limestone-rgb), 0.55);
+  }
+
+  .crumb a {
+    transition: color 0.3s;
+  }
+
+  .crumb a:hover {
+    color: var(--gold-2);
+  }
+
+  .crumb svg {
+    opacity: 0.6;
+  }
+
+  .crumb-on-light {
+    color: var(--muted-ink);
+  }
+
+  .crumb-on-light a {
+    color: var(--bronze);
+  }
+
+  .crumb-on-light a:hover {
+    color: var(--ink);
+  }
+</style>
