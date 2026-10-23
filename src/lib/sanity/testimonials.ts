@@ -16,9 +16,11 @@ export interface Testimonial {
 
 // Published AND name consent, on purpose, though validation already refuses
 // to publish without it: an API write can skip validation, and this is a
-// real person's name on a real website.
+// real person's name on a real website. $category narrows it to one kind of
+// event, or is null for all of them.
 const TESTIMONIALS_QUERY = `
-*[_type == "testimonial" && status == "published" && permissions.useName == true]
+*[_type == "testimonial" && status == "published" && permissions.useName == true
+  && ($category == null || category == $category)]
   | order(coalesce(order, 9999) asc){
   quote,
   "displayName": author.displayName,
@@ -64,10 +66,12 @@ const toQuoteString = (blocks: PortableTextBlock[]): string =>
     )
     .join(" ")
 
-export const getTestimonials = async (): Promise<Testimonial[]> => {
+/** Every published testimonial, or only those for one kind of event. */
+export const getTestimonials = async (category?: string): Promise<Testimonial[]> => {
   const testimonials = await fetchContent<SanityTestimonial[]>(
-    "published testimonials",
+    category ? `published ${category} testimonials` : "published testimonials",
     TESTIMONIALS_QUERY,
+    { category: category ?? null },
   )
 
   return testimonials.map((testimonial) => ({
