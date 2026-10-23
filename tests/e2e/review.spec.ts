@@ -9,7 +9,7 @@ const answerAsAWeddingBooking = async (page: Page) => {
       json: {
         firstName: "Rachel",
         date: "2026-08-29",
-        occasion: "your wedding",
+        occasion: "wedding",
         suggestedName: "Rachel & Paul Zammit",
         reviewSent: false,
         reviewText: "",
@@ -30,4 +30,11 @@ test("a review that's too short says how long it needs to be", async ({ page }) 
   await expect(page.locator("#reviewTextField .error")).toContainText(
     `at least ${REVIEW_MINIMUM_LENGTH} characters`,
   )
+})
+
+test("the heading names the kind of event the booking was", async ({ page }) => {
+  await answerAsAWeddingBooking(page)
+  await page.goto("/review?token=test")
+
+  await expect(page.locator("#reviewTitle")).toHaveText("Tell us about your wedding")
 })
