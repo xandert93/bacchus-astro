@@ -251,6 +251,10 @@ The rules below apply to the current layout.
   see how it was arrived at.
 - **The gold phrase in the title is SVG text** with a gradient fill. CSS
   gradient text prints with a faint box around it.
+- **Set-up is always one line when it has two or more**: "Tables and
+  dressing", each item named and priced in its small print, the ones at no
+  charge together at the end ("sound and red carpet, included"). A single
+  set-up line stays as it is.
 - **Built 2026-10-23 without the terms**, which follow once Bacchus approves
   them, and with page 2's unconfirmed details left out rather than shown
   in red: the payment schedule, the tasting terms, and when menu choices

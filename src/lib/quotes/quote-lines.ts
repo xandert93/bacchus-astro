@@ -36,9 +36,6 @@ const GROUPS = [
   { category: "other", title: "Other" },
 ]
 
-/** More set-up lines than this become one line, each item in its small print. */
-const MOST_SEPARATE_SET_UP_LINES = 2
-
 const TIER_WORDS: Record<number, string> = {
   1: "one-tier",
   2: "two-tier",
@@ -54,14 +51,27 @@ const cakeNote = (cake: NonNullable<DepositRecord["menu"]>["cake"]) => {
 
 const lowerFirst = (text: string) => text.charAt(0).toLowerCase() + text.slice(1)
 
-/** One set-up item in a combined line's small print: "16 round tables at €15". */
-const setUpItem = (line: StoredLine) => {
+const listInWords = (items: string[]) =>
+  items.length > 1 ? `${items.slice(0, -1).join(", ")} and ${items.at(-1)}` : items[0]
+
+/** One priced set-up item in the small print: "16 round tables at €15". */
+const pricedSetUpItem = (line: StoredLine) => {
   const name = lowerFirst(line.label)
-  if (line.amount === 0) return `${name}, included`
-  if (line.quantity && line.quantity > 1 && line.unitAmount) {
-    return `${line.quantity} ${name} at ${eurosCompact(line.unitAmount)}`
-  }
-  return `${name}, ${eurosCompact(line.amount)}`
+  return line.quantity && line.quantity > 1 && line.unitAmount
+    ? `${line.quantity} ${name} at ${eurosCompact(line.unitAmount)}`
+    : `${name}, ${eurosCompact(line.amount)}`
+}
+
+/** "16 round tables at €15 · … · sound and red carpet, included". */
+const setUpDetails = (lines: StoredLine[]) => {
+  const priced = lines.filter((line) => line.amount !== 0).map(pricedSetUpItem)
+  const included = lines
+    .filter((line) => line.amount === 0)
+    .map((line) => lowerFirst(line.label))
+  return [
+    ...priced,
+    ...(included.length ? [`${listInWords(included)}, included`] : []),
+  ].join(" · ")
 }
 
 const asLine = (line: StoredLine, record: DepositRecord): PresentedLine => ({
@@ -76,22 +86,21 @@ const asLine = (line: StoredLine, record: DepositRecord): PresentedLine => ({
   amount: line.amount === 0 ? undefined : line.amount,
 })
 
-/** Several small set-up lines as one, so the quote stays short without hiding any. */
-const combineSetUp = (lines: StoredLine[]): PresentedLine[] =>
-  lines.length > MOST_SEPARATE_SET_UP_LINES
+/**
+ * The set-up's lines as one, "Tables and dressing", each item named and
+ * priced in its small print, so the quote stays short without hiding any. A
+ * single line stays as it is.
+ */
+const combineSetUp = (lines: StoredLine[], record: DepositRecord): PresentedLine[] =>
+  lines.length > 1
     ? [
         {
-          label: "Set-up items",
-          details: lines.map(setUpItem).join(" · "),
+          label: "Tables and dressing",
+          details: setUpDetails(lines),
           amount: lines.reduce((sum, line) => sum + line.amount, 0),
         },
       ]
-    : lines.map((line) => ({
-        label: line.label,
-        quantity: line.unitAmount ? line.quantity : undefined,
-        unitAmount: line.unitAmount || undefined,
-        amount: line.amount === 0 ? undefined : line.amount,
-      }))
+    : lines.map((line) => asLine(line, record))
 
 const subtotalOf = (lines: PresentedLine[]) => {
   const priced = lines.filter((line) => line.amount !== undefined)
@@ -113,7 +122,7 @@ export const presentQuoteLines = (record: DepositRecord): PresentedGroup[] => {
     const stored = inGroup(category)
     let lines =
       category === "setup"
-        ? combineSetUp(stored)
+        ? combineSetUp(stored, record)
         : stored.map((line) => asLine(line, record))
 
     // The chairs and bar pieces included, worked out for this quote's guests.
