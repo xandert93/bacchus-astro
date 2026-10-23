@@ -43,3 +43,9 @@ export const REVIEW_MAXIMUM_LENGTH = 1500
 
 /** Shorter than this isn't a review yet. */
 export const REVIEW_MINIMUM_LENGTH = 10
+
+/**
+ * What the page and the endpoint say when a review is too short. It names
+ * the rule, so "Good" being refused isn't a mystery.
+ */
+export const REVIEW_TOO_SHORT_MESSAGE = `Please write a few more words: at least ${REVIEW_MINIMUM_LENGTH} characters.`

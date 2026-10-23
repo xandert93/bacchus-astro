@@ -23,7 +23,12 @@ import LoadingState from "@components/ui/LoadingState.astro"
 import PhotoScrimSection from "@components/sections/PhotoScrimSection.astro"
 import ProposedBadge from "@components/ui/ProposedBadge.astro"
 import TextInput from "@components/forms/TextInput.astro"
-import { GOOGLE_REVIEWS_URL, PUBLISH_WORDING, REVIEW_MAXIMUM_LENGTH } from "@data/reviews"
+import {
+  GOOGLE_REVIEWS_URL,
+  PUBLISH_WORDING,
+  REVIEW_MAXIMUM_LENGTH,
+  REVIEW_TOO_SHORT_MESSAGE,
+} from "@data/reviews"
 
 const STAR_VALUES = [1, 2, 3, 4, 5]
 ---
@@ -76,7 +81,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
           for="reviewText"
           full
           id="reviewTextField"
-          error="Please tell us a little about it."
+          error={REVIEW_TOO_SHORT_MESSAGE}
         >
           <TextInput
             id="reviewText"

@@ -6,6 +6,7 @@ import {
   REVIEW_CATEGORIES,
   REVIEW_MAXIMUM_LENGTH,
   REVIEW_MINIMUM_LENGTH,
+  REVIEW_TOO_SHORT_MESSAGE,
 } from "@data/reviews"
 import { fullNames, reviewTestimonialId, type ReviewBooking } from "./booking-by-token"
 
@@ -34,7 +35,7 @@ export const validateReview = (
     return { error: "Please choose a rating." }
   }
   if (text.length < REVIEW_MINIMUM_LENGTH) {
-    return { error: "Please tell us a little about it." }
+    return { error: REVIEW_TOO_SHORT_MESSAGE }
   }
   if (text.length > REVIEW_MAXIMUM_LENGTH) {
     return { error: `Please keep it under ${REVIEW_MAXIMUM_LENGTH} characters.` }
