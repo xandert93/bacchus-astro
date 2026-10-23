@@ -691,7 +691,11 @@
   align-items: center;
 }
 
-.secure-booking-hero-loading,
+.secure-booking-hero-loading {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
 .secure-booking-hero-message {
   display: flex;
   flex-direction: column;
@@ -709,14 +713,6 @@
   justify-content: center;
   gap: 12px;
   margin-top: 12px;
-}
-
-.secure-booking-hero-loading p {
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold-2);
 }
 
 /* ---------- Outcomes (DepositStatus) ---------- */

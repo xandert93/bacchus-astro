@@ -19,7 +19,7 @@ import Button from "@components/ui/Button.astro"
 import { CONTACT } from "@data/contact"
 import HeroFrame from "@components/sections/HeroFrame.astro"
 import HeroImage from "@components/ui/HeroImage.astro"
-import LoadingRing from "@components/ui/LoadingRing.astro"
+import LoadingState from "@components/ui/LoadingState.astro"
 ---
 
 <HeroFrame small>
@@ -30,10 +30,12 @@ import LoadingRing from "@components/ui/LoadingRing.astro"
     heroHeightVh={62}
   />
 
-  <div class="secure-booking-hero-loading" data-deposit-show="loading">
-    <LoadingRing label="Loading your booking" size={36} />
-    <p id="depositLoadingText">Loading your booking</p>
-  </div>
+  <LoadingState
+    class="secure-booking-hero-loading"
+    data-deposit-show="loading"
+    text="Loading your booking"
+    textId="depositLoadingText"
+  />
 
   <div data-deposit-show="pay transfer-sent" hidden>
     <div class="secure-booking-eyebrow">

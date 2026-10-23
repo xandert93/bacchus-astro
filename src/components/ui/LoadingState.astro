@@ -1,0 +1,52 @@
+---
+// A turning ring with a short line beneath it, while a page fetches what it
+// shows: the deposit page's booking, the review page's details. The page
+// decides where it sits; this centres the two together.
+//
+//   onLight   the bronze ring and text for a paper background; the default
+//             gold reads against a dark one (the deposit page's hero)
+//   textId    for a script that rewrites the line ("Checking your payment")
+//
+// Anything else (data attributes, hidden) lands on the wrapper.
+import type { HTMLAttributes } from "astro/types"
+import LoadingRing from "./LoadingRing.astro"
+
+type Props = HTMLAttributes<"div"> & {
+  text: string
+  onLight?: boolean
+  textId?: string
+}
+
+const { text, onLight = false, textId, class: className, ...rest } = Astro.props
+---
+
+<div
+  class:list={["loading-state", { "loading-state-on-light": onLight }, className]}
+  {...rest}
+>
+  <LoadingRing label={text} size={36} onLight={onLight} />
+  <p id={textId}>{text}</p>
+</div>
+
+<style>
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    text-align: center;
+  }
+
+  .loading-state p {
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-2);
+  }
+
+  .loading-state-on-light p {
+    color: var(--bronze);
+  }
+</style>
