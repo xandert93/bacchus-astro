@@ -236,15 +236,15 @@ and a quantity and total are filled in for the ones chosen.
 template doesn't state units, so "per person" is inferred from the
 quantities used):
 
-| Group          | Items                                                                                                                                                                                                      |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Venue          | Secret Garden €500 · Chambers €500 · Small Terrace €500 · Terrace & Lawns €4,500 (this booking) · De Redin Ballroom, Outside Catering, Partial Exclusivity (amounts unreadable: the column was too narrow) |
-| Wedding cake   | 1 tier €300 · 2 tiers €450 · 3 tiers €600 · custom; flavours almond, bacio, pistachio                                                                                                                      |
-| Drinks         | Maltese and Gozitan wine €30 · Italian and French wine €35 · custom wine · after-Mass reception €9.50 · premium upgrades                                                                                   |
-| Themed bars    | Cocktail €12.50 · whiskey €12.50 · champagne tower €20 · cigar €10.50 · gin €12.50 · rum €10.50 · welcome drink €6.50 · coffee €3.50                                                                       |
-| Set-up         | Chairs €5 (and the items under Prices)                                                                                                                                                                     |
-| Overtime       | €10 a rate (unit not stated; the emails say €10–15 a person per extra hour)                                                                                                                                |
-| Custom package | Food and drinks lines for anything off the menu                                                                                                                                                            |
+| Group          | Items                                                                                                                                                                                                            |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Venue          | Secret Garden €500 · Chambers €500 · Small Terrace €500 · Terrace & Lawns €4,500 (this booking) · De Redin Ballroom, Outside Catering, Partial Exclusivity (amounts unreadable: the column was too narrow)       |
+| Wedding cake   | 1 tier €300 · 2 tiers €450 · 3 tiers €600 · custom; flavours almond, bacio, pistachio                                                                                                                            |
+| Drinks         | Maltese and Gozitan wine €30 · Italian and French wine €35 · custom wine · after-Mass reception €9.50 · premium upgrades                                                                                         |
+| Themed bars    | Cocktail €12.50 · whiskey €12.50 · champagne tower €20 · cigar €10.50 · gin €12.50 · rum €10.50 · welcome drink €6.50 (the catalogue's hidden text gives the same €6.50 for a welcome prosecco) · coffee €3.50   |
+| Set-up         | Chairs €5 (and the items under Prices). Sound (€500) and red carpet (€150) are priced but weren't charged on this quote; the emails say the staircase is always dressed with a red carpet, so it may be included |
+| Overtime       | €10 a rate (unit not stated; the emails say €10–15 a person per extra hour)                                                                                                                                      |
+| Custom package | Food and drinks lines for anything off the menu                                                                                                                                                                  |
 
 The station prices match the Studio's exactly.
 
@@ -276,11 +276,25 @@ remembers it four weeks on, so confirm before relying on any of it):
   are there for completeness.
 - **Some set-up lines are there to show what's included** rather than to be
   charged, rounding the quote out.
-- **Two bar pieces are offered per wedding.**
-- **Chairs are included in the set-up**, for up to 30% of the guests (a
-  standing reception seats some, not all). The template does
+- **Bar pieces**: two per wedding, or one per 80 or so guests (the user's
+  two recollections; the catalogue's ratio is one bar per 250 guests).
+  The Studio uses one per 80, at least one (Wedding Policy, "Chairs and Bar
+  Pieces Included"), so 160 guests show "1–2 bar pieces".
+- **Chairs are included in the set-up**, for 20–30% of the guests (a
+  standing reception seats some, not all). The Studio shows the range on
+  each quote, e.g. "32–48 chairs" for 160 guests. The template does
   price chairs (€5, 32 of them on this quote, a fifth of its 160 guests),
   so ask whether "included" means free or simply part of the set-up line.
+
+- **The spaces for a wedding**: the outdoor area (all but the Secret
+  Garden) and the hall. With fewer guests, most are kept to one of them;
+  near capacity (800) both are fully used. Outdoors is the norm, with the
+  hall used if it rains or is very windy. This fits the emails (the hall is
+  always included alongside the outdoor space).
+- **"Terrace & Lawns"** on the quote is presumably that outdoor area (the
+  terrace and its lawns, without the Secret Garden), charged at €4,500
+  under Exclusive Use: exclusive use of it, since the emails say the
+  terrace and hall come with the standard package. Confirm both.
 
 **What couples choose most**, also from Nicholas in person:
 
