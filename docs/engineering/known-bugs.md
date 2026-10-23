@@ -276,29 +276,29 @@ the planned unit tests.
 
 ---
 
-## 11. A bright line under a station card's photo
+## 11. A bright line under a station card's photo (open)
 
-**Symptom**: hovering a Reception station card while the stations were
-still sliding in flashed a 1px light line along the bottom of its photo,
-gone once the slide-in ended. Found 2026-10-23.
+**Status**: open, not yet understood. Logged so it isn't lost; the usual
+rule (a test that fails without the fix) applies once it's fixed.
 
-**Cause**: the dark scrim under the card's name was a separate layer laid
-over the photo. While the browser animates both the hover zoom and the
-section's slide-in, it draws the photo and the scrim as separate layers and
-rounds their edges differently, so the photo's last row of pixels showed
-below the scrim, undarkened.
+**Symptom**: hovering a Reception station card while the stations are still
+sliding in flashes a 1px light line along the bottom of its photo, gone once
+the slide-in ends. Found 2026-10-23 on the user's desktop Chrome.
 
-**Fix**: the darkening is now a mask on the photo itself, fading it into
-the figure's ink background (`--station-scrim-mask` in
-`ReceptionStations.css`). One layer, so nothing can show between them. It
-looks the same: an 82% ink scrim over the photo and the photo at 18% over
-ink are the same colour.
+**What's known**: the line is the photo's bottom row of pixels showing
+without the dark scrim over it (`.package-station-card-figure::after`). It
+only happens while the hover zoom and the section's slide-in run at once, so
+the likely cause is the browser drawing the photo and the scrim as separate
+layers and rounding their edges differently.
 
-**Test**: none automated. It only shows for a few frames mid-animation, so a
-screenshot test would pass or fail by timing alone. It was found and the fix
-checked by screenshotting the card's bottom edge every 120ms while hovering
-during the slide-in, three runs each: before, a light row (brightness about
-410 of 765); after, none (about 140, the photo's own dark edge).
+**Tried, didn't work**: drawing the scrim as a mask on the photo itself, so
+there's only one layer (2026-10-23). It removed the line in headless
+Chromium screenshots, but not in the user's browser, so it was reverted. A
+lead for next time: the user's screen may use fractional display scaling
+(125% or 150% in Windows), which the screenshots didn't, and fractional
+scaling is where edges get rounded differently.
 
-**Rule**: darken a photo that zooms on hover with a mask on the photo, not
-a layer over it.
+**How to see it**: hover a station card the moment the stations section
+starts sliding in, and watch the bottom edge of its photo.
+
+**Test**: none yet.
