@@ -4,7 +4,7 @@
 
 import { STRIPE_SECRET_KEY } from "astro:env/server"
 import type { DepositRecord } from "@lib/deposits/load"
-import { longDate } from "@lib/email/enquiry-details"
+import { longDate } from "@lib/dates"
 import type { OnlineMethod } from "./checkout"
 import type { StripeCheckoutSession } from "./stripe-sessions"
 

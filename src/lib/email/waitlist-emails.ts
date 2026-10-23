@@ -6,7 +6,7 @@
 // from a local test opens the local site; pictures still come from the live
 // one (layout.ts).
 
-import { longDate } from "./enquiry-details"
+import { longDate } from "@lib/dates"
 import {
   button,
   emailLayout,

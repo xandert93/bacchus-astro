@@ -1,5 +1,6 @@
 // The published testimonials, from Sanity, in the shape Testimonials.astro
 // and Testimonials.js render.
+import { dayMonthYear } from "@lib/dates"
 import { fetchContent } from "./client"
 
 export interface Testimonial {
@@ -63,15 +64,6 @@ const toQuoteString = (blocks: PortableTextBlock[]): string =>
     )
     .join(" ")
 
-// "2014-04-26" -> "26 April 2014".
-const formatEventDate = (isoDate: string): string =>
-  new Date(`${isoDate}T12:00:00Z`).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  })
-
 export const getTestimonials = async (): Promise<Testimonial[]> => {
   const testimonials = await fetchContent<SanityTestimonial[]>(
     "published testimonials",
@@ -83,7 +75,7 @@ export const getTestimonials = async (): Promise<Testimonial[]> => {
     name: testimonial.displayName,
     category: CATEGORY_LABELS[testimonial.category ?? ""] ?? "",
     location: testimonial.location ?? "",
-    date: testimonial.eventDate ? formatEventDate(testimonial.eventDate) : undefined,
+    date: testimonial.eventDate ? dayMonthYear(testimonial.eventDate) : undefined,
     rating: testimonial.rating,
   }))
 }

@@ -2,6 +2,8 @@
 // from the email's link, shows the matching button, and sends it to
 // /api/waitlist/confirm or /api/waitlist/leave when pressed.
 
+import { longDate } from "@lib/dates"
+
 const card = document.getElementById("waitlistAction")
 
 if (card) {
@@ -15,16 +17,6 @@ if (card) {
   const params = new URLSearchParams(window.location.search)
   const action = params.get("action")
   const token = params.get("token")
-
-  // "Saturday 20 January 2027", from "2027-01-20".
-  const longDate = (isoDate) =>
-    new Date(`${isoDate}T12:00:00Z`).toLocaleDateString("en-GB", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      timeZone: "UTC",
-    })
 
   const ACTIONS = {
     confirm: {

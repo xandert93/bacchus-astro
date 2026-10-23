@@ -4,7 +4,7 @@
 // all the wording lives here, on the server.
 
 import { todayInMalta } from "@lib/dates"
-import { longDate } from "@lib/email/enquiry-details"
+import { longDate } from "@lib/dates"
 import { euros, plainAmount } from "@lib/money"
 import { paymentsInTestMode, providerFor } from "@lib/payments/checkout"
 import { describeIncludedSetUp } from "@studio/lib/includedSetUp"

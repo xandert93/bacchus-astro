@@ -2,7 +2,7 @@
 // event, and telling staff when one arrives.
 
 import { REVIEW_OCCASIONS } from "@data/reviews"
-import { longDate } from "./enquiry-details"
+import { longDate } from "@lib/dates"
 import {
   button,
   detailsCard,

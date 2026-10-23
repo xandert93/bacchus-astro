@@ -21,7 +21,7 @@ import {
   quoteExpiredStaffEmail,
   quoteReminderEmail,
 } from "@lib/email/deposit-emails"
-import { longDate } from "@lib/email/enquiry-details"
+import { longDate } from "@lib/dates"
 import { sendAndLog } from "@lib/email/log"
 import { fetchStaffRecipients } from "@lib/email/staff"
 import { newToken } from "@lib/tokens"

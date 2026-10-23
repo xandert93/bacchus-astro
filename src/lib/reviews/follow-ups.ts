@@ -13,7 +13,7 @@
 import type { SanityClient } from "@sanity/client"
 import { changeStatus } from "@lib/bookings/status"
 import { addDays, todayInMalta } from "@lib/dates"
-import { longDate } from "@lib/email/enquiry-details"
+import { longDate } from "@lib/dates"
 import { sendAndLog } from "@lib/email/log"
 import { reviewRequestEmail } from "@lib/email/review-emails"
 import { newToken } from "@lib/tokens"
