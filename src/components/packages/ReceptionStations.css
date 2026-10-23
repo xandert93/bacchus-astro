@@ -41,13 +41,11 @@
      makes a plain #stations link (or any future one) land clear of
      the nav. +20px so the top edge isn't flush against it. */
   scroll-margin-top: calc(var(--nav-h) + 20px);
-
-  /* The darkening under a card's name and price, as a mask on the photo
-     over an ink background: clear down to 38%, then fading to 18% of the
-     photo (the same as 82% ink laid over it). A mask rather than a scrim
-     on top, because a separate layer can miss the photo's last row of
-     pixels while it zooms (known-bugs.md, 11). */
-  --station-scrim-mask: linear-gradient(180deg, #000 38%, rgba(0, 0, 0, 0.18));
+  --station-scrim: linear-gradient(
+    180deg,
+    rgba(var(--ink-rgb), 0) 38%,
+    rgba(var(--ink-rgb), 0.82)
+  );
   position: relative;
 
   /* The corner washes are NOT declared here any more. They were,
@@ -622,9 +620,6 @@
   /* So the hover zoom below is clipped by the figure rather than
      sliding under the copy beneath it. */
   overflow: hidden;
-
-  /* What the photo's mask fades to (--station-scrim-mask). */
-  background: var(--ink);
 }
 
 /* 1 / 1, walked down again the same day: source native 4/5 ->
@@ -674,10 +669,17 @@
      the value most worth actually looking at once the ratio is
      seen — more than the ratio number itself. */
   object-position: 50% 58%;
-  mask-image: var(--station-scrim-mask);
   transition:
     transform 0.9s var(--ease),
     filter 0.45s var(--ease);
+}
+
+.package-station-card-figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--station-scrim);
+  pointer-events: none;
 }
 
 /* ADDED DURING THE PORT, not in the export. The export left the
