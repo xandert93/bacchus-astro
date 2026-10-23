@@ -493,6 +493,12 @@ Everything below is illustrative and is labelled as such on the page.
 
 ### For the call (added 2026-10-21)
 
+- **Anniversary invitations** (our proposal): an email to every couple on
+  their wedding anniversary, inviting them back to the restaurant, perhaps
+  with a glass of prosecco or a dessert on the house. Would you like it,
+  what would you offer, and for how many years? (`docs/planning/
+roadmap.md`, "Anniversary invitations".)
+
 - **How are enquiries and bookings recorded today?** An inbox, a diary, a
   spreadsheet, a calendar? Before launch we need every upcoming confirmed
   booking (and any open enquiry) in the Studio, or the calendar shows a

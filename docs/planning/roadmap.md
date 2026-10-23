@@ -197,6 +197,26 @@ none agreed with Bacchus yet (questions in `client-facts.md`):
   edit and send. **Never sent automatically.**
 - **FAQ chat assistant** (low priority): answers only from current Sanity
   content, never invents prices or availability. Built in-house.
+- **Anniversary invitations** (proposed 2026-10-23, to raise with Bacchus;
+  a question in `client-facts.md`, "For the call"). On each couple's
+  wedding anniversary, an email from Bacchus: "A year ago today you
+  celebrated with us: come back and toast it at the restaurant", perhaps
+  with a glass of prosecco or a dessert on the house. Every year, for as
+  long as they don't opt out.
+  - **Why**: it lands on a day they're already feeling sentimental, it's
+    personal, and it brings them back to the restaurant. Couples who return
+    bring friends, and leave reviews of their own accord: the honest
+    version of what a prize draw for reviews would try to buy.
+  - **Cheap to build**: each wedding's date and the couple's email are
+    already stored, and the daily jobs already run every morning. One more
+    check in them, and one email. About a day's work.
+  - **The rule**: emailing existing customers about similar services is
+    allowed without asking first (the "soft opt-in"), but every email must
+    offer a one-click way to stop, and stopping must be respected. A
+    booking would record that they've opted out.
+  - **For Bacchus to decide**: whether to offer something with it (a glass
+    of prosecco, a dessert), for which events (weddings only, or
+    anniversaries of any celebration), and for how many years.
 
 ---
 
