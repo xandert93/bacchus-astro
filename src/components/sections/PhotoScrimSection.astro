@@ -113,10 +113,15 @@ const { photo, pageTop = false, class: className } = Astro.props
     min-height: calc(100vh - var(--nav-h));
   }
 
+  /* No right padding: the scrim already runs 64px past the column before
+     its gold edge, which is the content's breathing room on that side, so
+     padding there would only squeeze the content (the review page's two
+     Google buttons stop fitting side by side). */
   @media (--from-desktop) {
     .photo-scrim-panel {
       max-width: var(--photo-scrim-width);
       margin: 0 0 0 var(--photo-scrim-left);
+      padding-right: 0;
     }
   }
 </style>
