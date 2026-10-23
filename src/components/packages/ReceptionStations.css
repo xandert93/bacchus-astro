@@ -296,21 +296,6 @@
   flex: none;
 }
 
-/* Cancels the sitewide .button:hover svg / .button:active svg
-   nudge (styles.css, translateX(4px) on hover/tap) for this icon
-   specifically (2026-09-30, on request — "it shouldn't be moving
-   at all... the add icon never should"). That nudge is built for
-   a directional arrow suggesting forward motion; a plus/tick/
-   cross toggle icon has no such direction, so the slide read as
-   stray movement rather than an intentional cue. Specificity
-   (0,3,0), beating .button:hover svg / .button:active svg's
-   (0,2,1) outright regardless of source order, so this doesn't
-   depend on where it's declared relative to styles.css. */
-.package-station-add-button:hover .package-station-add-button-icon,
-.package-station-add-button:active .package-station-add-button-icon {
-  transform: none;
-}
-
 /* The site has almost no :focus-visible styling of its own; this
    is additive, and a candidate to promote sitewide separately. */
 .package-stations-category-tab:focus-visible,

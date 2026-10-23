@@ -197,12 +197,4 @@ const isWedding = eventType === "Wedding"
   #availChangeBtn {
     flex: none;
   }
-
-  /* The calendar icon here is a label, not a "proceed" chevron, so it shouldn't
-         inherit .button:hover svg's forward-nudge translateX — that motion only reads
-         correctly on the trailing arrows it was designed for.
-  */
-  #availChangeBtn :global(svg) {
-    transition: none;
-  }
 </style>
