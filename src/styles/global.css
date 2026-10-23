@@ -478,12 +478,16 @@ section {
   margin-bottom: 32px;
 }
 
-h2 {
+/* .section-heading: a section heading's look on a heading that can't be an
+   h2, such as the h1 of a page with no hero (the review page). */
+h2,
+.section-heading {
   font-size: clamp(31px, 5.2vw, 62px);
   font-weight: 300;
 }
 
-h2 em {
+h2 em,
+.section-heading em {
   background: var(--bronze-gradient);
   -webkit-background-clip: text;
   background-clip: text;
@@ -504,7 +508,8 @@ h2 em {
   margin: 0 -0.16em;
 }
 
-.on-dark h2 em {
+.on-dark h2 em,
+.on-dark .section-heading em {
   background: var(--gold-gradient);
   -webkit-background-clip: text;
   background-clip: text;
