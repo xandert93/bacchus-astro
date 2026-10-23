@@ -97,7 +97,10 @@ const extra = {
     quantity: count,
     unitAmount: 3,
   }),
-  sound: { label: "Sound", category: "setup", quantity: 1, unitAmount: 500 },
+  // Priced on Bacchus's template (sound €500, red carpet €150) but left blank
+  // on their real quote: shown to say they're included (client-facts.md).
+  sound: { label: "Sound", category: "setup", quantity: 1, unitAmount: 0 },
+  redCarpet: { label: "Red carpet", category: "setup", quantity: 1, unitAmount: 0 },
   welcomeDrink: (guests: number) => ({
     label: "Welcome drink",
     category: "beverage",
@@ -199,7 +202,7 @@ const BOOKINGS: BookingSpec[] = [
       status: "accepted",
       mealFormat: TIERS.receptionRose,
       beverage: TIERS.localWine,
-      extras: [extra.roundTables(14), extra.sound],
+      extras: [extra.roundTables(14), extra.sound, extra.redCarpet],
       cake: FAVOURITE_CAKE,
       roundPerPersonDownTo: 5,
       sentDaysAgo: 100,
@@ -337,6 +340,7 @@ const BOOKINGS: BookingSpec[] = [
         extra.cocktailBar(160),
         extra.roundTables(16),
         extra.sound,
+        extra.redCarpet,
         extra.overtime(160),
       ],
       cake: FAVOURITE_CAKE,
@@ -430,6 +434,7 @@ const BOOKINGS: BookingSpec[] = [
         extra.roundTables(11),
         extra.bows(33),
         extra.sound,
+        extra.redCarpet,
       ],
       cake: FAVOURITE_CAKE,
       sentDaysAgo: 2,
