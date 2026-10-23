@@ -95,7 +95,7 @@ export default defineType({
     { name: "terms", title: "Terms" },
   ],
 
-  initialValue: async (_parameters, { getClient }) => {
+  initialValue: async (_parameters, { getClient, currentUser }) => {
     const defaults = await getClient({ apiVersion: "2024-10-01" }).fetch<{
       vatRate?: number
       depositPercent?: number
@@ -109,6 +109,8 @@ export default defineType({
     return {
       reference: newQuoteReference(),
       status: "draft",
+      // Whoever creates it, as Bacchus's own quotes name who prepared them.
+      ...(currentUser?.name ? { preparedBy: currentUser.name } : {}),
       pricing: {
         vat: { rate: defaults.vatRate ?? DEFAULT_VAT_RATE },
         deposit: { percent: defaults.depositPercent ?? DEFAULT_DEPOSIT_PERCENT },
@@ -209,6 +211,29 @@ export default defineType({
       ),
     }),
     defineField({
+      name: "preparedBy",
+      title: "Prepared By",
+      type: "string",
+      group: "summary",
+      readOnly: isLocked,
+      description: help(
+        "Filled in with your name. The client sees it on their booking page and in the quote email.",
+        "Change it if you're preparing the quote for a colleague.",
+      ),
+    }),
+    defineField({
+      name: "clientNotes",
+      title: "Notes for the Client",
+      type: "text",
+      group: "summary",
+      rows: 4,
+      readOnly: isLocked,
+      description: help(
+        "Shown to the client with the quote, on their booking page.",
+        "For anything they should know: a change to the menu, what's included, a reminder about the weather for an outdoor station.",
+      ),
+    }),
+    defineField({
       name: "internalNotes",
       title: "Internal Notes",
       type: "text",
@@ -303,6 +328,31 @@ export default defineType({
             "Choose one: Reception, Banquet or High Tea.",
             "They are alternatives, not courses, so they can't be combined.",
           ),
+        }),
+        defineField({
+          name: "cake",
+          title: "Wedding Cake",
+          type: "object",
+          options: { collapsible: false, columns: 2 },
+          description: help(
+            "The cake that comes with the meal. Shown under the meal on the client's quote.",
+            "Leave the flavour empty if it isn't chosen yet. A cake priced on top goes in the Pricing lines instead.",
+          ),
+          fields: [
+            defineField({
+              name: "tiers",
+              title: "Tiers",
+              type: "number",
+              options: { list: [1, 2, 3] },
+            }),
+            defineField({
+              name: "flavour",
+              title: "Flavour",
+              type: "string",
+              description:
+                "For example pistachio and olive oil (the favourite), almond, bacio or pistachio.",
+            }),
+          ],
         }),
         defineField({
           name: "beverages",

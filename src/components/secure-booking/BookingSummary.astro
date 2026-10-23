@@ -50,6 +50,14 @@ const DETAILS: { icon: SecureBookingIconName; label: string }[] = [
               </div>
             ))}
           </dl>
+
+          <div class="secure-booking-notes" data-deposit-row="notes" hidden>
+            <h3>Notes from Bacchus</h3>
+            <p data-deposit="notes"></p>
+          </div>
+          <p class="secure-booking-prepared" data-deposit-row="preparedBy" hidden>
+            Prepared by <span data-deposit="preparedBy"></span>
+          </p>
         </div>
 
         <div class="secure-booking-summary-col secure-booking-summary-col-right">
@@ -60,6 +68,7 @@ const DETAILS: { icon: SecureBookingIconName; label: string }[] = [
               <span>
                 <span data-line="label"></span>
                 <span class="secure-booking-item-working" data-line="working"></span>
+                <span class="secure-booking-item-working" data-line="details"></span>
               </span>
               <span class="secure-booking-item-amount" data-line="amount"></span>
             </div>

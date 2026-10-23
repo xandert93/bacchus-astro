@@ -27,6 +27,19 @@ const OCCASIONS: Record<string, string> = {
 const listInWords = (items: string[]) =>
   items.length > 1 ? `${items.slice(0, -1).join(", ")} and ${items.at(-1)}` : items[0]
 
+const TIER_WORDS: Record<number, string> = {
+  1: "one-tier",
+  2: "two-tier",
+  3: "three-tier",
+}
+
+/** "Includes a three-tier cake: pistachio and olive oil", under the meal line. */
+const cakeNote = (cake: { tiers?: number; flavour?: string } | undefined) => {
+  if (!cake?.tiers && !cake?.flavour) return ""
+  const size = cake.tiers ? `${TIER_WORDS[cake.tiers] ?? `${cake.tiers}-tier`} ` : ""
+  return `Includes a ${size}cake${cake.flavour ? `: ${cake.flavour}` : ""}`
+}
+
 const stateOf = (record: DepositRecord): DepositState => {
   const closedQuote = ["declined", "expired", "superseded"].includes(record.status)
   const closedBooking = ["declined", "withdrawn", "cancelled"].includes(
@@ -92,12 +105,20 @@ export const toDepositView = (record: DepositRecord) => {
     // amount.
     lineItems: pricing.lineItems.map((item) => ({
       label: item.label,
-      amount: euros(item.amount),
+      // Bacchus's quotes list some things at no charge, to show they're part
+      // of the package (chairs, for instance).
+      amount: item.amount === 0 ? "Included" : euros(item.amount),
       working:
-        item.quantity && item.quantity !== 1 && item.unitAmount !== undefined
+        item.quantity && item.quantity !== 1 && item.unitAmount
           ? `${item.quantity} × ${euros(item.unitAmount)}`
           : "",
+      details:
+        item.source && item.source === record.menu?.mealFormat
+          ? cakeNote(record.menu?.cake)
+          : "",
     })),
+    notes: record.clientNotes?.trim() ?? "",
+    preparedBy: record.preparedBy ?? "",
     subtotal: euros(pricing.subtotal),
     discount: pricing.discount?.amount ? `−${euros(pricing.discount.amount)}` : undefined,
     total: euros(pricing.total),
