@@ -2,19 +2,23 @@
 // A thin gold ring that turns while something loads: the lightbox while a
 // photo arrives, the deposit page while it fetches the booking. Screen
 // readers hear `label`. Under reduced motion it holds still.
+//
+// `onLight`: a stronger bronze ring for a light background, where the gold
+// one is barely there (the review page, the bank picker).
 interface Props {
   /** Read out to screen readers, e.g. "Loading your booking". */
   label?: string
   /** Diameter in px. */
   size?: number
+  onLight?: boolean
   class?: string
 }
 
-const { label = "Loading", size = 32, class: className } = Astro.props
+const { label = "Loading", size = 32, onLight = false, class: className } = Astro.props
 ---
 
 <span
-  class:list={["loading-ring", className]}
+  class:list={["loading-ring", { "loading-ring-on-light": onLight }, className]}
   role="status"
   aria-label={label}
   style={`--loading-ring-size: ${size}px`}
@@ -29,6 +33,12 @@ const { label = "Loading", size = 32, class: className } = Astro.props
     border-top-color: var(--gold-2);
     border-radius: 50%;
     animation: loading-ring-turn 0.9s linear infinite;
+  }
+
+  .loading-ring-on-light {
+    border-width: 2px;
+    border-color: rgba(var(--bronze-rgb), 0.2);
+    border-top-color: var(--bronze);
   }
 
   @keyframes loading-ring-turn {
