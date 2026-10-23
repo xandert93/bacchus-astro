@@ -1,11 +1,10 @@
 ---
 // The /review page: where the link in the review request lands
-// (src/lib/reviews/follow-ups.ts). A photograph of a celebration on the
-// terrace fills the section under a paper veil: solid on the left, where the
-// form sits, fading to clear on the right on a desktop; all over it on a
-// phone and tablet, with the photo just showing through. ReviewForm.js loads
-// who it's for, shows the form, and sends it; it then thanks them, or does
-// straight away if they've already left their review, and offers Google.
+// (src/lib/reviews/follow-ups.ts). The form sits on a photograph of a
+// celebration on the terrace, under a paper scrim (PhotoScrimSection).
+// ReviewForm.js loads who it's for, shows the form, and sends it; it then
+// thanks them, or does straight away if they've already left their review,
+// and offers Google.
 //
 // The stars are radio buttons, so the rating works from the keyboard (the
 // arrow keys move between them) and is read out as "3 stars"; the script
@@ -15,14 +14,13 @@
 // only happy clients is "review gating", which Google forbids
 // (docs/design/decisions.md, "Review gating"). Its link is a stand-in until
 // Bacchus supplies their own, hence the Proposed badge.
-import { below } from "@lib/media-queries.js"
 import Breadcrumb from "@components/ui/Breadcrumb.astro"
 import Button from "@components/ui/Button.astro"
 import CharacterCount from "@components/forms/CharacterCount.astro"
 import CheckboxField from "@components/forms/CheckboxField.astro"
 import FormField from "@components/forms/FormField.astro"
 import LoadingState from "@components/ui/LoadingState.astro"
-import Photo from "@components/ui/Photo.astro"
+import PhotoScrimSection from "@components/sections/PhotoScrimSection.astro"
 import ProposedBadge from "@components/ui/ProposedBadge.astro"
 import TextInput from "@components/forms/TextInput.astro"
 import { GOOGLE_REVIEWS_URL, PUBLISH_WORDING, REVIEW_MAXIMUM_LENGTH } from "@data/reviews"
@@ -30,17 +28,14 @@ import { GOOGLE_REVIEWS_URL, PUBLISH_WORDING, REVIEW_MAXIMUM_LENGTH } from "@dat
 const STAR_VALUES = [1, 2, 3, 4, 5]
 ---
 
-<section class="review-page">
-  <div class="review-photo">
-    <Photo
-      src="venue/terrace-celebration-reception"
-      sizes={`${below.desktop} 100vw, 100vw`}
-      alt="Guests gathered on the terrace at sunset, drinks in hand, with a band playing under strings of lights"
-      loading="eager"
-    />
-  </div>
-
-  <div class="review-panel is-loading" id="reviewCard">
+<PhotoScrimSection
+  pageTop
+  photo={{
+    src: "venue/terrace-celebration-reception",
+    alt: "Guests gathered on the terrace at sunset, drinks in hand, with a band playing under strings of lights",
+  }}
+>
+  <div class="review-card is-loading" id="reviewCard">
     <LoadingState class="review-loading" text="Loading your review" onLight />
 
     <div class="review-content">
@@ -175,79 +170,25 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
       </div>
     </div>
   </div>
-</section>
+</PhotoScrimSection>
 
 <script>
   import "./ReviewForm.js"
 </script>
 
 <style>
-  /* One gap between everything on the page, so its rhythm is even. */
-  .review-page {
+  /* One gap between everything on the page, so its rhythm is even. Fills
+     the section's panel, so the loading state can sit in its middle. */
+  .review-card {
     --review-gap: clamp(22px, 2.6vw, 30px);
 
-    position: relative;
-    min-height: 100vh;
-    padding-top: var(--nav-h);
-    background: var(--paper);
-  }
-
-  /* The photograph under everything, and the paper veil over it. */
-  .review-photo {
-    position: absolute;
-    inset: 0;
-  }
-
-  .review-photo :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .review-page::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: rgba(var(--paper-rgb), 0.9);
-  }
-
-  /* On a desktop the veil is solid behind the form and fades to clear
-     across the middle, so the photograph shows fully on the right. */
-  @media (--from-desktop) {
-    .review-page::before {
-      background: linear-gradient(
-        90deg,
-        rgba(var(--paper-rgb), 0.95) 0%,
-        rgba(var(--paper-rgb), 0.95) 46%,
-        rgba(var(--paper-rgb), 0) 72%
-      );
-    }
-  }
-
-  .review-panel {
-    position: relative;
-    z-index: 2;
     display: flex;
+    flex: 1;
     flex-direction: column;
-    width: 100%;
-    max-width: 640px;
-    min-height: calc(100vh - var(--nav-h));
-    margin: 0 auto;
-    padding: calc(var(--review-gap) * 2) clamp(20px, 5vw, 44px)
-      calc(var(--review-gap) * 3);
-  }
-
-  @media (--from-desktop) {
-    /* Left, in line with the site's other content, inside the solid veil. */
-    .review-panel {
-      max-width: min(620px, 42vw);
-      margin: 0 0 0 max(0px, calc((100vw - 1180px) / 2));
-    }
   }
 
   /* While loading, only the ring and its line, in the middle of the panel. */
-  .review-panel :global(.review-loading) {
+  .review-card :global(.review-loading) {
     display: none;
   }
 
@@ -383,11 +324,12 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     gap: 12px;
   }
 
-  /* On a phone the buttons stack, each as wide as the site's other phone
-     buttons. */
+  /* On a phone the buttons stack in the middle, each as wide as the site's
+     other phone buttons. */
   @media (--below-tablet) {
     .review-buttons {
       flex-direction: column;
+      align-items: center;
     }
 
     .review-buttons :global(.button) {
