@@ -67,7 +67,11 @@ record.
 2. Sanity's webhook calls the route.
 3. The route saves the private link's hash, the quote's end date and the
    booking's new status in Sanity.
-4. The route asks Resend to email the client the link.
+4. The route asks **Cloudflare's Browser Rendering** to print the quote as a
+   PDF (`src/lib/quotes/pdf/`), and keeps it on the quote in Sanity.
+5. The route asks Resend to email the client the link, with the PDF
+   attached. If the PDF fails, the email still goes, without it, and the
+   failure is logged.
 
 **A deposit by bank or card** (`api/deposits/`):
 

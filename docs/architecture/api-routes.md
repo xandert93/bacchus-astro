@@ -40,13 +40,14 @@ comment has the detail.
 
 **Called by another service** (webhooks, and Cloudflare's timer):
 
-| Route                              | From                                       | Does                                                                                    | Guarded by                                      |
-| ---------------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `POST /api/quote-events`           | Sanity, when a quote goes Draft → Sent     | Makes the deposit link, sets the quote's end date, emails the client                    | Sanity's signature (`SANITY_WEBHOOK_SECRET`)    |
-| `POST /api/booking-events`         | Sanity, when a booking changes             | A deposit marked received confirms the booking; a cancelled wedding emails its waitlist | Sanity's signature                              |
-| `POST /api/payments/stripe-events` | Stripe, when a checkout is paid            | Records the card payment and confirms the booking                                       | Stripe's signature (`STRIPE_WEBHOOK_SECRET`)    |
-| `POST /api/email-events`           | Resend, when an email bounces              | Marks that email Bounced in its booking's Email Log                                     | Resend's signature (`RESEND_WEBHOOK_SECRET`)    |
-| `POST /api/jobs/daily`             | Cloudflare's daily timer (`src/worker.ts`) | Quote reminders and expiries (`src/lib/jobs/daily.ts`)                                  | A key only the Worker knows; 404 to anyone else |
+| Route                              | From                                       | Does                                                                                                   | Guarded by                                      |
+| ---------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------- |
+| `POST /api/quote-events`           | Sanity, when a quote goes Draft → Sent     | Makes the deposit link, sets the quote's end date, prints and keeps its PDF, emails the client with it | Sanity's signature (`SANITY_WEBHOOK_SECRET`)    |
+| `POST /api/booking-events`         | Sanity, when a booking changes             | A deposit marked received confirms the booking; a cancelled wedding emails its waitlist                | Sanity's signature                              |
+| `POST /api/payments/stripe-events` | Stripe, when a checkout is paid            | Records the card payment and confirms the booking                                                      | Stripe's signature (`STRIPE_WEBHOOK_SECRET`)    |
+| `POST /api/email-events`           | Resend, when an email bounces              | Marks that email Bounced in its booking's Email Log                                                    | Resend's signature (`RESEND_WEBHOOK_SECRET`)    |
+| `POST /api/jobs/daily`             | Cloudflare's daily timer (`src/worker.ts`) | Quote reminders and expiries (`src/lib/jobs/daily.ts`)                                                 | A key only the Worker knows; 404 to anyone else |
+| `GET /api/dev/quote-pdf`           | You, on the dev server                     | A quote's PDF made on the spot, to check its design (`?id=`, `&format=html`); keeps and sends nothing  | 404 anywhere but the dev server                 |
 
 ## Writing a new one
 

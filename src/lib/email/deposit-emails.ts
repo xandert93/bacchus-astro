@@ -90,7 +90,11 @@ const staffButton = (bookingId: string) => {
 /** The quote, with the link to the deposit page. Sent when staff mark it Sent. */
 export const quoteEmail = (
   facts: DepositFacts,
-  { depositLink, validUntil }: { depositLink: string; validUntil?: string },
+  {
+    depositLink,
+    validUntil,
+    pdfAttached = false,
+  }: { depositLink: string; validUntil?: string; pdfAttached?: boolean },
 ): Email => {
   const day = longDate(facts.date)
   const rows: [string, string | undefined][] = [
@@ -106,6 +110,11 @@ export const quoteEmail = (
     "Until a deposit arrives, the date is still open to other couples.",
   ]
   const footnote = [
+    ...(pdfAttached
+      ? [
+          "Your quote is also attached as a PDF, to keep or to pass on: it has no link in it.",
+        ]
+      : []),
     "The page is private to you: please don't share the link.",
     "Questions? Just reply to this email.",
   ]

@@ -251,6 +251,10 @@ The rules below apply to the current layout.
   see how it was arrived at.
 - **The gold phrase in the title is SVG text** with a gradient fill. CSS
   gradient text prints with a faint box around it.
+- **Built 2026-10-23 without the terms**, which follow once Bacchus approves
+  them, and with page 2's unconfirmed details left out rather than shown
+  in red: the payment schedule, the tasting terms, and when menu choices
+  are due. A real client never sees a placeholder.
 
 ---
 

@@ -28,6 +28,11 @@
   // @sanity/client relies on.
   "compatibility_flags": ["nodejs_compat"],
 
+  // Cloudflare's headless Chrome (Browser Rendering), which prints each quote
+  // as a PDF when it's sent (src/lib/quotes/pdf/print.ts). `npm run dev`
+  // launches a Chrome on this machine for it instead.
+  "browser": { "binding": "BROWSER", "remote": true },
+
   // Required by `wrangler preview`, even when empty. Branch previews need no
   // settings of their own yet; their build variables (INCLUDE_DRAFTS) are set
   // under Builds, "Previews Base", in the dashboard.

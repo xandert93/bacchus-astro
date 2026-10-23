@@ -383,9 +383,10 @@ deposit to arrive secures it, and the client is told so.
    `src/pages/api/quote-events.ts`, which makes the quote a private link
    (only its hash is stored, as for the waitlist), gives the quote an end
    date if staff didn't (the wedding policy's "Days a Quote Stays Valid"),
-   moves the booking to Awaiting Deposit and emails the client a summary
-   with one button to `/secure-booking?token=…`. After that end date the
-   page shows the quote as closed.
+   moves the booking to Awaiting Deposit, prints the quote as a PDF (kept
+   on the quote as its "Generated PDF") and emails the client a summary
+   with one button to `/secure-booking?token=…`, the PDF attached. After
+   that end date the page shows the quote as closed.
 2. **The deposit page** loads the quote by that link (`api/deposits/view.ts`;
    loading and shaping in `src/lib/deposits/`). The client can:
    - **pay by card** (`checkout.ts`): sends them to Stripe's checkout when

@@ -185,6 +185,23 @@ sends a few quotes a day at most. The template is an HTML page made for
 print (A4, page margins, page numbers), styled with the site's palette and
 fonts; it isn't the deposit page.
 
+**Built, 2026-10-23** (`src/lib/quotes/pdf/`). Things learned building it:
+
+- **The binding**: `"browser"` in `wrangler.jsonc` connects the Worker to
+  Browser Rendering, and `@cloudflare/puppeteer` drives it.
+- **Locally, it borrows a real Cloudflare browser** (`"remote": true` on the
+  binding), so `npm run dev` needs `npx wrangler login` once. The local
+  stand-in Chrome that Cloudflare's tools offer instead hangs while printing
+  (tested on Windows, 2026-10-23).
+- **Cloudflare's Chrome is older than ours** (version 128 in October 2026),
+  too old for CSS page-margin boxes, so the footer and page numbers come
+  from Chrome's own print footer (`print.ts`).
+- **New browsers are rate-limited** (a few a minute on the free plan, 429
+  beyond that). `print.ts` waits and tries again, up to three times.
+- **To look at a quote's PDF while working on it**:
+  `/api/dev/quote-pdf?id=<quote id>` on the dev server (`&format=html` for
+  the page it's printed from). It keeps and sends nothing.
+
 **Until launch, nothing is indexed.** The `workers.dev` address is public, so
 `public/_headers` sends `X-Robots-Tag: noindex` with every page, telling
 search engines not to list it. Removing it is on the roadmap's launch

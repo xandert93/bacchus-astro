@@ -86,6 +86,10 @@ Good to know:
 4. **To change a sent quote**, create a new one and set the old one to
    **Superseded**.
 
+When a quote is sent, the client's email has it attached as a PDF, and the
+same PDF is kept on the quote, under Terms, "Generated PDF": open it to see
+exactly what they received.
+
 Statuses after that: **Accepted** when the client says yes, **Declined by
 Client** if they say no, and **Expired** once its "valid until" date passes.
 

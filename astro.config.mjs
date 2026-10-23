@@ -23,6 +23,11 @@ export default defineConfig({
     // Build the static pages in Node, as before, rather than in Cloudflare's
     // runtime: the image pipeline needs Node.
     prerenderEnvironment: "node",
+    // Bindings marked "remote" in wrangler.jsonc (Browser Rendering) reach the
+    // real Cloudflare service from `npm run dev` and `astro preview`, which
+    // needs a Cloudflare login. GitHub's checks have none, and their tests
+    // never print a PDF, so there they stay local.
+    remoteBindings: !process.env.CI,
   }),
   // The site keeps no per-visitor state on the server, so no session store.
   // Without this the adapter would ask Cloudflare for a KV store to hold

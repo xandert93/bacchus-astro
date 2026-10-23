@@ -16,6 +16,7 @@ import { sendAndLog } from "@lib/email/log"
 import { getWriteClient } from "@lib/sanity/write-client"
 import { newToken } from "@lib/tokens"
 import { verifySanityWebhook } from "@lib/webhooks/sanity"
+import { asAttachment, keepQuotePdf, makeQuotePdf } from "@lib/quotes/pdf/quote-pdf"
 import { includedSetUpFor, type IncludedSetUpPolicy } from "@studio/lib/includedSetUp"
 
 export const prerender = false
@@ -95,11 +96,36 @@ export const POST: APIRoute = async ({ request }) => {
       })
       .commit()
 
+    // The PDF, as sent: kept on the quote and attached to the email. A
+    // failure here mustn't stop the quote going out, so the email goes
+    // without it and the error is logged.
+    const pdf = await makeQuotePdf({
+      ...record,
+      sentAt: new Date().toISOString(),
+      terms: { ...record.terms, validUntil },
+      ...(includedSetUp ? { includedSetUp } : {}),
+    }).catch((error) => {
+      console.error(`Quote ${record.reference}: PDF not made.`, error)
+      return null
+    })
+    if (pdf) {
+      await keepQuotePdf(client, record._id, pdf).catch((error) =>
+        console.error(`Quote ${record.reference}: PDF made but not kept.`, error),
+      )
+    }
+
     const depositLink = `${new URL(request.url).origin}/secure-booking?token=${token}`
     const result = await sendAndLog(
       client,
       { bookingId: record.booking._id, audience: "client" },
-      quoteEmail(depositFacts(record), { depositLink, validUntil }),
+      {
+        ...quoteEmail(depositFacts(record), {
+          depositLink,
+          validUntil,
+          pdfAttached: Boolean(pdf),
+        }),
+        ...(pdf ? { attachments: [asAttachment(pdf)] } : {}),
+      },
     )
 
     return new Response(JSON.stringify({ emailed: result.sent }), {

@@ -158,6 +158,10 @@ Every button is `<Button>` (`ui/Button.astro`).
   for the enquiry endpoint, `src/pages/api/enquiries.ts`. The one module
   allowed to write to Sanity is `src/lib/sanity/write-client.ts`, which only
   that endpoint imports.
+- `src/lib/quotes/`: a quote as the client reads it. `quote-lines.ts` puts
+  its lines in groups with their small print and subtotals; `pdf/` makes
+  its PDF: `quote-html.ts` (the page), `quote-styles.ts` (its CSS),
+  `print.ts` (Browser Rendering) and `quote-pdf.ts` (make, keep, attach).
 - `src/data/navigation.ts`: both nav menus, for the bar and the drawer.
 - `src/data/gallery.ts`: the gallery's filters (the photos are in Sanity).
 - `src/data/enquiry.ts`: event types and chip notes. Read by both

@@ -19,6 +19,8 @@ export interface Email {
    * e.g. `{ booking: "<id>" }`. Letters, numbers, - and _ only.
    */
   tags?: Record<string, string>
+  /** Files to attach, e.g. the quote's PDF. `content` is base64. */
+  attachments?: { filename: string; content: string }[]
 }
 
 export interface SendResult {
@@ -74,6 +76,7 @@ export const sendEmail = async ({
   kind,
   replyTo = CONTACT.email.display,
   tags = {},
+  attachments = [],
 }: Email): Promise<SendResult> => {
   if (!RESEND_API_KEY) {
     console.error(`Email "${kind}" not sent: RESEND_API_KEY is not set.`)
@@ -95,6 +98,7 @@ export const sendEmail = async ({
     html,
     text,
     tags: Object.entries({ kind, ...tags }).map(([name, value]) => ({ name, value })),
+    ...(attachments.length ? { attachments } : {}),
   })
 
   try {
