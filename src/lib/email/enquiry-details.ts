@@ -6,15 +6,18 @@
 import { EVENT_STYLE_OPTIONS, NOT_SURE_OF_SPACES, SPACE_OPTIONS } from "@data/enquiry"
 import type { EnquiryInput } from "@lib/enquiries/validate"
 
-/** "Saturday 20 January 2027", from "2027-01-20". */
-export const longDate = (isoDate: string) =>
-  new Date(`${isoDate}T12:00:00Z`).toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  })
+/**
+ * "Saturday 20 January 2027", from "2027-01-20". Built from two parts, because
+ * the Workers runtime writes the whole date as "Saturday, 20 January 2027",
+ * with a comma Britain doesn't use there.
+ */
+export const longDate = (isoDate: string) => {
+  const date = new Date(`${isoDate}T12:00:00Z`)
+  const part = (options: Intl.DateTimeFormatOptions) =>
+    date.toLocaleDateString("en-GB", { ...options, timeZone: "UTC" })
+
+  return `${part({ weekday: "long" })} ${part({ day: "numeric", month: "long", year: "numeric" })}`
+}
 
 const titleOf = (options: { value: string; title: string }[], value?: string) =>
   options.find((option) => option.value === value)?.title
