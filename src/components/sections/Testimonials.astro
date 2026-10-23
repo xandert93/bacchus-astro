@@ -10,10 +10,14 @@ import { toScriptJson } from "@lib/script-json"
 interface Props {
   // The darkened photo behind the section — a key from src/lib/images.ts.
   backgroundImage: string
+  // Only reviews of this kind of event (the testimonial's Studio category,
+  // which a review left on the site takes from its booking). Left out, all
+  // of them: the home page speaks for every kind of event.
+  category?: "wedding" | "corporate" | "celebration" | "restaurant"
 }
-const { backgroundImage } = Astro.props
+const { backgroundImage, category } = Astro.props
 
-const testimonials = await getTestimonials()
+const testimonials = await getTestimonials(category)
 ---
 
 <section class="section-padding quote testimonials" id="testimonials">

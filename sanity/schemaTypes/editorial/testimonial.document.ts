@@ -83,14 +83,20 @@ export default defineType({
           { title: "Restaurant", value: "restaurant" },
         ],
       },
-      description: "Optional. The type of event they reviewed.",
+      description: help(
+        "The type of event they reviewed. The Weddings page shows only weddings.",
+        "Filled in from the booking for a review left on the site.",
+      ),
     }),
     defineField({
       name: "eventDate",
       title: "Event Date",
       type: "date",
       group: "content",
-      description: "Optional. Only if the reviewer mentioned it.",
+      description: help(
+        "Filled in from the booking for a review left on the site.",
+        "For one added by hand, only if the reviewer mentioned it.",
+      ),
     }),
     defineField({
       name: "author",
