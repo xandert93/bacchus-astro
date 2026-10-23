@@ -128,6 +128,7 @@ export const QUOTE_LINE_CATEGORIES = [
   { title: "Food", value: "food" },
   { title: "Beverage", value: "beverage" },
   { title: "Set-Up", value: "setup" },
+  { title: "Overtime", value: "overtime" },
   { title: "Other", value: "other" },
 ] as const
 
