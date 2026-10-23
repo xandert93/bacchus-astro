@@ -22,6 +22,16 @@ export const REVIEW_CATEGORIES: Record<string, string> = {
 export const PUBLISH_WORDING =
   "Bacchus may show my review on its website, with the name above. Leave this unticked and it stays between you and our team."
 
+/**
+ * Where the thank-you screen sends people to review Bacchus on Google: for
+ * now, Bacchus's listing found by a Maps search, where "Write a review" is a
+ * click away. Replace it with their own review link (from their Google
+ * Business profile, "Ask for reviews") once they supply it, and take the
+ * Proposed badge off (src/components/reviews/ReviewForm.astro).
+ */
+export const GOOGLE_REVIEWS_URL =
+  "https://www.google.com/maps/search/?api=1&query=Bacchus+Restaurant+Mdina+Malta"
+
 /** The longest review the page and the endpoint accept, in characters. */
 export const REVIEW_MAXIMUM_LENGTH = 1500
 

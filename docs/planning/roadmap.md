@@ -177,9 +177,10 @@ none agreed with Bacchus yet (questions in `client-facts.md`):
   form asks for a rating, the review, the name to show and permission to
   publish, and lands in the Studio as "Awaiting review". **Every submission
   is reviewed by a person before publishing.**
-- Not yet: a photo upload (the schema has the permission and the field), and
-  a link to Bacchus's Google reviews on the thank-you screen, which needs
-  their Google Business profile link.
+- Not yet: a photo upload (the schema has the permission and the field).
+- The thank-you screen asks everyone to share their review on Google too,
+  with it ready to copy. Its link is a stand-in, badged Proposed, until
+  Bacchus supplies their Google Business profile's review link.
 - The four live testimonials were supplied by hand.
 
 ### 6. Preferred supplier directory

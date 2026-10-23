@@ -1,0 +1,121 @@
+---
+// A ring under a textarea counting the characters left: green with plenty of
+// room, amber, then red as it runs out. Put it in the TextInput's slot, with
+// the textarea's id and the same limit as its maxlength. Used by the
+// enquiry's message and the review. CharacterCount.js keeps it up to date.
+interface Props {
+  /** The textarea's id. */
+  for: string
+  limit: number
+}
+
+const { for: inputId, limit } = Astro.props
+---
+
+<div class="character-count" data-character-count={inputId} data-limit={limit}>
+  <span class="character-count-label">Characters</span>
+  <div class="character-ring" aria-hidden="true">
+    <svg viewBox="0 0 34 34">
+      <circle class="character-ring-track" cx="17" cy="17" r="14"></circle>
+      <circle class="character-ring-fill" cx="17" cy="17" r="14"></circle>
+    </svg>
+    <span class="character-ring-number">{limit}</span>
+  </div>
+</div>
+
+<script>
+  import "./CharacterCount.js"
+</script>
+
+<style>
+  /* The ring sits below the textarea, right-aligned, in normal flow, not
+     over the textarea's corner, so the box never reserves invisible space. */
+  :global(.field-input):has(> .character-count) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .character-count {
+    display: flex;
+    align-items: center;
+    margin-top: 6px;
+  }
+
+  .character-count-label {
+    font-family: "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-ink);
+  }
+
+  .character-count-label::after {
+    content: "·";
+    margin: 0 6px;
+    color: rgba(var(--muted-ink-rgb), 0.4);
+  }
+
+  .character-ring {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+  }
+
+  .character-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .character-ring-track {
+    fill: none;
+    stroke: rgba(var(--muted-ink-rgb), 0.14);
+    stroke-width: 2;
+  }
+
+  .character-ring-fill {
+    fill: none;
+    stroke: #2fae5c;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 87.96;
+    stroke-dashoffset: 87.96;
+    transition:
+      stroke-dashoffset 0.2s var(--ease),
+      stroke 0.2s var(--ease);
+  }
+
+  .character-ring-number {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family: "Inter", sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--muted-ink);
+  }
+
+  /* Green (plenty of room) -> amber -> red. Deliberately true, vivid
+     semantic colours rather than the calendar's muted green, amber and
+     oxblood, which read too dark and too alike at this small a size. */
+  .character-ring:global(.amber) .character-ring-fill {
+    stroke: #f2a30f;
+  }
+
+  .character-ring:global(.amber) .character-ring-number {
+    color: #b97800;
+  }
+
+  .character-ring:global(.near-limit) .character-ring-fill {
+    stroke: #e0413a;
+  }
+
+  .character-ring:global(.near-limit) .character-ring-number {
+    color: #d1372f;
+  }
+</style>

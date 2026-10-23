@@ -153,8 +153,11 @@ A four-step wizard: **the occasion** (event type, date) → **the specifics**
   public. It can remove the reviews or suspend the listing. So:
   - Everyone is asked by one fixed rule: every Completed booking, a week
     after the event (`src/lib/reviews/follow-ups.ts`).
-  - Whoever sends our form is shown the Google prompt, whatever their rating
-    (planned, once we have Bacchus's Google review link).
+  - Whoever sends our form is shown the Google prompt, whatever their rating,
+    with their review ready to copy and paste. Built 2026-10-23 with a
+    stand-in link (a Maps search for Bacchus) and a Proposed badge, until
+    Bacchus supplies their own review link (`GOOGLE_REVIEWS_URL`,
+    `src/data/reviews.ts`).
   - Not asking someone at all is fine for our own form, for a real reason
     (a dispute in progress). Never because their review might be bad.
     Staff asking couples by hand follow the same rule.
