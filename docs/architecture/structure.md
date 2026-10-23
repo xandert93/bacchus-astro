@@ -80,10 +80,13 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   stands in on a page of its own: the pretend checkout and the bank picker,
   with a "Back to your booking" link above it),
   `LoadingRing` (the turning gold ring while something loads: the
-  lightbox's photo, the deposit page's booking).
+  lightbox's photo; `onLight` for a paper background), `LoadingState` (the
+  ring with a line of text beneath: the deposit page's booking, the review
+  page), `Breadcrumb` (Home › this page: the subpage heroes, and the review
+  page with `tone="on-light"`).
 - `forms/`: form controls. `FormField` (label, error, notes), `TextInput`
   (every input, the textarea and dropdowns), `CheckboxField` (a box with its
-  wording: the enquiry's consent),
+  wording: the enquiry's consent, the review's permission to publish),
   `CharacterCount` (the ring under a textarea counting what's left: the
   enquiry's message, the review),
   `ChipGroup`, `OptionCardGroup`. Used by the enquiry wizard, the waitlist
@@ -235,7 +238,9 @@ Every button is `<Button>` (`ui/Button.astro`).
   `site-nav.js` (bar, drawer and dropdowns together), `tabs.js` (the
   homepage tabs and the package tier switcher), and `lib/`: `motion.js`
   (reduced motion), `scroll-lock.js`, `safe-reveal.js`,
-  `availability-hooks.js` (the two calls enquiry needs from the calendar).
+  `availability-hooks.js` (the two calls enquiry needs from the calendar),
+  `clipboard.js` (copying, for every copy button: the bank details, the
+  review).
 
 ### Shared behaviour
 

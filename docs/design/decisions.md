@@ -161,15 +161,20 @@ A four-step wizard: **the occasion** (event type, date) → **the specifics**
   - Not asking someone at all is fine for our own form, for a real reason
     (a dispute in progress). Never because their review might be bad.
     Staff asking couples by hand follow the same rule.
-- **Permission to publish is a question with two answers**, neither chosen
-  to start ("Yes: show it on Bacchus's website…" / "No: keep it between me
-  and the Bacchus team"), and one must be picked. GDPR consent has to be an
-  active choice: a box ticked in advance, or "tick to keep it private"
-  (publishing by default), wouldn't count. Asking both ways gets a real
-  answer, and more yeses than a lone box people skip.
-- **No incentive for reviews** (a prize draw, vouchers): Google forbids
-  offering anything for a review, and on our own site an incentive would
-  have to be declared and would cheapen the reviews (2026-10-23).
+- **Permission to publish is one box, unticked to start**; ticking it is
+  the only way to say yes. GDPR consent has to be an active choice: a box
+  ticked in advance, or one inverted to "tick to keep it private"
+  (publishing by default), wouldn't count. A yes/no pair with neither
+  chosen was tried on 2026-10-23 and dropped for the simpler box.
+- **No incentive for reviews, ever** (a prize draw, vouchers, a free
+  dinner, a discount), decided 2026-10-23, in case the idea comes back:
+  - Google's rules forbid offering anything in exchange for a review; doing
+    it risks the reviews being removed and the listing penalised.
+  - On our own site, EU consumer law would make us declare the incentive
+    beside the reviews, which undercuts them.
+  - A prize for reviewing cheapens a venue selling a luxury wedding.
+  - A gesture to every couple that isn't tied to reviewing (an anniversary
+    dinner invitation, say) is fine.
 - **Label the testimonials honestly.** EU consumer law (the 2022 "Omnibus"
   rules) treats a business that publishes only positive reviews, or claims
   reviews are genuine without checking, as misleading consumers. A selection

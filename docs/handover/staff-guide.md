@@ -125,7 +125,9 @@ To publish one:
 Bacchus show up in Google's map results. One rule, from Google itself:
 **ask every client the same way, never only the happy ones.** Sending only
 satisfied clients to Google ("review gating") breaks Google's rules, and
-Google can remove the reviews or suspend the listing. The automatic email
+Google can remove the reviews or suspend the listing. For the same reason,
+**never offer anything for a review** (a prize draw, a voucher, a discount):
+Google forbids that too. The automatic email
 already asks everyone. If you ask anyone by hand, ask everyone, and never
 suggest an unhappy client keep it off Google.
 
