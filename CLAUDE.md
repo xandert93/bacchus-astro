@@ -165,7 +165,9 @@ with `astro dev stop`, `astro dev status`, `astro dev logs`). The user runs
 deposit marked received) also needs `npm run dev:webhooks` beside it, and a
 Stripe card payment needs `stripe listen` (`docs/planning/sanity-rollout.md`,
 step 7). Build with `npm run build`. Both read content from
-Sanity and need `SANITY_API_READ_TOKEN` in `.env` (never committed).
+Sanity and need `SANITY_API_READ_TOKEN` in `.env` (never committed). The dev
+server also borrows a real Cloudflare browser for quote PDFs, so it needs
+`npx wrangler login` once (`docs/architecture/tech-stack.md`, "Hosting").
 
 Docs: https://docs.astro.build. This project is on Astro 7.x. Consult before
 related work:
