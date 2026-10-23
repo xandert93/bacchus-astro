@@ -500,6 +500,22 @@ export default defineType({
       ],
     }),
     defineField({
+      name: "includedSetUp",
+      title: "Chairs and Bar Pieces Included",
+      type: "object",
+      group: "pricing",
+      readOnly: true,
+      options: { collapsible: false, columns: 4 },
+      description:
+        "Set when the quote is sent, from the wedding policy and the guest count. The client sees it with the price.",
+      fields: [
+        defineField({ name: "chairsFrom", title: "Chairs From", type: "number" }),
+        defineField({ name: "chairsTo", title: "Chairs To", type: "number" }),
+        defineField({ name: "barPiecesFrom", title: "Bar Pieces From", type: "number" }),
+        defineField({ name: "barPiecesTo", title: "Bar Pieces To", type: "number" }),
+      ],
+    }),
+    defineField({
       name: "pdf",
       title: "Generated PDF",
       type: "file",

@@ -7,6 +7,7 @@ import { todayInMalta } from "@lib/dates"
 import { longDate } from "@lib/email/enquiry-details"
 import { euros, plainAmount } from "@lib/money"
 import { paymentsInTestMode, providerFor } from "@lib/payments/checkout"
+import { describeIncludedSetUp } from "@studio/lib/includedSetUp"
 import { coupleName, depositPayment, type DepositRecord } from "./load"
 
 /**
@@ -103,20 +104,33 @@ export const toDepositView = (record: DepositRecord) => {
     // Each line's sum shown like a receipt ("160 × €64.00"), so a couple
     // can check it; left off a single item, where it would only repeat the
     // amount.
-    lineItems: pricing.lineItems.map((item) => ({
-      label: item.label,
-      // Bacchus's quotes list some things at no charge, to show they're part
-      // of the package (chairs, for instance).
-      amount: item.amount === 0 ? "Included" : euros(item.amount),
-      working:
-        item.quantity && item.quantity !== 1 && item.unitAmount
-          ? `${item.quantity} × ${euros(item.unitAmount)}`
-          : "",
-      details:
-        item.source && item.source === record.menu?.mealFormat
-          ? cakeNote(record.menu?.cake)
-          : "",
-    })),
+    lineItems: [
+      ...pricing.lineItems.map((item) => ({
+        label: item.label,
+        // Bacchus's quotes list some things at no charge, to show they're part
+        // of the package (chairs, for instance).
+        amount: item.amount === 0 ? "Included" : euros(item.amount),
+        working:
+          item.quantity && item.quantity !== 1 && item.unitAmount
+            ? `${item.quantity} × ${euros(item.unitAmount)}`
+            : "",
+        details:
+          item.source && item.source === record.menu?.mealFormat
+            ? cakeNote(record.menu?.cake)
+            : "",
+      })),
+      // What every booking includes, worked out for this one's guests.
+      ...(record.includedSetUp
+        ? [
+            {
+              label: "Chairs and bar pieces",
+              amount: "Included",
+              working: "",
+              details: describeIncludedSetUp(record.includedSetUp),
+            },
+          ]
+        : []),
+    ],
     notes: record.clientNotes?.trim() ?? "",
     preparedBy: record.preparedBy ?? "",
     subtotal: euros(pricing.subtotal),

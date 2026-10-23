@@ -36,6 +36,13 @@ const siteSettings = {
   },
 }
 
+/** Chairs for 20–30% of guests, a bar piece per 80 (sanity/lib/includedSetUp.ts). */
+export const INCLUDED_SET_UP = {
+  chairsMinPercent: 20,
+  chairsMaxPercent: 30,
+  guestsPerBarPiece: 80,
+}
+
 const weddingPolicy = {
   _id: "weddingPolicy",
   _type: "weddingPolicy",
@@ -51,6 +58,8 @@ const weddingPolicy = {
     layoutNote: "The layout is adjusted to the guest count.",
   },
   eventLength: { standardHours: 5, maxAdvisedHours: 8 },
+  // As Bacchus's coordinator described it in person; to confirm.
+  includedSetUp: INCLUDED_SET_UP,
   musicCurfew: { outdoor: "23:00", indoor: "04:00" },
   restaurantClosesAboveGuests: 150,
   coordinatorIncluded: true,

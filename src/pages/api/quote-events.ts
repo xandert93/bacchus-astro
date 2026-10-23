@@ -16,6 +16,7 @@ import { sendAndLog } from "@lib/email/log"
 import { getWriteClient } from "@lib/sanity/write-client"
 import { newToken } from "@lib/tokens"
 import { verifySanityWebhook } from "@lib/webhooks/sanity"
+import { includedSetUpFor, type IncludedSetUpPolicy } from "@studio/lib/includedSetUp"
 
 export const prerender = false
 
@@ -56,10 +57,14 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(null, { status: 204 })
     }
 
-    const validDays =
-      (await client.fetch<number | null>(
-        `*[_id == "weddingPolicy"][0].deposit.quoteValidDays`,
-      )) ?? DEFAULT_QUOTE_VALID_DAYS
+    const policy = await client.fetch<{
+      quoteValidDays?: number
+      includedSetUp?: IncludedSetUpPolicy
+    } | null>(
+      `*[_id == "weddingPolicy"][0]{"quoteValidDays": deposit.quoteValidDays, includedSetUp}`,
+    )
+    const validDays = policy?.quoteValidDays ?? DEFAULT_QUOTE_VALID_DAYS
+    const includedSetUp = includedSetUpFor(record.event.guestCount, policy?.includedSetUp)
     const validUntil = record.terms?.validUntil ?? addDays(todayInMalta(), validDays)
     const { token, hash } = await newToken()
     const openStatuses = ["new", "in-discussion"]
@@ -72,6 +77,8 @@ export const POST: APIRoute = async ({ request }) => {
           depositTokenHashes: [hash],
           sentAt: new Date().toISOString(),
           "terms.validUntil": validUntil,
+          // Kept with the quote, so a later policy change can't rewrite it.
+          ...(includedSetUp ? { includedSetUp } : {}),
         }),
       )
       .patch(record.booking._id, (patch) => {
