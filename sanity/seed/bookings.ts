@@ -111,7 +111,8 @@ const extra = {
     unitAmount: 12.5,
   }),
   station: (name: string, unitAmount: number, guests: number) => ({
-    label: `${name} station`,
+    // Bacchus's own names, as their quote lists them under Food Stations.
+    label: name,
     category: "food",
     quantity: guests,
     unitAmount,
