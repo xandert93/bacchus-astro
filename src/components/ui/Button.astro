@@ -174,7 +174,7 @@ const classes = [
   }
 
   @media (--hover) {
-    .button:hover :global(svg) {
+    .button:hover :global(.button-arrow) {
       transform: translateX(4px);
     }
   }
@@ -189,7 +189,7 @@ const classes = [
     transform: translateY(0) scale(0.98);
   }
 
-  .button :global(svg) {
+  .button :global(.button-arrow) {
     transition: transform 0.45s var(--ease);
   }
 
@@ -208,7 +208,7 @@ const classes = [
   }
 
   @media (--no-hover) {
-    .button:active :global(svg) {
+    .button:active :global(.button-arrow) {
       transform: translateX(4px);
     }
   }
@@ -489,31 +489,6 @@ const classes = [
            visual mass closer to Book a table's solid fill beside it.
   */
     border-width: 2px;
-  }
-
-  /* The envelope is a LABEL, not a "proceed" chevron, so it must not
-         inherit .button:hover svg's 4px forward nudge — that motion only
-         reads correctly on a trailing arrow. Exactly the precedent
-         #availChangeBtn's calendar icon already set in styles.css, and the
-         reason the icon here is an envelope rather than a second copy of
-         Book a table's arrow: "Enquire" is the vaguer of the two labels, so
-         the icon is doing real work saying what the action is, instead of
-         repeating what its neighbour already says.
-  */
-  .button-gold-outline :global(svg) {
-    transition: none;
-  }
-
-  @media (--hover) {
-    .button.button-gold-outline:hover :global(svg) {
-      transform: none;
-    }
-  }
-
-  @media (--no-hover) {
-    .button.button-gold-outline:active :global(svg) {
-      transform: none;
-    }
   }
 
   /* A Button that is itself a scroll-reveal target (GalleryPreview's) keeps
