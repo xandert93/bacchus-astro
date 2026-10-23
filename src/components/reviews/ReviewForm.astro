@@ -1,99 +1,145 @@
 ---
-// The /review page's one card: where the link in the review request lands
-// (src/lib/reviews/follow-ups.ts). ReviewForm.js loads who it's for, shows the
-// form, and sends it; it then thanks them, or does straight away if they've
-// already left their review.
+// The /review page: where the link in the review request lands
+// (src/lib/reviews/follow-ups.ts). The form beside a photograph of a
+// celebration on the terrace (above it, on a phone). ReviewForm.js loads who
+// it's for, shows the form, and sends it; it then thanks them, or does
+// straight away if they've already left their review, and offers Google.
 //
 // The stars are radio buttons, so the rating works from the keyboard (the
 // arrow keys move between them) and is read out as "3 stars"; the script
 // lights the stars up to the one chosen or hovered.
+//
+// Google comes after sending, to everyone, whatever their rating: asking
+// only happy clients is "review gating", which Google forbids
+// (docs/design/decisions.md, "Review gating"). Its link is a stand-in until
+// Bacchus supplies their own, hence the Proposed badge.
+import { below } from "@lib/media-queries.js"
 import Button from "@components/ui/Button.astro"
+import CharacterCount from "@components/forms/CharacterCount.astro"
 import CheckboxField from "@components/forms/CheckboxField.astro"
 import FormField from "@components/forms/FormField.astro"
 import LoadingRing from "@components/ui/LoadingRing.astro"
+import Photo from "@components/ui/Photo.astro"
+import ProposedBadge from "@components/ui/ProposedBadge.astro"
 import TextInput from "@components/forms/TextInput.astro"
-import { PUBLISH_WORDING, REVIEW_MAXIMUM_LENGTH } from "@data/reviews"
+import { GOOGLE_REVIEWS_URL, PUBLISH_WORDING, REVIEW_MAXIMUM_LENGTH } from "@data/reviews"
 
 const STAR_VALUES = [1, 2, 3, 4, 5]
 ---
 
 <section class="review-page">
-  <div class="wrap">
-    <div class="review-card" id="reviewCard">
-      {/* Revealed from the start: this page runs no reveal script. */}
-      <p class="eyebrow is-revealed">Your review</p>
-      <h1 id="reviewTitle">One moment…</h1>
-      <p class="lead" id="reviewLead"></p>
+  <div class="review-photo">
+    <Photo
+      src="venue/terrace-celebration-reception"
+      sizes={`${below.desktop} 100vw, 42vw`}
+      alt="Guests gathered on the terrace at sunset, drinks in hand, with a band playing under strings of lights"
+      loading="eager"
+    />
+  </div>
 
-      <div class="review-loading" id="reviewLoading">
-        <LoadingRing label="Loading" size={28} />
-      </div>
+  <div class="review-panel" id="reviewCard">
+    {/* Revealed from the start: this page runs no reveal script. */}
+    <p class="eyebrow is-revealed">Your review</p>
+    <h1 id="reviewTitle">One moment…</h1>
+    <p class="lead" id="reviewLead"></p>
 
-      <form class="review-form" id="reviewForm" novalidate hidden>
-        <fieldset class="review-rating" id="reviewRatingField">
-          <legend>Your rating</legend>
-          <div class="review-stars" id="reviewStars">
-            {STAR_VALUES.map((value) => (
-              <label class="review-star">
-                <input
-                  type="radio"
-                  name="rating"
-                  value={value}
-                  aria-label={value === 1 ? "1 star" : `${value} stars`}
-                />
-                <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" />
-                </svg>
-              </label>
-            ))}
-          </div>
-          <div class="error">Please choose a rating.</div>
-        </fieldset>
+    <div class="review-loading" id="reviewLoading">
+      <LoadingRing label="Loading" size={28} />
+    </div>
 
-        <FormField
-          label="Your review"
-          for="reviewText"
-          full
-          id="reviewTextField"
-          error="Please tell us a little about it."
-        >
-          <TextInput
-            id="reviewText"
-            multiline
-            maxlength={String(REVIEW_MAXIMUM_LENGTH)}
-            placeholder="What made the day for you?"
-          />
-        </FormField>
-
-        <FormField
-          label="Name to show"
-          for="reviewName"
-          id="reviewNameField"
-          error="Please add a name."
-        >
-          <TextInput id="reviewName" placeholder="e.g. Bertha & Alex" />
-        </FormField>
-
-        <FormField label="Where you're from" for="reviewLocation">
-          <TextInput id="reviewLocation" placeholder="Optional, e.g. London" />
-        </FormField>
-
-        <CheckboxField id="reviewPublish">{PUBLISH_WORDING}</CheckboxField>
-
-        <p class="review-error" id="reviewError" role="alert" hidden></p>
-
-        <div class="review-buttons">
-          <Button variant="gradient" type="submit" id="reviewSend">
-            <span>Send my review</span>
-          </Button>
+    <form class="review-form" id="reviewForm" novalidate hidden>
+      <fieldset class="review-rating" id="reviewRatingField">
+        <legend>Your rating</legend>
+        <div class="review-stars" id="reviewStars">
+          {STAR_VALUES.map((value) => (
+            <label class="review-star">
+              <input
+                type="radio"
+                name="rating"
+                value={value}
+                aria-label={value === 1 ? "1 star" : `${value} stars`}
+              />
+              <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" />
+              </svg>
+            </label>
+          ))}
         </div>
-      </form>
+        <div class="error">Please choose a rating.</div>
+      </fieldset>
 
-      <div class="review-buttons review-done" id="reviewDone" hidden>
-        <Button href="/" variant="dark" arrow>
-          <span>Back to Bacchus</span>
+      <FormField
+        label="Your review"
+        for="reviewText"
+        full
+        id="reviewTextField"
+        error="Please tell us a little about it."
+      >
+        <TextInput
+          id="reviewText"
+          multiline
+          maxlength={String(REVIEW_MAXIMUM_LENGTH)}
+          placeholder="What made the day for you?"
+        >
+          <CharacterCount for="reviewText" limit={REVIEW_MAXIMUM_LENGTH} />
+        </TextInput>
+      </FormField>
+
+      <FormField
+        label="Name to show"
+        for="reviewName"
+        id="reviewNameField"
+        error="Please add a name."
+      >
+        <TextInput id="reviewName" placeholder="e.g. Bertha & Alex" />
+      </FormField>
+
+      <FormField label="Where you're from" for="reviewLocation">
+        <TextInput id="reviewLocation" placeholder="Optional, e.g. London" />
+      </FormField>
+
+      <CheckboxField id="reviewPublish">{PUBLISH_WORDING}</CheckboxField>
+
+      <p class="review-error" id="reviewError" role="alert" hidden></p>
+
+      <div class="review-buttons">
+        <Button variant="gradient" type="submit" id="reviewSend">
+          <span id="reviewSendLabel">Send my review</span>
         </Button>
       </div>
+    </form>
+
+    <div class="review-google" id="reviewGoogle" hidden>
+      <div class="review-google-heading">
+        <h2>Share it on Google too?</h2>
+        <ProposedBadge tone="bronze" small />
+      </div>
+      <p>
+        Couples choosing a venue read Google's reviews first. If you'd like to help them,
+        <span id="reviewGoogleCopyNote">
+          copy your review here, then paste it on Google.
+        </span>
+      </p>
+      <div class="review-buttons">
+        <Button variant="dark" id="reviewCopy">
+          <span id="reviewCopyLabel">Copy my review</span>
+        </Button>
+        <Button
+          href={GOOGLE_REVIEWS_URL}
+          variant="gold-outline"
+          target="_blank"
+          rel="noopener"
+          arrow
+        >
+          <span>Review us on Google</span>
+        </Button>
+      </div>
+    </div>
+
+    <div class="review-buttons review-done" id="reviewDone" hidden>
+      <Button href="/" variant="dark" arrow>
+        <span>Back to Bacchus</span>
+      </Button>
     </div>
   </div>
 </section>
@@ -103,21 +149,59 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
 </script>
 
 <style>
-  /* Clear of the fixed nav, with the card centred in what's left. */
+  /* Phone and tablet: the photograph as a band across the top, the form
+     below. Desktop: the form on the left, the photograph filling the right,
+     held in place while the form scrolls. The header is solid on this page,
+     so the section starts beneath it. */
   .review-page {
-    padding: clamp(140px, 20vh, 220px) 0 clamp(80px, 11vw, 150px);
-  }
-
-  .review-card {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: clamp(28px, 5vw, 48px);
-    border: 1px solid rgba(var(--muted-ink-rgb), 0.12);
-    border-radius: var(--radius-card);
+    display: grid;
+    min-height: 100vh;
+    padding-top: var(--nav-h);
     background: var(--paper);
   }
 
-  .review-card h1 {
+  .review-photo {
+    height: clamp(200px, 38vw, 340px);
+    overflow: hidden;
+  }
+
+  .review-photo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 70%;
+  }
+
+  .review-panel {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(32px, 6vw, 72px) clamp(20px, 5vw, 44px) clamp(64px, 9vw, 120px);
+  }
+
+  @media (--from-desktop) {
+    .review-page {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    }
+
+    .review-photo {
+      position: sticky;
+      top: var(--nav-h);
+      order: 2;
+      height: calc(100vh - var(--nav-h));
+    }
+
+    .review-photo :global(img) {
+      object-position: center;
+    }
+
+    .review-panel {
+      order: 1;
+      padding-top: clamp(56px, 8vh, 96px);
+    }
+  }
+
+  .review-panel h1 {
     margin: 14px 0 16px;
 
     font-size: clamp(30px, 4.5vw, 44px);
@@ -239,6 +323,42 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 8px;
+  }
+
+  /* While sending: the button stays where it is, dimmed, and can't be
+     pressed twice. */
+  .review-buttons :global(button:disabled) {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  .review-google {
+    margin-top: 32px;
+    padding: clamp(20px, 4vw, 28px);
+    border: 1px solid rgba(var(--gold-rgb), 0.45);
+    border-radius: var(--radius-card);
+  }
+
+  .review-google-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .review-google h2 {
+    font-size: clamp(22px, 3vw, 26px);
+    line-height: 1.2;
+  }
+
+  .review-google p {
+    margin-bottom: 8px;
+
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--muted-ink);
   }
 
   .review-done {

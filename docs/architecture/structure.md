@@ -82,6 +82,8 @@ there is no long-lived branch to keep rebasing (trunk-based development).
 - `forms/`: form controls. `FormField` (label, error, notes), `TextInput`
   (every input, the textarea and dropdowns), `CheckboxField` (a box with its
   wording: the enquiry's consent, the review's permission to publish),
+  `CharacterCount` (the ring under a textarea counting what's left: the
+  enquiry's message, the review),
   `ChipGroup`, `OptionCardGroup`. Used by the enquiry wizard, the waitlist
   popover, the bank picker and the review form.
 - `reviews/`: `ReviewForm`, the `/review` page's card, where a review

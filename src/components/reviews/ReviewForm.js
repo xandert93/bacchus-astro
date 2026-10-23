@@ -1,6 +1,7 @@
 // Drives the /review page (ReviewForm.astro): loads who the link's token is
 // for from /api/reviews/view, fills in the greeting and the suggested name,
-// lights the stars, checks the form and sends it to /api/reviews/submit.
+// lights the stars, checks the form and sends it to /api/reviews/submit, then
+// thanks them and offers Google, with their review ready to copy.
 
 import { REVIEW_MINIMUM_LENGTH } from "@data/reviews"
 import { longDate } from "@lib/dates"
@@ -37,6 +38,12 @@ if (card) {
       }),
     )
 
+  const google = document.getElementById("reviewGoogle")
+  const copyButton = document.getElementById("reviewCopy")
+  const copyLabel = document.getElementById("reviewCopyLabel")
+  const copyNote = document.getElementById("reviewGoogleCopyNote")
+  const sendLabel = document.getElementById("reviewSendLabel")
+
   const finish = (heading, message) => {
     title.textContent = heading
     lead.textContent = message
@@ -45,11 +52,34 @@ if (card) {
     done.hidden = false
   }
 
-  const thank = (firstName) =>
+  // Their review, word for word, to paste on Google. Copying is offered only
+  // when it's here to copy: not on a return visit after sending.
+  const offerGoogle = (reviewText) => {
+    google.hidden = false
+    copyButton.hidden = !reviewText
+    copyNote.textContent = reviewText
+      ? "copy your review here, then paste it on Google."
+      : "you can leave a review there too."
+    copyButton.addEventListener("click", () => {
+      navigator.clipboard
+        .writeText(reviewText)
+        .then(() => {
+          copyLabel.textContent = "Copied"
+        })
+        .catch(() => {
+          // Some browsers refuse the clipboard; Google takes typing too.
+          copyLabel.textContent = "Couldn't copy it"
+        })
+    })
+  }
+
+  const thank = (firstName, reviewText = "") => {
     finish(
       firstName ? `Thank you, ${firstName}` : "Thank you",
       "We read every review, and yours means a great deal to us.",
     )
+    offerGoogle(reviewText)
+  }
 
   // --- The stars --------------------------------------------------------------
 
@@ -115,7 +145,9 @@ if (card) {
       error.hidden = true
       if (!check()) return
 
+      // Can't be sent twice, and says so while it's on its way.
       sendButton.disabled = true
+      sendLabel.textContent = "Sending…"
       post("submit", {
         rating: chosenRating(),
         text: text.value,
@@ -123,9 +155,10 @@ if (card) {
         location: place.value,
         publish: publish.checked,
       })
-        .then(() => thank(firstName))
+        .then(() => thank(firstName, text.value.trim()))
         .catch((problem) => {
           sendButton.disabled = false
+          sendLabel.textContent = "Send my review"
           error.textContent = problem.message
           error.hidden = false
         })
