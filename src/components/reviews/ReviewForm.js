@@ -47,8 +47,18 @@ if (card) {
   // The page starts with only the loading ring showing (.is-loading).
   const loaded = () => card.classList.remove("is-loading")
 
+  // A word of the heading in the gold italic of the site's section headings.
+  const emphasised = (text) => {
+    const em = document.createElement("em")
+    em.textContent = text
+    return em
+  }
+
+  // The heading is a string, or a list of strings and elements.
+  const setTitle = (heading) => title.replaceChildren(...[heading].flat())
+
   const finish = (heading, message) => {
-    title.textContent = heading
+    setTitle(heading)
     lead.textContent = message
     form.hidden = true
     loaded()
@@ -88,7 +98,7 @@ if (card) {
 
   const thank = (firstName, reviewText) => {
     finish(
-      firstName ? `Thank you, ${firstName}` : "Thank you",
+      firstName ? ["Thank you, ", emphasised(firstName)] : "Thank you",
       "We read every review, and yours means a great deal to us.",
     )
     offerGoogle(reviewText)
@@ -152,7 +162,9 @@ if (card) {
       return
     }
 
-    title.textContent = `How was ${occasion}?`
+    // The enquiry section's heading, word for word ("Tell us about your
+    // wedding"), so the page reads as part of the same site.
+    setTitle(["Tell us about your ", emphasised(occasion)])
     lead.textContent = date
       ? `Thank you for celebrating with us on ${longDate(date)}, ${firstName}. We'd love to hear how it went.`
       : `Thank you for celebrating with us, ${firstName}. We'd love to hear how it went.`
