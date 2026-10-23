@@ -47,10 +47,12 @@ const { photo, pageTop = false, class: className } = Astro.props
 <style>
   .photo-scrim {
     /* The content column on a desktop: in line with the site's other
-       content (.wrap's left edge), and how wide it may grow. The scrim
-       stops a little past its right edge. */
+       content (.wrap's left edge), and how wide it may grow: narrow enough
+       to leave the photograph most of the screen, never so narrow that a
+       pair of inputs can't sit side by side. The scrim stops a little past
+       its right edge. */
     --photo-scrim-left: max(0px, calc((100vw - 1180px) / 2));
-    --photo-scrim-width: min(620px, 42vw);
+    --photo-scrim-width: clamp(440px, 38vw, 560px);
     --photo-scrim-edge: calc(var(--photo-scrim-left) + var(--photo-scrim-width) + 64px);
 
     position: relative;
