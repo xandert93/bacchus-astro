@@ -78,6 +78,9 @@ Good to know:
      **Internal Notes** never do.
    - **Wedding Cake**: the tiers and flavour of the cake that comes with the
      meal. It shows under the meal line.
+   - **Chairs and bar pieces** aren't lines: when you send the quote, it
+     adds the range included for its guests (e.g. "32–48 chairs and 1–2 bar
+     pieces"), from Settings, Wedding Policy.
 3. **Send it**, then set its status to **Sent**. Everything else on the quote
    locks, so it always matches what the client received.
 4. **To change a sent quote**, create a new one and set the old one to
