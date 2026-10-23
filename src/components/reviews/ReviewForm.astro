@@ -1,13 +1,15 @@
 ---
 // The /review page: where the link in the review request lands
-// (src/lib/reviews/follow-ups.ts). The form beside a photograph of a
-// celebration on the terrace (above it, on a phone). ReviewForm.js loads who
-// it's for, shows the form, and sends it; it then thanks them, or does
-// straight away if they've already left their review, and offers Google.
+// (src/lib/reviews/follow-ups.ts). A photograph of a celebration on the
+// terrace fills the section, with a paper veil over the left half, cut on a
+// slant, that the form sits on; on a phone and tablet the veil covers it all
+// and the photo just shows through. ReviewForm.js loads who it's for, shows
+// the form, and sends it; it then thanks them, or does straight away if
+// they've already left their review, and offers Google.
 //
-// The stars are radio buttons, so the rating works from the keyboard (the
-// arrow keys move between them) and is read out as "3 stars"; the script
-// lights the stars up to the one chosen or hovered.
+// The stars and the share question are radio buttons, so they work from the
+// keyboard and are read out properly; the script lights the stars up to the
+// one chosen or hovered.
 //
 // Google comes after sending, to everyone, whatever their rating: asking
 // only happy clients is "review gating", which Google forbids
@@ -16,13 +18,17 @@
 import { below } from "@lib/media-queries.js"
 import Button from "@components/ui/Button.astro"
 import CharacterCount from "@components/forms/CharacterCount.astro"
-import CheckboxField from "@components/forms/CheckboxField.astro"
 import FormField from "@components/forms/FormField.astro"
 import LoadingRing from "@components/ui/LoadingRing.astro"
 import Photo from "@components/ui/Photo.astro"
 import ProposedBadge from "@components/ui/ProposedBadge.astro"
 import TextInput from "@components/forms/TextInput.astro"
-import { GOOGLE_REVIEWS_URL, PUBLISH_WORDING, REVIEW_MAXIMUM_LENGTH } from "@data/reviews"
+import {
+  GOOGLE_REVIEWS_URL,
+  PUBLISH_CHOICES,
+  PUBLISH_QUESTION,
+  REVIEW_MAXIMUM_LENGTH,
+} from "@data/reviews"
 
 const STAR_VALUES = [1, 2, 3, 4, 5]
 ---
@@ -31,115 +37,127 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
   <div class="review-photo">
     <Photo
       src="venue/terrace-celebration-reception"
-      sizes={`${below.desktop} 100vw, 42vw`}
+      sizes={`${below.desktop} 100vw, 100vw`}
       alt="Guests gathered on the terrace at sunset, drinks in hand, with a band playing under strings of lights"
       loading="eager"
     />
   </div>
 
-  <div class="review-panel" id="reviewCard">
-    {/* Revealed from the start: this page runs no reveal script. */}
-    <p class="eyebrow is-revealed">Your review</p>
-    <h1 id="reviewTitle">One moment…</h1>
-    <p class="lead" id="reviewLead"></p>
-
-    <div class="review-loading" id="reviewLoading">
-      <LoadingRing label="Loading" size={28} />
+  <div class="review-panel is-loading" id="reviewCard">
+    <div class="review-loading">
+      <LoadingRing label="Loading your review page" size={40} onLight />
     </div>
 
-    <form class="review-form" id="reviewForm" novalidate hidden>
-      <fieldset class="review-rating" id="reviewRatingField">
-        <legend>Your rating</legend>
-        <div class="review-stars" id="reviewStars">
-          {STAR_VALUES.map((value) => (
-            <label class="review-star">
-              <input
-                type="radio"
-                name="rating"
-                value={value}
-                aria-label={value === 1 ? "1 star" : `${value} stars`}
-              />
-              <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" />
-              </svg>
-            </label>
-          ))}
+    <div class="review-content">
+      {/* Revealed from the start: this page runs no reveal script. */}
+      <p class="eyebrow is-revealed">Your review</p>
+      <h1 id="reviewTitle"></h1>
+      <p class="lead" id="reviewLead"></p>
+
+      <form class="review-form" id="reviewForm" novalidate hidden>
+        <fieldset class="review-question" id="reviewRatingField">
+          <legend>Your rating</legend>
+          <div class="review-stars">
+            {STAR_VALUES.map((value) => (
+              <label class="review-star">
+                <input
+                  type="radio"
+                  name="rating"
+                  value={value}
+                  aria-label={value === 1 ? "1 star" : `${value} stars`}
+                />
+                <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z" />
+                </svg>
+              </label>
+            ))}
+          </div>
+          <div class="error">Please choose a rating.</div>
+        </fieldset>
+
+        <FormField
+          label="Your review"
+          for="reviewText"
+          full
+          id="reviewTextField"
+          error="Please tell us a little about it."
+        >
+          <TextInput
+            id="reviewText"
+            multiline
+            maxlength={String(REVIEW_MAXIMUM_LENGTH)}
+            placeholder="What made the day for you?"
+          >
+            <CharacterCount for="reviewText" limit={REVIEW_MAXIMUM_LENGTH} />
+          </TextInput>
+        </FormField>
+
+        <FormField
+          label="Name to show"
+          for="reviewName"
+          id="reviewNameField"
+          error="Please add a name."
+        >
+          <TextInput id="reviewName" placeholder="e.g. Bertha & Alex" />
+        </FormField>
+
+        <FormField label="Where you're from" for="reviewLocation">
+          <TextInput id="reviewLocation" placeholder="Optional, e.g. London" />
+        </FormField>
+
+        <fieldset class="review-question" id="reviewShareField">
+          <legend>{PUBLISH_QUESTION}</legend>
+          <div class="review-share">
+            {Object.entries(PUBLISH_CHOICES).map(([value, wording]) => (
+              <label class="review-share-choice">
+                <input type="radio" name="share" value={value} />
+                <span class="review-share-dot" aria-hidden="true" />
+                <span>{wording}</span>
+              </label>
+            ))}
+          </div>
+          <div class="error">Please choose one.</div>
+        </fieldset>
+
+        <p class="review-error" id="reviewError" role="alert" hidden></p>
+
+        <div class="review-buttons">
+          <Button variant="gradient" type="submit" id="reviewSend">
+            <span id="reviewSendLabel">Send my review</span>
+          </Button>
         </div>
-        <div class="error">Please choose a rating.</div>
-      </fieldset>
+      </form>
 
-      <FormField
-        label="Your review"
-        for="reviewText"
-        full
-        id="reviewTextField"
-        error="Please tell us a little about it."
-      >
-        <TextInput
-          id="reviewText"
-          multiline
-          maxlength={String(REVIEW_MAXIMUM_LENGTH)}
-          placeholder="What made the day for you?"
-        >
-          <CharacterCount for="reviewText" limit={REVIEW_MAXIMUM_LENGTH} />
-        </TextInput>
-      </FormField>
+      <div class="review-google" id="reviewGoogle" hidden>
+        <div class="review-google-heading">
+          <h2>Share it on Google too?</h2>
+          <ProposedBadge tone="bronze" small />
+        </div>
+        <p>
+          Couples choosing a venue read Google's reviews first. If you'd like to help
+          them, copy your review here and paste it there.
+        </p>
+        <div class="review-buttons">
+          <Button variant="dark" id="reviewCopy">
+            <span id="reviewCopyLabel">Copy my review</span>
+          </Button>
+          <Button
+            href={GOOGLE_REVIEWS_URL}
+            variant="gradient"
+            target="_blank"
+            rel="noopener"
+            arrow
+          >
+            <span>Review us on Google</span>
+          </Button>
+        </div>
+      </div>
 
-      <FormField
-        label="Name to show"
-        for="reviewName"
-        id="reviewNameField"
-        error="Please add a name."
-      >
-        <TextInput id="reviewName" placeholder="e.g. Bertha & Alex" />
-      </FormField>
-
-      <FormField label="Where you're from" for="reviewLocation">
-        <TextInput id="reviewLocation" placeholder="Optional, e.g. London" />
-      </FormField>
-
-      <CheckboxField id="reviewPublish">{PUBLISH_WORDING}</CheckboxField>
-
-      <p class="review-error" id="reviewError" role="alert" hidden></p>
-
-      <div class="review-buttons">
-        <Button variant="gradient" type="submit" id="reviewSend">
-          <span id="reviewSendLabel">Send my review</span>
+      <div class="review-buttons" id="reviewDone" hidden>
+        <Button href="/" variant="dark" arrow>
+          <span>Back to Bacchus</span>
         </Button>
       </div>
-    </form>
-
-    <div class="review-google" id="reviewGoogle" hidden>
-      <div class="review-google-heading">
-        <h2>Share it on Google too?</h2>
-        <ProposedBadge tone="bronze" small />
-      </div>
-      <p>
-        Couples choosing a venue read Google's reviews first. If you'd like to help them,
-        <span id="reviewGoogleCopyNote">
-          copy your review here, then paste it on Google.
-        </span>
-      </p>
-      <div class="review-buttons">
-        <Button variant="dark" id="reviewCopy">
-          <span id="reviewCopyLabel">Copy my review</span>
-        </Button>
-        <Button
-          href={GOOGLE_REVIEWS_URL}
-          variant="gold-outline"
-          target="_blank"
-          rel="noopener"
-          arrow
-        >
-          <span>Review us on Google</span>
-        </Button>
-      </div>
-    </div>
-
-    <div class="review-buttons review-done" id="reviewDone" hidden>
-      <Button href="/" variant="dark" arrow>
-        <span>Back to Bacchus</span>
-      </Button>
     </div>
   </div>
 </section>
@@ -149,81 +167,113 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
 </script>
 
 <style>
-  /* Phone and tablet: the photograph as a band across the top, the form
-     below. Desktop: the form on the left, the photograph filling the right,
-     held in place while the form scrolls. The header is solid on this page,
-     so the section starts beneath it. */
+  /* One gap between everything on the page, so its rhythm is even. */
   .review-page {
-    display: grid;
+    --review-gap: clamp(22px, 2.6vw, 30px);
+
+    position: relative;
     min-height: 100vh;
     padding-top: var(--nav-h);
     background: var(--paper);
   }
 
+  /* The photograph under everything, and the paper veil over it: all of it on
+     a phone and tablet, the left half on a slant on a desktop. */
   .review-photo {
-    height: clamp(200px, 38vw, 340px);
-    overflow: hidden;
+    position: absolute;
+    inset: 0;
   }
 
   .review-photo :global(img) {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 70%;
+  }
+
+  .review-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(var(--paper-rgb), 0.9);
   }
 
   .review-panel {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     max-width: 640px;
     margin: 0 auto;
-    padding: clamp(32px, 6vw, 72px) clamp(20px, 5vw, 44px) clamp(64px, 9vw, 120px);
+    padding: calc(var(--review-gap) * 2) clamp(20px, 5vw, 44px)
+      calc(var(--review-gap) * 3);
   }
 
   @media (--from-desktop) {
-    .review-page {
-      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    .review-page::before {
+      background: linear-gradient(
+        105deg,
+        rgba(var(--paper-rgb), 0.94) 52%,
+        transparent 52%
+      );
     }
 
-    .review-photo {
-      position: sticky;
-      top: var(--nav-h);
-      order: 2;
-      height: calc(100vh - var(--nav-h));
-    }
-
-    .review-photo :global(img) {
-      object-position: center;
-    }
-
+    /* Left, in line with the site's other content, and clear of the slant. */
     .review-panel {
-      order: 1;
-      padding-top: clamp(56px, 8vh, 96px);
+      min-height: calc(100vh - var(--nav-h));
+      max-width: min(620px, 40vw);
+      margin: 0 0 0 max(0px, calc((100vw - 1180px) / 2));
     }
   }
 
-  .review-panel h1 {
-    margin: 14px 0 16px;
-
-    font-size: clamp(30px, 4.5vw, 44px);
-    line-height: 1.15;
+  /* While loading, only the ring: at the top of the panel on a phone and
+     tablet, in the middle of it on a desktop. */
+  .review-loading {
+    display: none;
   }
 
-  .review-loading {
+  .is-loading .review-loading {
     display: flex;
     justify-content: center;
-    padding: 24px 0 8px;
+  }
+
+  .is-loading .review-content {
+    display: none;
+  }
+
+  @media (--from-desktop) {
+    .is-loading .review-loading {
+      flex: 1;
+      align-items: center;
+    }
+  }
+
+  .review-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--review-gap);
+  }
+
+  .review-content .eyebrow,
+  .review-content h1 {
+    margin: 0;
+  }
+
+  .review-content h1 {
+    font-size: clamp(30px, 4.5vw, 44px);
+    line-height: 1.15;
   }
 
   .review-form {
     display: flex;
     flex-wrap: wrap;
-    gap: 22px 12px;
-    margin-top: 28px;
+    gap: var(--review-gap) 12px;
   }
 
-  /* A fieldset, so the legend names the five stars as one question; styled
-     like the .field labels beside it. */
-  .review-rating {
+  /* The stars and the share question: fieldsets, so each legend names its
+     choices as one question; styled like the .field labels beside them. */
+  .review-question {
     flex: 1 1 100%;
     min-width: 0;
     margin: 0;
@@ -231,7 +281,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     border: 0;
   }
 
-  .review-rating legend {
+  .review-question legend {
     margin-bottom: 9px;
     padding: 0;
 
@@ -239,6 +289,29 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--bronze);
+  }
+
+  /* The same message as a FormField's, shown the same way (.field.bad). */
+  .review-question .error {
+    height: 0;
+    margin-top: 0;
+    overflow: hidden;
+    opacity: 0;
+
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 11.5px;
+    color: var(--oxblood);
+    transition: all 0.3s var(--ease);
+  }
+
+  .review-question:global(.bad) {
+    animation: shake 0.4s;
+  }
+
+  .review-question:global(.bad) .error {
+    height: 18px;
+    margin-top: 8px;
+    opacity: 1;
   }
 
   .review-stars {
@@ -260,7 +333,8 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
       transform 0.2s var(--ease);
   }
 
-  .review-star input {
+  .review-star input,
+  .review-share-choice input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
@@ -286,27 +360,63 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     }
   }
 
-  /* The same message as a FormField's, shown the same way (.field.bad). */
-  .review-rating .error {
-    height: 0;
-    margin-top: 0;
-    overflow: hidden;
-    opacity: 0;
+  /* The two answers to "May we share it?", as round choices. */
+  .review-share {
+    display: grid;
+    gap: 10px;
+  }
+
+  .review-share-choice {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
 
     font-family: "Newsreader", Georgia, serif;
-    font-size: 11.5px;
-    color: var(--oxblood);
-    transition: all 0.3s var(--ease);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ink);
+    cursor: pointer;
   }
 
-  .review-rating:global(.bad) {
-    animation: shake 0.4s;
+  .review-share-dot {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    border: 1px solid rgba(var(--muted-ink-rgb), 0.35);
+    border-radius: 50%;
+    background: #fff;
+    transition: border-color 0.3s var(--ease);
   }
 
-  .review-rating:global(.bad) .error {
-    height: 18px;
-    margin-top: 8px;
-    opacity: 1;
+  .review-share-dot::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    transform: scale(0);
+    transition: transform 0.2s var(--ease);
+  }
+
+  .review-share-choice input:checked + .review-share-dot {
+    border-color: var(--gold);
+  }
+
+  .review-share-choice input:checked + .review-share-dot::after {
+    transform: scale(1);
+  }
+
+  .review-share-choice input:focus-visible + .review-share-dot {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  .review-question:global(.bad) .review-share-dot {
+    border-color: var(--oxblood);
   }
 
   .review-error {
@@ -322,7 +432,6 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     flex: 1 1 100%;
     flex-wrap: wrap;
     gap: 12px;
-    margin-top: 8px;
   }
 
   /* While sending: the button stays where it is, dimmed, and can't be
@@ -332,11 +441,13 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     cursor: progress;
   }
 
+  /* After sending: Google, set off by a rule rather than boxed. */
   .review-google {
-    margin-top: 32px;
-    padding: clamp(20px, 4vw, 28px);
-    border: 1px solid rgba(var(--gold-rgb), 0.45);
-    border-radius: var(--radius-card);
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--review-gap) * 0.6);
+    padding-top: var(--review-gap);
+    border-top: 1px solid rgba(var(--muted-ink-rgb), 0.16);
   }
 
   .review-google-heading {
@@ -344,24 +455,21 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
     flex-wrap: wrap;
     align-items: center;
     gap: 10px;
-    margin-bottom: 10px;
   }
 
   .review-google h2 {
-    font-size: clamp(22px, 3vw, 26px);
+    font-size: clamp(24px, 3vw, 28px);
     line-height: 1.2;
   }
 
   .review-google p {
-    margin-bottom: 8px;
-
     font-family: "Newsreader", Georgia, serif;
     font-size: 16px;
     line-height: 1.6;
     color: var(--muted-ink);
   }
 
-  .review-done {
-    margin-top: 24px;
+  .review-google .review-buttons {
+    margin-top: calc(var(--review-gap) * 0.4);
   }
 </style>

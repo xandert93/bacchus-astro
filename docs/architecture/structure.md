@@ -83,7 +83,7 @@ there is no long-lived branch to keep rebasing (trunk-based development).
   lightbox's photo, the deposit page's booking).
 - `forms/`: form controls. `FormField` (label, error, notes), `TextInput`
   (every input, the textarea and dropdowns), `CheckboxField` (a box with its
-  wording: the enquiry's consent, the review's permission to publish),
+  wording: the enquiry's consent),
   `CharacterCount` (the ring under a textarea counting what's left: the
   enquiry's message, the review),
   `ChipGroup`, `OptionCardGroup`. Used by the enquiry wizard, the waitlist
