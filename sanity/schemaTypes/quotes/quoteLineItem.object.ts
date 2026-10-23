@@ -42,7 +42,7 @@ export default defineType({
       type: "string",
       description: help(
         "Exactly as it should read on the quote and the deposit page.",
-        'For example, "Food — Banquet, Dahlia tier".',
+        "For example, \"Banquet – Dahlia\". The quantity column shows what's per person, so there's no need to say it.",
       ),
       validation: (Rule) => Rule.required(),
     }),

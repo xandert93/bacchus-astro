@@ -2,9 +2,11 @@
  * Enquiries and bookings in every status, the quotes behind them, their
  * payments, and the waitlist.
  *
- * Every person here is invented. Emails use example.com and phone numbers
+ * Every client here is invented. Emails use example.com and phone numbers
  * Ofcom's 07700 900xxx range, both reserved for fiction, so nothing can ever
  * reach a real inbox or phone. Dates are relative to the day the seed runs.
+ * The quotes' lines and prices follow Bacchus's own quote template, and are
+ * prepared by the coordinator who prepares their real ones.
  */
 import {
   addDays,
@@ -35,47 +37,100 @@ const RETENTION_MONTHS = 36
 const TIERS = {
   receptionDaisy: {
     id: "packageTier-reception-daisy",
-    label: "Reception — Daisy",
+    label: "Reception – Daisy",
     amount: 53,
   },
   receptionLavender: {
     id: "packageTier-reception-lavender",
-    label: "Reception — Lavender",
+    label: "Reception – Lavender",
     amount: 57,
   },
   receptionRose: {
     id: "packageTier-reception-rose",
-    label: "Reception — Rose",
+    label: "Reception – Rose",
     amount: 64,
   },
   banquetOrchid: {
     id: "packageTier-banquet-orchid",
-    label: "Banquet — Orchid",
+    label: "Banquet – Orchid",
     amount: 65,
   },
   banquetDahlia: {
     id: "packageTier-banquet-dahlia",
-    label: "Banquet — Dahlia",
+    label: "Banquet – Dahlia",
     amount: 85,
   },
   highTeaHibiscus: {
     id: "packageTier-high-tea-hibiscus",
-    label: "High Tea — Hibiscus",
+    label: "High Tea – Hibiscus",
     amount: 45,
   },
   localWine: {
     id: "packageTier-beverage-local-wine",
-    label: "Local wine package",
+    label: "Maltese wine",
     amount: 30,
   },
   foreignWine: {
     id: "packageTier-beverage-foreign-wine",
-    label: "Foreign wine package",
+    label: "Italian wine",
     amount: 35,
   },
 }
 
 type Tier = (typeof TIERS)[keyof typeof TIERS]
+
+// Lines priced as on Bacchus's quote template. Chairs are included for up to
+// 30% of guests, and two bar pieces come with a wedding (both as Bacchus's
+// coordinator described them), so those show at no charge.
+const extra = {
+  roundTables: (count: number) => ({
+    label: "Round tables",
+    category: "setup",
+    quantity: count,
+    unitAmount: 15,
+  }),
+  chairs: (guests: number) => ({
+    label: "Chairs",
+    category: "setup",
+    quantity: Math.round(guests * 0.3),
+    unitAmount: 0,
+  }),
+  barPieces: { label: "Bar pieces", category: "setup", quantity: 2, unitAmount: 0 },
+  bows: (count: number) => ({
+    label: "Bows",
+    category: "setup",
+    quantity: count,
+    unitAmount: 3,
+  }),
+  sound: { label: "Sound", category: "setup", quantity: 1, unitAmount: 500 },
+  welcomeDrink: (guests: number) => ({
+    label: "Welcome drink",
+    category: "beverage",
+    quantity: guests,
+    unitAmount: 6.5,
+  }),
+  cocktailBar: (guests: number) => ({
+    label: "Cocktail bar",
+    category: "beverage",
+    quantity: guests,
+    unitAmount: 12.5,
+  }),
+  station: (name: string, unitAmount: number, guests: number) => ({
+    label: `${name} station`,
+    category: "food",
+    quantity: guests,
+    unitAmount,
+  }),
+  overtime: (guests: number) => ({
+    label: "Overtime, one hour",
+    category: "overtime",
+    quantity: guests,
+    unitAmount: 10,
+  }),
+}
+
+const NICHOLAS = "Nicholas Vella Gatt"
+const FAVOURITE_CAKE = { tiers: 3, flavour: "pistachio and olive oil" }
 
 interface BookingSpec {
   key: string
@@ -101,6 +156,12 @@ interface BookingSpec {
     mealFormat: Tier
     beverage?: Tier
     extras?: { label: string; category: string; quantity: number; unitAmount: number }[]
+    // The cake that comes with the meal.
+    cake?: { tiers: number; flavour?: string }
+    clientNotes?: string
+    // A discount bringing the price down to a round figure per guest, as
+    // Bacchus's own quotes do (theirs came to exactly €100 a person).
+    roundPerPersonDownTo?: number
     sentDaysAgo?: number
   }
   // When the deposit arrived, and how.
@@ -134,10 +195,9 @@ const BOOKINGS: BookingSpec[] = [
       status: "accepted",
       mealFormat: TIERS.receptionRose,
       beverage: TIERS.localWine,
-      extras: [
-        { label: "Round family tables", category: "setup", quantity: 14, unitAmount: 15 },
-        { label: "Sound system", category: "setup", quantity: 1, unitAmount: 500 },
-      ],
+      extras: [extra.roundTables(14), extra.chairs(140), extra.barPieces, extra.sound],
+      cake: FAVOURITE_CAKE,
+      roundPerPersonDownTo: 5,
       sentDaysAgo: 100,
     },
     deposit: { daysAgo: 90, method: "bank-transfer" },
@@ -160,10 +220,14 @@ const BOOKINGS: BookingSpec[] = [
       mealFormat: TIERS.banquetDahlia,
       beverage: TIERS.foreignWine,
       extras: [
-        { label: "Round family tables", category: "setup", quantity: 22, unitAmount: 15 },
-        { label: "Chair bows", category: "setup", quantity: 220, unitAmount: 3 },
-        { label: "Bar pieces", category: "setup", quantity: 2, unitAmount: 250 },
+        extra.station("Salumerie Table", 12.5, 220),
+        extra.cocktailBar(220),
+        extra.roundTables(22),
+        extra.chairs(220),
+        extra.bows(66),
+        extra.barPieces,
       ],
+      cake: { tiers: 3, flavour: "bacio" },
       sentDaysAgo: 60,
     },
     deposit: { daysAgo: 50, method: "card" },
@@ -209,7 +273,7 @@ const BOOKINGS: BookingSpec[] = [
       beverage: TIERS.localWine,
       extras: [
         {
-          label: "Secret Garden, exclusive use",
+          label: "Secret Garden",
           category: "exclusivity",
           quantity: 1,
           unitAmount: 500,
@@ -236,9 +300,7 @@ const BOOKINGS: BookingSpec[] = [
       status: "accepted",
       mealFormat: TIERS.banquetOrchid,
       beverage: TIERS.localWine,
-      extras: [
-        { label: "Sound system", category: "setup", quantity: 1, unitAmount: 500 },
-      ],
+      extras: [extra.sound],
       sentDaysAgo: 35,
     },
     deposit: { daysAgo: 28, method: "bank-transfer" },
@@ -266,22 +328,20 @@ const BOOKINGS: BookingSpec[] = [
       mealFormat: TIERS.receptionRose,
       beverage: TIERS.localWine,
       extras: [
-        {
-          label: "Secret Garden ceremony set-up",
-          category: "setup",
-          quantity: 1,
-          unitAmount: 650,
-        },
-        { label: "Welcome prosecco", category: "beverage", quantity: 160, unitAmount: 9 },
-        { label: "Round family tables", category: "setup", quantity: 16, unitAmount: 15 },
-        { label: "Sound system", category: "setup", quantity: 1, unitAmount: 500 },
-        {
-          label: "Late bar, one hour",
-          category: "beverage",
-          quantity: 1,
-          unitAmount: 900,
-        },
+        { label: "Secret Garden", category: "exclusivity", quantity: 1, unitAmount: 500 },
+        extra.station("Salumerie Table", 12.5, 160),
+        extra.station("Charcuterie Table", 10.5, 160),
+        extra.welcomeDrink(160),
+        extra.cocktailBar(160),
+        extra.roundTables(16),
+        extra.chairs(160),
+        extra.barPieces,
+        extra.sound,
+        extra.overtime(160),
       ],
+      cake: FAVOURITE_CAKE,
+      clientNotes:
+        "As discussed, the ceremony is in the Secret Garden, with drinks on the Terrace afterwards.",
     },
     suggestedReply:
       "Dear Laura and Karl,\n\nThank you for thinking of Bacchus for your wedding. Your date is currently available. The Secret Garden isn't part of our standard package, but it can be added for your ceremony; vegetarian menus are no trouble at all.\n\nWould you like to come for a viewing? We hold them Monday to Friday, by appointment.\n\nWarm regards,\nThe Bacchus events team",
@@ -360,11 +420,20 @@ const BOOKINGS: BookingSpec[] = [
       mealFormat: TIERS.receptionDaisy,
       beverage: TIERS.localWine,
       extras: [
-        { label: "Welcome prosecco", category: "beverage", quantity: 110, unitAmount: 9 },
-        { label: "Round family tables", category: "setup", quantity: 11, unitAmount: 15 },
-        { label: "Chair bows", category: "setup", quantity: 110, unitAmount: 3 },
-        { label: "Sound system", category: "setup", quantity: 1, unitAmount: 500 },
+        {
+          label: "Terrace & Lawns",
+          category: "exclusivity",
+          quantity: 1,
+          unitAmount: 4500,
+        },
+        extra.welcomeDrink(110),
+        extra.roundTables(11),
+        extra.chairs(110),
+        extra.bows(33),
+        extra.barPieces,
+        extra.sound,
       ],
+      cake: FAVOURITE_CAKE,
       sentDaysAgo: 2,
     },
   },
@@ -522,7 +591,7 @@ const buildQuote = (
   const lineItems = keyed([
     {
       _type: "quoteLineItem",
-      label: `${quoteSpec.mealFormat.label}, per person`,
+      label: quoteSpec.mealFormat.label,
       category: "food",
       quantity: spec.guestCount,
       unitAmount: quoteSpec.mealFormat.amount,
@@ -532,7 +601,7 @@ const buildQuote = (
       ? [
           {
             _type: "quoteLineItem",
-            label: `${quoteSpec.beverage.label}, per person`,
+            label: quoteSpec.beverage.label,
             category: "beverage",
             quantity: spec.guestCount,
             unitAmount: quoteSpec.beverage.amount,
@@ -544,12 +613,24 @@ const buildQuote = (
   ])
 
   // The same sums the Studio does, so seeded quotes read as if staff made them.
-  const totals = calculateQuoteTotals({
-    lineItems,
-    vatRate: VAT_RATE,
-    guestCount: spec.guestCount,
-    depositPercent: DEPOSIT_PERCENT,
-  })
+  const sums = (discountAmount = 0) =>
+    calculateQuoteTotals({
+      lineItems,
+      discountAmount,
+      vatRate: VAT_RATE,
+      guestCount: spec.guestCount,
+      depositPercent: DEPOSIT_PERCENT,
+    })
+  const roundTo = quoteSpec.roundPerPersonDownTo
+  const undiscounted = sums()
+  const roundedPerPerson = roundTo
+    ? Math.floor(undiscounted.subtotal / spec.guestCount / roundTo) * roundTo
+    : undefined
+  // In cents, so the subtraction doesn't drift by a fraction of a cent.
+  const discountAmount = roundedPerPerson
+    ? euros(cents(undiscounted.subtotal) - cents(roundedPerPerson * spec.guestCount))
+    : 0
+  const totals = sums(discountAmount)
   const sentAt = addDays(start, -(quoteSpec.sentDaysAgo ?? 0))
 
   return {
@@ -561,6 +642,8 @@ const buildQuote = (
     addressedTo: spec.partnerName
       ? `${spec.firstName} ${spec.lastName} & ${spec.partnerName}`
       : `${spec.firstName} ${spec.lastName}`,
+    preparedBy: NICHOLAS,
+    ...(quoteSpec.clientNotes ? { clientNotes: quoteSpec.clientNotes } : {}),
     event: {
       date: isoDate(eventDate),
       startTime: spec.eventType === "wedding" ? "17:00" : "19:30",
@@ -570,6 +653,7 @@ const buildQuote = (
     },
     menu: {
       mealFormat: reference(quoteSpec.mealFormat.id),
+      ...(quoteSpec.cake ? { cake: quoteSpec.cake } : {}),
       ...(quoteSpec.beverage
         ? { beverages: keyedReferences([quoteSpec.beverage.id]) }
         : {}),
@@ -580,6 +664,14 @@ const buildQuote = (
         amount: totals.lineAmounts[index].amount,
       })),
       subtotal: totals.subtotal,
+      ...(discountAmount
+        ? {
+            discount: {
+              amount: discountAmount,
+              reason: `Rounded to €${roundedPerPerson} a person`,
+            },
+          }
+        : {}),
       total: totals.total,
       vat: { rate: VAT_RATE, amount: totals.vatAmount },
       perPerson: totals.perPerson,
@@ -587,7 +679,8 @@ const buildQuote = (
     },
     terms: {
       balanceDueDate: isoDate(addDays(eventDate, -14)),
-      validUntil: isoDate(addDays(sentAt, 14)),
+      // 30 days, as Bacchus's own quotes give.
+      validUntil: isoDate(addDays(sentAt, 30)),
     },
   }
 }
