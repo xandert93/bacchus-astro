@@ -68,7 +68,16 @@ Good to know:
 2. **Add the lines.** For anything priced per person or per item, enter the
    quantity and the unit price; the line total, subtotal, total, VAT, price
    per person and deposit all work themselves out. For a flat fee, leave the
-   quantity and unit price empty and type the total.
+   quantity and unit price empty and type the total. For something included
+   at no charge (chairs, say), enter a unit price of 0: the client sees
+   "Included". Name lines plainly ("Banquet – Dahlia", "Cocktail bar"): the
+   quantity already shows what's per person.
+   - **Prepared By** is filled in with your name; the quote email is signed
+     with it.
+   - **Notes for the Client** appear with the quote on their booking page.
+     **Internal Notes** never do.
+   - **Wedding Cake**: the tiers and flavour of the cake that comes with the
+     meal. It shows under the meal line.
 3. **Send it**, then set its status to **Sent**. Everything else on the quote
    locks, so it always matches what the client received.
 4. **To change a sent quote**, create a new one and set the old one to

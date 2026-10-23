@@ -25,6 +25,22 @@ const HERO = {
 
 const SIGN_OFF = paragraph("Warm regards,<br><em>The Bacchus events team</em>")
 
+/**
+ * The quote and its reminder come from the person who prepared it, as
+ * Bacchus's own quotes do; everything else from the team.
+ */
+const personalSignOff = (preparedBy?: string) =>
+  preparedBy
+    ? paragraph(
+        `Warm regards,<br><em>${escapeHtml(preparedBy)}</em><br>The Bacchus events team`,
+      )
+    : SIGN_OFF
+
+const personalSignOffText = (preparedBy?: string) =>
+  preparedBy
+    ? ["Warm regards,", preparedBy, "The Bacchus events team"]
+    : ["Warm regards,", "The Bacchus events team"]
+
 /** The facts every deposit email can draw on. */
 export interface DepositFacts {
   couple: string
@@ -37,6 +53,8 @@ export interface DepositFacts {
   bookingId: string
   balanceDueDate?: string
   depositPercent?: number
+  /** Who prepared the quote, to sign the emails about it. */
+  preparedBy?: string
 }
 
 /** "Deposit (30% of total)", or just "Deposit" where no percentage was set. */
@@ -106,7 +124,7 @@ export const quoteEmail = (
         detailsCard(rows),
         button("Review and pay your deposit", depositLink),
         htmlParagraphs(footnote, { small: true }),
-        SIGN_OFF,
+        personalSignOff(facts.preparedBy),
       ].join(""),
     }),
     text: plain([
@@ -120,8 +138,7 @@ export const quoteEmail = (
       "",
       textParagraphs(footnote),
       "",
-      "Warm regards,",
-      "The Bacchus events team",
+      ...personalSignOffText(facts.preparedBy),
     ]),
     kind: "quote",
   }
@@ -163,7 +180,7 @@ export const quoteReminderEmail = (
         detailsCard(rows),
         button("Review and pay your deposit", depositLink),
         htmlParagraphs(footnote, { small: true }),
-        SIGN_OFF,
+        personalSignOff(facts.preparedBy),
       ].join(""),
     }),
     text: plain([
@@ -177,8 +194,7 @@ export const quoteReminderEmail = (
       "",
       textParagraphs(footnote),
       "",
-      "Warm regards,",
-      "The Bacchus events team",
+      ...personalSignOffText(facts.preparedBy),
     ]),
     kind: "quote-reminder",
   }

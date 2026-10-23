@@ -78,6 +78,8 @@ if (page) {
       exampleBank: !view.bank.areReal,
       manualTransfer: view.transferMode === "manual",
       stripeTransfer: view.transferMode === "stripe",
+      notes: Boolean(view.notes),
+      preparedBy: Boolean(view.preparedBy),
     }
     page.querySelectorAll("[data-deposit-row]").forEach((element) => {
       element.hidden = !rowShown[element.dataset.depositRow]
@@ -98,9 +100,11 @@ if (page) {
           const line = lineTemplate.content.cloneNode(true)
           line.querySelector('[data-line="label"]').textContent = item.label
           line.querySelector('[data-line="amount"]').textContent = item.amount
-          const working = line.querySelector('[data-line="working"]')
-          working.textContent = item.working
-          working.hidden = !item.working
+          ;["working", "details"].forEach((part) => {
+            const element = line.querySelector(`[data-line="${part}"]`)
+            element.textContent = item[part]
+            element.hidden = !item[part]
+          })
           return line
         }),
       )

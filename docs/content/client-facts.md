@@ -226,8 +226,8 @@ and a quantity and total are filled in for the ones chosen.
   Gatt**, with the date. His title isn't given.
 - **"This quote is valid for 30 days."** The catalogue's terms say 15.
   **Conflict**, though a mild one: the quote is the newer document and
-  shows current practice. The Studio still assumes 7 (an illustrative
-  number from the prototype, never Bacchus's).
+  shows current practice. The Studio now defaults to 30 (it assumed 7, an
+  illustrative number from the prototype, until 2026-10-23).
 - **"If the contract is not signed"**: they use a signed contract after
   the quote, which matters for how terms are accepted online
   (`booking-terms-draft.md`, D28).

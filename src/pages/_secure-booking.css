@@ -192,6 +192,29 @@
   gap: clamp(12px, 3vw, 20px);
 }
 
+/* The quote's notes for the client, under the event's details. */
+.secure-booking-notes {
+  margin-top: clamp(24px, 4vw, 36px);
+}
+
+.secure-booking-notes p {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+
+  /* Keeps the line breaks staff typed. */
+  white-space: pre-line;
+}
+
+.secure-booking-prepared {
+  margin-top: clamp(20px, 3vw, 28px);
+
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 14px;
+  color: var(--muted-ink);
+}
+
 .secure-booking-field {
   display: flex;
   align-items: center;

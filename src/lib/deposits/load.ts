@@ -10,6 +10,8 @@ export interface DepositRecord {
   reference: string
   status: string
   addressedTo?: string
+  preparedBy?: string
+  clientNotes?: string
   event: {
     date: string
     startTime?: string
@@ -17,8 +19,19 @@ export interface DepositRecord {
     guestCount: number
     spaces?: string[]
   }
+  menu?: {
+    mealFormat?: string
+    cake?: { tiers?: number; flavour?: string }
+  }
   pricing: {
-    lineItems: { label: string; amount: number; quantity?: number; unitAmount?: number }[]
+    lineItems: {
+      label: string
+      amount: number
+      quantity?: number
+      unitAmount?: number
+      /** The package tier a line was priced from, if any. */
+      source?: string
+    }[]
     subtotal: number
     discount?: { amount?: number; reason?: string }
     total: number
@@ -56,8 +69,11 @@ const DEPOSIT_PROJECTION = /* groq */ `{
   reference,
   status,
   addressedTo,
+  preparedBy,
+  clientNotes,
   event{date, startTime, endTime, guestCount, "spaces": spaces[]->name},
-  pricing{lineItems[]{label, amount, quantity, unitAmount}, subtotal, discount, total, vat, perPerson, deposit},
+  menu{"mealFormat": mealFormat._ref, cake},
+  pricing{lineItems[]{label, amount, quantity, unitAmount, "source": sourceRef._ref}, subtotal, discount, total, vat, perPerson, deposit},
   terms,
   reminderSentAt,
   bankPaymentAttempts[]{state, paymentId, bank},
@@ -126,4 +142,5 @@ export const depositFacts = (record: DepositRecord) => ({
   bookingId: record.booking._id,
   balanceDueDate: record.terms?.balanceDueDate,
   depositPercent: record.pricing.deposit.percent,
+  preparedBy: record.preparedBy,
 })

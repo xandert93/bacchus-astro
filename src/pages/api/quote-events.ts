@@ -19,8 +19,8 @@ import { verifySanityWebhook } from "@lib/webhooks/sanity"
 
 export const prerender = false
 
-/** Used where the wedding policy doesn't say. */
-const DEFAULT_QUOTE_VALID_DAYS = 7
+/** Used where the wedding policy doesn't say: what Bacchus's own quotes give. */
+const DEFAULT_QUOTE_VALID_DAYS = 30
 
 /** The webhook's projection, set in Sanity's dashboard. */
 interface QuoteChange {
