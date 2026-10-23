@@ -3,8 +3,8 @@
 // layer) over it, for a form or a block of text to sit on: the photo gives
 // the section life without fighting the content. On a desktop the scrim
 // covers the content column, on the left, and stops a little past it at a
-// gold hairline, so the photograph shows fully on the right; on a phone and tablet it
-// covers the whole photo, which just shows through. Used by the review page;
+// thin gold line, so the photograph shows fully on the right; on a phone and
+// tablet it covers the whole photo, which just shows through. Used by the review page;
 // the enquiry section, the waitlist page and the checkout pages are the next
 // candidates (docs/design/decisions.md, "Photo with a scrim").
 //
@@ -81,7 +81,7 @@ const { photo, pageTop = false, class: className } = Astro.props
     background: rgba(var(--paper-rgb), 0.9);
   }
 
-  /* A hard edge, finished with a hairline of the buttons' gold gradient so
+  /* A hard edge, finished with a thin line of the buttons' gold gradient so
      it reads as intended. A fade looked soft and, when long enough to be
      gentle, reached the form's inputs. On a box this tall and thin, the
      gradient's 135deg runs top to bottom. */
@@ -89,7 +89,7 @@ const { photo, pageTop = false, class: className } = Astro.props
     .photo-scrim::before {
       right: auto;
       width: var(--photo-scrim-edge);
-      border-right: 1px solid;
+      border-right: 2px solid;
       border-image: var(--gold-gradient) 1;
 
       background: rgba(var(--paper-rgb), 0.95);

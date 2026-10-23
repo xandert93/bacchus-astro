@@ -209,9 +209,9 @@ component, `PhotoScrimSection`.
 - **A photograph fills the section, under a paper scrim** (a translucent
   layer that keeps text readable), and the content sits on the scrim. It
   gives a plain page life without the photo fighting the words.
-- **Desktop: one even shade behind the content, ending at a gold
-  hairline.** The scrim covers the content column and 64px beyond, then
-  stops at a 1px line of the buttons' gold gradient, so the photo shows
+- **Desktop: one even shade behind the content, ending at a thin gold
+  line.** The scrim covers the content column and 64px beyond, then stops
+  at a 2px line of the buttons' gold gradient, so the photo shows
   fully on the right. The line is what makes a hard straight edge look
   intended rather than a mistake. Tried and dropped: a slanted edge (too
   dramatic), a long fade (it reached the form's inputs) and a short fade
