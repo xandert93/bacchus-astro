@@ -251,3 +251,24 @@ lists its own `allowScripts`, as the root one does.
 
 **Rule**: a script that runs `npm install` in a subfolder clears
 `npm_config_allow_scripts` first.
+
+---
+
+## 10. Dates in emails read "Saturday, 29 May 2027"
+
+**Symptom**: the quote email's subject and the dates in emails had a comma
+after the weekday, which British English doesn't use there. Found
+2026-10-23, in the first PDF quote printed through the Worker.
+
+**Cause**: `longDate()` asked for the whole date in one go, and the Workers
+runtime's date formatting puts a comma after the weekday; Node and the
+browser don't, so nothing showed it outside the Worker.
+
+**Fix**: `longDate()` (`src/lib/email/enquiry-details.ts`) builds the date
+from two parts, the weekday and the rest, so no runtime can add the comma.
+
+**Test**: none automated yet; it needs the Workers runtime, so it waits for
+the planned unit tests.
+
+**Rule**: format a date that matters from its parts, not one
+`toLocaleDateString()` call, when the code runs in the Worker.
