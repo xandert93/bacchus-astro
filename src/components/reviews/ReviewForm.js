@@ -135,7 +135,12 @@ if (card) {
   if (token) {
     post("view")
       .then(start)
-      .catch((problem) => finish("This link isn't working", problem.message))
+      .catch(() =>
+        finish(
+          "We couldn't find your review link",
+          "Please use the button in your email again. If it still doesn't work, just reply to that email and we'll help.",
+        ),
+      )
   } else {
     finish(
       "This link isn't complete",

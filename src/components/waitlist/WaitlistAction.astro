@@ -9,7 +9,8 @@ import Button from "@components/ui/Button.astro"
 <section class="waitlist-action">
   <div class="wrap">
     <div class="waitlist-card" id="waitlistAction">
-      <p class="eyebrow">Waitlist</p>
+      {/* Revealed from the start: this page runs no reveal script. */}
+      <p class="eyebrow is-revealed">Waitlist</p>
       <h1 id="waitlistTitle">One moment…</h1>
       <p class="lead" id="waitlistText"></p>
       <p class="waitlist-error" id="waitlistError" role="alert" hidden></p>
@@ -17,7 +18,7 @@ import Button from "@components/ui/Button.astro"
         <Button variant="gradient" id="waitlistButton" hidden>
           <span id="waitlistButtonLabel"></span>
         </Button>
-        <Button href="/weddings" variant="ghost" id="waitlistBack" hidden arrow>
+        <Button href="/weddings" variant="dark" id="waitlistBack" hidden arrow>
           <span>Back to weddings</span>
         </Button>
       </div>
