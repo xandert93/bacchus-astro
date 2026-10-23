@@ -17,7 +17,8 @@ const heroImg = document.getElementById("heroImg")
 let ticking = false
 const onScroll = () => {
   const y = window.scrollY || 0
-  if (nav) nav.classList.toggle("stuck", y > 60)
+  // A page with no dark hero keeps the bar dark however far it's scrolled.
+  if (nav) nav.classList.toggle("stuck", y > 60 || nav.hasAttribute("data-solid"))
   const max = document.documentElement.scrollHeight - window.innerHeight
   if (progress) progress.style.transform = "scaleX(" + (max > 0 ? y / max : 0) + ")"
   if (heroImg && !reduce && y < window.innerHeight)
