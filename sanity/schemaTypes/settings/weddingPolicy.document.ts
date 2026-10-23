@@ -15,9 +15,10 @@ import { DEFAULT_DEPOSIT_PERCENT, DEFAULT_VAT_RATE } from "../../lib/constants"
  *   - `WEDDING_MIN_NOTICE_MONTHS = 3` in `main.js` carries a comment saying in
  *     so many words that it is a reasonable placeholder and not a confirmed
  *     Bacchus policy. A visitor reading the calendar cannot see that comment.
- *   - A quote stays valid for 7 days. Kept as a specific number on the
- *     user's explicit call, but it is illustrative and was never verified as
- *     Bacchus's policy.
+ *   - How long a quote stays valid. The site first assumed 7 days, an
+ *     illustrative number; Bacchus's own quotes say 30 and the catalogue 15.
+ *     30 is the default now, as what they actually send, but the two
+ *     documents still disagree (docs/content/client-facts.md).
  *   - The homepage's "35+ years" stat is wrong rather than merely unconfirmed:
  *     the catering business has operated since 1976, which the real site frames
  *     as 50+ years.
@@ -210,7 +211,7 @@ export default defineType({
           name: "quoteValidDays",
           title: "Days a Quote Stays Valid",
           type: "number",
-          initialValue: 7,
+          initialValue: 30,
           description: help(
             "Counted from the day it's sent, unless the quote sets its own end date.",
             "The date isn't held meanwhile: the first deposit to arrive secures it.",

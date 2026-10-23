@@ -57,7 +57,7 @@ const weddingPolicy = {
   coupleSourcesThemselves:
     "Flowers, entertainment (a DJ or band, including any stage) and a photographer. A photobooth is a common extra.",
   vatRate: 18,
-  deposit: { percent: 30, balanceDueDays: 14, quoteValidDays: 7 },
+  deposit: { percent: 30, balanceDueDays: 14, quoteValidDays: 30 },
   bankTransferDetails: {
     accountName: "Bacchus Ltd",
     iban: "MT99 BACC 0000 0000 0000 0000 0000 000",
