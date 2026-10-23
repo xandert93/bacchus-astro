@@ -273,3 +273,32 @@ the planned unit tests.
 
 **Rule**: format a date that matters from its parts, not one
 `toLocaleDateString()` call, when the code runs in the Worker.
+
+---
+
+## 11. A bright line under a station card's photo
+
+**Symptom**: hovering a Reception station card while the stations were
+still sliding in flashed a 1px light line along the bottom of its photo,
+gone once the slide-in ended. Found 2026-10-23.
+
+**Cause**: the dark scrim under the card's name was a separate layer laid
+over the photo. While the browser animates both the hover zoom and the
+section's slide-in, it draws the photo and the scrim as separate layers and
+rounds their edges differently, so the photo's last row of pixels showed
+below the scrim, undarkened.
+
+**Fix**: the darkening is now a mask on the photo itself, fading it into
+the figure's ink background (`--station-scrim-mask` in
+`ReceptionStations.css`). One layer, so nothing can show between them. It
+looks the same: an 82% ink scrim over the photo and the photo at 18% over
+ink are the same colour.
+
+**Test**: none automated. It only shows for a few frames mid-animation, so a
+screenshot test would pass or fail by timing alone. It was found and the fix
+checked by screenshotting the card's bottom edge every 120ms while hovering
+during the slide-in, three runs each: before, a light row (brightness about
+410 of 765); after, none (about 140, the photo's own dark edge).
+
+**Rule**: darken a photo that zooms on hover with a mask on the photo, not
+a layer over it.
