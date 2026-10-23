@@ -402,7 +402,12 @@ Everything below is illustrative and is labelled as such on the page.
   fallback.)
 
 - **Space names**: are the Secret Garden, Prince De Redin Hall and Terrace the
-  right names, and is "the ballroom" the Prince De Redin Hall?
+  right names, and is "the ballroom" the Prince De Redin Hall? Their own
+  documents differ: the catalogue says Secret Garden, De Redin and Terrace;
+  their quote prices Secret Garden, Terrace & Lawns, De Redin Ballroom,
+  Chambers and Small Terrace. Which names should couples see, and what is
+  each one? The site's spaces (Studio, Venue) follow the answer; a quote's
+  exclusive-use line can keep whatever name Bacchus charges under.
 
 - **Banquet pricing** and **deposit terms**: the two
   [conflicts](#open-conflicts).
