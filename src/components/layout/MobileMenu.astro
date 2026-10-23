@@ -353,8 +353,7 @@ import NavCtaButtons from "@components/nav/NavCtaButtons.astro"
        sit left inside a button that is now wider than its content.
   */
   .mobile-nav-cta-row :global(.button) {
-    width: 100%;
-    max-width: 300px;
+    width: min(100%, 300px);
     justify-content: center;
 
     /* Scaled up from .button-small's own size, exactly as
