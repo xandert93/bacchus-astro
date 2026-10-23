@@ -20,7 +20,8 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
 <section class="review-page">
   <div class="wrap">
     <div class="review-card" id="reviewCard">
-      <p class="eyebrow">Your review</p>
+      {/* Revealed from the start: this page runs no reveal script. */}
+      <p class="eyebrow is-revealed">Your review</p>
       <h1 id="reviewTitle">One moment…</h1>
       <p class="lead" id="reviewLead"></p>
 
@@ -89,7 +90,7 @@ const STAR_VALUES = [1, 2, 3, 4, 5]
       </form>
 
       <div class="review-buttons review-done" id="reviewDone" hidden>
-        <Button href="/" variant="ghost" arrow>
+        <Button href="/" variant="dark" arrow>
           <span>Back to Bacchus</span>
         </Button>
       </div>
