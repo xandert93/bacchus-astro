@@ -12,19 +12,22 @@ if (card) {
   const token = new URLSearchParams(window.location.search).get("token") || ""
   const title = document.getElementById("reviewTitle")
   const lead = document.getElementById("reviewLead")
-  const loading = document.getElementById("reviewLoading")
   const form = document.getElementById("reviewForm")
   const done = document.getElementById("reviewDone")
   const error = document.getElementById("reviewError")
   const sendButton = document.getElementById("reviewSend")
+  const sendLabel = document.getElementById("reviewSendLabel")
   const ratingField = document.getElementById("reviewRatingField")
   const textField = document.getElementById("reviewTextField")
   const nameField = document.getElementById("reviewNameField")
+  const shareField = document.getElementById("reviewShareField")
   const text = document.getElementById("reviewText")
   const name = document.getElementById("reviewName")
   const place = document.getElementById("reviewLocation")
-  const publish = document.getElementById("reviewPublish")
   const stars = [...document.querySelectorAll(".review-star")]
+  const google = document.getElementById("reviewGoogle")
+  const copyButton = document.getElementById("reviewCopy")
+  const copyLabel = document.getElementById("reviewCopyLabel")
 
   const post = (path, body = {}) =>
     fetch(`/api/reviews/${path}`, {
@@ -38,28 +41,22 @@ if (card) {
       }),
     )
 
-  const google = document.getElementById("reviewGoogle")
-  const copyButton = document.getElementById("reviewCopy")
-  const copyLabel = document.getElementById("reviewCopyLabel")
-  const copyNote = document.getElementById("reviewGoogleCopyNote")
-  const sendLabel = document.getElementById("reviewSendLabel")
+  // The page starts with only the loading ring showing (.is-loading).
+  const loaded = () => card.classList.remove("is-loading")
 
   const finish = (heading, message) => {
     title.textContent = heading
     lead.textContent = message
-    loading.hidden = true
     form.hidden = true
     done.hidden = false
+    loaded()
   }
 
-  // Their review, word for word, to paste on Google. Copying is offered only
-  // when it's here to copy: not on a return visit after sending.
+  // Their review, word for word, to paste on Google. Offered to everyone,
+  // whatever their rating: asking only the happy ones is review gating.
   const offerGoogle = (reviewText) => {
     google.hidden = false
     copyButton.hidden = !reviewText
-    copyNote.textContent = reviewText
-      ? "copy your review here, then paste it on Google."
-      : "you can leave a review there too."
     copyButton.addEventListener("click", () => {
       navigator.clipboard
         .writeText(reviewText)
@@ -73,7 +70,7 @@ if (card) {
     })
   }
 
-  const thank = (firstName, reviewText = "") => {
+  const thank = (firstName, reviewText) => {
     finish(
       firstName ? `Thank you, ${firstName}` : "Thank you",
       "We read every review, and yours means a great deal to us.",
@@ -100,6 +97,9 @@ if (card) {
 
   // --- Checking and sending ---------------------------------------------------
 
+  /** "yes", "no", or "" while neither is chosen. */
+  const shareChoice = () => form.querySelector("[name=share]:checked")?.value || ""
+
   // Restarted each time, so a second failed send shakes again.
   const markBad = (field) => {
     field.classList.remove("bad")
@@ -112,6 +112,7 @@ if (card) {
       [ratingField, !chosenRating()],
       [textField, text.value.trim().length < REVIEW_MINIMUM_LENGTH],
       [nameField, !name.value.trim()],
+      [shareField, !shareChoice()],
     ].filter(([, bad]) => bad)
 
     problems.forEach(([field]) => markBad(field))
@@ -125,10 +126,18 @@ if (card) {
   ].forEach(([input, field]) =>
     input.addEventListener("input", () => field.classList.remove("bad")),
   )
+  shareField.addEventListener("change", () => shareField.classList.remove("bad"))
 
-  const start = ({ firstName, date, occasion, suggestedName, reviewSent }) => {
+  const start = ({
+    firstName,
+    date,
+    occasion,
+    suggestedName,
+    reviewSent,
+    reviewText,
+  }) => {
     if (reviewSent) {
-      thank(firstName)
+      thank(firstName, reviewText)
       return
     }
 
@@ -137,8 +146,8 @@ if (card) {
       ? `Thank you for celebrating with us on ${longDate(date)}, ${firstName}. We'd love to hear how it went.`
       : `Thank you for celebrating with us, ${firstName}. We'd love to hear how it went.`
     name.value = suggestedName
-    loading.hidden = true
     form.hidden = false
+    loaded()
 
     form.addEventListener("submit", (event) => {
       event.preventDefault()
@@ -153,7 +162,7 @@ if (card) {
         text: text.value,
         displayName: name.value,
         location: place.value,
-        publish: publish.checked,
+        publish: shareChoice() === "yes",
       })
         .then(() => thank(firstName, text.value.trim()))
         .catch((problem) => {

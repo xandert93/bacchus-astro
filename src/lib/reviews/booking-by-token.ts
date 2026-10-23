@@ -14,6 +14,8 @@ export interface ReviewBooking {
   date?: string
   eventType: string
   reviewSent: boolean
+  /** The review they sent, as plain text, for the thank-you screen to copy. */
+  reviewText?: string
 }
 
 /**
@@ -41,11 +43,12 @@ export const bookingByReviewToken = async (client: SanityClient, token: unknown)
   )
   if (!booking) return null
 
-  const reviewId = await client.fetch<string | null>(`*[_id == $id][0]._id`, {
-    id: reviewTestimonialId(booking._id),
-  })
+  const review = await client.fetch<{ text?: string } | null>(
+    `*[_id == $id][0]{"text": pt::text(quote)}`,
+    { id: reviewTestimonialId(booking._id) },
+  )
 
-  return { ...booking, reviewSent: Boolean(reviewId) }
+  return { ...booking, reviewSent: Boolean(review), reviewText: review?.text }
 }
 
 /** "Bertha & Alex", or just "Bertha": what the page suggests as the name to show. */

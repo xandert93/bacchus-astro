@@ -161,6 +161,15 @@ A four-step wizard: **the occasion** (event type, date) → **the specifics**
   - Not asking someone at all is fine for our own form, for a real reason
     (a dispute in progress). Never because their review might be bad.
     Staff asking couples by hand follow the same rule.
+- **Permission to publish is a question with two answers**, neither chosen
+  to start ("Yes: show it on Bacchus's website…" / "No: keep it between me
+  and the Bacchus team"), and one must be picked. GDPR consent has to be an
+  active choice: a box ticked in advance, or "tick to keep it private"
+  (publishing by default), wouldn't count. Asking both ways gets a real
+  answer, and more yeses than a lone box people skip.
+- **No incentive for reviews** (a prize draw, vouchers): Google forbids
+  offering anything for a review, and on our own site an incentive would
+  have to be declared and would cheapen the reviews (2026-10-23).
 - **Label the testimonials honestly.** EU consumer law (the 2022 "Omnibus"
   rules) treats a business that publishes only positive reviews, or claims
   reviews are genuine without checking, as misleading consumers. A selection
