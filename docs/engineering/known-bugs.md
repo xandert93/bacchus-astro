@@ -302,3 +302,31 @@ scaling is where edges get rounded differently.
 starts sliding in, and watch the bottom edge of its photo.
 
 **Test**: none yet.
+
+---
+
+## 12. A testimonial cut short on a phone, losing its gold words
+
+**Symptom**: on a phone, Daniela C's testimonial ended in "…" after five
+lines, and the gold emphasised sentence vanished from it entirely, even
+the part before the cut. Found 2026-10-24.
+
+**Cause**: two things in `Testimonials.js`. The quote was capped at five
+lines, chosen when every quote fitted in that; Daniela's, at 220
+characters, takes six on a 360–390px phone. And a shortened quote was
+rebuilt as plain text, because cutting by words through the `<em>` markers
+could have left one unclosed, so the emphasis went with any cut.
+
+**Fix**: the cap is eight lines, a safety net for a very long quote rather
+than the usual case (the box already reserves the tallest quote's height,
+so nothing jumps). A cut now works on words that each remember whether
+they're emphasised, and rebuilds the markers around them, so the gold
+survives up to the cut.
+
+**Test**: `tests/e2e/testimonials.spec.ts`, "every testimonial shows in
+full, with its emphasis, on a phone": at 360px wide, each live quote must
+end with its own last words, carry no "…", and keep its emphasis. It fails
+on the old script at Daniela's quote.
+
+**Rule**: a cap on text that's trimmed in the browser is set for the
+narrowest screen, and checked again when longer content arrives.
