@@ -171,7 +171,7 @@
 
 @media (--from-secure-booking-small) {
   .secure-booking-facts {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -215,7 +215,8 @@
 /* --- The price: groups down the left, then Item, Qty, Price, Amount --- */
 
 .secure-booking-price {
-  --price-group-column: clamp(110px, 14vw, 150px);
+  /* Wide enough for "Exclusive use" on one line. */
+  --price-group-column: clamp(136px, 15vw, 160px);
   --price-quantity-column: 52px;
   --price-unit-column: 84px;
   --price-amount-column: 92px;
