@@ -192,12 +192,12 @@
 
 /* Each fact as on the first design: its icon in a gold-ringed circle, the
    label above the value. The icon sits in the label (a <dt> can't share a
-   box with its <dd>) and is placed beside both. */
+   box with its <dd>) and is placed beside both, its top level with the
+   label's, so a value that wraps grows downwards from it. */
 .secure-booking-fact {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 2px;
   min-height: 38px;
   padding-left: 52px;
@@ -205,7 +205,7 @@
 
 .secure-booking-fact-icon {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 0;
   display: grid;
   place-items: center;
@@ -215,7 +215,6 @@
   border: 1px solid rgba(var(--gold-rgb), 0.3);
   background: var(--limestone-2);
   color: var(--bronze);
-  transform: translateY(-50%);
 }
 
 .secure-booking-fact dt {
@@ -490,21 +489,24 @@
   }
 }
 
-/* "This quote was prepared by", then the name, large, like a signature. */
+/* Who prepared the quote, and how to reach us: quiet, as the PDF ends,
+   with only the name in ink. */
 .secure-booking-prepared {
   font-family: "Newsreader", Georgia, serif;
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.6;
   color: var(--muted-ink);
 }
 
-.secure-booking-prepared-name {
-  margin: 2px 0;
-
-  font-family: "Fraunces", Georgia, serif;
-  font-size: clamp(22px, 2.6vw, 26px);
-  line-height: 1.2;
+.secure-booking-prepared strong {
+  font-weight: 500;
   color: var(--ink);
+}
+
+.secure-booking-prepared a {
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--muted-ink-rgb), 0.35);
+  text-underline-offset: 3px;
 }
 
 .secure-booking-notes + .secure-booking-prepared {

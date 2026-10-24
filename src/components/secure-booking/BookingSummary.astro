@@ -6,6 +6,7 @@
 // from the quote its link points to: each `data-deposit` names the field it
 // shows, and the facts and price groups are built from the templates below
 // (src/lib/deposits/view.ts).
+import { CONTACT } from "@data/contact"
 import SecureBookingIcon from "./SecureBookingIcon.astro"
 import type { SecureBookingIconName } from "./SecureBookingIcon.astro"
 
@@ -151,14 +152,19 @@ const FACT_ICONS: Record<string, SecureBookingIconName> = {
               <h3>Notes from Bacchus</h3>
               <p data-deposit="notes"></p>
             </div>
-            {/* Signed, like a letter: whoever prepared it, by name. */}
-            <div class="secure-booking-prepared" data-deposit-row="preparedBy" hidden>
-              <p>This quote was prepared by</p>
-              <p class="secure-booking-prepared-name" data-deposit="preparedBy"></p>
-              <p data-deposit-row="preparedOn" hidden>
+            {/* Who prepared it and how to reach us, quietly, as the PDF ends. */}
+            <p class="secure-booking-prepared" data-deposit-row="preparedBy" hidden>
+              This quote was prepared by <strong data-deposit="preparedBy"></strong>
+              <span data-deposit-row="preparedOn" hidden>
+                {" "}
                 on <span data-deposit="preparedOn"></span>
-              </p>
-            </div>
+              </span>
+              .
+              <br />
+              Any questions: <a href={CONTACT.phone.href}>
+                {CONTACT.phone.display}
+              </a> or <a href={CONTACT.email.href}>{CONTACT.email.display}</a>.
+            </p>
           </div>
         </div>
       </div>
