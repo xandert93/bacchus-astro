@@ -26,3 +26,39 @@ test("swiping the quote left shows the next testimonial @mobile", async ({ page 
     "true",
   )
 })
+
+// known-bugs.md, 12: on a phone, five lines cut Daniela C's quote short and
+// dropped its gold emphasis. Every live testimonial should show in full,
+// with its emphasis, on a phone.
+test("every testimonial shows in full, with its emphasis, on a phone @mobile", async ({
+  page,
+}) => {
+  // The home page is heavy on an emulated phone, and this visits every quote.
+  test.setTimeout(60_000)
+  // The narrowest phones in common use, where quotes take the most lines.
+  await page.setViewportSize({ width: 360, height: 780 })
+  await page.goto("/")
+
+  const testimonials: { quote: string }[] = JSON.parse(
+    (await page.locator("#testimonialsData").textContent()) ?? "[]",
+  )
+  const cards = page.locator("#tCards button")
+  const quote = page.locator("#tQuote")
+
+  for (const [index, testimonial] of testimonials.entries()) {
+    await cards.nth(index).click()
+    await expect(cards.nth(index)).toHaveAttribute("aria-selected", "true")
+
+    // The quote fades out and back in on a swap, so wait for the new one.
+    const lastWords = testimonial.quote
+      .replace(/<\/?em>/g, "")
+      .trim()
+      .slice(-12)
+    await expect(quote).toContainText(lastWords)
+    await expect(quote).not.toContainText("…")
+
+    if (testimonial.quote.includes("<em>")) {
+      await expect(quote.locator("em")).not.toHaveCount(0)
+    }
+  }
+})
