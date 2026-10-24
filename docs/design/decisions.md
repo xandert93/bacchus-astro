@@ -350,6 +350,12 @@ The rules below apply to the current layout.
   the PDF; the deposit keeps its cents, since a couple types it into their
   banking app. Still to come: the "I accept the booking terms" box, once
   Bacchus approves the terms.
+  - **Where the page differs on purpose** (the user, 2026-10-24): each fact
+    keeps its icon from the first design, since a screen has room the
+    printed panel doesn't. The notes sit in a paper panel, as on the PDF.
+  - **Signed, on both**: "This quote was prepared by" and the name, which
+    the page sets large, like a signature, after the notes. A name on the
+    quote tells the couple who they're dealing with.
 
 ---
 
