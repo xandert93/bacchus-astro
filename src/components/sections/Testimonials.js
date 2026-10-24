@@ -59,7 +59,44 @@ import { reduce } from "@scripts/lib/motion.js"
   })
   const dots = [].slice.call(dotsWrap.children)
 
-  const T_MAX_LINES = 5
+  // A safety cap for a very long quote, not the usual case: the box reserves
+  // the height of the tallest quote anyway (tMeasureMinHeight), so this only
+  // stops one long review making the section huge. Eight lines, so every
+  // current quote shows in full on a phone, where five cut Daniela C's off
+  // (known-bugs.md, 12).
+  const T_MAX_LINES = 8
+
+  // The quote as pieces (words and the spaces between them), each marked as
+  // emphasised or not, so a shortened quote keeps its gold words up to the
+  // cut and its punctuation where it was ("day</em>." stays "day.").
+  const tQuotePieces = (text) =>
+    text
+      .split(/(<em>.*?<\/em>)/)
+      .filter(Boolean)
+      .flatMap((part) => {
+        const emphasised = part.startsWith("<em>")
+        const plain = emphasised ? part.slice(4, -5) : part
+        return plain
+          .split(/(\s+)/)
+          .filter(Boolean)
+          .map((piece) => ({ piece, emphasised }))
+      })
+
+  // Drops the last word, and the space before it.
+  const tDropLastWord = (pieces) => {
+    pieces.pop()
+    while (pieces.length && !pieces[pieces.length - 1].piece.trim()) pieces.pop()
+  }
+
+  // Back to a quote string, with <em> markers round each emphasised run.
+  const tJoinQuotePieces = (pieces) =>
+    pieces
+      .map(({ piece, emphasised }, index) => {
+        const opens = emphasised && !pieces[index - 1]?.emphasised
+        const closes = emphasised && !pieces[index + 1]?.emphasised
+        return `${opens ? "<em>" : ""}${piece}${closes ? "</em>" : ""}`
+      })
+      .join("")
 
   // Turns <em>...</em> markers in a quote string into real <em> elements
   // (plain text elsewhere). Every piece goes in as a text node, never as
@@ -107,16 +144,12 @@ import { reduce } from "@scripts/lib/motion.js"
     const lineHeight = parseFloat(getComputedStyle(quoteEl).lineHeight)
     if (lineHeight) {
       const maxHeight = lineHeight * T_MAX_LINES + 1
-      // Word-split on the <em>-stripped text, not item.quote directly — an
-      // </em> could otherwise land past the cut and leave an emphasis span
-      // unclosed. The truncated result is always rendered as plain text
-      // (tSetQuoteContent falls back to that automatically when there's no
-      // <em> marker left to match), which is an acceptable simplification
-      // since none of the current quotes actually reach the 5-line cap.
-      const words = item.quote.replace(/<\/?em>/g, "").split(" ")
-      while (words.length > 1 && quoteEl.scrollHeight > maxHeight) {
-        words.pop()
-        tSetQuoteContent(words.join(" ") + "…", false)
+      // Cut word by word, keeping each word's emphasis, so the gold survives
+      // up to the cut; the emphasis was dropped entirely before.
+      const pieces = tQuotePieces(item.quote)
+      while (pieces.length > 1 && quoteEl.scrollHeight > maxHeight) {
+        tDropLastWord(pieces)
+        tSetQuoteContent(tJoinQuotePieces(pieces) + "…", false)
       }
     }
     metaEl.textContent = ""
