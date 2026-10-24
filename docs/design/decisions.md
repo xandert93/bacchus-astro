@@ -293,8 +293,24 @@ layout is `docs/design/quote-pdf/quote.pdf`** (chosen by the user on
 3. `3-one-page.pdf`: everything squeezed onto page 1, the deposit beside
    the totals. It fitted, but felt cramped, which led to the current
    layout.
+4. `4-title-beside-logo-with-icons.pdf` (2026-10-24): see "The header"
+   below. Not chosen, but the user's preferred alternative.
 
 The rules below apply to the current layout.
+
+- **The header follows the letterhead pattern**, kept on purpose
+  (2026-10-24): the logo on the left, the quote number and issue date on
+  the right, a rule, then the title and "Prepared for" beneath. It's how
+  quotes and invoices are laid out, and finance teams look for the
+  reference and date top right.
+  - **What it costs**, measured on the fullest seed quote: 32mm free under
+    the totals on page 1. With the title and "Prepared for" beside the
+    logo, the reference as two lines on the right and no rule: 60mm.
+  - **Open to switching** to that, with the deposit page's icons in circles
+    in the event panel (label above value), if big icons are wanted there.
+    It keeps 46mm free (the icons cost 14mm); small icons beside the labels
+    would cost nothing. The user's preference of the alternatives. Kept as
+    `archive/4-title-beside-logo-with-icons.pdf`.
 
 - **One PDF: the quote, then the booking terms.** Not two files.
   - It travels whole: a quote forwarded to a finance team, a parent or a
