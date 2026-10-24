@@ -341,6 +341,15 @@ The rules below apply to the current layout.
   them, and with page 2's unconfirmed details left out rather than shown
   in red: the payment schedule, the tasting terms, and when menu choices
   are due. A real client never sees a placeholder.
+- **The deposit page's summary matches the PDF** (2026-10-24): the same
+  event panel, the same groups with their subtotals and small print, the
+  same figures and the same totals, from one source
+  (`src/lib/quotes/quote-lines.ts`), so the two can't disagree. On a phone
+  the group names sit above their lines and each line's sum ("110 × €53")
+  under its name. Amounts are whole euros where there are no cents, as on
+  the PDF; the deposit keeps its cents, since a couple types it into their
+  banking app. Still to come: the "I accept the booking terms" box, once
+  Bacchus approves the terms.
 
 ---
 

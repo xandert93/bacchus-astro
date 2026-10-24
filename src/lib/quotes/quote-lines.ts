@@ -1,10 +1,11 @@
-// A quote's lines as the client reads them: in groups (Exclusive use, Food,
-// Drinks, Set-up, Overtime), each line's small print, and each group's
-// subtotal. Worked out once from the stored quote, so the PDF (and, in time,
-// the deposit page) show the same thing. The rules are in
-// docs/design/decisions.md, "PDF quotes".
+// A quote as the client reads it: the event's facts (date, guests, food and
+// so on), and its lines in groups (Exclusive use, Food, Drinks, Set-up,
+// Overtime), each line's small print, and each group's subtotal. Worked out
+// once from the stored quote, so the PDF and the deposit page show the same
+// thing. The rules are in docs/design/decisions.md, "PDF quotes".
 
 import type { DepositRecord } from "@lib/deposits/load"
+import { longDate } from "@lib/dates"
 import { eurosCompact } from "@lib/money"
 import { describeIncludedSetUp } from "@studio/lib/includedSetUp"
 
@@ -51,7 +52,8 @@ const cakeNote = (cake: NonNullable<DepositRecord["menu"]>["cake"]) => {
 
 const lowerFirst = (text: string) => text.charAt(0).toLowerCase() + text.slice(1)
 
-const listInWords = (items: string[]) =>
+/** "the Terrace, the Hall and the Secret Garden". */
+export const listInWords = (items: string[]) =>
   items.length > 1 ? `${items.slice(0, -1).join(", ")} and ${items.at(-1)}` : items[0]
 
 /** One priced set-up item in the small print: "16 round tables at €15". */
@@ -140,6 +142,65 @@ export const presentQuoteLines = (record: DepositRecord): PresentedGroup[] => {
   }).filter((group) => group.lines.length)
 }
 
-/** "with two stations", for the event panel: lines priced from a station. */
-export const stationCount = (record: DepositRecord) =>
+/** How many stations the quote prices. */
+const stationCount = (record: DepositRecord) =>
   record.pricing.lineItems.filter((line) => line.sourceType === "station").length
+
+const NUMBER_WORDS = ["", "one", "two", "three", "four", "five", "six"]
+
+/** "Reception – Rose, with two stations". */
+const foodSummary = (record: DepositRecord) => {
+  const meal = record.menu?.meal
+  if (!meal?.name) return undefined
+  const stations = stationCount(record)
+  const name = meal.package ? `${meal.package} – ${meal.name}` : meal.name
+  return stations
+    ? `${name}, with ${NUMBER_WORDS[stations] ?? stations} ${stations === 1 ? "station" : "stations"}`
+    : name
+}
+
+/** "Maltese wine, open bar and cocktail bar", from the drinks lines. */
+const drinksSummary = (record: DepositRecord) => {
+  const drinks = record.pricing.lineItems
+    .filter((line) => line.category === "beverage")
+    .map((line, index) => (index ? lowerFirst(line.label) : line.label))
+  return drinks.length ? listInWords(drinks) : undefined
+}
+
+export interface EventFact {
+  label: string
+  value: string
+}
+
+/**
+ * The event at a glance, in two columns: when and how many, then where and
+ * what's served. A fact the quote doesn't have (the time, say) is left out.
+ */
+export const eventFacts = (record: DepositRecord): EventFact[][] => {
+  const { event } = record
+  const columns = [
+    [
+      { label: "Date", value: longDate(event.date) },
+      {
+        label: "Time",
+        value:
+          event.startTime && event.endTime
+            ? `${event.startTime} to ${event.endTime}`
+            : undefined,
+      },
+      { label: "Guests", value: String(event.guestCount) },
+    ],
+    [
+      {
+        label: "Spaces",
+        value: event.spaces?.length ? listInWords(event.spaces) : undefined,
+      },
+      { label: "Food", value: foodSummary(record) },
+      { label: "Drinks", value: drinksSummary(record) },
+    ],
+  ]
+
+  return columns.map((column) =>
+    column.filter((fact): fact is EventFact => Boolean(fact.value)),
+  )
+}

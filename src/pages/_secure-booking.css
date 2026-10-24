@@ -150,53 +150,300 @@
   color: var(--bronze);
 }
 
-.secure-booking-summary-grid {
+/* The summary's body: the facts, the price, then the totals and deposit.
+   Laid out like the PDF quote (docs/design/quote-pdf/quote.pdf), with the
+   same groups, small print and figures (src/lib/quotes/quote-lines.ts). */
+.secure-booking-summary-body {
   display: grid;
-}
-
-@media (--from-secure-booking-large) {
-  .secure-booking-summary-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.secure-booking-summary-col {
+  gap: clamp(24px, 3vw, 32px);
   padding: clamp(20px, 3vw, 40px);
-  border-bottom: 1px solid rgba(var(--ink-rgb), 0.1);
 }
 
-@media (--from-secure-booking-large) {
-  .secure-booking-summary-col {
-    border-bottom: none;
+/* --- The event's facts: a paper panel, two columns as on the PDF --- */
+
+.secure-booking-facts {
+  display: grid;
+  gap: 10px clamp(24px, 4vw, 48px);
+  padding: clamp(16px, 2vw, 20px) clamp(18px, 2.6vw, 28px);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+}
+
+@media (--from-secure-booking-small) {
+  .secure-booking-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (--from-secure-booking-large) {
-  .secure-booking-summary-col-right {
-    border-left: 1px solid rgba(var(--ink-rgb), 0.1);
+/* On a phone the card's white falls away (the cardless summary), so the
+   panel takes the white instead, to stand off the page. */
+@media (--below-secure-booking-small) {
+  .secure-booking-facts {
+    border: 1px solid rgba(var(--ink-rgb), 0.08);
+    background: #fff;
   }
 }
 
-.secure-booking-summary-col h3 {
-  margin-bottom: 20px;
+.secure-booking-facts-column {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.secure-booking-fact {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 12px;
+}
+
+.secure-booking-fact dt {
   font-family: "Inter", sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.2em;
+  font-size: 10px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  line-height: inherit;
+  color: var(--bronze);
+}
+
+.secure-booking-fact dd {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+/* --- The price: groups down the left, then Item, Qty, Price, Amount --- */
+
+.secure-booking-price {
+  /* Wide enough for "Exclusive use" on one line. */
+  --price-group-column: clamp(136px, 15vw, 160px);
+  --price-quantity-column: 52px;
+  --price-unit-column: 84px;
+  --price-amount-column: 92px;
+  --price-rule: rgba(var(--ink-rgb), 0.1);
+  --price-group-rule: rgba(var(--ink-rgb), 0.28);
+}
+
+.secure-booking-price-head {
+  display: none;
+}
+
+@media (--from-secure-booking-small) {
+  .secure-booking-price-head {
+    display: grid;
+    grid-template-columns:
+      var(--price-group-column) minmax(0, 1fr) var(--price-quantity-column)
+      var(--price-unit-column) var(--price-amount-column);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--ink);
+
+    font-family: "Inter", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bronze);
+  }
+
+  .secure-booking-price-head span:nth-child(n + 3) {
+    text-align: right;
+  }
+}
+
+.secure-booking-price-group {
+  border-bottom: 1px solid var(--price-group-rule);
+}
+
+@media (--from-secure-booking-small) {
+  .secure-booking-price-group {
+    display: grid;
+    grid-template-columns: var(--price-group-column) minmax(0, 1fr);
+  }
+}
+
+/* The group's name in the bronze italic of the PDF, its subtotal beside it
+   on a phone and beneath it on a wider screen. */
+.secure-booking-price-group-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 0 4px;
+
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 18px;
+  font-style: italic;
+  color: var(--bronze);
+}
+
+/* Its top padding sets the name level with the group's first line, whose
+   text is smaller. */
+@media (--from-secure-booking-small) {
+  .secure-booking-price-group-title {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 2px;
+    padding: 9px 16px 12px 0;
+  }
+}
+
+.secure-booking-price-group-subtotal {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 14px;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
   color: var(--muted-ink);
 }
 
-.secure-booking-field-list {
+.secure-booking-price-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.secure-booking-price-line {
   display: grid;
-  gap: clamp(12px, 3vw, 20px);
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 16px;
+  padding: 10px 0;
+
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
 }
 
-/* The quote's notes for the client, under the event's details. */
-.secure-booking-notes {
-  margin-top: clamp(24px, 4vw, 36px);
+.secure-booking-price-line + .secure-booking-price-line {
+  border-top: 1px solid var(--price-rule);
 }
 
+@media (--from-secure-booking-small) {
+  .secure-booking-price-line {
+    grid-template-columns:
+      minmax(0, 1fr) var(--price-quantity-column) var(--price-unit-column)
+      var(--price-amount-column);
+    column-gap: 0;
+    padding: 12px 0;
+  }
+}
+
+.secure-booking-price-item {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+/* The small print: under the sum on a phone, under the item on a wider
+   screen, where the sum has its own columns. */
+.secure-booking-price-details {
+  grid-column: 1;
+  grid-row: 3;
+  margin-top: 2px;
+
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--muted-ink);
+}
+
+/* On a phone, "110 × €53" under the item; on a wider screen, its two
+   numbers in their own columns. */
+.secure-booking-price-sum {
+  grid-column: 1;
+  grid-row: 2;
+
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-ink);
+}
+
+.secure-booking-price-sum.is-empty,
+.secure-booking-price-sum.is-single {
+  display: none;
+}
+
+@media (--from-secure-booking-small) {
+  .secure-booking-price-sum,
+  .secure-booking-price-sum.is-empty,
+  .secure-booking-price-sum.is-single {
+    display: contents;
+  }
+
+  .secure-booking-price-quantity,
+  .secure-booking-price-unit {
+    grid-row: 1;
+
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    color: var(--ink);
+  }
+
+  .secure-booking-price-quantity {
+    grid-column: 2;
+  }
+
+  .secure-booking-price-unit {
+    grid-column: 3;
+  }
+
+  .secure-booking-price-times {
+    display: none;
+  }
+
+  .secure-booking-price-details {
+    grid-row: 2;
+  }
+}
+
+.secure-booking-price-amount {
+  grid-column: 2;
+  grid-row: 1;
+
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (--from-secure-booking-small) {
+  .secure-booking-price-amount {
+    grid-column: 4;
+  }
+}
+
+/* --- The totals and the deposit, with the notes beside them --- */
+
+.secure-booking-summary-foot {
+  display: grid;
+  gap: clamp(24px, 3vw, 32px);
+}
+
+@media (--from-secure-booking-medium) {
+  .secure-booking-summary-foot {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
+    grid-template-areas: "from money";
+    align-items: start;
+  }
+
+  .secure-booking-summary-money {
+    grid-area: money;
+  }
+
+  .secure-booking-summary-from {
+    grid-area: from;
+  }
+}
+
+.secure-booking-summary-from h3 {
+  margin-bottom: 10px;
+
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: inherit;
+  color: var(--bronze);
+}
+
+/* The quote's notes for the client. */
 .secure-booking-notes p {
   font-family: "Newsreader", Georgia, serif;
   font-size: 16px;
@@ -208,100 +455,27 @@
 }
 
 .secure-booking-prepared {
-  margin-top: clamp(20px, 3vw, 28px);
-
   font-family: "Newsreader", Georgia, serif;
   font-size: 14px;
   color: var(--muted-ink);
 }
 
-.secure-booking-field {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.secure-booking-field > div {
-  margin-top: 4px;
-}
-
-.secure-booking-field-icon {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: clamp(34px, 9vw, 40px);
-  height: clamp(34px, 9vw, 40px);
-  border-radius: 50%;
-  border: 1px solid rgba(var(--gold-rgb), 0.3);
-  background: var(--limestone-2);
-  color: var(--bronze);
-}
-
-.secure-booking-field dt {
-  font-family: "Inter", sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted-ink);
-}
-
-.secure-booking-field dd {
-  margin-top: 2px;
-  font-family: "Newsreader", Georgia, serif;
-  font-size: clamp(16px, 4vw, 18px);
-  font-weight: 500;
-  color: var(--ink);
-}
-
-.secure-booking-items {
-  display: grid;
-  gap: 16px;
-}
-
-.secure-booking-item {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 32px;
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 15px;
-  line-height: 1.5;
-  color: var(--ink);
-}
-
-/* The receipt-style sum under a line's name, "160 × €64.00". */
-.secure-booking-item-working {
-  display: block;
-  margin-top: 2px;
-
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-  color: var(--muted-ink);
-}
-
-.secure-booking-item-amount {
-  flex: none;
-  font-family: "Newsreader", Georgia, serif;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink);
+.secure-booking-notes + .secure-booking-prepared {
+  margin-top: clamp(16px, 2vw, 20px);
 }
 
 .secure-booking-totals {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(var(--ink-rgb), 0.1);
   display: grid;
-  gap: 16px;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
+  gap: 6px;
 }
 
 .secure-booking-totals-row {
   display: flex;
   justify-content: space-between;
+  gap: 16px;
+
   font-family: "Newsreader", Georgia, serif;
-  font-size: 15px;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
   color: var(--muted-ink);
 }
@@ -310,38 +484,22 @@
   color: var(--avail-green-fg);
 }
 
+/* The total in Fraunces over an ink rule, as on the PDF. */
 .secure-booking-totals-total {
-  margin-top: 8px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(var(--ink-rgb), 0.1);
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 20px;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  color: var(--ink);
-}
+  margin: 4px 0 2px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ink);
 
-.secure-booking-per-person {
-  margin-top: -6px;
-  text-align: right;
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 12px;
-  font-variant-numeric: tabular-nums;
-  color: rgba(var(--muted-ink-rgb), 0.72);
-}
-
-.secure-booking-deposit-terms {
-  margin-top: 12px;
-  font-family: "Newsreader", Georgia, serif;
-  font-size: 14px;
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(22px, 2.6vw, 26px);
   color: var(--ink);
 }
 
 .secure-booking-deposit-box {
-  margin-top: 16px;
+  margin-top: 20px;
   padding: clamp(18px, 2.4vw, 24px);
   border-radius: var(--radius-card);
-  border: 1px solid rgba(var(--gold-rgb), 0.2);
+  border: 1px solid rgba(var(--gold-rgb), 0.45);
   background: var(--limestone-2);
   box-shadow: 0 4px 14px -8px rgba(var(--ink-rgb), 0.15);
 }
@@ -398,7 +556,7 @@
 
 @media (--below-secure-booking-small) {
   .secure-booking-summary-topbar,
-  .secure-booking-summary-col {
+  .secure-booking-summary-body {
     padding-left: 0;
     padding-right: 0;
   }
@@ -421,25 +579,6 @@
 @media (--below-secure-booking-small) {
   .secure-booking-summary-footbar svg {
     color: var(--oxblood);
-  }
-}
-
-/* Match the 24px above/below rhythm already used by the two dividers in
-     the price breakdown (before Subtotal, before Total). */
-@media (--below-secure-booking-small) {
-  .secure-booking-summary-col {
-    padding-top: 24px;
-    padding-bottom: 24px;
-  }
-}
-
-/* The right column's own border-bottom (from the shared .secure-booking-summary-col
-     rule) leaves a stray divider under the deposit box — only the left/
-     right column boundary itself should show one. */
-@media (--below-secure-booking-small) {
-  .secure-booking-summary-col-right {
-    border-bottom: none;
-    padding-bottom: 0;
   }
 }
 

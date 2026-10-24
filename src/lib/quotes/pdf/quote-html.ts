@@ -9,10 +9,15 @@
 
 import { CONTACT } from "@data/contact"
 import { coupleName, type DepositRecord } from "@lib/deposits/load"
-import { dayMonthYear as plainDate, longDate } from "@lib/dates"
+import { dayMonthYear as plainDate } from "@lib/dates"
 import { escapeHtml, siteUrl } from "@lib/email/layout"
 import { eurosCompact } from "@lib/money"
-import { presentQuoteLines, stationCount, type PresentedGroup } from "../quote-lines"
+import {
+  eventFacts,
+  presentQuoteLines,
+  type EventFact,
+  type PresentedGroup,
+} from "../quote-lines"
 import { QUOTE_FONTS_URL, QUOTE_STYLES } from "./quote-styles"
 
 /** How the title and copy name the event: "Your wedding at Bacchus". */
@@ -23,34 +28,13 @@ const OCCASIONS: Record<string, string> = {
   other: "event",
 }
 
-const NUMBER_WORDS = ["", "one", "two", "three", "four", "five", "six"]
-
-const listInWords = (items: string[]) =>
-  items.length > 1 ? `${items.slice(0, -1).join(", ")} and ${items.at(-1)}` : items[0]
-
-const lowerFirst = (text: string) => text.charAt(0).toLowerCase() + text.slice(1)
-
-/** "Reception – Rose, with two stations". */
-const foodSummary = (record: DepositRecord) => {
-  const meal = record.menu?.meal
-  if (!meal?.name) return undefined
-  const stations = stationCount(record)
-  const name = meal.package ? `${meal.package} – ${meal.name}` : meal.name
-  return stations
-    ? `${name}, with ${NUMBER_WORDS[stations] ?? stations} ${stations === 1 ? "station" : "stations"}`
-    : name
-}
-
-/** "Maltese wine, open bar and cocktail bar", from the drinks lines. */
-const drinksSummary = (record: DepositRecord) => {
-  const drinks = record.pricing.lineItems
-    .filter((line) => line.category === "beverage")
-    .map((line, index) => (index ? lowerFirst(line.label) : line.label))
-  return drinks.length ? listInWords(drinks) : undefined
-}
-
-const factRow = (label: string, value: string | undefined) =>
-  value ? `<dt class="label">${label}</dt><dd>${escapeHtml(value)}</dd>` : ""
+const factColumn = (facts: EventFact[]) =>
+  `<dl>${facts
+    .map(
+      ({ label, value }) =>
+        `<dt class="label">${label}</dt><dd>${escapeHtml(value)}</dd>`,
+    )
+    .join("")}</dl>`
 
 const amountCell = (amount: number | undefined) =>
   amount === undefined ? "Included" : eurosCompact(amount)
@@ -82,7 +66,7 @@ const groupRows = (group: PresentedGroup) =>
     .join("")
 
 export const quoteHtml = (record: DepositRecord) => {
-  const { event, pricing, terms, booking } = record
+  const { pricing, terms, booking } = record
   const occasion = OCCASIONS[booking.event.type] ?? "event"
   const couple = escapeHtml(coupleName(record))
   const issued = plainDate(record.sentAt ?? new Date().toISOString())
@@ -93,11 +77,6 @@ export const quoteHtml = (record: DepositRecord) => {
   const coordinator = preparedBy
     ? `${preparedBy.split(" ")[0]}, your coordinator,`
     : "Our events team"
-  const time =
-    event.startTime && event.endTime
-      ? `${event.startTime} to ${event.endTime}`
-      : undefined
-  const spaces = event.spaces?.length ? listInWords(event.spaces) : undefined
   const reference = escapeHtml(record.reference)
 
   return `<!doctype html>
@@ -135,18 +114,7 @@ export const quoteHtml = (record: DepositRecord) => {
     </h1>
     <p class="lead">Prepared for ${couple}.${validUntil ? ` Valid until ${validUntil}.` : ""}</p>
 
-    <div class="facts">
-      <dl>
-        ${factRow("Date", longDate(event.date))}
-        ${factRow("Time", time)}
-        ${factRow("Guests", String(event.guestCount))}
-      </dl>
-      <dl>
-        ${factRow("Spaces", spaces)}
-        ${factRow("Food", foodSummary(record))}
-        ${factRow("Drinks", drinksSummary(record))}
-      </dl>
-    </div>
+    <div class="facts">${eventFacts(record).map(factColumn).join("")}</div>
 
     <table>
       <thead>
