@@ -7,6 +7,17 @@
 // shows, and the facts and price groups are built from the templates below
 // (src/lib/deposits/view.ts).
 import SecureBookingIcon from "./SecureBookingIcon.astro"
+import type { SecureBookingIconName } from "./SecureBookingIcon.astro"
+
+// Each fact's icon, by its label (src/lib/quotes/quote-lines.ts, eventFacts).
+const FACT_ICONS: Record<string, SecureBookingIconName> = {
+  Date: "calendar",
+  Time: "clock",
+  Guests: "users",
+  Spaces: "map-pin",
+  Food: "utensils",
+  Drinks: "wine",
+}
 ---
 
 <section
@@ -34,9 +45,20 @@ import SecureBookingIcon from "./SecureBookingIcon.astro"
         </template>
         <template id="depositFact">
           <div class="secure-booking-fact">
-            <dt></dt>
+            <dt>
+              <span class="secure-booking-fact-icon"></span>
+              <span data-fact="label"></span>
+            </dt>
             <dd></dd>
           </div>
+        </template>
+        {/* The icons, ready for the script to copy into each fact by its label. */}
+        <template id="depositFactIcons">
+          {Object.entries(FACT_ICONS).map(([label, icon]) => (
+            <span data-fact-icon={label}>
+              <SecureBookingIcon name={icon} />
+            </span>
+          ))}
         </template>
 
         <div class="secure-booking-price">
@@ -124,13 +146,19 @@ import SecureBookingIcon from "./SecureBookingIcon.astro"
           </div>
 
           <div class="secure-booking-summary-from">
+            {/* A paper panel, as the PDF sets its notes. */}
             <div class="secure-booking-notes" data-deposit-row="notes" hidden>
               <h3>Notes from Bacchus</h3>
               <p data-deposit="notes"></p>
             </div>
-            <p class="secure-booking-prepared" data-deposit-row="preparedBy" hidden>
-              Prepared by <span data-deposit="preparedBy"></span>
-            </p>
+            {/* Signed, like a letter: whoever prepared it, by name. */}
+            <div class="secure-booking-prepared" data-deposit-row="preparedBy" hidden>
+              <p>This quote was prepared by</p>
+              <p class="secure-booking-prepared-name" data-deposit="preparedBy"></p>
+              <p data-deposit-row="preparedOn" hidden>
+                on <span data-deposit="preparedOn"></span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
