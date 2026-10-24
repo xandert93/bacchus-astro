@@ -353,9 +353,10 @@ The rules below apply to the current layout.
   - **Where the page differs on purpose** (the user, 2026-10-24): each fact
     keeps its icon from the first design, since a screen has room the
     printed panel doesn't. The notes sit in a paper panel, as on the PDF.
-  - **Signed, on both**: "This quote was prepared by" and the name, which
-    the page sets large, like a signature, after the notes. A name on the
-    quote tells the couple who they're dealing with.
+  - **Signed, on both**: "This quote was prepared by" and the name, the
+    date, then "Any questions" with the phone and email, in one quiet line
+    after the notes, as the PDF ends. Set large, like a signature, it was
+    too loud (tried 2026-10-24).
 
 ---
 
