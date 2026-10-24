@@ -185,6 +185,38 @@ A four-step wizard: **the occasion** (event type, date) → **the specifics**
   client through a link only they receive. Not legal advice: worth Bacchus
   checking. Not done yet.
 
+### Review length (2026-10-24)
+
+- **Clients may write up to 1,500 characters** (at least 10), about 250
+  words. The longest live testimonial is 220 characters, so nobody has
+  come near it.
+- **Longer is better, so the limit stays generous:**
+  - **Detail is what convinces.** A named waiter, a dish, the moment the
+    rain stopped: specifics read as real, and they're what couples look
+    for. "Lovely day, thanks" persuades nobody.
+  - **On Google**, the number, rating and freshness of reviews count
+    towards its map results (Google says so), and a detailed review is
+    shown as more helpful. What reviews mention ("wedding", "Mdina", "the
+    terrace") is widely reported to help with matching searches too,
+    though Google doesn't spell that out. The copy button carries the full
+    review across.
+  - **For Bacchus**, a long review is better feedback, kept whether or not
+    it's published.
+- **The website's display is separate.** The testimonials section caps a
+  quote at eight lines and ends it with "…" (known-bugs.md, 12), and staff
+  choose which reviews to publish and which phrase is gold. So a long
+  review never makes the page long.
+- **A website excerpt (proposed, not built)**: an optional field on the
+  testimonial holding a shorter passage for the site, used instead of the
+  full quote when filled in.
+  - **Cut, never reworded.** It must be the client's own words, with "…"
+    where something was left out. Rewording a review, by a person or by AI,
+    puts words in a real client's mouth: misleading under EU consumer law,
+    and not what they agreed to publish.
+  - **Staff pick it, at first.** Choosing a passage takes a minute, and
+    reviews arrive a few at a time. AI could later suggest which sentences
+    to keep, copied exactly, for a person to approve; never to write it.
+
 ---
 
 ## Photo carousel
