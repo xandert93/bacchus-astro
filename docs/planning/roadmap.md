@@ -222,6 +222,14 @@ none agreed with Bacchus yet (questions in `client-facts.md`):
   the venue costs more in busier months: the €4,500 for the Terrace &
   Lawns was, we think, for April, and May would cost more. Today staff type
   the venue fee into each quote by hand.
+  - **Half of it exists already**, for the package tiers (found
+    2026-10-24, after this was first written): a `season` document (a name
+    and its dates, recurring every year or for one year only, with a
+    priority where two overlap), `seasonalRates` on each tier, and
+    `resolvePriceForDate` in `sanity/queries/pricing.ts`, which picks the
+    price for a date. No rates are entered, and nothing on the site uses
+    it yet. Venue pricing would add the same `seasonalRates` to each
+    space's exclusivity fee and use the same resolver.
   - **Seasons, set once**: each season a name and its months (low, mid,
     peak, or whatever Bacchus uses).
   - **A rate card per year** ("2027 rates"): for each space, or each
@@ -236,7 +244,9 @@ none agreed with Bacchus yet (questions in `client-facts.md`):
     for them to check and publish. Until a year's card exists, its dates
     can't be quoted automatically, and staff are told why.
   - **Not on the public site** until the prices are confirmed.
-  - **Effort**: about one to two days once the questions are answered.
+  - **Effort**: about a day once the questions are answered, since the
+    seasons and the resolver are built. A year's own prices are seasons
+    that don't repeat (2027's April, say).
 
 ---
 
