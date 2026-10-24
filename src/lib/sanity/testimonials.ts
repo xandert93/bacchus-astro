@@ -44,13 +44,15 @@ interface SanityTestimonial {
   eventDate?: string
 }
 
-// How each Studio category reads on the card. Every testimonial so far is a
-// wedding; the others are ready for when that changes.
+// How each Studio category reads on the card and under the quote: one word,
+// as the nav names them, so the line under the quote fits on a phone. Every
+// testimonial so far is a wedding; the others are ready for when that
+// changes.
 const CATEGORY_LABELS: Record<string, string> = {
-  wedding: "Wedding celebration",
-  corporate: "Corporate event",
-  celebration: "Private celebration",
-  restaurant: "Dinner at Bacchus",
+  wedding: "Wedding",
+  corporate: "Corporate",
+  celebration: "Celebration",
+  restaurant: "Restaurant",
 }
 
 // The quote is rich text in Sanity so the emphasis is attached to exactly the
