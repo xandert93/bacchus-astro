@@ -3,7 +3,7 @@
 // view.ts) sends this, and the page's script only drops it into place, so
 // all the wording lives here, on the server.
 
-import { longDate, todayInMalta } from "@lib/dates"
+import { dayMonthYear, longDate, todayInMalta } from "@lib/dates"
 import { euros, eurosCompact, plainAmount } from "@lib/money"
 import { paymentsInTestMode, providerFor } from "@lib/payments/checkout"
 import { eventFacts, listInWords, presentQuoteLines } from "@lib/quotes/quote-lines"
@@ -96,6 +96,8 @@ export const toDepositView = (record: DepositRecord) => {
     })),
     notes: record.clientNotes?.trim() ?? "",
     preparedBy: record.preparedBy ?? "",
+    // "24th October 2026": the day the quote was sent, as the PDF dates it.
+    preparedOn: record.sentAt ? dayMonthYear(record.sentAt) : "",
     // The subtotal only matters beside a discount; without one it's the total.
     subtotal: eurosCompact(pricing.subtotal),
     discount: pricing.discount?.amount

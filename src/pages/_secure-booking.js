@@ -62,13 +62,17 @@ if (page) {
   const fillFacts = (columns) => {
     const facts = document.getElementById("depositFacts")
     if (!facts) return
+    const factIcons = document.getElementById("depositFactIcons")?.content
 
     facts.replaceChildren(
       ...columns.map((column) => {
         const columnCopy = copyOf("depositFactColumn")
         column.forEach(({ label, value }) => {
           const fact = copyOf("depositFact")
-          fact.querySelector("dt").textContent = label
+          const icon = factIcons?.querySelector(`[data-fact-icon="${label}"] svg`)
+          if (icon)
+            fact.querySelector(".secure-booking-fact-icon").append(icon.cloneNode(true))
+          fact.querySelector('[data-fact="label"]').textContent = label
           fact.querySelector("dd").textContent = value
           columnCopy.querySelector("dl").appendChild(fact)
         })
@@ -135,6 +139,7 @@ if (page) {
       stripeTransfer: view.transferMode === "stripe",
       notes: Boolean(view.notes),
       preparedBy: Boolean(view.preparedBy),
+      preparedOn: Boolean(view.preparedOn),
       perGuest: Boolean(view.perGuest),
     }
     page.querySelectorAll("[data-deposit-row]").forEach((element) => {
