@@ -18,7 +18,7 @@ interface Props {
 const { backgroundImage, category } = Astro.props
 
 // On a page for one kind of event, every review is that kind, so its label
-// ("Wedding celebration" on every card) would only repeat itself.
+// ("Wedding" on every card) would only repeat itself.
 const testimonials = (await getTestimonials(category)).map((testimonial) =>
   category ? { ...testimonial, category: "" } : testimonial,
 )
@@ -58,7 +58,7 @@ const testimonials = (await getTestimonials(category)).map((testimonial) =>
       <div class="who testimonial-meta" id="tMeta" data-reveal style="--d: 200ms"></div>
     </div>
     <div
-      class="testimonial-cards"
+      class:list={["testimonial-cards", { "testimonial-cards-labelled": !category }]}
       id="tCards"
       role="tablist"
       aria-label="Choose a testimonial"
@@ -556,6 +556,15 @@ const testimonials = (await getTestimonials(category)).map((testimonial) =>
     overflow-wrap: break-word;
     text-wrap: balance;
     min-width: 0;
+  }
+
+  /* With a label under it (the home page), a name keeps to one line and
+     ends in "…", so every card stays two lines tall. Without one (a page
+     for one kind of event), it may wrap onto a second line instead. */
+  .testimonial-cards-labelled .testimonial-card-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .testimonial-card-category {
