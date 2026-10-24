@@ -654,6 +654,8 @@ const buildQuote = (
     _type: "quote",
     reference: `BAC-${isoDate(sentAt).replace(/-/g, "")}-${spec.key.slice(0, 4).toUpperCase()}${idSuffix.toUpperCase()}`,
     status: statusOverride ?? quoteSpec.status,
+    // Every quote past its draft was sent, and records when, as a real one does.
+    ...(quoteSpec.status === "draft" ? {} : { sentAt: isoDateTime(sentAt, 10) }),
     booking: reference(bookingId(spec.key)),
     addressedTo: spec.partnerName
       ? `${spec.firstName} ${spec.lastName} & ${spec.partnerName}`
