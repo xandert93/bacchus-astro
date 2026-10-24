@@ -1,19 +1,12 @@
 ---
-// The booking summary: who it's for and the quote reference, the event's
-// details beside the price breakdown, and the deposit due. Filled in by the
-// page's script (src/pages/_secure-booking.js) from the quote its link points to: each
-// `data-deposit` names the field it shows (src/lib/deposits/view.ts).
+// The booking summary, laid out like the PDF quote (docs/design/quote-pdf/
+// quote.pdf): who it's for and the quote reference, the event's facts in a
+// panel, the price in groups with their subtotals, then the totals and the
+// deposit due. Filled in by the page's script (src/pages/_secure-booking.js)
+// from the quote its link points to: each `data-deposit` names the field it
+// shows, and the facts and price groups are built from the templates below
+// (src/lib/deposits/view.ts).
 import SecureBookingIcon from "./SecureBookingIcon.astro"
-import type { SecureBookingIconName } from "./SecureBookingIcon.astro"
-
-// The event rows, in order. A row whose value doesn't come back (the time,
-// when the quote has none) stays hidden.
-const DETAILS: { icon: SecureBookingIconName; label: string }[] = [
-  { icon: "calendar", label: "Date" },
-  { icon: "clock", label: "Time" },
-  { icon: "users", label: "Guests" },
-  { icon: "map-pin", label: "Venue" },
-]
 ---
 
 <section
@@ -34,87 +27,110 @@ const DETAILS: { icon: SecureBookingIconName; label: string }[] = [
         </div>
       </div>
 
-      <div class="secure-booking-summary-grid">
-        <div class="secure-booking-summary-col">
-          <h3>Your event</h3>
-          <dl class="secure-booking-field-list">
-            {DETAILS.map((detail) => (
-              <div class="secure-booking-field" data-deposit-detail={detail.label} hidden>
-                <span class="secure-booking-field-icon">
-                  <SecureBookingIcon name={detail.icon} />
-                </span>
-                <div>
-                  <dt>{detail.label}</dt>
-                  <dd data-deposit-detail-value />
-                </div>
-              </div>
-            ))}
-          </dl>
-
-          <div class="secure-booking-notes" data-deposit-row="notes" hidden>
-            <h3>Notes from Bacchus</h3>
-            <p data-deposit="notes"></p>
+      <div class="secure-booking-summary-body">
+        <div class="secure-booking-facts" id="depositFacts"></div>
+        <template id="depositFactColumn">
+          <dl class="secure-booking-facts-column"></dl>
+        </template>
+        <template id="depositFact">
+          <div class="secure-booking-fact">
+            <dt></dt>
+            <dd></dd>
           </div>
-          <p class="secure-booking-prepared" data-deposit-row="preparedBy" hidden>
-            Prepared by <span data-deposit="preparedBy"></span>
-          </p>
+        </template>
+
+        <div class="secure-booking-price">
+          {/* The column headings, once above every group, as on the PDF. */}
+          <div class="secure-booking-price-head" aria-hidden="true">
+            <span></span>
+            <span>Item</span>
+            <span>Qty</span>
+            <span>Price</span>
+            <span>Amount</span>
+          </div>
+          <div id="depositPriceGroups"></div>
         </div>
+        <template id="depositPriceGroup">
+          <div class="secure-booking-price-group">
+            <p class="secure-booking-price-group-title">
+              <span data-group="title"></span>
+              <span
+                class="secure-booking-price-group-subtotal"
+                data-group="subtotal"
+              ></span>
+            </p>
+            <ul class="secure-booking-price-lines"></ul>
+          </div>
+        </template>
+        <template id="depositPriceLine">
+          <li class="secure-booking-price-line">
+            <span class="secure-booking-price-item" data-line="label"></span>
+            {/* Two columns on a wide screen; "110 × €53" under the item on a phone. */}
+            <span class="secure-booking-price-sum" data-line="sum">
+              <span class="secure-booking-price-quantity" data-line="quantity"></span>
+              <span class="secure-booking-price-times">{" × "}</span>
+              <span class="secure-booking-price-unit" data-line="unitPrice"></span>
+            </span>
+            <span class="secure-booking-price-amount" data-line="amount"></span>
+            <span class="secure-booking-price-details" data-line="details"></span>
+          </li>
+        </template>
 
-        <div class="secure-booking-summary-col secure-booking-summary-col-right">
-          <h3>Price breakdown</h3>
-          <div class="secure-booking-items" id="depositLineItems"></div>
-          <template id="depositLineItem">
-            <div class="secure-booking-item">
-              <span>
-                <span data-line="label"></span>
-                <span class="secure-booking-item-working" data-line="working"></span>
-                <span class="secure-booking-item-working" data-line="details"></span>
-              </span>
-              <span class="secure-booking-item-amount" data-line="amount"></span>
+        <div class="secure-booking-summary-foot">
+          <div class="secure-booking-summary-money">
+            <div class="secure-booking-totals">
+              <div class="secure-booking-totals-row" data-deposit-row="discount" hidden>
+                <span>Subtotal</span>
+                <span data-deposit="subtotal"></span>
+              </div>
+              <div
+                class="secure-booking-totals-row secure-booking-totals-discount"
+                data-deposit-row="discount"
+                hidden
+              >
+                <span>Discount</span>
+                <span data-deposit="discount"></span>
+              </div>
+              <div class="secure-booking-totals-row secure-booking-totals-total">
+                <span>Total</span>
+                <span data-deposit="total"></span>
+              </div>
+              <div class="secure-booking-totals-row" data-deposit-row="vat" hidden>
+                <span data-deposit="vat.label"></span>
+                <span data-deposit="vat.amount"></span>
+              </div>
+              <div class="secure-booking-totals-row" data-deposit-row="perGuest" hidden>
+                <span>Per guest</span>
+                <span data-deposit="perGuest"></span>
+              </div>
             </div>
-          </template>
 
-          <div class="secure-booking-totals">
-            <div class="secure-booking-totals-row">
-              <span>Subtotal</span>
-              <span data-deposit="subtotal"></span>
-            </div>
-            <div
-              class="secure-booking-totals-row secure-booking-totals-discount"
-              data-deposit-row="discount"
-              hidden
-            >
-              <span>Discount</span>
-              <span data-deposit="discount"></span>
-            </div>
-            <div class="secure-booking-totals-row secure-booking-totals-total">
-              <span>Total</span>
-              <span data-deposit="total"></span>
-            </div>
-            <p class="secure-booking-per-person" data-deposit="perPerson"></p>
-            <div class="secure-booking-totals-row" data-deposit-row="vat" hidden>
-              <span data-deposit="vat.label"></span>
-              <span data-deposit="vat.amount"></span>
+            <div class="secure-booking-deposit-box">
+              {/* What the deposit is now, as the page's state says. */}
+              <p class="secure-booking-deposit-label">
+                <span data-deposit-show="pay" hidden>
+                  Deposit due now
+                </span>
+                <span data-deposit-show="transfer-sent" hidden>
+                  Deposit on its way
+                </span>
+                <span data-deposit-show="confirmed" hidden>
+                  Deposit paid
+                </span>
+              </p>
+              <p class="secure-booking-deposit-amount" data-deposit="deposit.display"></p>
+              <p class="secure-booking-deposit-note" data-deposit="deposit.note"></p>
             </div>
           </div>
 
-          <p class="secure-booking-deposit-terms" data-deposit="depositTerms"></p>
-
-          <div class="secure-booking-deposit-box">
-            {/* What the deposit is now, as the page's state says. */}
-            <p class="secure-booking-deposit-label">
-              <span data-deposit-show="pay" hidden>
-                Deposit due now
-              </span>
-              <span data-deposit-show="transfer-sent" hidden>
-                Deposit on its way
-              </span>
-              <span data-deposit-show="confirmed" hidden>
-                Deposit paid
-              </span>
+          <div class="secure-booking-summary-from">
+            <div class="secure-booking-notes" data-deposit-row="notes" hidden>
+              <h3>Notes from Bacchus</h3>
+              <p data-deposit="notes"></p>
+            </div>
+            <p class="secure-booking-prepared" data-deposit-row="preparedBy" hidden>
+              Prepared by <span data-deposit="preparedBy"></span>
             </p>
-            <p class="secure-booking-deposit-amount" data-deposit="deposit.display"></p>
-            <p class="secure-booking-deposit-note" data-deposit="balanceNote"></p>
           </div>
         </div>
       </div>

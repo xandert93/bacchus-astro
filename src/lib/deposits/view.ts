@@ -3,11 +3,10 @@
 // view.ts) sends this, and the page's script only drops it into place, so
 // all the wording lives here, on the server.
 
-import { todayInMalta } from "@lib/dates"
-import { longDate } from "@lib/dates"
-import { euros, plainAmount } from "@lib/money"
+import { longDate, todayInMalta } from "@lib/dates"
+import { euros, eurosCompact, plainAmount } from "@lib/money"
 import { paymentsInTestMode, providerFor } from "@lib/payments/checkout"
-import { describeIncludedSetUp } from "@studio/lib/includedSetUp"
+import { eventFacts, listInWords, presentQuoteLines } from "@lib/quotes/quote-lines"
 import { coupleName, depositPayment, type DepositRecord } from "./load"
 
 /**
@@ -23,22 +22,6 @@ const OCCASIONS: Record<string, string> = {
   corporate: "event",
   celebration: "celebration",
   other: "event",
-}
-
-const listInWords = (items: string[]) =>
-  items.length > 1 ? `${items.slice(0, -1).join(", ")} and ${items.at(-1)}` : items[0]
-
-const TIER_WORDS: Record<number, string> = {
-  1: "one-tier",
-  2: "two-tier",
-  3: "three-tier",
-}
-
-/** "Includes a three-tier cake: pistachio and olive oil", under the meal line. */
-const cakeNote = (cake: { tiers?: number; flavour?: string } | undefined) => {
-  if (!cake?.tiers && !cake?.flavour) return ""
-  const size = cake.tiers ? `${TIER_WORDS[cake.tiers] ?? `${cake.tiers}-tier`} ` : ""
-  return `Includes a ${size}cake${cake.flavour ? `: ${cake.flavour}` : ""}`
 }
 
 const stateOf = (record: DepositRecord): DepositState => {
@@ -63,10 +46,17 @@ const stateOf = (record: DepositRecord): DepositState => {
 
 export const toDepositView = (record: DepositRecord) => {
   const { event, pricing, terms, booking } = record
-  const date = longDate(event.date)
   const spaces = event.spaces?.length ? event.spaces : []
   const balance = pricing.total - pricing.deposit.amount
   const vatRate = pricing.vat?.rate
+  const balanceNote =
+    balance > 0
+      ? `The remaining ${euros(balance)} is due ${
+          terms?.balanceDueDate
+            ? `by ${longDate(terms.balanceDueDate)}`
+            : "before your event"
+        }.`
+      : ""
 
   return {
     state: stateOf(record),
@@ -82,80 +72,57 @@ export const toDepositView = (record: DepositRecord) => {
     occasion: OCCASIONS[booking.event.type] ?? "event",
     // "the Terrace and the Secret Garden", or the venue when none were named.
     spaces: spaces.length ? listInWords(spaces) : "Bacchus",
-    date,
-    details: [
-      { icon: "calendar", label: "Date", value: date },
-      ...(event.startTime && event.endTime
-        ? [
-            {
-              icon: "clock",
-              label: "Time",
-              value: `${event.startTime} – ${event.endTime}`,
-            },
-          ]
-        : []),
-      { icon: "users", label: "Guests", value: String(event.guestCount) },
-      {
-        icon: "map-pin",
-        label: "Venue",
-        value: spaces.length ? `${spaces.join(", ")}, Mdina` : "Bacchus, Mdina",
-      },
-    ],
-    // Each line's sum shown like a receipt ("160 × €64.00"), so a couple
-    // can check it; left off a single item, where it would only repeat the
-    // amount.
-    lineItems: [
-      ...pricing.lineItems.map((item) => ({
-        label: item.label,
-        // Bacchus's quotes list some things at no charge, to show they're part
-        // of the package (chairs, for instance).
-        amount: item.amount === 0 ? "Included" : euros(item.amount),
-        working:
-          item.quantity && item.quantity !== 1 && item.unitAmount
-            ? `${item.quantity} × ${euros(item.unitAmount)}`
-            : "",
-        details:
-          item.source && item.source === record.menu?.mealFormat
-            ? cakeNote(record.menu?.cake)
-            : "",
+    date: longDate(event.date),
+    // The event and the price as the PDF shows them (src/lib/quotes/
+    // quote-lines.ts): the same facts, groups and small print, and whole
+    // euros where there are no cents. The deposit itself keeps its cents,
+    // since it's what a couple types into their banking app.
+    facts: eventFacts(record),
+    priceGroups: presentQuoteLines(record).map((group) => ({
+      title: group.title,
+      subtotal: group.subtotal === undefined ? "" : eurosCompact(group.subtotal),
+      lines: group.lines.map((line) => ({
+        label: line.label,
+        details: line.details ?? "",
+        quantity: line.quantity ? String(line.quantity) : "",
+        unitPrice: line.unitAmount ? eurosCompact(line.unitAmount) : "",
+        // One of something: on a phone, "1 × €4,500" would only repeat the
+        // amount, so the sum is left off there.
+        single: line.quantity === 1,
+        // Bacchus's quotes list some things at no charge, to show they're
+        // part of the package (chairs, for instance).
+        amount: line.amount === undefined ? "Included" : eurosCompact(line.amount),
       })),
-      // What every booking includes, worked out for this one's guests.
-      ...(record.includedSetUp
-        ? [
-            {
-              label: "Chairs and bar pieces",
-              amount: "Included",
-              working: "",
-              details: describeIncludedSetUp(record.includedSetUp),
-            },
-          ]
-        : []),
-    ],
+    })),
     notes: record.clientNotes?.trim() ?? "",
     preparedBy: record.preparedBy ?? "",
-    subtotal: euros(pricing.subtotal),
-    discount: pricing.discount?.amount ? `−${euros(pricing.discount.amount)}` : undefined,
-    total: euros(pricing.total),
-    perPerson: pricing.perPerson ? `${euros(pricing.perPerson)} per person` : undefined,
+    // The subtotal only matters beside a discount; without one it's the total.
+    subtotal: eurosCompact(pricing.subtotal),
+    discount: pricing.discount?.amount
+      ? `−${eurosCompact(pricing.discount.amount)}`
+      : undefined,
+    total: eurosCompact(pricing.total),
+    perGuest: pricing.perPerson ? eurosCompact(pricing.perPerson) : undefined,
     vat:
       vatRate !== undefined && pricing.vat?.amount !== undefined
-        ? { label: `Includes VAT (${vatRate}%)`, amount: euros(pricing.vat.amount) }
+        ? {
+            label: `Includes VAT at ${vatRate}%`,
+            amount: eurosCompact(pricing.vat.amount),
+          }
         : undefined,
-    depositTerms: pricing.deposit.percent
-      ? `Your deposit is ${pricing.deposit.percent}% of the total.`
-      : "Your deposit secures your date.",
     deposit: {
       display: euros(pricing.deposit.amount),
       plain: plainAmount(pricing.deposit.amount),
+      // "30% of the total. The remaining €10,226.30 is due by …", in the
+      // deposit's box.
+      note: [
+        pricing.deposit.percent ? `${pricing.deposit.percent}% of the total.` : "",
+        balanceNote,
+      ]
+        .filter(Boolean)
+        .join(" "),
     },
-    balanceNote:
-      balance > 0
-        ? `The remaining ${euros(balance)} is due ${
-            terms?.balanceDueDate
-              ? `by ${longDate(terms.balanceDueDate)}`
-              : "before your event"
-          }.`
-        : "",
+    balanceNote,
     validUntil: terms?.validUntil ? longDate(terms.validUntil) : undefined,
     bank: {
       accountName: record.bank?.accountName ?? "",

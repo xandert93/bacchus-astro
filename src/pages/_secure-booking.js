@@ -54,6 +54,61 @@ if (page) {
       }),
     )
 
+  // A copy of a <template>'s content, ready to fill in.
+  const copyOf = (templateId) =>
+    document.getElementById(templateId).content.cloneNode(true)
+
+  // The event's facts, in the PDF's two columns: "Date", "Saturday 24th …".
+  const fillFacts = (columns) => {
+    const facts = document.getElementById("depositFacts")
+    if (!facts) return
+
+    facts.replaceChildren(
+      ...columns.map((column) => {
+        const columnCopy = copyOf("depositFactColumn")
+        column.forEach(({ label, value }) => {
+          const fact = copyOf("depositFact")
+          fact.querySelector("dt").textContent = label
+          fact.querySelector("dd").textContent = value
+          columnCopy.querySelector("dl").appendChild(fact)
+        })
+        return columnCopy
+      }),
+    )
+  }
+
+  // The price in its groups, each line with its small print and its sum.
+  const fillPrice = (groups) => {
+    const price = document.getElementById("depositPriceGroups")
+    if (!price) return
+
+    price.replaceChildren(
+      ...groups.map((group) => {
+        const groupCopy = copyOf("depositPriceGroup")
+        groupCopy.querySelector('[data-group="title"]').textContent = group.title
+        groupCopy.querySelector('[data-group="subtotal"]').textContent = group.subtotal
+
+        groupCopy.querySelector("ul").replaceChildren(
+          ...group.lines.map((item) => {
+            const line = copyOf("depositPriceLine")
+            ;["label", "details", "quantity", "unitPrice", "amount"].forEach((part) => {
+              line.querySelector(`[data-line="${part}"]`).textContent = item[part]
+            })
+            // Empty quantity and price cells stay, holding their columns.
+            line.querySelector('[data-line="details"]').hidden = !item.details
+
+            // No sum on an included line, and none under one of something.
+            const sum = line.querySelector('[data-line="sum"]')
+            sum.classList.toggle("is-empty", !item.quantity)
+            sum.classList.toggle("is-single", item.single)
+            return line
+          }),
+        )
+        return groupCopy
+      }),
+    )
+  }
+
   const fill = (view) => {
     page.querySelectorAll("[data-deposit]").forEach((element) => {
       element.textContent = valueAt(view, element.dataset.deposit) ?? ""
@@ -80,35 +135,14 @@ if (page) {
       stripeTransfer: view.transferMode === "stripe",
       notes: Boolean(view.notes),
       preparedBy: Boolean(view.preparedBy),
+      perGuest: Boolean(view.perGuest),
     }
     page.querySelectorAll("[data-deposit-row]").forEach((element) => {
       element.hidden = !rowShown[element.dataset.depositRow]
     })
 
-    page.querySelectorAll("[data-deposit-detail]").forEach((row) => {
-      const detail = view.details.find((item) => item.label === row.dataset.depositDetail)
-      row.hidden = !detail
-      if (detail)
-        row.querySelector("[data-deposit-detail-value]").textContent = detail.value
-    })
-
-    const lineList = document.getElementById("depositLineItems")
-    const lineTemplate = document.getElementById("depositLineItem")
-    if (lineList && lineTemplate) {
-      lineList.replaceChildren(
-        ...view.lineItems.map((item) => {
-          const line = lineTemplate.content.cloneNode(true)
-          line.querySelector('[data-line="label"]').textContent = item.label
-          line.querySelector('[data-line="amount"]').textContent = item.amount
-          ;["working", "details"].forEach((part) => {
-            const element = line.querySelector(`[data-line="${part}"]`)
-            element.textContent = item[part]
-            element.hidden = !item[part]
-          })
-          return line
-        }),
-      )
-    }
+    fillFacts(view.facts)
+    fillPrice(view.priceGroups)
   }
 
   // A one-off rise of gold specks through the hero, like bubbles in a glass,
