@@ -419,6 +419,9 @@ const BOOKINGS: BookingSpec[] = [
     message: "We were on the waitlist for this date. Delighted it came free!",
     submittedDaysAgo: 8,
     sourcePage: "/weddings",
+    // The one quote waiting for its deposit, so it carries a bit of
+    // everything the deposit page and the PDF have to show: two stations,
+    // several drinks, set-up, overtime, a discount and notes.
     quote: {
       status: "sent",
       mealFormat: TIERS.receptionDaisy,
@@ -430,13 +433,20 @@ const BOOKINGS: BookingSpec[] = [
           quantity: 1,
           unitAmount: 4500,
         },
+        extra.station("Salumerie Table", 12.5, 110),
+        extra.station("Charcuterie Table", 10.5, 110),
         extra.welcomeDrink(110),
+        extra.cocktailBar(110),
         extra.roundTables(11),
         extra.bows(33),
         extra.sound,
         extra.redCarpet,
+        extra.overtime(110),
       ],
       cake: FAVOURITE_CAKE,
+      roundPerPersonDownTo: 5,
+      clientNotes:
+        "As discussed on your visit, the welcome drinks are on the Terrace at sunset, with dinner in the Hall afterwards.\nWe've held the extra hour at the end of the night for you.",
       sentDaysAgo: 2,
     },
   },
