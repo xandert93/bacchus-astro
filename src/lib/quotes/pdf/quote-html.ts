@@ -196,7 +196,9 @@ export const quoteHtml = (record: DepositRecord) => {
     }
 
     <p class="prepared">${
-      preparedBy ? `Prepared by <strong>${preparedBy}</strong> on ${issued}.<br>` : ""
+      preparedBy
+        ? `This quote was prepared by <strong>${preparedBy}</strong> on ${issued}.<br>`
+        : ""
     }Any questions: ${CONTACT.phone.display} or ${CONTACT.email.display}.</p>
   </section>
 </body>
