@@ -121,6 +121,13 @@ To publish one:
    gold.
 3. Set the status to **Published** and publish.
 
+**Long reviews are welcome.** Clients can write up to about 250 words, and
+the more detail the better: a named member of staff or a dish is far more
+convincing than "lovely day", on Google most of all. On the website, a long
+review is shortened to eight lines with "…", so pick one whose best part
+comes early, and put the gold on a phrase within it. **Never reword a
+client's review**, not even to tidy it: it has to stay their own words.
+
 **Google reviews matter most**: they're what couples check, and they help
 Bacchus show up in Google's map results. One rule, from Google itself:
 **ask every client the same way, never only the happy ones.** Sending only
